@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.0;netstandard2.0</TargetFrameworks>
+    <Authors>Dan Siegel</Authors>
+    <Copyright>© Dan Siegel</Copyright>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <Description>Provides MFractor Config for Prism applications</Description>
+    <PackageTags>prism;mfractor;xamarin;mvvm;</PackageTags>
+    <PackageLicenseUrl>https://github.com/dansiegel/Mobile.BuildTools/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools</PackageProjectUrl>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.0.41" PrivateAssets="all" />
+    <None Update="**\*.xml;**\*.txt;**\*.pp" Pack="true" PackagePath="." />
+  </ItemGroup>
+
+</Project>

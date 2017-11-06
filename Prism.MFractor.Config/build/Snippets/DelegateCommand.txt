@@ -1,0 +1,6 @@
+public DelegateCommand $name$ { get; }
+
+private void On$name$Executed()
+{
+
+}
