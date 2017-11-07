@@ -11,8 +11,8 @@
     </configure>
     <configure id="com.mfractor.code_gen.forms.csharp.value_converter">
         <property name="Folder" value="Converters" />
-        <property name="ImplementConversionForConvert" value="true" />
         <property name="Namespace" value=".Converters" />
+        <property name="Snippet" value="Snippets/ValueConverterTemplate.txt"/>
     </configure>
     <configure id="com.mfractor.code_gen.resx.generate_resx_entry">
         <property name="IncludeCommentWhenEmpty" value="true" />
