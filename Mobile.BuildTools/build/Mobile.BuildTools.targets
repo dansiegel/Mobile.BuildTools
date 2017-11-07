@@ -1,6 +1,6 @@
 <Project>
 
-  <Target Name="ConfigCopy" BeforeTargets="CoreCompile;XamlG;XamlC;Build">
+  <Target Name="ConfigCopy" BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
     <PropertyGroup>
       <BuildResourcesDirectoryName Condition=" '$(BuildResourcesDirectoryName)' == '' ">build</BuildResourcesDirectoryName>
       <BuildResourcesDirRootPath>$([System.IO.Path]::Combine($(SolutionDir), $(BuildResourcesDirectoryName)))</BuildResourcesDirRootPath>
@@ -38,7 +38,7 @@
           Condition=" Exists('$(BuildHostScriptLocation)') And Exists('$(PowerShellExe)') " />
   </Target> -->
 
-  <Target Name="Secrets" BeforeTargets="CoreCompile;XamlG;XamlC;Build">
+  <Target Name="Secrets" BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
     <PropertyGroup>
       <SecretsScriptLocation>$(MSBuildThisFileDirectory)Secrets.ps1</SecretsScriptLocation>
       <JsonSecretsFileName Condition=" '$(JsonSecretsFileName)' == '' ">secrets.json</JsonSecretsFileName>
