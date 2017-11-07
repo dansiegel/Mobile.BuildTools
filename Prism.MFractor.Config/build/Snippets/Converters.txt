@@ -1,0 +1,20 @@
+using System;
+using System.Globalization;
+using Xamarin.Forms;
+
+namespace $namespace$
+{
+    [$value_conversion_attribute$(typeof($input_type$), typeof($output_type$))]
+    public class $name$ : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
