@@ -11,6 +11,7 @@
     <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools</PackageProjectUrl>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
