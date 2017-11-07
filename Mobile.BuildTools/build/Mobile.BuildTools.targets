@@ -1,6 +1,6 @@
-<Project InitialTargets="ConfigCopy;Secrets">
+<Project>
 
-  <Target Name="ConfigCopy">
+  <Target Name="ConfigCopy" BeforeTargets="CoreCompile;XamlG;XamlC;Build">
     <PropertyGroup>
       <BuildResourcesDirectoryName Condition=" '$(BuildResourcesDirectoryName)' == '' ">build</BuildResourcesDirectoryName>
       <BuildResourcesDirRootPath>$([System.IO.Path]::Combine($(SolutionDir), $(BuildResourcesDirectoryName)))</BuildResourcesDirRootPath>
@@ -12,6 +12,8 @@
       <AndroidManifestPath>$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', "Properties", "AndroidManifest.xml"))
       </AndroidManifestPath>
     </PropertyGroup>
+
+    <Message Text="Checking for Platform Template Configurations to Copy" />
 
     <Message Condition=" !Exists('$(InfoPlistPath)') And Exists('$(BuildTemplateInfoPlistPath)') And '$(IsUnix)' And '$(IsiOSProject)' " 
              Text="Copying '$(BuildTemplateInfoPListPath)' to '$(InfoPlistPath)'" />
@@ -36,7 +38,7 @@
           Condition=" Exists('$(BuildHostScriptLocation)') And Exists('$(PowerShellExe)') " />
   </Target> -->
 
-  <Target Name="Secrets">
+  <Target Name="Secrets" BeforeTargets="CoreCompile;XamlG;XamlC;Build">
     <PropertyGroup>
       <SecretsScriptLocation>$(MSBuildThisFileDirectory)Secrets.ps1</SecretsScriptLocation>
       <JsonSecretsFileName Condition=" '$(JsonSecretsFileName)' == '' ">secrets.json</JsonSecretsFileName>
