@@ -1,6 +1,6 @@
 <Project>
 
-  <Target Name="ConfigCopy" BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
+  <Target Name="ConfigCopy" Condition=" '$(IsiOSProject)' Or '$(IsAndroidProject)' " BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
     <PropertyGroup>
       <BuildResourcesDirectoryName Condition=" '$(BuildResourcesDirectoryName)' == '' ">build</BuildResourcesDirectoryName>
       <BuildResourcesDirRootPath>$([System.IO.Path]::Combine($(SolutionDir), $(BuildResourcesDirectoryName)))</BuildResourcesDirRootPath>
@@ -15,12 +15,21 @@
 
     <Message Text="Checking for Platform Template Configurations to Copy" />
 
+    <!-- Handle iOS Configuration -->
+    <Message Condition=" '$(IsiOSProject)' And '$(IsWindows)'"
+             Text="Skipping Copy of iOS Project Configuration. Build Host cannot be Windows" />
+
+    <Message Condition=" '$(IsiOSProject)' And '$(IsUnix)' And Exists('$(InfoPlistPath)') "
+             Text="An Info.plist already exists at the destination." />
     <Message Condition=" !Exists('$(InfoPlistPath)') And Exists('$(BuildTemplateInfoPlistPath)') And '$(IsUnix)' And '$(IsiOSProject)' " 
              Text="Copying '$(BuildTemplateInfoPListPath)' to '$(InfoPlistPath)'" />
     <Copy SourceFiles="$(BuildTemplateInfoPlistPath)"  
           DestinationFolder="$(InfoPlistPath)"
           Condition=" !Exists('$(InfoPlistPath)') And Exists('$(BuildTemplateInfoPlistPath)') And '$(IsUnix)' And '$(IsiOSProject)' " />
 
+    <!-- Handle Android Configuration -->
+    <Message Condition=" Exists('$(AndroidManifestPath)') And '$(IsAndroidProject)' "
+             Text="An Android Manifest already exists." />
     <Message Condition=" !Exists('$(AndroidManifestPath)') And Exists('$(BuildTemplateAndroidManifestPath)') And '$(IsAndroidProject)' " 
              Text="Copying '$(BuildTemplateAndroidManifestPath)' to '$(AndroidManifestPath)'" />
     <Copy SourceFiles="$(BuildTemplateAndroidManifestPath)"
@@ -51,7 +60,7 @@
     <Message Condition="!Exists('$(JsonSecretsFilePath)')" Text="No Secrets Json was found for $(AssemblyName)" />
     <Message Condition="Exists('$(JsonSecretsFilePath)')" Text="Secrets Json was found for $(AssemblyName)" />
     <Exec Command="$(PowerShellExe) -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; { &amp;$(SecretsScriptLocation) -RootNamespace &apos;$(RootNamespace)&apos; -ProjectPath &apos;$(ProjectDir)&apos; -JsonSecretsFileName &apos;$(JsonSecretsFileName)&apos; -OutputFileName &apos;$(SecretsOutputFileName)&apos; }&quot;"
-          Condition=" Exists('$(SecretsScriptLocation)') And Exists('$(PowerShellExe)') " />
+          Condition=" Exists('$(JsonSecretsFilePath)') And Exists('$(SecretsScriptLocation)') And Exists('$(PowerShellExe)') " />
   </Target>
 
 </Project>
