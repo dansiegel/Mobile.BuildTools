@@ -8,7 +8,7 @@
     <Description>Provides MFractor Config for Prism applications</Description>
     <PackageTags>prism;mfractor;xamarin;mvvm;</PackageTags>
     <PackageLicenseUrl>https://github.com/dansiegel/Mobile.BuildTools/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools/</PackageProjectUrl>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
