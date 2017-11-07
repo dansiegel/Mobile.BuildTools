@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+
+  <PropertyGroup>
+    <IsWindows Condition=" '$(OS)' == 'Windows_NT'">true</IsWindows>
+    <IsWindows Condition=" '$(IsWindows)' == '' ">false</IsWindows>
+    <IsUnix Condition=" '$(OS)' == 'Unix' ">true</IsUnix>
+    <IsUnix Condition=" '$(IsUnix)' == '' ">false</IsUnix>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PowerShellExe Condition=" '$(PowerShellExe)'=='' And '$(IsWindows)' == 'true' ">powershell.exe</PowerShellExe>
+    <PowerShellExe Condition=" '$(PowerShellExe)'=='' And '$(IsUnix)' == 'true' ">\usr\local\bin\powershell</PowerShellExe>
+    <EnableDefaultEmbeddedResourceItems>True</EnableDefaultEmbeddedResourceItems>
+    <IsAndroidProject>false</IsAndroidProject>
+    <IsiOSProject>false</IsiOSProject>
+    <IsUWPProject>false</IsUWPProject>
+    <IsMacOSProject>false</IsMacOSProject>
+    <IsTizenProject>false</IsTizenProject>
+    <MobileBuildToolsTargets>$(MSBuildThisFileDirectory)Mobile.BuildTools.targets</MobileBuildToolsTargets>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition=" '$(TargetFrameworkIdentifier)' == 'MonoAndroid' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Android' ">
+      <PropertyGroup>
+        <IsAndroidProject>true</IsAndroidProject>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' ">
+      <PropertyGroup>
+        <IsiOSProject>true</IsiOSProject>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(TargetFrameworkIdentifier)' == '.NETCore' ">
+      <PropertyGroup>
+        <IsUWPProject>true</IsUWPProject>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' ">
+      <PropertyGroup>
+        <IsMacOSProject>true</IsMacOSProject>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(TargetFrameworkIdentifier)' == 'Tizen' ">
+      <PropertyGroup>
+        <IsTizenProject>true</IsTizenProject>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'monoandroid' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarinandroid' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarin.android' ">
+      <PropertyGroup>
+        <IsAndroidProject>true</IsAndroidProject>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'xamarinios' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarin.ios' ">
+      <PropertyGroup>
+        <IsiOSProject>true</IsiOSProject>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'win' Or '$(_SdkShortFrameworkIdentifier)' == 'uap' ">
+      <PropertyGroup>
+        <IsUWPProject>true</IsUWPProject>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'xamarinmac' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarin.mac' ">
+      <PropertyGroup>
+        <IsMacOSProject>true</IsMacOSProject>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'tizen' ">
+      <PropertyGroup>
+        <IsTizenProject>true</IsTizenProject>
+      </PropertyGroup>
+    </When>
+  </Choose>
+
+  <PropertyGroup Condition=" '$(SolutionDir)' == '' Or '$(SolutionDir)' == '*Undefined*' ">
+    <ProjectParentDir>$([System.IO.Directory]::GetParent($(MSBuildProjectDirectory)))</ProjectParentDir>
+    <ProjectParentDirName>$([System.IO.Directory]::GetParent($(MSBuildProjectDirectory)).Name)</ProjectParentDirName>
+    <SolutionDir>$(ProjectParentDir)</SolutionDir>
+    <SolutionDir Condition=" '$(ProjectParentDirName)' == 'src' Or '$(ProjectParentDirName)' == 'source' ">$([System.IO.Directory]::GetParent($(ProjectParentDir)))</SolutionDir>
+  </PropertyGroup>
+
+  <!-- VS4Mac executes using the Mono Runtime & provides no way for us to know -->
+  <PropertyGroup Condition=" '$(MSBuildRuntimeType)' == 'Mono' ">
+    <IsOSX>Unknown</IsOSX>
+    <IsLinux>Unknown</IsLinux>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
+    <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+    <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+    <EnableDefaultItems Condition=" '$(EnableDefaultItems)' == '' ">true</EnableDefaultItems>
+    <EnableDefaultNoneItems Condition=" '$(EnableDefaultNoneItems)' == '' ">true</EnableDefaultNoneItems>
+    <EnableDefaultXamlItems Condition=" '$(EnableDefaultXamlItems)' == '' ">true</EnableDefaultXamlItems>
+    <EnableDefaultEmbeddedResourceItems Condition=" '$(EnableDefaultEmbeddedResourceItems)' == '' ">true</EnableDefaultEmbeddedResourceItems>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Mock' ">
+    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+  </PropertyGroup>
+
+</Project>

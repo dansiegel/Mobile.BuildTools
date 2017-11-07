@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.0</TargetFramework>
+    <Authors>Dan Siegel</Authors>
+    <Copyright>© Dan Siegel</Copyright>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <Description>Additional MSBuild targets and properties for Xamarin projects. Enables better development practices with CI/CD pipelines</Description>
+    <PackageTags>msbuild;dotnet;sdk;xamarin;android;ios;macos;uwp;tizen</PackageTags>
+    <PackageLicenseUrl>https://github.com/dansiegel/Mobile.BuildTools/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools</PackageProjectUrl>
+    <PackageReleaseNotes>
+      See the Readme for how to use/configure these targets.
+
+      https://github.com/dansiegel/Mobile.BuildTools/
+    </PackageReleaseNotes>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.0.41" PrivateAssets="all" />
+    <None Update="**\*.props;**\*.targets;**\*.ps1" Pack="true" PackagePath="." />
+  </ItemGroup>
+
+</Project>
