@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mfractor>
     <configure id="com.mfractor.code_actions.xaml.implement_view_model">
-        <property name="BaseClass" value="ViewModelBase" />
+        <property name="BaseClass" value="Prism.Mvvm.BindableBase" />
         <property name="ViewModelsFolder" value="ViewModels" />
         <property name="ViewModelNamespace" value=".ViewModels" />
         <property name="ShouldRemoveXamlViewSuffix" value="false" />
