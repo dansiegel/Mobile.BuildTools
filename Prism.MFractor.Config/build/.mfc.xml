@@ -14,10 +14,4 @@
         <property name="Namespace" value=".Converters" />
         <property name="Snippet" value="Snippets/ValueConverterTemplate.txt"/>
     </configure>
-    <configure id="com.mfractor.code_gen.resx.generate_resx_entry">
-        <property name="IncludeCommentWhenEmpty" value="true" />
-    </configure>
-    <configure id="com.mfractor.code_gen.forms.replace_with_localisation_lookup">
-        <property name="TranslateExtensionSymbol" value=".i18n.TranslateExtension" />
-    </configure>
 </mfractor>
