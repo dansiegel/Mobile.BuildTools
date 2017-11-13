@@ -1,51 +1,30 @@
 <Project>
 
-  <Target Name="ConfigCopy" Condition=" '$(IsiOSProject)' Or '$(IsAndroidProject)' " BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
+  <UsingTask TaskName="Mobile.BuildTools.Tools.SecretsJsonTask" AssemblyFile="net461/Mobile.BuildTools.dll"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tools.TemplateManifestTask" AssemblyFile="net461/Mobile.BuildTools.dll"/>
+
+  <Target Name="TemplateManifest" 
+          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
     <PropertyGroup>
       <BuildResourcesDirectoryName Condition=" '$(BuildResourcesDirectoryName)' == '' ">build</BuildResourcesDirectoryName>
-      <BuildResourcesDirRootPath>$([System.IO.Path]::Combine($(SolutionDir), $(BuildResourcesDirectoryName)))</BuildResourcesDirRootPath>
+      <BuildResourcesDirRootPath Condition=" '$(BuildResourcesDirRootPath)' == '' ">$([System.IO.Path]::Combine($(SolutionDir), $(BuildResourcesDirectoryName)))</BuildResourcesDirRootPath>
       <InfoPlistTemplateName Condition=" '$(InfoPlistTemplateName)' == '' ">BuildTemplateInfo.plist</InfoPlistTemplateName>
-      <BuildTemplateInfoPlistPath>$([System.IO.Path]::Combine('$(BuildResourcesDirRootPath)', '$(InfoPlistTemplateName)'))</BuildTemplateInfoPlistPath>
-      <InfoPlistPath>$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', "Info.plist"))</InfoPlistPath>
       <AndroidManifestTemplateName Condition=" '$(AndroidManifestTemplateName)' == '' ">AndroidTemplateManifest.xml</AndroidManifestTemplateName>
-      <BuildTemplateAndroidManifestPath>$([System.IO.Path]::Combine('$(BuildResourcesDirRootPath)', "AndroidTemplateManifest.xml"))</BuildTemplateAndroidManifestPath>
-      <AndroidManifestPath>$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', "Properties", "AndroidManifest.xml"))
-      </AndroidManifestPath>
+      <TemplateManifestPath Condition=" '$(IsAndroidProject)' ">$([System.IO.Path]::Combine('$(BuildResourcesDirRootPath)', '$(AndroidManifestTemplateName)'))</TemplateManifestPath>
+      <ManifestDestinationPath Condition=" '$(IsAndroidProject)' ">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', "Properties", "AndroidManifest.xml"))</ManifestDestinationPath>
+      <TemplateManifestPath Condition=" '$(IsiOSProject)' ">$([System.IO.Path]::Combine('$(BuildResourcesDirRootPath)', '$(InfoPlistTemplateName)'))</TemplateManifestPath>
+      <ManifestDestinationPath Condition=" '$(IsiOSProject)' ">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', "Info.plist"))</ManifestDestinationPath>
+      <ManifestVariablePrefix Condition=" '$(ManifestVariablePrefix)' == '' ">Manifest_</ManifestVariablePrefix>
     </PropertyGroup>
 
     <Message Text="Checking for Platform Template Configurations to Copy" />
 
-    <!-- Handle iOS Configuration -->
-    <Message Condition=" '$(IsiOSProject)' And '$(IsWindows)'"
-             Text="Skipping Copy of iOS Project Configuration. Build Host cannot be Windows" />
-
-    <Message Condition=" '$(IsiOSProject)' And '$(IsUnix)' And Exists('$(InfoPlistPath)') "
-             Text="An Info.plist already exists at the destination." />
-    <Message Condition=" !Exists('$(InfoPlistPath)') And Exists('$(BuildTemplateInfoPlistPath)') And '$(IsUnix)' And '$(IsiOSProject)' " 
-             Text="Copying '$(BuildTemplateInfoPListPath)' to '$(InfoPlistPath)'" />
-    <Copy SourceFiles="$(BuildTemplateInfoPlistPath)"  
-          DestinationFolder="$(InfoPlistPath)"
-          Condition=" !Exists('$(InfoPlistPath)') And Exists('$(BuildTemplateInfoPlistPath)') And '$(IsUnix)' And '$(IsiOSProject)' " />
-
-    <!-- Handle Android Configuration -->
-    <Message Condition=" Exists('$(AndroidManifestPath)') And '$(IsAndroidProject)' "
-             Text="An Android Manifest already exists." />
-    <Message Condition=" !Exists('$(AndroidManifestPath)') And Exists('$(BuildTemplateAndroidManifestPath)') And '$(IsAndroidProject)' " 
-             Text="Copying '$(BuildTemplateAndroidManifestPath)' to '$(AndroidManifestPath)'" />
-    <Copy SourceFiles="$(BuildTemplateAndroidManifestPath)"
-          DestinationFolder="$(AndroidManifestPath)"
-          Condition=" !Exists('$(AndroidManifestPath)') And Exists('$(BuildTemplateAndroidManifestPath)') And '$(IsAndroidProject)' " />
+    <TemplateManifestTask Prefix="$(ManifestVariablePrefix)"
+                          Token="$(ManifestToken)"
+                          ManifestTemplatePath="$(TemplateManifestPath)"
+                          ManifestOutputPath="$(ManifestDestinationPath)" />
 
   </Target>
-
-  <!-- <Target Name="BuildHostSecrets">
-    <PropertyGroup>
-      <BuildHostScriptLocation Condition=" '$(BuildHostScriptLocation)'=='' ">$(SolutionDir)\BuildHostSecrets.ps1</BuildHostScriptLocation>
-    </PropertyGroup>
-    <Message Condition="!Exists('$(BuildHostScriptLocation)')" Text="Build Host Script Does Not Exist = '$(BuildHostScriptLocation)'" />
-    <Exec Command="$(PowerShellExe) -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; { &amp;$(BuildHostScriptLocation) }&quot;"
-          Condition=" Exists('$(BuildHostScriptLocation)') And Exists('$(PowerShellExe)') " />
-  </Target> -->
 
   <Target Name="Secrets" BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
     <PropertyGroup>
@@ -54,13 +33,13 @@
       <JsonSecretsFilePath>$([System.IO.Path]::Combine("$(ProjectDir)", "$(JsonSecretsFileName)"))</JsonSecretsFilePath>
       <SecretsOutputFileName Condition=" '$(SecretsOutputFileName)' == '' ">Helpers/Secrets.cs</SecretsOutputFileName>
     </PropertyGroup>
-    <Message Condition="!Exists('$(SecretsScriptLocation)')" Text="Secrets Script Does Not Exist = '$(SecretsScriptLocation)'" />
-    <Message Condition="!Exists('$(PowerShellExe)')" Text="Power Shell Exe Does Not Exist = '$(PowerShellExe)'" />
 
-    <Message Condition="!Exists('$(JsonSecretsFilePath)')" Text="No Secrets Json was found for $(AssemblyName)" />
-    <Message Condition="Exists('$(JsonSecretsFilePath)')" Text="Secrets Json was found for $(AssemblyName)" />
-    <Exec Command="$(PowerShellExe) -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; { &amp;$(SecretsScriptLocation) -RootNamespace &apos;$(RootNamespace)&apos; -ProjectPath &apos;$(ProjectDir)&apos; -JsonSecretsFileName &apos;$(JsonSecretsFileName)&apos; -OutputFileName &apos;$(SecretsOutputFileName)&apos; }&quot;"
-          Condition=" Exists('$(JsonSecretsFilePath)') And Exists('$(SecretsScriptLocation)') And Exists('$(PowerShellExe)') " />
+    <SecretsJsonTask ProjectBasePath="$(MSBuildProjectDirectory)"
+                     SecretsClassName="$(SecretsClassName)"
+                     SecretsJsonFilePath="$(JsonSecretsFilePath)"
+                     RootNamespace="$(RootNamespace)"
+                     OutputPath="$(SecretsOutputPath)" />
+
   </Target>
 
 </Project>

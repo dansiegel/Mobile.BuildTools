@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <Authors>Dan Siegel</Authors>
     <Copyright>© Dan Siegel</Copyright>
     <DevelopmentDependency>true</DevelopmentDependency>
@@ -14,14 +14,25 @@
 
       https://github.com/dansiegel/Mobile.BuildTools/
     </PackageReleaseNotes>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- <IncludeBuildOutput>true</IncludeBuildOutput> -->
+    <BuildOutputTargetFolder>build</BuildOutputTargetFolder>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <OutputPath>bin\$(Configuration)</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="2.0.41" PrivateAssets="all" />
-    <None Update="**\*.props;**\*.targets;**\*.ps1" Pack="true" PackagePath="." />
+    <!-- <PackageReference Include="Nerdbank.GitVersioning" Version="2.0.41" PrivateAssets="all" /> -->
+    <None Update="**\*.props;\**\*.targets" Pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.3.409" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Json" />
   </ItemGroup>
 
 </Project>
