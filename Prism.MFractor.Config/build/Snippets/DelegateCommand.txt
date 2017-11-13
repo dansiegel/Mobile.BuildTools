@@ -1,4 +1,4 @@
-public DelegateCommand $name$ { get; }
+public Prism.Commands.DelegateCommand $name$ { get; }
 
 private void On$name$Executed()
 {
