@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mfractor>
+    <configure id="com.mfractor.code_actions.xaml.implement_view_model">
+        <property name="BaseClass" value="ViewModelBase" />
+        <property name="ViewModelsFolder" value="ViewModels" />
+        <property name="ViewModelNamespace" value=".ViewModels" />
+        <property name="ShouldRemoveXamlViewSuffix" value="false" />
+    </configure>
+    <configure id="com.mfractor.code_gen.forms.csharp.command_implementation">
+        <property name="Snippet" value="Snippets/DelegateCommand.txt" source="file" />
+    </configure>
+    <configure id="com.mfractor.code_gen.forms.csharp.value_converter">
+        <property name="Folder" value="Converters" />
+        <property name="Namespace" value=".Converters" />
+        <property name="Snippet" value="Snippets/ValueConverterTemplate.txt"/>
+    </configure>
+    <configure id="com.mfractor.code_gen.resx.generate_resx_entry">
+        <property name="IncludeCommentWhenEmpty" value="true" />
+    </configure>
+    <configure id="com.mfractor.code_gen.forms.replace_with_localisation_lookup">
+        <property name="TranslateExtensionSymbol" value=".i18n.TranslateExtension" />
+    </configure>
+</mfractor>
