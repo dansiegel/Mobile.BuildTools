@@ -28,7 +28,7 @@
   </Target>
 
   <Target Name="BuildHostSecrets"
-          BeforeTargets="Secrets"
+          BeforeTargets="Secrets;CoreCompile;_CoreXamlG;XamlG;XamlC;Build"
           Condition=" '$(EnableBuildHostSecrets)' == '' Or '$(EnableBuildHostSecrets)' == 'true' ">
     <PropertyGroup>
       <JsonSecretsFileName Condition=" '$(JsonSecretsFileName)' == '' ">secrets.json</JsonSecretsFileName>

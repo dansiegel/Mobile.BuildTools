@@ -16,6 +16,7 @@ namespace Mobile.BuildTools.Tools
         {
             try
             {
+                Log.LogMessage($"Output Path: {SecretsJsonFilePath}");
                 if(string.IsNullOrWhiteSpace(SecretsJsonFilePath))
                 {
                     Log.LogMessage("No Secrets file specified");
@@ -30,9 +31,12 @@ namespace Mobile.BuildTools.Tools
                     var generator = new BuildHostSecretsGenerator()
                     {
                         SecretsPrefix = SecretsPrefix,
-                        SecretsJsonFilePath = SecretsJsonFilePath
+                        SecretsJsonFilePath = SecretsJsonFilePath,
                     };
+                    Log.LogMessage($"Generating {Path.GetFileName(SecretsJsonFilePath)} for {SecretsPrefix}");
                     generator.Execute();
+
+                    Log.LogMessage(File.ReadAllText(SecretsJsonFilePath));
                 }
             }
             catch(Exception e)
@@ -46,9 +50,9 @@ namespace Mobile.BuildTools.Tools
 
         private void ValidateSecretsPrefix()
         {
-            if(!string.IsNullOrWhiteSpace(SecretsPrefix)) return;
+            if (!string.IsNullOrWhiteSpace(SecretsPrefix)) return;
 
-            switch(SdkShortFrameworkIdentifier)
+            switch (SdkShortFrameworkIdentifier)
             {
                 case "monoandroid":
                 case "xamarinandroid":

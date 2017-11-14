@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Json;
-using Microsoft.Build.Utilities;
 
 namespace Mobile.BuildTools.Generators
 {
@@ -16,17 +14,32 @@ namespace Mobile.BuildTools.Generators
 
         public void Execute()
         {
-            var keys = Environment.GetEnvironmentVariables()
+            var secrets = Environment.GetEnvironmentVariables()
                                   .Keys
-                                  .Cast<string>()
-                                  .Where(k => k.StartsWith(SecretsPrefix));
-            if(!keys.Any()) return;
+                                  .Cast<DictionaryEntry>()
+                                  .Where(e => $"{e.Key}".StartsWith(SecretsPrefix, StringComparison.InvariantCulture));
+            if (!secrets.Any()) return;
 
             var json = new JsonObject();
-            foreach(var key in keys)
-                json.Add(key, Environment.GetEnvironmentVariable(key));
+            foreach (var secret in secrets)
+            {
+                var key = secret.Key.ToString().Remove(0, SecretsPrefix.Length);
+                var value = secret.Value.ToString();
+                if (double.TryParse(value, out double d))
+                {
+                    json.Add(key, d % 1 == 0 ? (int)d : d);
+                }
+                else if (bool.TryParse(value, out bool b))
+                {
+                    json.Add(key, b);
+                }
+                else
+                {
+                    json.Add(key, value);
+                }
+            }
 
-            using(var stream = File.Create(SecretsJsonFilePath))
+            using (var stream = File.Create(SecretsJsonFilePath))
             {
                 json.Save(stream);
             }
