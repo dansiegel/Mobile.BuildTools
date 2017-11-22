@@ -22,53 +22,68 @@
     <When Condition=" '$(TargetFrameworkIdentifier)' == 'MonoAndroid' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Android' ">
       <PropertyGroup>
         <IsAndroidProject>true</IsAndroidProject>
+        <BuildHostSecretPrefix>DroidSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' ">
       <PropertyGroup>
         <IsiOSProject>true</IsiOSProject>
+        <BuildHostSecretPrefix>iOSSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFrameworkIdentifier)' == '.NETCore' ">
       <PropertyGroup>
         <IsUWPProject>true</IsUWPProject>
+        <BuildHostSecretPrefix>UWPSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' ">
       <PropertyGroup>
         <IsMacOSProject>true</IsMacOSProject>
+        <BuildHostSecretPrefix>MacSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFrameworkIdentifier)' == 'Tizen' ">
       <PropertyGroup>
         <IsTizenProject>true</IsTizenProject>
+        <BuildHostSecretPrefix>TizenSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
     <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'monoandroid' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarinandroid' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarin.android' ">
       <PropertyGroup>
         <IsAndroidProject>true</IsAndroidProject>
+        <BuildHostSecretPrefix>DroidSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
     <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'xamarinios' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarin.ios' ">
       <PropertyGroup>
         <IsiOSProject>true</IsiOSProject>
+        <BuildHostSecretPrefix>iOSSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
     <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'win' Or '$(_SdkShortFrameworkIdentifier)' == 'uap' ">
       <PropertyGroup>
         <IsUWPProject>true</IsUWPProject>
+        <BuildHostSecretPrefix>UWPSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
     <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'xamarinmac' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarin.mac' ">
       <PropertyGroup>
         <IsMacOSProject>true</IsMacOSProject>
+        <BuildHostSecretPrefix>MacSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
     <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'tizen' ">
       <PropertyGroup>
         <IsTizenProject>true</IsTizenProject>
+        <BuildHostSecretPrefix>TizenSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
+    <Otherwise>
+      <PropertyGroup>
+        <BuildHostSecretPrefix>Secret_</BuildHostSecretPrefix>
+      </PropertyGroup>
+    </Otherwise>
   </Choose>
 
   <PropertyGroup Condition=" '$(SolutionDir)' == '' Or '$(SolutionDir)' == '*Undefined*' ">

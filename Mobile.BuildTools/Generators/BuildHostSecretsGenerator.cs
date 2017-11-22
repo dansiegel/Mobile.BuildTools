@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Json;
+using Newtonsoft.Json;
+using Microsoft.Build.Utilities;
+using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Generators
 {
@@ -12,15 +14,22 @@ namespace Mobile.BuildTools.Generators
 
         public string SecretsJsonFilePath { get; set; }
 
+        public TaskLoggingHelper Log { get; set; }
+
         public void Execute()
         {
             var secrets = Environment.GetEnvironmentVariables()
-                                  .Keys
-                                  .Cast<DictionaryEntry>()
-                                  .Where(e => $"{e.Key}".StartsWith(SecretsPrefix, StringComparison.InvariantCulture));
-            if (!secrets.Any()) return;
+                                     .Keys
+                                     .Cast<DictionaryEntry>()
+                                     .Where(e => $"{e.Key}".StartsWith(SecretsPrefix, StringComparison.OrdinalIgnoreCase));
+            if (!secrets.Any())
+            {
+                Log.LogMessage("    No Build Host Secrets Found...");
+                return;
+            }
 
-            var json = new JsonObject();
+            Log.LogMessage($"Generating {Path.GetFileName(SecretsJsonFilePath)} for {SecretsPrefix}");
+            var json = new JObject();
             foreach (var secret in secrets)
             {
                 var key = secret.Key.ToString().Remove(0, SecretsPrefix.Length);
@@ -39,10 +48,10 @@ namespace Mobile.BuildTools.Generators
                 }
             }
 
-            using (var stream = File.Create(SecretsJsonFilePath))
-            {
-                json.Save(stream);
-            }
+            File.WriteAllText(SecretsJsonFilePath,
+                              json.ToString(Formatting.Indented));
+
+            Log.LogMessage(File.ReadAllText(SecretsJsonFilePath));
         }
     }
 }

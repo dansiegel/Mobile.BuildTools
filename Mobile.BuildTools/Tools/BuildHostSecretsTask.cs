@@ -32,11 +32,10 @@ namespace Mobile.BuildTools.Tools
                     {
                         SecretsPrefix = SecretsPrefix,
                         SecretsJsonFilePath = SecretsJsonFilePath,
+                        Log = Log
                     };
-                    Log.LogMessage($"Generating {Path.GetFileName(SecretsJsonFilePath)} for {SecretsPrefix}");
-                    generator.Execute();
 
-                    Log.LogMessage(File.ReadAllText(SecretsJsonFilePath));
+                    generator.Execute();
                 }
             }
             catch(Exception e)

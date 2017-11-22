@@ -1,8 +1,11 @@
 <Project>
 
-  <UsingTask TaskName="Mobile.BuildTools.Tools.SecretsJsonTask" AssemblyFile="net461/Mobile.BuildTools.dll"/>
-  <UsingTask TaskName="Mobile.BuildTools.Tools.TemplateManifestTask" AssemblyFile="net461/Mobile.BuildTools.dll"/>
-  <UsingTask TaskName="Mobile.BuildTools.Tools.BuildHostSecretsTask" AssemblyFile="net461/Mobile.BuildTools.dll"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tools.SecretsJsonTask" 
+             AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tools.TemplateManifestTask" 
+             AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tools.BuildHostSecretsTask" 
+             AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
 
   <Target Name="TemplateManifest" 
           BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
