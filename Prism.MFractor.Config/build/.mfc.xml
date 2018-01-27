@@ -10,8 +10,10 @@
         <property name="Snippet" value="Snippets/DelegateCommand.txt" source="file" />
     </configure>
     <configure id="com.mfractor.code_gen.forms.csharp.value_converter">
+        <property name="Snippet" value="Snippets/ValueConverterTemplate.txt"/>
+    </configure>
+    <configure id="com.mfractor.configuration.forms.value_conversions">
         <property name="Folder" value="Converters" />
         <property name="Namespace" value=".Converters" />
-        <property name="Snippet" value="Snippets/ValueConverterTemplate.txt"/>
     </configure>
 </mfractor>
