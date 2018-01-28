@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using Microsoft.Build.Utilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Generators
@@ -20,8 +19,8 @@ namespace Mobile.BuildTools.Generators
         {
             var secrets = Environment.GetEnvironmentVariables()
                                      .Keys
-                                     .Cast<DictionaryEntry>()
-                                     .Where(e => $"{e.Key}".StartsWith(SecretsPrefix, StringComparison.OrdinalIgnoreCase));
+                                     .Cast<object>()
+                                     .Where(e => $"{e}".StartsWith(SecretsPrefix, StringComparison.OrdinalIgnoreCase));
             if (!secrets.Any())
             {
                 Log.LogMessage("    No Build Host Secrets Found...");
@@ -32,8 +31,8 @@ namespace Mobile.BuildTools.Generators
             var json = new JObject();
             foreach (var secret in secrets)
             {
-                var key = secret.Key.ToString().Remove(0, SecretsPrefix.Length);
-                var value = secret.Value.ToString();
+                var key = secret.ToString().Remove(0, SecretsPrefix.Length);
+                var value = Environment.GetEnvironmentVariable(secret.ToString());
                 if (double.TryParse(value, out double d))
                 {
                     json.Add(key, d % 1 == 0 ? (int)d : d);
