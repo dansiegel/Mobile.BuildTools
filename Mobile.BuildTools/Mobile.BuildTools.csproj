@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <Authors>Dan Siegel</Authors>
     <Copyright>© Dan Siegel</Copyright>
     <DevelopmentDependency>true</DevelopmentDependency>
@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.3.409" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="CopyResources" BeforeTargets="CoreCompile">
