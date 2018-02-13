@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Generators;
+using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,7 +27,7 @@ namespace Mobile.BuildTools.Tests
             };
 
         private void SetTestVariable() =>
-		    Environment.SetEnvironmentVariable($"{SecretsPrefix}Test1", "SomeValue");
+            Environment.SetEnvironmentVariable($"{SecretsPrefix}Test1", "SomeValue");
 
         [Fact]
         public void DoesNotThrowException()
@@ -44,9 +45,24 @@ namespace Mobile.BuildTools.Tests
         }
 
         [Fact]
+        public void CreatesJObject()
+        {
+            SetTestVariable();
+            var generator = GetGenerator();
+            var secrets = generator.GetSecrets();
+
+            var jsonObject = generator.GetJObjectFromSecrets(secrets);
+
+            Assert.NotNull(jsonObject);
+            Assert.IsType<JObject>(jsonObject);
+            Assert.Equal("SomeValue", jsonObject["Test1"].ToString());
+
+        }
+
+        [Fact]
         public void RetrievesEnvironmentVariables()
         {
-			SetTestVariable();
+            SetTestVariable();
             var generator = GetGenerator();
             var secrets = generator.GetSecrets();
 

@@ -29,10 +29,16 @@ namespace Mobile.BuildTools.Generators
             Log?.LogMessage($"Generating {Path.GetFileName(SecretsJsonFilePath)} for {SecretsPrefix}");
             var json = GetJObjectFromSecrets(secrets);
 
-            File.WriteAllText(SecretsJsonFilePath,
-                              json.ToString(Formatting.Indented));
+            WriteJsonFile(SecretsJsonFilePath, json.ToString(Formatting.Indented));
 
             Log?.LogMessage(File.ReadAllText(SecretsJsonFilePath));
+        }
+
+        internal void WriteJsonFile(string path, string json)
+        {
+            var dirPath = Path.GetDirectoryName(path);
+            Directory.CreateDirectory(dirPath);
+            File.WriteAllText(path, json);
         }
 
         internal JObject GetJObjectFromSecrets(IEnumerable<object> secrets)
