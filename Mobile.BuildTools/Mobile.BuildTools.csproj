@@ -33,6 +33,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Target Name="CopyResources" BeforeTargets="CoreCompile">
     <Copy SourceFiles="$(NuGetPackageRoot)newtonsoft.json/10.0.3/lib/netstandard1.3/Newtonsoft.Json.dll" DestinationFolder="$(OutputPath)" />
   </Target>

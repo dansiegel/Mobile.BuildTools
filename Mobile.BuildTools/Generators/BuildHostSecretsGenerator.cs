@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Utilities;
@@ -17,17 +18,25 @@ namespace Mobile.BuildTools.Generators
 
         public void Execute()
         {
-            var secrets = Environment.GetEnvironmentVariables()
-                                     .Keys
-                                     .Cast<object>()
-                                     .Where(e => $"{e}".StartsWith(SecretsPrefix, StringComparison.OrdinalIgnoreCase));
+            var secrets = GetSecrets();
+
             if (!secrets.Any())
             {
-                Log.LogMessage("    No Build Host Secrets Found...");
+                Log?.LogMessage("    No Build Host Secrets Found...");
                 return;
             }
 
-            Log.LogMessage($"Generating {Path.GetFileName(SecretsJsonFilePath)} for {SecretsPrefix}");
+            Log?.LogMessage($"Generating {Path.GetFileName(SecretsJsonFilePath)} for {SecretsPrefix}");
+            var json = GetJObjectFromSecrets(secrets);
+
+            File.WriteAllText(SecretsJsonFilePath,
+                              json.ToString(Formatting.Indented));
+
+            Log?.LogMessage(File.ReadAllText(SecretsJsonFilePath));
+        }
+
+        internal JObject GetJObjectFromSecrets(IEnumerable<object> secrets)
+        {
             var json = new JObject();
             foreach (var secret in secrets)
             {
@@ -35,7 +44,7 @@ namespace Mobile.BuildTools.Generators
                 var value = Environment.GetEnvironmentVariable(secret.ToString());
                 if (double.TryParse(value, out double d))
                 {
-                    json.Add(key, d % 1 == 0 ? (int)d : d);
+                    json.Add(key, Math.Abs(d % 1) <= (double.Epsilon * 100) ? (int)d : d);
                 }
                 else if (bool.TryParse(value, out bool b))
                 {
@@ -46,11 +55,14 @@ namespace Mobile.BuildTools.Generators
                     json.Add(key, value);
                 }
             }
-
-            File.WriteAllText(SecretsJsonFilePath,
-                              json.ToString(Formatting.Indented));
-
-            Log.LogMessage(File.ReadAllText(SecretsJsonFilePath));
+            return json;
         }
+
+        internal IEnumerable<object> GetSecrets() =>
+            Environment.GetEnvironmentVariables()
+                           .Keys
+                           .Cast<object>()
+                           .Where(e => $"{e}".StartsWith(SecretsPrefix, StringComparison.OrdinalIgnoreCase));
+
     }
 }
