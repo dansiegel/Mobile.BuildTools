@@ -17,6 +17,8 @@ namespace Mobile.BuildTools.Tasks
 
         public string OutputPath { get; set; }
 
+        public string IntermediateOutputPath { get; set; }
+
         public override bool Execute()
         {
             if (!ValidateParameters()) return false;
@@ -39,6 +41,7 @@ namespace Mobile.BuildTools.Tasks
                         SecretsJsonFilePath = SecretsJsonFilePath,
                         BaseNamespace = RootNamespace,
                         OutputPath = OutputPath,
+                        IntermediateOutputPath = IntermediateOutputPath,
                         Log = (BuildHostLoggingHelper)Log
                     };
                     generator.Execute();
