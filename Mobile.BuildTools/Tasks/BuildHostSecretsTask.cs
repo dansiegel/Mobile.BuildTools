@@ -1,8 +1,9 @@
 using System;
 using System.IO;
 using Mobile.BuildTools.Generators;
+using Mobile.BuildTools.Logging;
 
-namespace Mobile.BuildTools.Tools
+namespace Mobile.BuildTools.Tasks
 {
     public class BuildHostSecretsTask : Microsoft.Build.Utilities.Task
     {
@@ -17,11 +18,11 @@ namespace Mobile.BuildTools.Tools
             try
             {
                 Log.LogMessage($"Output Path: {SecretsJsonFilePath}");
-                if(string.IsNullOrWhiteSpace(SecretsJsonFilePath))
+                if (string.IsNullOrWhiteSpace(SecretsJsonFilePath))
                 {
                     Log.LogMessage("No Secrets file specified");
                 }
-                else if(File.Exists(SecretsJsonFilePath))
+                else if (File.Exists(SecretsJsonFilePath))
                 {
                     Log.LogMessage("A secrets file already exists. Pleaes delete the file to regenerate the secrets");
                 }
@@ -32,13 +33,13 @@ namespace Mobile.BuildTools.Tools
                     {
                         SecretsPrefix = SecretsPrefix,
                         SecretsJsonFilePath = SecretsJsonFilePath,
-                        Log = Log
+                        Log = (BuildHostLoggingHelper)Log
                     };
 
                     generator.Execute();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.LogErrorFromException(e);
                 return false;

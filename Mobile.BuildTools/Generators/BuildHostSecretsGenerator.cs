@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Utilities;
+using Mobile.BuildTools.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -14,7 +15,7 @@ namespace Mobile.BuildTools.Generators
 
         public string SecretsJsonFilePath { get; set; }
 
-        public TaskLoggingHelper Log { get; set; }
+        public ILog Log { get; set; }
 
         public void Execute()
         {

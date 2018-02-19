@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Mobile.BuildTools.Generators;
+using Mobile.BuildTools.Logging;
 
-namespace Mobile.BuildTools.Tools
+namespace Mobile.BuildTools.Tasks
 {
     public class TemplateManifestTask : Microsoft.Build.Utilities.Task
     {
@@ -20,15 +21,15 @@ namespace Mobile.BuildTools.Tools
         {
             try
             {
-                if(string.IsNullOrWhiteSpace(ManifestOutputPath) || string.IsNullOrWhiteSpace(ManifestTemplatePath))
+                if (string.IsNullOrWhiteSpace(ManifestOutputPath) || string.IsNullOrWhiteSpace(ManifestTemplatePath))
                 {
                     Log.LogMessage("No Template path specified");
                 }
-                else if(File.Exists(ManifestOutputPath))
+                else if (File.Exists(ManifestOutputPath))
                 {
                     Log.LogMessage($"{Path.GetFileName(ManifestOutputPath)} already exists.");
                 }
-                else if(File.Exists(ManifestTemplatePath))
+                else if (File.Exists(ManifestTemplatePath))
                 {
                     Log.LogMessage($"Generating '{Path.GetFileName(ManifestOutputPath)}'");
                     var generator = new AppManifestGenerator()
@@ -36,7 +37,8 @@ namespace Mobile.BuildTools.Tools
                         Prefix = Prefix,
                         Token = Token,
                         ManifestOutputPath = ManifestOutputPath,
-                        ManifestTemplatePath = ManifestTemplatePath
+                        ManifestTemplatePath = ManifestTemplatePath,
+                        Log = (BuildHostLoggingHelper)Log,
                     };
 
                     generator.Execute();
@@ -46,7 +48,7 @@ namespace Mobile.BuildTools.Tools
                     Log.LogWarning($"Could not locate template manifest at '{ManifestTemplatePath}'");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.LogErrorFromException(e);
 

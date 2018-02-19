@@ -37,7 +37,16 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <Target Name="CopyResources" BeforeTargets="CoreCompile">
-    <Copy SourceFiles="$(NuGetPackageRoot)newtonsoft.json/10.0.3/lib/netstandard1.3/Newtonsoft.Json.dll" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="$(NuGetPackageRoot)newtonsoft.json/10.0.3/lib/netstandard1.3/Newtonsoft.Json.dll" 
+          DestinationFolder="$(OutputPath)" />
+  </Target>
+
+  <!-- <Target Name="DebugFoo" AfterTargets="GenerateBuildDependencyFile">
+    <Message Text="NuGetPackageRoot: $(NuGetPackageRoot)" />
+  </Target> -->
+  <Target Name="CopyPackage" AfterTargets="GenerateNuspec">
+    <Copy SourceFiles="$(BaseOutputPath)$(Configuration)/$(AssemblyName).$(Version).nupkg" 
+          DestinationFolder="/Users/dansiegel/LocalNuGet/" />
   </Target>
 
 </Project>

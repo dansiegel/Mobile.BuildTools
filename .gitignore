@@ -5,3 +5,9 @@ obj
 .vscode
 .mfractor
 *.userprefs
+
+
+Sample/
+packages/
+src/
+binaries/

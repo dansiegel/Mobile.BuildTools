@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Mobile.BuildTools.Logging;
 
 namespace Mobile.BuildTools.Generators
 {
@@ -35,13 +36,13 @@ namespace Mobile.BuildTools.Generators
 
         public string OutputPath { get; set; }
 
-        public TaskLoggingHelper Log { get; set; }
+        public ILog Log { get; set; }
 
         public void Execute()
         {
             var json = File.ReadAllText(SecretsJsonFilePath);
             var secrets = JObject.Parse(json);
-            
+
             string replacement = string.Empty;
 
             foreach (var secret in secrets)

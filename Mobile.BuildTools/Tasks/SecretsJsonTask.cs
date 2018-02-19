@@ -1,8 +1,9 @@
 using System;
 using System.IO;
 using Mobile.BuildTools.Generators;
+using Mobile.BuildTools.Logging;
 
-namespace Mobile.BuildTools.Tools
+namespace Mobile.BuildTools.Tasks
 {
     public class SecretsJsonTask : Microsoft.Build.Utilities.Task
     {
@@ -38,7 +39,7 @@ namespace Mobile.BuildTools.Tools
                         SecretsJsonFilePath = SecretsJsonFilePath,
                         BaseNamespace = RootNamespace,
                         OutputPath = OutputPath,
-                        Log = Log
+                        Log = (BuildHostLoggingHelper)Log
                     };
                     generator.Execute();
                 }

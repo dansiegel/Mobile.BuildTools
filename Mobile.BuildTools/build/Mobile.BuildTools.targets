@@ -1,10 +1,10 @@
 <Project>
 
-  <UsingTask TaskName="Mobile.BuildTools.Tools.SecretsJsonTask" 
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.SecretsJsonTask" 
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
-  <UsingTask TaskName="Mobile.BuildTools.Tools.TemplateManifestTask" 
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask" 
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
-  <UsingTask TaskName="Mobile.BuildTools.Tools.BuildHostSecretsTask" 
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.BuildHostSecretsTask" 
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
 
   <Target Name="TemplateManifest" 

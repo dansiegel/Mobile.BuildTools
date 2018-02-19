@@ -17,4 +17,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Mobile.BuildTools\Mobile.BuildTools.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Templates\MockManifestTemplate.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
