@@ -36,6 +36,8 @@ namespace Mobile.BuildTools.Generators
 
         public string OutputPath { get; set; }
 
+        public string IntermediateOutputPath { get; set; }
+
         public ILog Log { get; set; }
 
         public void Execute()
@@ -61,7 +63,11 @@ namespace Mobile.BuildTools.Generators
                 Directory.CreateDirectory(OutputPath);
             }
 
-            File.WriteAllText(Path.Combine(OutputPath, $"{SecretsClassName}.cs"), secretsClass);
+            var outputFile = Path.Combine(OutputPath, $"{SecretsClassName}.cs");
+            var intermediateFile = Path.Combine(IntermediateOutputPath, $"{SecretsClassName}.cs");
+            Log.LogMessage($"Writing Secrets Class to: '{outputFile}'");
+            File.WriteAllText(outputFile, secretsClass);
+            File.WriteAllText(intermediateFile, secretsClass);
         }
 
         internal string ProcessSecret(KeyValuePair<string, JToken> secret)

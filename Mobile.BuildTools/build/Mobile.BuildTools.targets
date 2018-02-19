@@ -31,7 +31,8 @@
     <TemplateManifestTask Prefix="$(ManifestVariablePrefix)"
                           Token="$(ManifestToken)"
                           ManifestTemplatePath="$(TemplateManifestPath)"
-                          ManifestOutputPath="$(ManifestDestinationPath)" />
+                          ManifestOutputPath="$(ManifestDestinationPath)"
+                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"/>
 
   </Target>
 
@@ -61,7 +62,8 @@
                      SecretsClassName="$(SecretsClassName)"
                      SecretsJsonFilePath="$(JsonSecretsFilePath)"
                      RootNamespace="$(RootNamespace)"
-                     OutputPath="$(SecretsOutputPath)" />
+                     OutputPath="$(SecretsOutputPath)"
+                     IntermediateOutputPath="$(IntermediateOutputPath)" />
 
   </Target>
 

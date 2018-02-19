@@ -17,13 +17,15 @@ namespace Mobile.BuildTools.Tasks
 
         public string ManifestOutputPath { get; set; }
 
+        public string SdkShortFrameworkIdentifier { get; set; }
+
         public override bool Execute()
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(ManifestOutputPath) || string.IsNullOrWhiteSpace(ManifestTemplatePath))
                 {
-                    Log.LogMessage("No Template path specified");
+                    Log.LogMessage($"No Template path specified for {SdkShortFrameworkIdentifier}");
                 }
                 else if (File.Exists(ManifestOutputPath))
                 {
