@@ -27,7 +27,7 @@ namespace Mobile.BuildTools.Tasks
                 }
                 else if (File.Exists(ManifestOutputPath))
                 {
-                    Log.LogMessage($"{Path.GetFileName(ManifestOutputPath)} already exists.");
+                    Log.LogMessage($"'{Path.GetFileName(ManifestOutputPath)}' already exists.");
                 }
                 else if (File.Exists(ManifestTemplatePath))
                 {
