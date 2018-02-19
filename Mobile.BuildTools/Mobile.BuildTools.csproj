@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <Version>1.0.7</Version>
+    <Version>1.0.8-pre2</Version>
     <Authors>Dan Siegel</Authors>
     <Copyright>© Dan Siegel</Copyright>
     <DevelopmentDependency>true</DevelopmentDependency>
@@ -39,14 +39,6 @@
   <Target Name="CopyResources" BeforeTargets="CoreCompile">
     <Copy SourceFiles="$(NuGetPackageRoot)newtonsoft.json/10.0.3/lib/netstandard1.3/Newtonsoft.Json.dll" 
           DestinationFolder="$(OutputPath)" />
-  </Target>
-
-  <!-- <Target Name="DebugFoo" AfterTargets="GenerateBuildDependencyFile">
-    <Message Text="NuGetPackageRoot: $(NuGetPackageRoot)" />
-  </Target> -->
-  <Target Name="CopyPackage" AfterTargets="GenerateNuspec">
-    <Copy SourceFiles="$(BaseOutputPath)$(Configuration)/$(AssemblyName).$(Version).nupkg" 
-          DestinationFolder="/Users/dansiegel/LocalNuGet/" />
   </Target>
 
 </Project>
