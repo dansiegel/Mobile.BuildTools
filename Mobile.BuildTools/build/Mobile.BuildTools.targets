@@ -32,7 +32,8 @@
                           Token="$(ManifestToken)"
                           ManifestTemplatePath="$(TemplateManifestPath)"
                           ManifestOutputPath="$(ManifestDestinationPath)"
-                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"/>
+                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                          DebugOutput="$(MobileBuildToolsDebug)" />
 
   </Target>
 
@@ -46,7 +47,8 @@
 
     <BuildHostSecretsTask SecretsPrefix="$(BuildHostSecretPrefix)"
                           SecretsJsonFilePath="$(JsonSecretsFilePath)"
-                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)" />
+                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                          DebugOutput="$(MobileBuildToolsDebug)" />
 
   </Target>
 
@@ -63,7 +65,8 @@
                      SecretsJsonFilePath="$(JsonSecretsFilePath)"
                      RootNamespace="$(RootNamespace)"
                      OutputPath="$(SecretsOutputPath)"
-                     IntermediateOutputPath="$(IntermediateOutputPath)" />
+                     IntermediateOutputPath="$(IntermediateOutputPath)"
+                     DebugOutput="$(MobileBuildToolsDebug)" />
 
   </Target>
 

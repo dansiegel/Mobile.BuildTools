@@ -50,15 +50,24 @@ As part of the Build Tools, a number of Build Properties are added to better ass
 
 \* `IsOSX` and `IsLinux` can not be determined as true when the executing MSBuildRuntimeType is `Mono`.
 
+The Mobile.BuildTools are designed to keep Secrets Safe, while still allowing you to be able to debug. During the build outputs from Mobile.BuildTools will help you see that what keys were found and show you generally what was output. Because your secrets should be safe we default to sanitizing the output. This can be easily overriden if you need to debug your build. You can do this by updating either your `Directory.build.props` or csproj as follows:
+
+```xml
+<PropertyGroup>
+  <!-- This will allow output of your actual secrets to the Build Log -->
+  <MobileBuildToolsDebug>true</MobileBuildToolsDebug>
+</PropertyGroup>
+```
+
 ### Secrets
 
 Modern Apps have a lot of secrets, or at the very least variables that may change based on an environment. Secrets could be something that really is sensitive and should be kept out of Source Control such as an OAuth Client Id, or it could be something such as the URL to use for the Backend which may change between Development, Staging, and Production. The Build Tools allow you to handle these secrets with ease in your application through the use of a JSON file.
 
 ```json
 {
-    "AppBackend": "https://backend.awesomeapp.com",
-    "ClientId": "abc123",
-    "IsSomethingTrue": true
+  "AppBackend": "https://backend.awesomeapp.com",
+  "ClientId": "abc123",
+  "IsSomethingTrue": true
 }
 ```
 
@@ -121,27 +130,27 @@ Putting this all together say that we want to use Mobile Center for Push Notific
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleDisplayName</key>
-    <string>Awesome App</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLName</key>
-            <string>com.prismlib.awesomeapp</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>msal$$AADClientId$$</string>
-            </array>
-        </dict>
-        <dict>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>mobilecenter-$$MobileCenterSecret$$</string>
-            </array>
-        </dict>
-    </array>
+  <key>CFBundleDisplayName</key>
+  <string>Awesome App</string>
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>CFBundleURLName</key>
+      <string>com.prismlib.awesomeapp</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>msal$$AADClientId$$</string>
+      </array>
+    </dict>
+    <dict>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>mobilecenter-$$MobileCenterSecret$$</string>
+      </array>
+    </dict>
+  </array>
 </dict>
 </plist>
 ```

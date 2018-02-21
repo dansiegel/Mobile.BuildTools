@@ -13,6 +13,8 @@ namespace Mobile.BuildTools.Tasks
 
         public string SdkShortFrameworkIdentifier { get; set; }
 
+        public bool? DebugOutput { get; set; }
+
         public override bool Execute()
         {
             try
@@ -33,6 +35,7 @@ namespace Mobile.BuildTools.Tasks
                     {
                         SecretsPrefix = SecretsPrefix,
                         SecretsJsonFilePath = SecretsJsonFilePath,
+                        DebugOutput = DebugOutput,
                         Log = (BuildHostLoggingHelper)Log
                     };
 

@@ -19,6 +19,8 @@ namespace Mobile.BuildTools.Tasks
 
         public string SdkShortFrameworkIdentifier { get; set; }
 
+        public bool? DebugOutput { get; set; }
+
         public override bool Execute()
         {
             try
@@ -40,6 +42,7 @@ namespace Mobile.BuildTools.Tasks
                         Token = Token,
                         ManifestOutputPath = ManifestOutputPath,
                         ManifestTemplatePath = ManifestTemplatePath,
+                        DebugOutput = DebugOutput,
                         Log = (BuildHostLoggingHelper)Log,
                     };
 

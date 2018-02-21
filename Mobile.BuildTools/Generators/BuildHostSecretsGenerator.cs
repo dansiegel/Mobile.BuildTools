@@ -15,10 +15,17 @@ namespace Mobile.BuildTools.Generators
 
         public string SecretsJsonFilePath { get; set; }
 
+        public bool? DebugOutput { get; set; }
+
         public ILog Log { get; set; }
 
         public void Execute()
         {
+            if (DebugOutput == null)
+            {
+                DebugOutput = false;
+            }
+
             var secrets = GetSecrets();
 
             if (!secrets.Any())
@@ -32,7 +39,17 @@ namespace Mobile.BuildTools.Generators
 
             WriteJsonFile(SecretsJsonFilePath, json.ToString(Formatting.Indented));
 
-            Log?.LogMessage(File.ReadAllText(SecretsJsonFilePath));
+            Log?.LogMessage((bool)DebugOutput ? json.ToString(Formatting.Indented) : SanitizeJObject(json));
+        }
+
+        internal string SanitizeJObject(JObject jObject)
+        {
+            foreach(var pair in jObject)
+            {
+                jObject[pair.Key] = "*****";
+            }
+
+            return jObject.ToString(Formatting.Indented);
         }
 
         internal void WriteJsonFile(string path, string json)

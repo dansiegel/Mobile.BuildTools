@@ -19,6 +19,8 @@ namespace Mobile.BuildTools.Generators
 
         public string ManifestOutputPath { get; set; }
 
+        public bool? DebugOutput { get; set; }
+
         public ILog Log { get; set; }
 
         public void Execute()
@@ -31,6 +33,11 @@ namespace Mobile.BuildTools.Generators
             if (!File.Exists(ManifestTemplatePath))
             {
                 Log?.LogWarning("There is no Template Manifest at the path: '{0}'", ManifestTemplatePath);
+            }
+
+            if(DebugOutput == null)
+            {
+                DebugOutput = false;
             }
 
             var template = File.ReadAllText(ManifestTemplatePath);

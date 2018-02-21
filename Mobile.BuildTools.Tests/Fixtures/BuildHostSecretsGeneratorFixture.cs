@@ -2,6 +2,7 @@ using System;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Tests.Mocks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -77,6 +78,20 @@ namespace Mobile.BuildTools.Tests.Fixtures
             }
 
             Assert.Contains($"{SecretsPrefix}Test1", secrets);
+        }
+
+        [Fact]
+        public void JObjectIsSanitized()
+        {
+            var generator = GetGenerator();
+            var secretValue = "TestSecret";
+            var json = JObject.Parse($"{{\"Secret\":\"{secretValue}\"}}");
+            Assert.Equal(secretValue, json["Secret"]);
+
+            var sanitized = generator.SanitizeJObject(json);
+            var secret = JsonConvert.DeserializeAnonymousType(sanitized, new { Secret = "" });
+            Assert.NotEqual(secretValue, secret.Secret);
+            Assert.Equal("*****", secret.Secret);
         }
     }
 }

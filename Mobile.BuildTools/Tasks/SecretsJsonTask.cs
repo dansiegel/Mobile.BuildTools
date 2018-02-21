@@ -19,6 +19,8 @@ namespace Mobile.BuildTools.Tasks
 
         public string IntermediateOutputPath { get; set; }
 
+        public bool? DebugOutput { get; set; }
+
         public override bool Execute()
         {
             if (!ValidateParameters()) return false;
@@ -42,6 +44,7 @@ namespace Mobile.BuildTools.Tasks
                         BaseNamespace = RootNamespace,
                         OutputPath = OutputPath,
                         IntermediateOutputPath = IntermediateOutputPath,
+                        DebugOutput = DebugOutput,
                         Log = (BuildHostLoggingHelper)Log
                     };
                     generator.Execute();
