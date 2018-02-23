@@ -1,10 +1,12 @@
-using Microsoft.Build.Utilities;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Generators
 {
@@ -45,6 +47,8 @@ namespace Mobile.BuildTools.Generators
 
         public ILog Log { get; set; }
 
+        public ITaskItem[] GeneratedFiles { get; private set; }
+
         public void Execute()
         {
             if (DebugOutput == null)
@@ -77,6 +81,9 @@ namespace Mobile.BuildTools.Generators
             var outputFile = Path.Combine(OutputPath, $"{SecretsClassName}.cs");
             var intermediateFile = Path.Combine(IntermediateOutputPath, $"{SecretsClassName}.cs");
             Log.LogMessage($"Writing Secrets Class to: '{outputFile}'");
+            GeneratedFiles = File.Exists(outputFile) ? new ITaskItem[0] : new ITaskItem[] {
+                new TaskItem(ProjectCollection.Escape(outputFile))
+            };
             File.WriteAllText(outputFile, secretsClass);
             File.WriteAllText(intermediateFile, secretsClass);
         }

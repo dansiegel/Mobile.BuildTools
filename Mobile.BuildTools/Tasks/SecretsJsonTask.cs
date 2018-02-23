@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using Microsoft.Build.Framework;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Logging;
 
@@ -7,6 +9,8 @@ namespace Mobile.BuildTools.Tasks
 {
     public class SecretsJsonTask : Microsoft.Build.Utilities.Task
     {
+        private ITaskItem[] _generatedCodeFiles;
+
         public string ProjectBasePath { get; set; }
 
         public string SecretsClassName { get; set; }
@@ -20,6 +24,9 @@ namespace Mobile.BuildTools.Tasks
         public string IntermediateOutputPath { get; set; }
 
         public string DebugOutput { get; set; }
+
+        [Output]
+        public ITaskItem[] GeneratedCodeFiles => _generatedCodeFiles ?? new ITaskItem[0];
 
         public override bool Execute()
         {
@@ -49,6 +56,7 @@ namespace Mobile.BuildTools.Tasks
                         Log = (BuildHostLoggingHelper)Log
                     };
                     generator.Execute();
+                    _generatedCodeFiles = generator.GeneratedFiles;
                 }
                 else
                 {

@@ -66,7 +66,12 @@
                      RootNamespace="$(RootNamespace)"
                      OutputPath="$(SecretsOutputPath)"
                      IntermediateOutputPath="$(IntermediateOutputPath)"
-                     DebugOutput="$(MobileBuildToolsDebug)" />
+                     DebugOutput="$(MobileBuildToolsDebug)">
+        <Output ItemName="FilesWrite"
+                TaskParameter="GeneratedCodeFiles"/>
+        <Output ItemName="Compile"
+                TaskParameter="GeneratedCodeFiles"/>
+    </SecretsJsonTask>
 
   </Target>
 
