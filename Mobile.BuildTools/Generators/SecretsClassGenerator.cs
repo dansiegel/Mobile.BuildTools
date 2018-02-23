@@ -67,7 +67,7 @@ namespace Mobile.BuildTools.Generators
             replacement = Regex.Replace(replacement, "\n\n$", "");
 
             var secretsClass = GenerateClass(replacement);
-            Log.LogMessage((bool)DebugOutput ? secretsClass : GenerateClass(safeReplacement));
+            Log.LogMessage((bool)DebugOutput ? secretsClass : GenerateClass(Regex.Replace(safeReplacement, "\n\n$", "")));
 
             if (!Directory.Exists(OutputPath))
             {
