@@ -19,7 +19,7 @@ namespace Mobile.BuildTools.Tasks
 
         public string IntermediateOutputPath { get; set; }
 
-        public bool? DebugOutput { get; set; }
+        public string DebugOutput { get; set; }
 
         public override bool Execute()
         {
@@ -35,7 +35,8 @@ namespace Mobile.BuildTools.Tasks
                     Log.LogMessage($"RootNamespace: {RootNamespace}");
                     Log.LogMessage($"OutputPath: {OutputPath}");
 
-
+                    bool debug = false;
+                    bool.TryParse(DebugOutput, out debug);
                     var generator = new SecretsClassGenerator()
                     {
                         ProjectBasePath = ProjectBasePath,
@@ -44,7 +45,7 @@ namespace Mobile.BuildTools.Tasks
                         BaseNamespace = RootNamespace,
                         OutputPath = OutputPath,
                         IntermediateOutputPath = IntermediateOutputPath,
-                        DebugOutput = DebugOutput,
+                        DebugOutput = debug,
                         Log = (BuildHostLoggingHelper)Log
                     };
                     generator.Execute();

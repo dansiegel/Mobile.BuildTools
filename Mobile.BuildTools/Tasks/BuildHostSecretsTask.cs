@@ -13,7 +13,7 @@ namespace Mobile.BuildTools.Tasks
 
         public string SdkShortFrameworkIdentifier { get; set; }
 
-        public bool? DebugOutput { get; set; }
+        public string DebugOutput { get; set; }
 
         public override bool Execute()
         {
@@ -31,11 +31,13 @@ namespace Mobile.BuildTools.Tasks
                 else
                 {
                     ValidateSecretsPrefix();
+                    bool debug = false;
+                    bool.TryParse(DebugOutput, out debug);
                     var generator = new BuildHostSecretsGenerator()
                     {
                         SecretsPrefix = SecretsPrefix,
                         SecretsJsonFilePath = SecretsJsonFilePath,
-                        DebugOutput = DebugOutput,
+                        DebugOutput = debug,
                         Log = (BuildHostLoggingHelper)Log
                     };
 

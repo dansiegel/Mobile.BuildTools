@@ -19,7 +19,7 @@ namespace Mobile.BuildTools.Tasks
 
         public string SdkShortFrameworkIdentifier { get; set; }
 
-        public bool? DebugOutput { get; set; }
+        public string DebugOutput { get; set; }
 
         public override bool Execute()
         {
@@ -36,13 +36,15 @@ namespace Mobile.BuildTools.Tasks
                 else if (File.Exists(ManifestTemplatePath))
                 {
                     Log.LogMessage($"Generating '{Path.GetFileName(ManifestOutputPath)}'");
+                    bool debug = false;
+                    bool.TryParse(DebugOutput, out debug);
                     var generator = new AppManifestGenerator()
                     {
                         Prefix = Prefix,
                         Token = Token,
                         ManifestOutputPath = ManifestOutputPath,
                         ManifestTemplatePath = ManifestTemplatePath,
-                        DebugOutput = DebugOutput,
+                        DebugOutput = debug,
                         Log = (BuildHostLoggingHelper)Log,
                     };
 
