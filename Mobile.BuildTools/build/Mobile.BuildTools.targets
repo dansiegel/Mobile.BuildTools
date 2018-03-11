@@ -8,7 +8,7 @@
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
 
   <Target Name="TemplateManifest" 
-          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
+          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build;_CleanMsymArchive;_CleanAppBundle;PrepareForBuild;_CoreCompileInterfaceDefinitions;_SetLatestTargetFrameworkVersion">
     <PropertyGroup>
       <BuildResourcesDirectoryName Condition=" '$(BuildResourcesDirectoryName)' == '' ">build</BuildResourcesDirectoryName>
       <BuildResourcesDirRootPath Condition=" '$(BuildResourcesDirRootPath)' == '' ">$([System.IO.Path]::Combine($(SolutionDir), $(BuildResourcesDirectoryName)))</BuildResourcesDirRootPath>
