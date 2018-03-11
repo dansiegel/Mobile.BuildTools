@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <Version>1.0.10</Version>
+    <Version>1.0.11</Version>
     <Authors>Dan Siegel</Authors>
     <Copyright>© Dan Siegel</Copyright>
     <DevelopmentDependency>true</DevelopmentDependency>
@@ -34,10 +34,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <Target Name="CopyResources" BeforeTargets="CoreCompile">
+  <Target Name="CopyResources" BeforeTargets="CoreCompile;CoreGenerateAssemblyInfo">
     <Copy SourceFiles="$(NuGetPackageRoot)newtonsoft.json/10.0.3/lib/netstandard1.3/Newtonsoft.Json.dll" 
           DestinationFolder="$(OutputPath)" />
   </Target>

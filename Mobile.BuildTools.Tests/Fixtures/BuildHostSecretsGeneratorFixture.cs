@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Tests.Mocks;
 using Newtonsoft.Json;
