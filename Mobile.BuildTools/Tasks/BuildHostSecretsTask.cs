@@ -31,8 +31,7 @@ namespace Mobile.BuildTools.Tasks
                 else
                 {
                     ValidateSecretsPrefix();
-                    bool debug = false;
-                    bool.TryParse(DebugOutput, out debug);
+                    bool.TryParse(DebugOutput, out bool debug);
                     var generator = new BuildHostSecretsGenerator()
                     {
                         SecretsPrefix = SecretsPrefix,

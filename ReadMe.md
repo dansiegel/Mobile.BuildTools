@@ -2,12 +2,14 @@
 
 There is a lot of talk these days about DevOps. One of the problems with DevOps is that it can be really challenging. Far too many companies suffer from reliance on poor practices that their Development teams know need to be fixed. Today we have a variety of Build Systems that are at our disposal and we no longer need to rely on such poor practices. Mobile.BuildTools can help turn your run of the mill project into a streamlined DevOps masterpiece.
 
-Mobile.BuildTools is split into two basic categories:
+Mobile.BuildTools is split into the following categories:
 
 1. Understanding your environment.
   After installing Mobile.BuildTools you will immediately have access to Build Properties that you can utilize in your own custom Build Tasks to determine information about both your Build Host and the Project MSBuild is about to compile.
 1. Protecting Application Secrets
   Most applications these days have some sort of Client Id or Backend Uri that should be excluded from Source Control. It's easy to understand why a Client Id doesn't belong in Source Control, but protecting things like a Backend Uri
+1. Enhancing the DevOps Experience
+  There are certain tasks that can be painful such as automatically increasing the build version without having to check in a change to source control
 
 ## Background
 
@@ -162,6 +164,61 @@ As you can see from this sample we can protect our client id's by having a Token
 | Manifest_AADClientId | 00000000-0000-0000-0000-000000000000 |
 | Manifest_MobileCenterSecret | 11111111-1111-1111-1111-111111111111 |
 
+### Automatic Build Versioning
+
+The Mobile Build tools supports automatically incrementing the Build Version for Xamarin iOS and Xamarin Android projects. This can work EVERYWHERE including your local desktop/laptop. This is however an entirely Opt-In feature!
+
+Automatic Build Versioning supports the following Versioning Environments:
+
+| Environment | Description |
+| ----------- | ----------- |
+| All | Versioning will occur on every build. |
+| BuildHost | Versioning will only occur if a \*Supported Build Host is detected. |
+| Local | Versioning will only occur if a \*Supported Build Host is not detected. |
+
+Automatic Build Versioning supports the following `Behavior`'s:
+
+| Behavior | Description |
+| -------- | ----------- |
+| Off | Automatic Versioning is Disabled |
+| PreferBuildNumber | When running on a \*Supported Build Host it will use the Build Number, otherwise it will use the current timestamp |
+| Timestamp | Automatic Versioning will use the timestamp for the build |
+
+\* Supported Build Hosts:
+
+  - AppCenter
+  - AppVeyor
+  - Jenkins
+  - VSTS
+
+#### Configuring Automatic Versioning
+
+To enable Automatic Versioning you will need to open your iOS or Android project edit the main `PropertyGroup`.
+
+| Property | Default Value | Notes |
+| -------- | ------------- | ----- |
+| AutomaticVersionOffset | 0 | This value will be added to your Version Number |
+| AutomaticVersionEnvironment | All | By default this will run everywhere |
+| AutomaticVersionBehavior | n/a | The property must be set to `PreferBuildNumber` or `Timestamp` to enable the build task. |
+
+```xml
+<PropertyGroup>
+  <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+  <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+  <ProductVersion>8.0.30703</ProductVersion>
+  <SchemaVersion>2.0</SchemaVersion>
+  <ProjectGuid>{99D11950-C303-4761-8045-4BCEEACCB226}</ProjectGuid>
+  <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  <OutputType>Exe</OutputType>
+  <RootNamespace>App1.iOS</RootNamespace>
+  <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+  <AssemblyName>App1.iOS</AssemblyName>
+  <NuGetPackageImportStamp>
+  </NuGetPackageImportStamp>
+  <!-- Enable Automatic Versioning -->
+  <AutomaticVersionBehavior>PreferBuildNumber</AutomaticVersionBehavior>
+</PropertyGroup>
+```
 
 [PrismNuGetShield]: https://img.shields.io/nuget/vpre/Prism.MFractor.Config.svg
 [QuickStartNuGetShield]: https://img.shields.io/nuget/vpre/Prism.QuickStart.MFractor.Config.svg
