@@ -6,6 +6,7 @@
     <VersionPrefix>1.0.12</VersionPrefix>
     <VersionPrefix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(VersionPrefix).$(BUILD_BUILDNUMBER)</VersionPrefix>
     <VersionSuffix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">ci</VersionSuffix>
+    <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_RELEASE)' == 'true' "></VersionSuffix>
     <Authors>Dan Siegel</Authors>
     <Copyright>© Dan Siegel</Copyright>
