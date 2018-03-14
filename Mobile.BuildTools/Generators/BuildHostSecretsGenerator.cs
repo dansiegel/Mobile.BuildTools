@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Generators
 {
-    public class BuildHostSecretsGenerator
+    public class BuildHostSecretsGenerator : IGenerator
     {
         public string SecretsPrefix { get; set; }
 

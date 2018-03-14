@@ -7,7 +7,7 @@ using Mobile.BuildTools.Logging;
 
 namespace Mobile.BuildTools.Generators
 {
-    public class AppManifestGenerator
+    public class AppManifestGenerator : IGenerator
     {
         internal const string DefaultToken = @"\$\$";
 
