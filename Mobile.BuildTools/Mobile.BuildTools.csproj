@@ -3,7 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <Version>1.0.11</Version>
+    <VersionPrefix>1.0.12</VersionPrefix>
+    <VersionPrefix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(VersionPrefix).$(BUILD_BUILDNUMBER)</VersionPrefix>
+    <VersionSuffix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">ci</VersionSuffix>
+    <VersionSuffix Condition=" '$(IS_RELEASE)' == 'true' "></VersionSuffix>
     <Authors>Dan Siegel</Authors>
     <Copyright>© Dan Siegel</Copyright>
     <DevelopmentDependency>true</DevelopmentDependency>
