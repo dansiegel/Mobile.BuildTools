@@ -11,7 +11,7 @@
     <Authors>Dan Siegel</Authors>
     <Copyright>© Dan Siegel</Copyright>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <Description>Additional MSBuild targets and properties for Xamarin projects. Enables better development practices with CI/CD pipelines</Description>
+    <Description>Additional MSBuild targets and properties for .NET projects. Especially enhances Xamarin targets. Enables better development practices with CI/CD pipelines</Description>
     <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
     <PackageLicenseUrl>https://github.com/dansiegel/Mobile.BuildTools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools/</PackageProjectUrl>
