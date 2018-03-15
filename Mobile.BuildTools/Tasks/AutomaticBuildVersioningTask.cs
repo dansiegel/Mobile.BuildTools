@@ -23,7 +23,7 @@ namespace Mobile.BuildTools.Tasks
             {
                 var generator = GetGenerator();
 
-                if(generator != null)
+                if(generator == null)
                 {
                     Log.LogMessage("The current target framework is not supported for Automatic Versioning");
                     return true;
@@ -35,25 +35,19 @@ namespace Mobile.BuildTools.Tasks
                     return true;
                 }
 
-                VersionEnvironment versionEnvironment = Versioning.VersionEnvironment.All;
-                if(!string.IsNullOrWhiteSpace(VersionEnvironment))
-                {
-                    Enum.TryParse(VersionEnvironment, out versionEnvironment);
-                }
-
-                if(CIBuildEnvironmentUtils.IsBuildHost && versionEnvironment == Versioning.VersionEnvironment.Local)
+                if(CIBuildEnvironmentUtils.IsBuildHost && generator.VersionEnvironment == Versioning.VersionEnvironment.Local)
                 {
                     Log.LogMessage("Your current settings are to only build on your local machine, however it appears you are building on a Build Host.");
                     return true;
                 }
 
-                generator.VersionEnvironment = versionEnvironment;
-
+                Log.LogMessage("Executing Automatic Version Generator");
                 generator.Execute();
             }
             catch (Exception e)
             {
-                Log.LogErrorFromException(e);
+                Log.LogMessage(e.ToString());
+                //Log.LogErrorFromException(e);
 
                 return false;
             }

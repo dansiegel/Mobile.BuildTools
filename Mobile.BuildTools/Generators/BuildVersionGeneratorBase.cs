@@ -47,7 +47,9 @@ namespace Mobile.BuildTools.Generators
             }
 
             var buildNumber = GetBuildNumber();
+            Log.LogMessage($"Build Number: {buildNumber}");
 
+            Log.LogMessage("Processing Manifest");
             ProcessManifest(manifestPath, buildNumber);
         }
 
@@ -59,8 +61,12 @@ namespace Mobile.BuildTools.Generators
         {
             if(Behavior == Behavior.PreferBuildNumber && CIBuildEnvironmentUtils.IsBuildHost)
             {
-                var buildId = int.Parse(CIBuildEnvironmentUtils.BuildNumber);
-                return $"{buildId + VersionOffset}";
+                if(int.TryParse(CIBuildEnvironmentUtils.BuildNumber, out int buildId))
+                {
+                    return $"{buildId + VersionOffset}";
+                }
+
+                return CIBuildEnvironmentUtils.BuildNumber;
             }
 
             return $"{VersionOffset + DateTimeOffset.Now.ToUnixTimeSeconds()}";
@@ -68,10 +74,19 @@ namespace Mobile.BuildTools.Generators
 
         protected string SanitizeVersion(string version)
         {
-            var parts = version.Split('.');
-            return parts.LastOrDefault().Count() > 4 ?
-                   string.Join(".", parts.Where(p => p != parts.LastOrDefault())) :
-                   version;
+            try
+            {
+                var parts = version.Split('.');
+                return parts.LastOrDefault().Count() > 4 ?
+                    string.Join(".", parts.Where(p => p != parts.LastOrDefault())) :
+                    version;
+            }
+            catch(Exception e)
+            {
+                Log.LogMessage($"Error Sanitizing Version String");
+                Log.LogWarning(e.ToString());
+                return version;
+            }
         }
     }
 }
