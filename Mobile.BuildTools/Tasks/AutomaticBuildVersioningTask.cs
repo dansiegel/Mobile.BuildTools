@@ -25,7 +25,7 @@ namespace Mobile.BuildTools.Tasks
 
                 if(generator == null)
                 {
-                    Log.LogMessage("The current target framework is not supported for Automatic Versioning");
+                    Log.LogMessage($"The current target framework '{SdkShortFrameworkIdentifier}' is not supported for Automatic Versioning");
                     return true;
                 }
 
