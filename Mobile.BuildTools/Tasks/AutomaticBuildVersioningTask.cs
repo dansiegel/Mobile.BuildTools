@@ -13,6 +13,7 @@ namespace Mobile.BuildTools.Tasks
         public string ProjectPath { get; set; }
         public string VersionOffset { get; set; }
 
+        public string TargetFrameworkIdentifier { get; set; }
         public string SdkShortFrameworkIdentifier { get; set; }
 
         public string DebugOutput { get; set; }
@@ -69,8 +70,12 @@ namespace Mobile.BuildTools.Tasks
                 Enum.TryParse(VersionEnvironment, out versionEnvironment);
             }
 
-            switch (SdkShortFrameworkIdentifier)
+            var framework = string.IsNullOrWhiteSpace(SdkShortFrameworkIdentifier) ? TargetFrameworkIdentifier : SdkShortFrameworkIdentifier;
+
+            switch (framework)
             {
+                case "MonoAndroid":
+                case "Xamarin.Android":
                 case "monoandroid":
                 case "xamarinandroid":
                 case "xamarin.android":
@@ -83,6 +88,7 @@ namespace Mobile.BuildTools.Tasks
                         Behavior = behavior,
                         VersionEnvironment = versionEnvironment
                     };
+                case "Xamarin.iOS":
                 case "xamarinios":
                 case "xamarin.ios":
                     return new iOSAutomaticBuildVersionGenerator
@@ -97,9 +103,11 @@ namespace Mobile.BuildTools.Tasks
                 case "win":
                 case "uap":
                     return null;
+                case "Xamarin.Mac":
                 case "xamarinmac":
                 case "xamarin.mac":
                     return null;
+                case "Tizen":
                 case "tizen":
                     return null;
                 default:

@@ -89,6 +89,7 @@
                                   VersionEnvironment="$(AutomaticVersionEnvironment)"
                                   VersionOffset="$(AutomaticVersionOffset)"
                                   ProjectPath="$(MSBuildProjectDirectory)"
+                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                   SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
                                   DebugOutput="$(MobileBuildToolsDebug)" />
   </Target>
