@@ -15,7 +15,7 @@ namespace Mobile.BuildTools.Generators
         {
             var manifest = XElement.Parse(File.ReadAllText(path));
             ProcessAndroidAttributes(manifest.FirstAttribute, buildNumber);
-            manifest.Save(File.Open(path, FileMode.CreateNew));
+            manifest.Save(File.Open(path, FileMode.OpenOrCreate));
         }
 
         private void ProcessAndroidAttributes(XAttribute attribute, string buildNumber)
