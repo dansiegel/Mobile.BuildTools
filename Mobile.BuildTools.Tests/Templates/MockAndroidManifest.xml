@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
+          android:versionName="1.0"
+          android:installLocation="internalOnly"
+          package="com.avantipoint.awesomeapp">
+  <uses-sdk android:minSdkVersion="21" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <application android:label="AwesomeApp" android:icon="@mipmap/ic_launcher">
+    <activity android:name="microsoft.identity.client.BrowserTabActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="msal$$AADClientId$$" android:host="auth" />
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>

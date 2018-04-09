@@ -18,6 +18,9 @@
     <ProjectReference Include="..\Mobile.BuildTools\Mobile.BuildTools.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Templates\MockAndroidManifest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Templates\MockManifestTemplate.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Tests.Mocks;
 using Newtonsoft.Json;
@@ -12,6 +13,8 @@ namespace Mobile.BuildTools.Tests.Fixtures
     public class AppManifestGeneratorFixture
     {
         private const string TestPrefix = "XunitTest_";
+        private static readonly string TemplateAndroidManifestPath = @"Templates/MockAndroidManifest.xml";
+        private static readonly string TemplateAndroidManifestOutputPath = @"Generated/AndroidManifest.xml";
         private static readonly string TemplateManifestPath = @"Templates/MockManifestTemplate.json";
         private static readonly string TemplateManifestOutputPath = @"Generated/MockManifest.json";
 
@@ -81,6 +84,38 @@ namespace Mobile.BuildTools.Tests.Fixtures
 
             Assert.Equal(nameof(AppManifestGeneratorFixture), json.CustomTokenParameter);
             Assert.Equal("$$TemplatedParameter$$", json.TemplatedParameter);
+        }
+
+        [Fact]
+        public void ProcessingDoesNotCorruptAndroidManifest()
+        {
+            var generator = CreateGenerator();
+            var template = File.ReadAllText(TemplateAndroidManifestPath);
+            var guid = Guid.NewGuid().ToString();
+            Environment.SetEnvironmentVariable("XunitTest_AADClientId", guid);
+
+            var matches = generator.GetMatches(template);
+            var match = matches.First();
+            Assert.Equal("$$AADClientId$$", match.Value);
+
+            generator.ManifestTemplatePath = TemplateAndroidManifestPath;
+            generator.ManifestOutputPath = TemplateAndroidManifestOutputPath;
+            generator.DebugOutput = true;
+
+            var ex = Record.Exception(() => generator.Execute());
+            Assert.Null(ex);
+
+            var generatedTemplate = File.ReadAllText(TemplateAndroidManifestOutputPath);
+            ex = Record.Exception(() =>
+            {
+                var doc = new XmlDocument();
+                doc.LoadXml(generatedTemplate);
+            });
+
+            Assert.Null(ex);
+
+            Assert.DoesNotContain("msal$$AADClientId$$", generatedTemplate);
+            Assert.Contains($"msal{guid}", generatedTemplate);
         }
     }
 }
