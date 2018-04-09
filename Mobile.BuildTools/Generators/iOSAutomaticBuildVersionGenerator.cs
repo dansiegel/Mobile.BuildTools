@@ -13,7 +13,7 @@ namespace Mobile.BuildTools.Generators
             var infoPlist = XElement.Parse(File.ReadAllText(plistPath));
             var dict = GetDictionary(infoPlist);
             WalkDictionary(dict, buildNumber);
-            infoPlist.Save(File.Open(plistPath, FileMode.OpenOrCreate));
+            File.WriteAllText(plistPath, infoPlist.ToString());
         }
 
         private XElement GetDictionary(XElement plist)
