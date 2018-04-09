@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <VersionPrefix>1.0.12</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <VersionPrefix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(VersionPrefix).$(BUILD_BUILDNUMBER)</VersionPrefix>
     <VersionSuffix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">ci</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
