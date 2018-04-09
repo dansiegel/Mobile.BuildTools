@@ -20,6 +20,8 @@ namespace Mobile.BuildTools.Generators
         public ILog Log { get; set; }
         public bool? DebugOutput { get; set; }
 
+        internal string BuildNumber { get; private set; }
+
         public void Execute()
         {
             if (DebugOutput == null)
@@ -46,11 +48,11 @@ namespace Mobile.BuildTools.Generators
                 return;
             }
 
-            var buildNumber = GetBuildNumber();
-            Log.LogMessage($"Build Number: {buildNumber}");
+            BuildNumber = GetBuildNumber();
+            Log.LogMessage($"Build Number: {BuildNumber}");
 
             Log.LogMessage("Processing Manifest");
-            ProcessManifest(manifestPath, buildNumber);
+            ProcessManifest(manifestPath, BuildNumber);
         }
 
         protected abstract void ProcessManifest(string path, string buildNumber);
