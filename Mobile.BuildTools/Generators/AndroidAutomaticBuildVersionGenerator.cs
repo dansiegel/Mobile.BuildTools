@@ -24,9 +24,11 @@ namespace Mobile.BuildTools.Generators
             {
                 case "versionCode":
                     attribute.Value = buildNumber;
+                    Log.LogMessage($"versionCode: {attribute.Value}");
                     break;
                 case "versionName":
                     attribute.Value = $"{SanitizeVersion(attribute.Value)}.{buildNumber}";
+                    Log.LogMessage($"versionName: {attribute.Value}");
                     break;
             }
 
