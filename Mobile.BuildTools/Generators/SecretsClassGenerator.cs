@@ -93,7 +93,7 @@ namespace Mobile.BuildTools.Generators
             var outputValue = safeOutput ? SafePlaceholder : value;
             if (bool.TryParse(value, out bool b))
             {
-                return $"{TabSpace}{TabSpace}internal const bool {secret.Key} = {outputValue};\n\n";
+                return $"{TabSpace}{TabSpace}internal const bool {secret.Key} = {outputValue.ToLower()};\n\n";
             }
             else if (double.TryParse(value, out double d))
             {
