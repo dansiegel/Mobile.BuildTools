@@ -21,6 +21,10 @@ If these projects have helped you reduce time to develop and made your app bette
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/dansiegel)
 
+## Samples
+
+- [AppCenter.DemoApp](https://github.com/dansiegel/AppCenter.DemoApp) - Sample Xamarin Forms app that protects the Info.plist &amp; AndroidManifest.xml, injects the AppCenter App Secrets, and automatically increments the app version on each build using timestamps locally and the Build Id when on built AppCenter.
+
 ## Prism MFractor Config
 
 As part of the DevOps tooling, you can now easily include an MFractor config to enable MFractor to better utilize Prism naming conventions. If you have modified your project structure you can always override individual settings by adding your own MFractor config. More information can be found in the [MFractor Docs](http://docs.mfractor.com/). Configurations are available both for generic Prism applications and those using the Prism QuickStart Templates.
@@ -88,6 +92,10 @@ namespace YourApp.Helpers
     }
 }
 ```
+
+#### v1.1 and beyond
+
+Starting in v1.1 a new behavior has been introduced for the Secrets task. By default the Secrets class will be generated in the Intermediate Output Folder (`{ProjectPath}\obj\Secrets.cs`) rather than in the project itself (`{ProjectPath}\Helpers\Secrets.cs`). Since standard .gitignore files already ignore this folder you will only need to add an ignore for the secrets.json file. If you prefer to see the generated class and don't mind having the file ignored, all you need to do is create a file in the standard output path as shown above and it will update that file instead. When updating from 1.0, you will not automatically see any changes because you already have the Secrets.cs in your project. Deleting the file in your project will allow the Secrets task to change to the new behavior.
 
 ### Build Host Secrets
 

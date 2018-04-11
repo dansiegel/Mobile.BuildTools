@@ -73,19 +73,15 @@ namespace Mobile.BuildTools.Generators
             var secretsClass = GenerateClass(replacement);
             Log.LogMessage((bool)DebugOutput ? secretsClass : GenerateClass(Regex.Replace(safeReplacement, "\n\n$", "")));
 
-            if (!Directory.Exists(OutputPath))
-            {
-                Directory.CreateDirectory(OutputPath);
-            }
-
-            var outputFile = Path.Combine(OutputPath, $"{SecretsClassName}.cs");
+            var projectFile = Path.Combine(OutputPath, $"{SecretsClassName}.cs");
             var intermediateFile = Path.Combine(IntermediateOutputPath, $"{SecretsClassName}.cs");
+            var outputFile = File.Exists(projectFile) ? projectFile : intermediateFile;
             Log.LogMessage($"Writing Secrets Class to: '{outputFile}'");
-            GeneratedFiles = File.Exists(outputFile) ? new ITaskItem[0] : new ITaskItem[] {
+            GeneratedFiles = new ITaskItem[] {
                 new TaskItem(ProjectCollection.Escape(outputFile))
             };
+
             File.WriteAllText(outputFile, secretsClass);
-            File.WriteAllText(intermediateFile, secretsClass);
         }
 
         internal string GenerateClass(string replacement) =>
