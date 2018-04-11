@@ -8,6 +8,8 @@
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
   <UsingTask TaskName="Mobile.BuildTools.Tasks.AutomaticBuildVersioningTask"
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.CopyAppOutputsTask"
+             AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
 
   <Target Name="TemplateManifest" 
           BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build;_CleanMsymArchive;_CleanAppBundle;PrepareForBuild;_CoreCompileInterfaceDefinitions;_SetLatestTargetFrameworkVersion">
@@ -92,6 +94,45 @@
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                   SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
                                   DebugOutput="$(MobileBuildToolsDebug)" />
+  </Target>
+
+  <Target Name="IPACopyToStagingDirectory"
+          AfterTargets="_ZipIpa"
+          DependsOnTargets="_ZipIpa"
+          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' ">
+
+    <PropertyGroup>
+      <__IpaFileName>$([System.IO.Path]::GetFileNameWithoutExtension('$(IpaPackagePath)'))</__IpaFileName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <__Generated_dSYM Include="$([System.IO.Path]::GetDirectoryName('$(IpaPackagePath)'))\**" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(__Generated_dSYM)" 
+          DestinationFolder="$(BuildToolsArtifactOutputPath)\$(__IpaFileName).app.dSYM\%(RecursiveDir)" 
+          SkipUnchangedFiles="false" 
+          OverwriteReadOnlyFiles="true" 
+          Retries="3" 
+          RetryDelayMilliseconds="300" />
+
+    <Copy SourceFiles="$(IpaPackagePath)" 
+          DestinationFiles="$(BuildToolsArtifactOutputPath)\$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))" />
+
+  </Target>
+
+  <Target Name="APKCopyToStagingDirectory"
+          AfterTargets="_CreateBaseApk"
+          DependsOnTargets="_CreateBaseApk"
+          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' ">
+    
+    <ItemGroup>
+      <__Generated_APK Include="$(OutputPath)\**\*.apk" />
+    </ItemGroup>
+
+    <Copy SourceFiles="$(__Generated_APK)" 
+          DestinationFiles="$(BuildToolsArtifactOutputPath)\%(Filename)%(Extension)" />
+
   </Target>
 
 </Project>

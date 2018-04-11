@@ -16,6 +16,18 @@
     <IsMacOSProject>false</IsMacOSProject>
     <IsTizenProject>false</IsTizenProject>
     <MobileBuildToolsTargets>$(MSBuildThisFileDirectory)Mobile.BuildTools.targets</MobileBuildToolsTargets>
+    <BuildToolsArtifactOutputPath>$([System.IO.Path]::Combine('$(SolutionDir)', 'Artifacts'))</BuildToolsArtifactOutputPath>
+    <BuildToolsArtifactOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</BuildToolsArtifactOutputPath>
+    <IsAppCenter Condition=" '$(IsAppCenter)' == '' ">false</IsAppCenter>
+    <IsAppCenter Condition=" '$(APPCENTER_BUILD_ID)' != '' ">true</IsAppCenter>
+    <IsVSTS Condition=" '$(IsVSTS)' == '' ">false</IsVSTS>
+    <IsVSTS Condition=" '$(BUILD_BUILDNUMBER)' != '' ">true</IsVSTS>
+    <IsAppVeyor Condition=" '$(IsAppVeyor)' == '' ">false</IsAppVeyor>
+    <IsAppVeyor Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">true</IsAppVeyor>
+    <IsJenkins Condition=" '$(IsJenkins)' == '' ">false</IsJenkins>
+    <IsJenkins Condition=" '$(BUILD_NUMBER)' != '' ">true</IsJenkins>
+    <IsBuildHost Condition=" '$(IsBuildHost)' == '' ">false</IsBuildHost>
+    <IsBuildHost Condition=" '$(IsAppCenter)' Or '$(IsVSTS)' Or '$(IsAppVeyor)' Or '$(IsJenkins)' ">true</IsBuildHost>
   </PropertyGroup>
 
   <Choose>
