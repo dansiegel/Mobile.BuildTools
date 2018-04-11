@@ -8,8 +8,6 @@
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
   <UsingTask TaskName="Mobile.BuildTools.Tasks.AutomaticBuildVersioningTask"
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
-  <UsingTask TaskName="Mobile.BuildTools.Tasks.CopyAppOutputsTask"
-             AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
 
   <Target Name="TemplateManifest" 
           BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build;_CleanMsymArchive;_CleanAppBundle;PrepareForBuild;_CoreCompileInterfaceDefinitions;_SetLatestTargetFrameworkVersion">
