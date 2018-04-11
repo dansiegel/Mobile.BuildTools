@@ -51,6 +51,11 @@ As part of the Build Tools, a number of Build Properties are added to better ass
 - IsUWPProject
 - IsMacOSProject
 - IsTizenProject
+- IsAppCenter
+- IsAppVeyor
+- IsJenkins
+- IsVSTS
+- IsBuildHost
 
 **Notes:**
 
@@ -227,6 +232,15 @@ To enable Automatic Versioning you will need to open your iOS or Android project
   <AutomaticVersionBehavior>PreferBuildNumber</AutomaticVersionBehavior>
 </PropertyGroup>
 ```
+
+### App Package (Artifacts) Copy
+
+It can sometimes be confusing as to where you generated App Package is after you build. Mobile.BuildTools helps you with this by automatically copying the generated APK, IPA and dSYM to an artifacts folder under the solution directory. It does this with some intelligence by disabling the copy on AppCenter since there is no need, and it will copy to `Build.ArtifactStagingDirectory` allowing you to more easily discover and consume the outputs when built on VSTS.
+
+| Property | Default |
+| -------- | ------- |
+| BuildToolsArtifactOutputPath | `{Solution Dir}/Artifacts` |
+| DisableBuildToolsArtifactCopy | `false` |
 
 [PrismNuGetShield]: https://img.shields.io/nuget/vpre/Prism.MFractor.Config.svg
 [QuickStartNuGetShield]: https://img.shields.io/nuget/vpre/Prism.QuickStart.MFractor.Config.svg
