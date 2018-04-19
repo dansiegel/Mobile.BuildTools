@@ -11,17 +11,18 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Build" Version="15.3.409" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.3.409" />
+    <PackageReference Include="SharpScss" Version="1.3.8" />
+    <PackageReference Include="NUglify" Version="1.5.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mobile.BuildTools\Mobile.BuildTools.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Templates\MockAndroidManifest.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Templates\MockManifestTemplate.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="Templates\**\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>
