@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <VersionPrefix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(VersionPrefix).$(BUILD_BUILDNUMBER)</VersionPrefix>
     <VersionSuffix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">ci</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
@@ -36,10 +36,16 @@
     <PackageReference Include="Microsoft.Build" Version="15.3.409" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.3.409" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" PrivateAssets="all" />
+    <PackageReference Include="SharpScss" Version="1.3.8" PrivateAssets="all" />
+    <PackageReference Include="NUglify" Version="1.5.10" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="CopyResources" BeforeTargets="CoreCompile;CoreGenerateAssemblyInfo">
     <Copy SourceFiles="$(NuGetPackageRoot)newtonsoft.json/10.0.3/lib/netstandard1.3/Newtonsoft.Json.dll" 
+          DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="$(NuGetPackageRoot)sharpscss/1.3.8/lib/netstandard1.3/SharpScss.dll" 
+          DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="$(NuGetPackageRoot)nuglify/1.5.10/lib/netstandard1.3/NUglify.dll" 
           DestinationFolder="$(OutputPath)" />
   </Target>
 

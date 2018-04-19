@@ -1,0 +1,7 @@
+@import 'colors';
+@import 'fonts';
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+}
