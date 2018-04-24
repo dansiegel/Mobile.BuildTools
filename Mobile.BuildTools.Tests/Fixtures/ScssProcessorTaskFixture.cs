@@ -13,9 +13,16 @@ namespace Mobile.BuildTools.Tests.Fixtures
     {
         private const string OutputFolder = "Generated";
         private const string Templates = "Templates";
-        private const string ExpectedCssPath = "Templates/Css";
-        private const string Sass = "Templates/Sass";
-        private const string Scss = "Templates/Scss";
+        private static readonly string ExpectedCssPath;
+        private static readonly string Sass;
+        private static readonly string Scss;
+
+        static ScssProcessorTaskFixture()
+        {
+            ExpectedCssPath = $"{Templates}{Path.DirectorySeparatorChar}Css";
+            Sass = $"{Templates}{Path.DirectorySeparatorChar}Sass";
+            Scss = $"{Templates}{Path.DirectorySeparatorChar}Scss";
+        }
 
         private ITestOutputHelper _testOutputHelper { get; }
 
