@@ -1,11 +1,10 @@
 @import 'colors';
 
-/*^contentpage {
+contentpage:any {
     background-color: $primary-color;
-    padding: 20;
-}*/
+    padding: 20px
+}
 
-stacklayout > * {
-    margin: 3
-
+button:all {
+    border-radius: 10px
 }

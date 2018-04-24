@@ -81,7 +81,11 @@ namespace Mobile.BuildTools.Tasks
 
                 ThrowUglifyErrors(uglifyResult, outputFile);
 
-                File.WriteAllText(outputFile, minified);
+                // HACK: ^ selector is not valid CSS/Sass. This replaces alternate valid syntax with the ^ selector for Xamarin Forms
+                var pattern = @"(\w+):(any|all)";
+                var formsCSS = Regex.Replace(minified, pattern, m => $"^{m.Groups[1].Value}");
+
+                File.WriteAllText(outputFile, formsCSS);
 
                 yield return new TaskItem(ProjectCollection.Escape(outputFile));
             }
