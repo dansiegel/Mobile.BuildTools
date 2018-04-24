@@ -59,8 +59,11 @@ namespace Mobile.BuildTools.Tests.Fixtures
 
             _testOutputHelper.WriteLine($"Files found: {string.Join(", ", files)}");
             Assert.Equal(2, files.Length);
-            Assert.Contains("Generated/Templates/Scss/style.css", files);
-            Assert.Contains("Generated/Templates/Scss/style2.css", files);
+
+            foreach(var item in task.GeneratedCssFiles)
+            {
+                Assert.Contains(item.ItemSpec.ToString(), files);
+            }
         }
 
         //[Fact]
