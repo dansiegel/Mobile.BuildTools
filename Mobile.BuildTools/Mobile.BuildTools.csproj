@@ -30,6 +30,7 @@
     <None Remove="**\*.props;**\*.targets" />
     <Content Include="build/*.props;build/*.targets" Pack="true" PackagePath="build/" />
     <Content Include="$(OutputPath)/*.dll;$(OutputPath)/*.pdb" Pack="true" PackagePath="build/" />
+    <Content Include="$(NuGetPackageRoot)sharpscss/1.3.8/runtimes/**" PackagePath="runtimes/" />
   </ItemGroup>
 
   <ItemGroup>
