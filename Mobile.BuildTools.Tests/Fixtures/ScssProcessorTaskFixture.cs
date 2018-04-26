@@ -39,6 +39,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
 
             var task = new ScssProcessorTask
             {
+                OutputInProject = false,
                 OutputDirectory = OutputFolder,
                 NoneIncluded = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
@@ -60,7 +61,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
             _testOutputHelper.WriteLine($"Files found: {string.Join(", ", files)}");
             Assert.Equal(2, files.Length);
 
-            foreach(var item in task.GeneratedCssFiles)
+            foreach (var item in task.GeneratedCssFiles)
             {
                 Assert.Contains(item.ItemSpec.ToString(), files);
             }
@@ -151,13 +152,17 @@ namespace Mobile.BuildTools.Tests.Fixtures
         //}
 
         [Theory]
-        [InlineData("style.css")]
-        [InlineData("style2.css")]
-        public void GeneratedExpectedCss_FromScss(string fileName)
+        [InlineData("style.css", "style.css")]
+        [InlineData("style.css", "style.min.css")]
+        [InlineData("style2.css", "style2.css")]
+        [InlineData("style2.css", "style2.min.css")]
+        public void GeneratedExpectedCss_FromScss(string fileName, string expectedFileName)
         {
             _testOutputHelper.WriteLine($"Checking: {fileName}");
             var task = new ScssProcessorTask
             {
+                MinimizeCSS = expectedFileName.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase),
+                OutputInProject = false,
                 OutputDirectory = OutputFolder,
                 NoneIncluded = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
@@ -177,7 +182,8 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var files = Directory.GetFiles(OutputFolder, fileName, SearchOption.AllDirectories);
             Assert.Single(files);
             var generatedFile = files.First(f => f.EndsWith(fileName, StringComparison.CurrentCultureIgnoreCase));
-            Assert.Equal(File.ReadAllText(Path.Combine(ExpectedCssPath, fileName)), File.ReadAllText(generatedFile));
+            Assert.Equal($"{ScssProcessorTask.UpgradeNote}{File.ReadAllText(Path.Combine(ExpectedCssPath, expectedFileName))}",
+                         File.ReadAllText(generatedFile));
         }
 
         private void ResetOutputFolder()

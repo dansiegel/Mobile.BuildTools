@@ -135,21 +135,43 @@
 
   </Target>
 
+  <PropertyGroup>
+    <CoreCompileDependsOn>
+      ProcessScss;
+      $(CoreCompileDependsOn);
+    </CoreCompileDependsOn>
+    <CompileDependsOn>
+      ProcessScss;
+      $(CompileDependsOn);
+    </CompileDependsOn>
+    <CssGDependsOn>
+      ProcessScss;
+      $(CssGDependsOn);
+    </CssGDependsOn>
+  </PropertyGroup>
+
   <Target Name="ProcessScss"
-          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
+          BeforeTargets="CssG;PrepareResourceNames;CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
     <PropertyGroup>
+      <MinimizeCSSOutput Condition=" '$(MinimizeCSSOutput)' == '' ">false</MinimizeCSSOutput>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' AND ('$(Prefer32Bit)' == 'true' OR '$(PlatformTarget)' == 'x86')">win-x86</ScssRuntime>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' AND '$(OS)' == 'Unix'">osx-x64</ScssRuntime>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' ">win-x64</ScssRuntime>
     </PropertyGroup>
     <ItemGroup>
-      <LibSass Include="$(MSBuildThisFileDirectory)..\runtimes\$(ScssRuntime)\native\libsass.*" />
+      <LibSass Include="$(MSBuildThisFileDirectory)runtimes\$(ScssRuntime)\native\libsass.*" />
     </ItemGroup>
     <Copy SourceFiles="@(LibSass)"
           DestinationFiles="$(MSBuildThisFileDirectory)%(Filename)%(Extension)" />
 
     <ScssProcessorTask OutputDirectory="$(IntermediateOutputPath)"
-                       NoneIncluded="@(None)">
+                       NoneIncluded="@(None)"
+                       OutputInProject="true"
+                       MinimizeCSS="$(MinimizeCSSOutput)" />
+      <Output ItemName="GeneratedFile"
+              TaskParameter="GeneratedCssFiles"/>
+      <Output ItemName="FilesWrite"
+              TaskParameter="GeneratedCssFiles"/>
       <Output ItemName="EmbeddedResource" 
               TaskParameter="GeneratedCssFiles" />
     </ScssProcessorTask>
