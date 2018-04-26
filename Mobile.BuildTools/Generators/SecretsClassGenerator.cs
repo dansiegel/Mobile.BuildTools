@@ -95,17 +95,13 @@ namespace Mobile.BuildTools.Generators
             {
                 return $"{TabSpace}{TabSpace}internal const bool {secret.Key} = {outputValue.ToLower()};\n\n";
             }
-            else if (double.TryParse(value, out double d))
+            else if (Regex.IsMatch(value, @"\d+\.\d+") && double.TryParse(value, out double d))
             {
-                if (double.TryParse(secret.Value.ToString(), out double val))
-                {
-                    var type = Regex.IsMatch(secret.Value.ToString(), @"^\d+$") ? "int" : "double";
-                    return $"{TabSpace}{TabSpace}internal const {type} {secret.Key} = {outputValue};\n\n";
-                }
-                else
-                {
-                    throw new NotSupportedException($"Unable to parse value for {secret.Key} - {outputValue}");
-                }
+                return $"{TabSpace}{TabSpace}internal const double {secret.Key} = {outputValue};\n\n";
+            }
+            else if (int.TryParse(value, out int i))
+            {
+                return $"{TabSpace}{TabSpace}internal const int {secret.Key} = {outputValue};\n\n";
             }
             else
             {
