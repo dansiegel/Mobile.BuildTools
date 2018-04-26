@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -29,8 +30,11 @@
     <!-- <PackageReference Include="Nerdbank.GitVersioning" Version="2.0.41" PrivateAssets="all" /> -->
     <None Remove="**\*.props;**\*.targets" />
     <Content Include="build/*.props;build/*.targets" Pack="true" PackagePath="build/" />
-    <Content Include="$(OutputPath)/*.dll;$(OutputPath)/*.pdb" Pack="true" PackagePath="build/" />
-    <Content Include="$(NuGetPackageRoot)sharpscss/1.3.8/runtimes/**" PackagePath="runtimes/" />
+    <Content Include="$(OutputPath)/$(AssemblyName).dll;$(OutputPath)/$(AssemblyName).pdb" Pack="true" PackagePath="build/" />
+    <Content Include="$(NuGetPackageRoot)newtonsoft.json/10.0.3/lib/netstandard1.3/Newtonsoft.Json.dll" Link="build/%(Filename)%(Extension)" Pack="true" PackagePath="build/" />
+    <Content Include="$(NuGetPackageRoot)sharpscss/1.3.8/lib/netstandard1.3/SharpScss.dll" Link="build/%(Filename)%(Extension)" Pack="true" PackagePath="build/" />
+    <Content Include="$(NuGetPackageRoot)nuglify/1.5.10/lib/netstandard1.3/NUglify.dll" Link="build/%(Filename)%(Extension)" Pack="true" PackagePath="build/" />
+    <Content Include="$(NuGetPackageRoot)sharpscss/1.3.8/runtimes/**" Link="build/runtimes/%(RecursiveDir)%(Filename)%(Extension)" Pack="true" PackagePath="build/runtimes/" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,14 +44,5 @@
     <PackageReference Include="SharpScss" Version="1.3.8" PrivateAssets="all" />
     <PackageReference Include="NUglify" Version="1.5.10" PrivateAssets="all" />
   </ItemGroup>
-
-  <Target Name="CopyResources" BeforeTargets="CoreCompile;CoreGenerateAssemblyInfo">
-    <Copy SourceFiles="$(NuGetPackageRoot)newtonsoft.json/10.0.3/lib/netstandard1.3/Newtonsoft.Json.dll" 
-          DestinationFolder="$(OutputPath)" />
-    <Copy SourceFiles="$(NuGetPackageRoot)sharpscss/1.3.8/lib/netstandard1.3/SharpScss.dll" 
-          DestinationFolder="$(OutputPath)" />
-    <Copy SourceFiles="$(NuGetPackageRoot)nuglify/1.5.10/lib/netstandard1.3/NUglify.dll" 
-          DestinationFolder="$(OutputPath)" />
-  </Target>
 
 </Project>
