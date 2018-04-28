@@ -15,12 +15,23 @@ namespace Mobile.BuildTools.Tasks
 {
     public class ScssProcessorTask : Microsoft.Build.Utilities.Task
     {
+        internal const string UpgradeNote = @"/*
+ * Note: Mobile.BuildTools will be changing the default output behavior in a
+ * future release. Future releases will minimize the output, and place it in the 
+ * intermediate output folder (obj). Please delete this file after updating the
+ * Mobile.BuildTools package.
+ */
+";
         private ILog _logger;
         internal ILog Logger
         {
             get => _logger ?? (BuildHostLoggingHelper)Log;
             set => _logger = value;
         }
+
+        public string OutputInProject { get; set; }
+
+        public string MinimizeCSS { get; set; }
 
         public string OutputDirectory { get; set; }
 
@@ -61,34 +72,53 @@ namespace Mobile.BuildTools.Tasks
             foreach (var file in inputFiles)
             {
                 Logger.LogMessage($"Processing {file}");
-                var outputFile = Path.Combine(OutputDirectory, Regex.Replace(file, @"sass|scss", "css"));
+                var outputFile = GetFilePath(file);
 
                 var options = new ScssOptions { InputFile = file };
                 var result = Scss.ConvertToCss(File.ReadAllText(file), options);
 
                 Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
 
-                Logger.LogMessage(result.Css);
-                CssSettings settings = new CssSettings
+                Logger.LogMessage($"Finished processing '{file}'");
+                var css = result.Css;
+                Logger.LogMessage(css);
+
+                if (!string.IsNullOrWhiteSpace(MinimizeCSS) && bool.TryParse(MinimizeCSS, out bool b) && !b)
                 {
-                    CommentMode = CssComment.None
-                };
+                    Logger.LogMessage($"minifying output to '{outputFile}'");
+                    CssSettings settings = new CssSettings
+                    {
+                        CommentMode = CssComment.None
+                    };
 
-                Logger.LogMessage($"Finished processing '{file}', minifying output to '{outputFile}'");
-                UglifyResult uglifyResult = Uglify.Css(result.Css, settings);
+                    UglifyResult uglifyResult = Uglify.Css(result.Css, settings);
 
-                string minified = uglifyResult.Code;
+                    css = uglifyResult.Code;
 
-                ThrowUglifyErrors(uglifyResult, outputFile);
+                    Logger.LogMessage(css);
+
+                    ThrowUglifyErrors(uglifyResult, outputFile);
+                }
 
                 // HACK: ^ selector is not valid CSS/Sass. This replaces alternate valid syntax with the ^ selector for Xamarin Forms
                 var pattern = @"(\w+):(any|all)";
-                var formsCSS = Regex.Replace(minified, pattern, m => $"^{m.Groups[1].Value}");
+                var formsCSS = Regex.Replace(css, pattern, m => $"^{m.Groups[1].Value}");
 
-                File.WriteAllText(outputFile, formsCSS);
-
+                File.WriteAllText(outputFile, $"{UpgradeNote}{formsCSS}");
                 yield return new TaskItem(ProjectCollection.Escape(outputFile));
             }
+        }
+
+        private string GetFilePath(string scssFile)
+        {
+            var file = Regex.Replace(scssFile, @"sass|scss", "css");
+
+            if (!string.IsNullOrWhiteSpace(OutputInProject) && bool.TryParse(OutputInProject, out bool b) && !b)
+            {
+                file = Path.Combine(OutputDirectory, file);
+            }
+
+            return file;
         }
 
         private void ThrowUglifyErrors(UglifyResult result, string outputFilePath)
