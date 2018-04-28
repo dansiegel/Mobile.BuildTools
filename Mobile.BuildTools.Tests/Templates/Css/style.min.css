@@ -1,1 +1,7 @@
+/*
+ * Note: Mobile.BuildTools will be changing the default output behavior in a
+ * future release. Future releases will minimize the output, and place it in the 
+ * intermediate output folder (obj). Please delete this file after updating the
+ * Mobile.BuildTools package.
+ */
 body{font:100% Helvetica,sans-serif;color:#333}

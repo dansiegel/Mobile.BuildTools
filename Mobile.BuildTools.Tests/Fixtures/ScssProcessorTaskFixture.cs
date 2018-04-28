@@ -167,6 +167,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                 NoneIncluded = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
             };
+            _testOutputHelper.WriteLine($"Minimize CSS: {task.MinimizeCSS}");
 
             bool success = false;
             var exception = Record.Exception(() =>
@@ -182,7 +183,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var files = Directory.GetFiles(OutputFolder, fileName, SearchOption.AllDirectories);
             Assert.Single(files);
             var generatedFile = files.First(f => f.EndsWith(fileName, StringComparison.CurrentCultureIgnoreCase));
-            Assert.Equal($"{ScssProcessorTask.UpgradeNote}{File.ReadAllText(Path.Combine(ExpectedCssPath, expectedFileName))}",
+            Assert.Equal(File.ReadAllText(Path.Combine(ExpectedCssPath, expectedFileName)),
                          File.ReadAllText(generatedFile));
         }
 

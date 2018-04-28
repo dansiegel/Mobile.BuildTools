@@ -83,7 +83,7 @@ namespace Mobile.BuildTools.Tasks
                 var css = result.Css;
                 Logger.LogMessage(css);
 
-                if (!string.IsNullOrWhiteSpace(MinimizeCSS) && bool.TryParse(MinimizeCSS, out bool b) && !b)
+                if (!string.IsNullOrWhiteSpace(MinimizeCSS) && bool.TryParse(MinimizeCSS, out bool b) && b)
                 {
                     Logger.LogMessage($"minifying output to '{outputFile}'");
                     CssSettings settings = new CssSettings
