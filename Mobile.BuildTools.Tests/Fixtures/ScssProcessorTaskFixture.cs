@@ -39,7 +39,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
 
             var task = new ScssProcessorTask
             {
-                OutputInProject = false,
+                OutputInProject = bool.FalseString,
                 OutputDirectory = OutputFolder,
                 NoneIncluded = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
@@ -158,11 +158,11 @@ namespace Mobile.BuildTools.Tests.Fixtures
         [InlineData("style2.css", "style2.min.css")]
         public void GeneratedExpectedCss_FromScss(string fileName, string expectedFileName)
         {
-            _testOutputHelper.WriteLine($"Checking: {fileName}");
+            _testOutputHelper.WriteLine($"Checking: {fileName} - {expectedFileName}");
             var task = new ScssProcessorTask
             {
-                MinimizeCSS = expectedFileName.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase),
-                OutputInProject = false,
+                MinimizeCSS = $"{expectedFileName.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase)}",
+                OutputInProject = bool.FalseString,
                 OutputDirectory = OutputFolder,
                 NoneIncluded = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)

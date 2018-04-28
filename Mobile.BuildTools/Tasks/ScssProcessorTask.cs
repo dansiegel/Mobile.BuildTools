@@ -29,9 +29,9 @@ namespace Mobile.BuildTools.Tasks
             set => _logger = value;
         }
 
-        public bool? OutputInProject { get; set; }
+        public string OutputInProject { get; set; }
 
-        public bool? MinimizeCSS { get; set; }
+        public string MinimizeCSS { get; set; }
 
         public string OutputDirectory { get; set; }
 
@@ -45,9 +45,6 @@ namespace Mobile.BuildTools.Tasks
         {
             try
             {
-                // HACK: Output in obj folder generates wrong resource id
-                if (!OutputInProject.HasValue)
-                    OutputInProject = true;
                 _generatedCssFiles = ProcessFiles(GetFilesToProcess());
             }
             catch (Exception ex)
@@ -82,20 +79,23 @@ namespace Mobile.BuildTools.Tasks
 
                 Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
 
-                Logger.LogMessage(result.Css);
-                CssSettings settings = new CssSettings
-                {
-                    CommentMode = CssComment.None
-                };
-
-                Logger.LogMessage($"Finished processing '{file}', minifying output to '{outputFile}'");
+                Logger.LogMessage($"Finished processing '{file}'");
                 var css = result.Css;
+                Logger.LogMessage(css);
 
-                if (MinimizeCSS.HasValue && MinimizeCSS.Value)
+                if (!string.IsNullOrWhiteSpace(MinimizeCSS) && bool.TryParse(MinimizeCSS, out bool b) && !b)
                 {
+                    Logger.LogMessage($"minifying output to '{outputFile}'");
+                    CssSettings settings = new CssSettings
+                    {
+                        CommentMode = CssComment.None
+                    };
+
                     UglifyResult uglifyResult = Uglify.Css(result.Css, settings);
 
                     css = uglifyResult.Code;
+
+                    Logger.LogMessage(css);
 
                     ThrowUglifyErrors(uglifyResult, outputFile);
                 }
@@ -113,7 +113,7 @@ namespace Mobile.BuildTools.Tasks
         {
             var file = Regex.Replace(scssFile, @"sass|scss", "css");
 
-            if (OutputInProject.HasValue && !OutputInProject.Value)
+            if (!string.IsNullOrWhiteSpace(OutputInProject) && bool.TryParse(OutputInProject, out bool b) && !b)
             {
                 file = Path.Combine(OutputDirectory, file);
             }
