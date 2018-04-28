@@ -152,9 +152,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
         //}
 
         [Theory]
-        [InlineData("style.css", "style.css")]
+        // [InlineData("style.css", "style.css")]
         [InlineData("style.css", "style.min.css")]
-        [InlineData("style2.css", "style2.css")]
+        // [InlineData("style2.css", "style2.css")]
         [InlineData("style2.css", "style2.min.css")]
         public void GeneratedExpectedCss_FromScss(string fileName, string expectedFileName)
         {
