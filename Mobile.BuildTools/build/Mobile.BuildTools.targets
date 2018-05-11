@@ -25,12 +25,12 @@
       <ManifestVariablePrefix Condition=" '$(ManifestVariablePrefix)' == '' ">Manifest_</ManifestVariablePrefix>
     </PropertyGroup>
 
-    <Message Text="Checking for Platform Template Configurations to Copy" />
-    <Message Text="SdkShortFrameworkIdentifier: '$(_SdkShortFrameworkIdentifier)'" />
-    <Message Text="Prefix: '$(ManifestVariablePrefix)'" />
-    <Message Text="Token: '$(ManifestToken)'" />
-    <Message Text="ManifestTemplatePath: '$(TemplateManifestPath)'" />
-    <Message Text="ManifestOutputPath: '$(ManifestDestinationPath)'" />
+    <Message Condition=" '$(MobileBuildToolsDebug)' == 'true' " Text="Checking for Platform Template Configurations to Copy" />
+    <Message Condition=" '$(MobileBuildToolsDebug)' == 'true' " Text="SdkShortFrameworkIdentifier: '$(_SdkShortFrameworkIdentifier)'" />
+    <Message Condition=" '$(MobileBuildToolsDebug)' == 'true' " Text="Prefix: '$(ManifestVariablePrefix)'" />
+    <Message Condition=" '$(MobileBuildToolsDebug)' == 'true' " Text="Token: '$(ManifestToken)'" />
+    <Message Condition=" '$(MobileBuildToolsDebug)' == 'true' " Text="ManifestTemplatePath: '$(TemplateManifestPath)'" />
+    <Message Condition=" '$(MobileBuildToolsDebug)' == 'true' " Text="ManifestOutputPath: '$(ManifestDestinationPath)'" />
 
     <TemplateManifestTask Prefix="$(ManifestVariablePrefix)"
                           Token="$(ManifestToken)"
