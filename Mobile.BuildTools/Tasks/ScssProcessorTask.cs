@@ -29,13 +29,11 @@ namespace Mobile.BuildTools.Tasks
             set => _logger = value;
         }
 
-        public string OutputInProject { get; set; }
-
-        public string MinimizeCSS { get; set; }
+        public string DebugOutput { get; set; }
 
         public string OutputDirectory { get; set; }
 
-        public string[] NoneIncluded { get; set; }
+        public string[] ScssFiles { get; set; }
 
         private IEnumerable<ITaskItem> _generatedCssFiles;
         [Output]
@@ -45,7 +43,7 @@ namespace Mobile.BuildTools.Tasks
         {
             try
             {
-                _generatedCssFiles = ProcessFiles(GetFilesToProcess());
+                _generatedCssFiles = ProcessFiles(ScssFiles);
             }
             catch (Exception ex)
             {
@@ -57,15 +55,6 @@ namespace Mobile.BuildTools.Tasks
             return true;
         }
 
-        internal IEnumerable<string> GetFilesToProcess()
-        {
-            return from f in NoneIncluded
-                   where (Path.GetExtension(f) == ".scss" ||
-                          Path.GetExtension(f) == ".sass") &&
-                         !Path.GetFileNameWithoutExtension(f)
-                    .StartsWith("_", StringComparison.InvariantCulture)
-                   select f;
-        }
 
         private IEnumerable<TaskItem> ProcessFiles(IEnumerable<string> inputFiles)
         {
@@ -83,7 +72,7 @@ namespace Mobile.BuildTools.Tasks
                 var css = result.Css;
                 Logger.LogMessage(css);
 
-                if (!string.IsNullOrWhiteSpace(MinimizeCSS) && bool.TryParse(MinimizeCSS, out bool b) && b)
+                if (string.IsNullOrWhiteSpace(DebugOutput) || (bool.TryParse(DebugOutput, out bool b) && !b))
                 {
                     Logger.LogMessage($"minifying output to '{outputFile}'");
                     CssSettings settings = new CssSettings
@@ -112,13 +101,7 @@ namespace Mobile.BuildTools.Tasks
         private string GetFilePath(string scssFile)
         {
             var file = Regex.Replace(scssFile, @"sass|scss", "css");
-
-            if (!string.IsNullOrWhiteSpace(OutputInProject) && bool.TryParse(OutputInProject, out bool b) && !b)
-            {
-                file = Path.Combine(OutputDirectory, file);
-            }
-
-            return file;
+            return Path.Combine(OutputDirectory, file);
         }
 
         private void ThrowUglifyErrors(UglifyResult result, string outputFilePath)

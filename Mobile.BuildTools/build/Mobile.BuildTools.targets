@@ -136,25 +136,30 @@
   </Target>
 
   <PropertyGroup>
-    <CoreCompileDependsOn>
-      ProcessScss;
-      $(CoreCompileDependsOn);
-    </CoreCompileDependsOn>
-    <CompileDependsOn>
-      ProcessScss;
-      $(CompileDependsOn);
-    </CompileDependsOn>
     <CssGDependsOn>
       ProcessScss;
       $(CssGDependsOn);
     </CssGDependsOn>
+    <PrepareResourcesDependsOn>
+      ProcessScss;
+      $(PrepareResourcesDependsOn)
+    </PrepareResourcesDependsOn>
+    <ProcessScssDependsOn>
+      _CollectScss;
+      _EnsureScssRuntimeIsAvailable
+    </ProcessScssDependsOn>
   </PropertyGroup>
 
-  <Target Name="ProcessScss"
-          BeforeTargets="CssG;PrepareResourceNames;CoreCompile;_CoreXamlG;XamlG;XamlC;Build">
+  <Target Name="_CollectScss">
+    <ItemGroup>
+      <_AllScss Include="@(None)" Condition="'%(Extension)' == '.scss'" />
+      <_PartialScss Include="@(_AllScss)" Condition="$([MSBuild]::ValueOrDefault('%(Filename)', '').StartsWith('_'))" />
+      <_Scss Include="@(_AllScss)" Exclude="@(_PartialScss)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_EnsureScssRuntimeIsAvailable">
     <PropertyGroup>
-      <MinimizeCSSOutput Condition=" '$(MinimizeCSSOutput)' == '' ">false</MinimizeCSSOutput>
-      <OutputCSSInProject Condition=" '$(OutputCSSInProject)' == '' ">true</OutputCSSInProject>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' AND ('$(Prefer32Bit)' == 'true' OR '$(PlatformTarget)' == 'x86')">win-x86</ScssRuntime>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' AND '$(OS)' == 'Unix'">osx-x64</ScssRuntime>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' ">win-x64</ScssRuntime>
@@ -163,19 +168,32 @@
       <LibSass Include="$(MSBuildThisFileDirectory)runtimes\$(ScssRuntime)\native\libsass.*" />
     </ItemGroup>
     <Copy SourceFiles="@(LibSass)"
-          DestinationFiles="$(MSBuildThisFileDirectory)%(Filename)%(Extension)" />
+          DestinationFiles="$(MSBuildThisFileDirectory)%(Filename)%(Extension)"
+          Condition="!Exists('$(MSBuildThisFileDirectory)%(Filename)%(Extension)')" />
+  </Target>
+
+  <Target Name="ProcessScss" 
+          Inputs="@(_Scss);@(_PartialScc)" 
+          Outputs="@(_Scss -> '$(IntermediateOutputPath)\%(Filename).css')" BeforeTargets="CssG">
+
+    <PropertyGroup>
+      <ProcessScssDebug Condition=" '$(ProcessScssDebug)' == '' ">$(MobileBuildToolsDebug)</ProcessScssDebug>
+    </PropertyGroup>
 
     <ScssProcessorTask OutputDirectory="$(IntermediateOutputPath)"
-                       NoneIncluded="@(None)"
-                       OutputInProject="$(OutputCSSInProject)"
-                       MinimizeCSS="$(MinimizeCSSOutput)">
+                       ScssFiles="@(_Scss)"
+                       DebugOutput="$(ProcessScssDebug)">
       <Output ItemName="GeneratedFile"
               TaskParameter="GeneratedCssFiles"/>
       <Output ItemName="FilesWrite"
               TaskParameter="GeneratedCssFiles"/>
-      <Output ItemName="EmbeddedResource" 
-              TaskParameter="GeneratedCssFiles" />
     </ScssProcessorTask>
+
+    <ItemGroup>
+      <EmbeddedResource Include="@(_Scss -> $'(IntermediateOutputPath)\%(RecursiveDir)%(Filename).css')">
+        <Link>%(RecursiveDir)%(Filename).css</Link>
+      </EmbeddedResource>
+    </ItemGroup>
 
   </Target>
 

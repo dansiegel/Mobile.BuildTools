@@ -39,9 +39,8 @@ namespace Mobile.BuildTools.Tests.Fixtures
 
             var task = new ScssProcessorTask
             {
-                OutputInProject = bool.FalseString,
                 OutputDirectory = OutputFolder,
-                NoneIncluded = Directory.GetFiles(Scss, "*"),
+                ScssFiles = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
             };
 
@@ -75,7 +74,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
         //    var task = new ScssProcessorTask
         //    {
         //        OutputDirectory = OutputFolder,
-        //        NoneIncluded = Directory.GetFiles(Sass, "*"),
+        //        ScssFiles = Directory.GetFiles(Sass, "*"),
         //        Logger = new XunitLog(_testOutputHelper)
         //    };
 
@@ -102,7 +101,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
         //    var task = new ScssProcessorTask
         //    {
         //        OutputDirectory = OutputFolder,
-        //        NoneIncluded = Directory.GetFiles(Templates, "*", SearchOption.AllDirectories),
+        //        ScssFiles = Directory.GetFiles(Templates, "*", SearchOption.AllDirectories),
         //        Logger = new XunitLog(_testOutputHelper)
         //    };
 
@@ -130,7 +129,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
         //    var task = new ScssProcessorTask
         //    {
         //        OutputDirectory = OutputFolder,
-        //        NoneIncluded = Directory.GetFiles(Sass, "*"),
+        //        ScssFiles = Directory.GetFiles(Sass, "*"),
         //        Logger = new XunitLog(_testOutputHelper)
         //    };
 
@@ -161,13 +160,10 @@ namespace Mobile.BuildTools.Tests.Fixtures
             _testOutputHelper.WriteLine($"Checking: {fileName} - {expectedFileName}");
             var task = new ScssProcessorTask
             {
-                MinimizeCSS = $"{expectedFileName.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase)}",
-                OutputInProject = bool.FalseString,
                 OutputDirectory = OutputFolder,
-                NoneIncluded = Directory.GetFiles(Scss, "*"),
+                ScssFiles = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
             };
-            _testOutputHelper.WriteLine($"Minimize CSS: {task.MinimizeCSS}");
 
             bool success = false;
             var exception = Record.Exception(() =>
