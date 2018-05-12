@@ -49,12 +49,12 @@ namespace Mobile.BuildTools.Tasks
             {
                 Logger.LogMessage("An Error occurred while processing the Sass files");
                 Logger.LogMessage(ex.ToString());
+                _generatedCssFiles = new List<ITaskItem>();
                 return false;
             }
 
             return true;
         }
-
 
         private IEnumerable<TaskItem> ProcessFiles(IEnumerable<string> inputFiles)
         {
