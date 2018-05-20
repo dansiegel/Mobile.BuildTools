@@ -1,3 +1,5 @@
+<p align="center"><img src="logo/horizontal.svg" alt="Mobile.BuildTools" height="200px"></p>
+
 # Build Tools
 
 There is a lot of talk these days about DevOps. One of the problems with DevOps is that it can be really challenging. Far too many companies suffer from reliance on poor practices that their Development teams know need to be fixed. Today we have a variety of Build Systems that are at our disposal and we no longer need to rely on such poor practices. Mobile.BuildTools can help turn your run of the mill project into a streamlined DevOps masterpiece.
