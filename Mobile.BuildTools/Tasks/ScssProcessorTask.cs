@@ -15,13 +15,6 @@ namespace Mobile.BuildTools.Tasks
 {
     public class ScssProcessorTask : Microsoft.Build.Utilities.Task
     {
-        internal const string UpgradeNote = @"/*
- * Note: Mobile.BuildTools will be changing the default output behavior in a
- * future release. Future releases will minimize the output, and place it in the 
- * intermediate output folder (obj). Please delete this file after updating the
- * Mobile.BuildTools package.
- */
-";
         private ILog _logger;
         internal ILog Logger
         {
@@ -37,19 +30,19 @@ namespace Mobile.BuildTools.Tasks
 
         private IEnumerable<ITaskItem> _generatedCssFiles;
         [Output]
-        public ITaskItem[] GeneratedCssFiles => _generatedCssFiles.ToArray();
+        public ITaskItem[] GeneratedCssFiles => _generatedCssFiles?.ToArray() ?? new ITaskItem[0];
 
         public override bool Execute()
         {
             try
             {
-                _generatedCssFiles = ProcessFiles(ScssFiles);
+                var filesToProcess = ScssFiles.Where(scss => Path.GetFileName(scss)[0] != '_' && Path.GetExtension(scss) == ".scss" || Path.GetExtension(scss) == ".sass");
+                _generatedCssFiles = ProcessFiles(filesToProcess);
             }
             catch (Exception ex)
             {
                 Logger.LogMessage("An Error occurred while processing the Sass files");
                 Logger.LogMessage(ex.ToString());
-                _generatedCssFiles = new List<ITaskItem>();
                 return false;
             }
 
@@ -60,6 +53,12 @@ namespace Mobile.BuildTools.Tasks
         {
             foreach (var file in inputFiles)
             {
+                if (Path.GetFileName(file)[0] == '_')
+                {
+                    Logger.LogMessage($"Skipping Partial File: {file}");
+                    continue;
+                }
+
                 Logger.LogMessage($"Processing {file}");
                 var outputFile = GetFilePath(file);
 
@@ -93,7 +92,7 @@ namespace Mobile.BuildTools.Tasks
                 var pattern = @"(\w+):(any|all)";
                 var formsCSS = Regex.Replace(css, pattern, m => $"^{m.Groups[1].Value}");
 
-                File.WriteAllText(outputFile, $"{UpgradeNote}{formsCSS}");
+                File.WriteAllText(outputFile, $"{formsCSS}");
                 yield return new TaskItem(ProjectCollection.Escape(outputFile));
             }
         }

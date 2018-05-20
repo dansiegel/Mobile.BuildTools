@@ -183,6 +183,28 @@ namespace Mobile.BuildTools.Tests.Fixtures
                          File.ReadAllText(generatedFile));
         }
 
+        [Fact]
+        public void NoOutputDoesNotCauseNullOutputCollection()
+        {
+            var task = new ScssProcessorTask
+            {
+                OutputDirectory = OutputFolder,
+                ScssFiles = Directory.GetFiles(ExpectedCssPath, "*"),
+                Logger = new XunitLog(_testOutputHelper)
+            };
+
+            bool success = false;
+            var exception = Record.Exception(() =>
+            {
+                success = task.Execute();
+            });
+
+            Assert.Null(exception);
+            Assert.True(success);
+            Assert.NotNull(task.GeneratedCssFiles);
+            Assert.Empty(task.GeneratedCssFiles);
+        }
+
         private void ResetOutputFolder()
         {
             if (Directory.Exists(OutputFolder))

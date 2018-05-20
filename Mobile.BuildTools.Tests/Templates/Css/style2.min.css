@@ -1,7 +1,1 @@
-/*
- * Note: Mobile.BuildTools will be changing the default output behavior in a
- * future release. Future releases will minimize the output, and place it in the 
- * intermediate output folder (obj). Please delete this file after updating the
- * Mobile.BuildTools package.
- */
 ^contentpage{background-color:#333;padding:20px}^button{border-radius:10px}

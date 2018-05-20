@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <MobileBuildToolsDebug>true</MobileBuildToolsDebug>
+  </PropertyGroup>
+
+  <!-- <None Include="SampleManifest.json" CopyToOutput> -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="Mobile.BuildTools" Version="*" />
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.446417" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+    <PackageReference Include="Xamarin.Forms.Mocks" Version="3.0.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\E2E.Core\E2E.Core.csproj" />
+  </ItemGroup>
+</Project>
