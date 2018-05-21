@@ -5,6 +5,7 @@ obj
 .vscode
 .mfractor
 *.userprefs
+*.binlog
 
 
 Artifacts/
