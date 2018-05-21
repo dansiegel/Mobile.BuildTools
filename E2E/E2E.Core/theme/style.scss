@@ -1,0 +1,9 @@
+@import "colors";
+
+.primaryButton {
+    background-color: $primary
+}
+
+button:any {
+    background-color: transparent
+}

@@ -1,29 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <VersionPrefix>1.2.1</VersionPrefix>
+    <VersionPrefix>1.3.0</VersionPrefix>
     <VersionPrefix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(VersionPrefix).$(BUILD_BUILDNUMBER)</VersionPrefix>
     <VersionSuffix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">ci</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_RELEASE)' == 'true' "></VersionSuffix>
-    <Authors>Dan Siegel</Authors>
-    <Copyright>© Dan Siegel</Copyright>
-    <DevelopmentDependency>true</DevelopmentDependency>
+    
     <Description>Additional MSBuild targets and properties for .NET projects. Especially enhances Xamarin targets. Enables better development practices with CI/CD pipelines</Description>
     <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
-    <PackageLicenseUrl>https://github.com/dansiegel/Mobile.BuildTools/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools/</PackageProjectUrl>
     <PackageReleaseNotes>
       See the Readme for how to use/configure these targets.
 
       https://github.com/dansiegel/Mobile.BuildTools/
     </PackageReleaseNotes>
     <NoPackageAnalysis>true</NoPackageAnalysis>
-    <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,16 +25,16 @@
     <None Remove="**\*.props;**\*.targets" />
     <Content Include="build/*.props;build/*.targets" Pack="true" PackagePath="build/" />
     <Content Include="$(OutputPath)/$(AssemblyName).dll;$(OutputPath)/$(AssemblyName).pdb" Pack="true" PackagePath="build/" />
-    <Content Include="$(NuGetPackageRoot)newtonsoft.json/10.0.3/lib/netstandard1.3/Newtonsoft.Json.dll" Link="build/%(Filename)%(Extension)" Pack="true" PackagePath="build/" />
-    <Content Include="$(NuGetPackageRoot)sharpscss/1.3.8/lib/netstandard1.3/SharpScss.dll" Link="build/%(Filename)%(Extension)" Pack="true" PackagePath="build/" />
-    <Content Include="$(NuGetPackageRoot)nuglify/1.5.10/lib/netstandard1.3/NUglify.dll" Link="build/%(Filename)%(Extension)" Pack="true" PackagePath="build/" />
+    <Content Include="$(NuGetPackageRoot)newtonsoft.json/11.0.2/lib/netstandard2.0/Newtonsoft.Json.dll" Link="build\Newtonsoft.Json.dll" Pack="true" PackagePath="build/" />
+    <Content Include="$(NuGetPackageRoot)sharpscss/1.3.8/lib/netstandard1.3/SharpScss.dll" Link="build\SharpScss.dll" Pack="true" PackagePath="build/" />
+    <Content Include="$(NuGetPackageRoot)nuglify/1.5.10/lib/netstandard1.3/NUglify.dll" Link="build\NUglify.dll" Pack="true" PackagePath="build/" />
     <Content Include="$(NuGetPackageRoot)sharpscss/1.3.8/runtimes/**" Link="build/runtimes/%(RecursiveDir)%(Filename)%(Extension)" Pack="true" PackagePath="build/runtimes/" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Build" Version="15.3.409" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.3.409" PrivateAssets="all" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" PrivateAssets="all" />
     <PackageReference Include="SharpScss" Version="1.3.8" PrivateAssets="all" />
     <PackageReference Include="NUglify" Version="1.5.10" PrivateAssets="all" />
   </ItemGroup>

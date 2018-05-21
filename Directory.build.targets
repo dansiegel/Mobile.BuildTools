@@ -1,0 +1,45 @@
+<Project>
+  <UsingTask TaskName="_RecursiveDeleteTask"
+             TaskFactory="CodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup>
+      <_DeleteDirectory ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>  
+      <Using Namespace="System"/>  
+      <Using Namespace="System.IO"/>  
+      <Code Type="Fragment" Language="cs">  
+<![CDATA[  
+Log.LogMessage($"Directory to Delete '{_DeleteDirectory}'.");
+if(Directory.Exists(_DeleteDirectory))
+{
+  Directory.Delete(_DeleteDirectory, true);
+}
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="LocalPublish" 
+          AfterTargets="Pack" 
+          Condition=" '$(IsPackable)' ">
+    <!-- <PropertyGroup>
+    </PropertyGroup>
+    <ItemGroup>
+      <ToDelete Include="$(LocalArtifactStagingDirectory)/*.*" 
+                Condition=" '$(PackageOutputPath)' != '$(LocalArtifactStagingDirectory)' " />
+      <ToDelete Include="$(NuGetPackageRoot)/packages/$(PackageId)/**/*.*" />
+    </ItemGroup> -->
+
+    <_RecursiveDeleteTask _DeleteDirectory="$(NuGetPackageRoot)/$(PackageId.ToLower())" />
+    <_RecursiveDeleteTask _DeleteDirectory="$(LocalArtifactStagingDirectory)"
+                          Condition=" '$(PackageOutputPath)' != '$(LocalArtifactStagingDirectory)' " />
+    <!-- <Delete Files="@(ToDelete)" /> -->
+
+    <MakeDir Directories="$(LocalArtifactStagingDirectory)" 
+             Condition="!Exists('$(LocalArtifactStagingDirectory)')" />
+    <Copy SourceFiles="$(PackageTargetPath)" 
+          DestinationFolder="$(LocalArtifactStagingDirectory)"
+          Condition=" '$(PackageOutputPath)' != '$(LocalArtifactStagingDirectory)' " />
+  </Target>
+</Project>

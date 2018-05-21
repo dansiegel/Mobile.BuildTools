@@ -15,13 +15,6 @@ namespace Mobile.BuildTools.Tasks
 {
     public class ScssProcessorTask : Microsoft.Build.Utilities.Task
     {
-        internal const string UpgradeNote = @"/*
- * Note: Mobile.BuildTools will be changing the default output behavior in a
- * future release. Future releases will minimize the output, and place it in the 
- * intermediate output folder (obj). Please delete this file after updating the
- * Mobile.BuildTools package.
- */
-";
         private ILog _logger;
         internal ILog Logger
         {
@@ -29,23 +22,22 @@ namespace Mobile.BuildTools.Tasks
             set => _logger = value;
         }
 
-        public string OutputInProject { get; set; }
-
-        public string MinimizeCSS { get; set; }
+        public string DebugOutput { get; set; }
 
         public string OutputDirectory { get; set; }
 
-        public string[] NoneIncluded { get; set; }
+        public string[] ScssFiles { get; set; }
 
         private IEnumerable<ITaskItem> _generatedCssFiles;
         [Output]
-        public ITaskItem[] GeneratedCssFiles => _generatedCssFiles.ToArray();
+        public ITaskItem[] GeneratedCssFiles => _generatedCssFiles?.ToArray() ?? new ITaskItem[0];
 
         public override bool Execute()
         {
             try
             {
-                _generatedCssFiles = ProcessFiles(GetFilesToProcess());
+                var filesToProcess = ScssFiles.Where(scss => Path.GetFileName(scss)[0] != '_' && Path.GetExtension(scss) == ".scss" || Path.GetExtension(scss) == ".sass");
+                _generatedCssFiles = ProcessFiles(filesToProcess);
             }
             catch (Exception ex)
             {
@@ -57,20 +49,16 @@ namespace Mobile.BuildTools.Tasks
             return true;
         }
 
-        internal IEnumerable<string> GetFilesToProcess()
-        {
-            return from f in NoneIncluded
-                   where (Path.GetExtension(f) == ".scss" ||
-                          Path.GetExtension(f) == ".sass") &&
-                         !Path.GetFileNameWithoutExtension(f)
-                    .StartsWith("_", StringComparison.InvariantCulture)
-                   select f;
-        }
-
         private IEnumerable<TaskItem> ProcessFiles(IEnumerable<string> inputFiles)
         {
             foreach (var file in inputFiles)
             {
+                if (Path.GetFileName(file)[0] == '_')
+                {
+                    Logger.LogMessage($"Skipping Partial File: {file}");
+                    continue;
+                }
+
                 Logger.LogMessage($"Processing {file}");
                 var outputFile = GetFilePath(file);
 
@@ -83,7 +71,7 @@ namespace Mobile.BuildTools.Tasks
                 var css = result.Css;
                 Logger.LogMessage(css);
 
-                if (!string.IsNullOrWhiteSpace(MinimizeCSS) && bool.TryParse(MinimizeCSS, out bool b) && b)
+                if (string.IsNullOrWhiteSpace(DebugOutput) || (bool.TryParse(DebugOutput, out bool b) && !b))
                 {
                     Logger.LogMessage($"minifying output to '{outputFile}'");
                     CssSettings settings = new CssSettings
@@ -104,7 +92,7 @@ namespace Mobile.BuildTools.Tasks
                 var pattern = @"(\w+):(any|all)";
                 var formsCSS = Regex.Replace(css, pattern, m => $"^{m.Groups[1].Value}");
 
-                File.WriteAllText(outputFile, $"{UpgradeNote}{formsCSS}");
+                File.WriteAllText(outputFile, $"{formsCSS}");
                 yield return new TaskItem(ProjectCollection.Escape(outputFile));
             }
         }
@@ -112,13 +100,7 @@ namespace Mobile.BuildTools.Tasks
         private string GetFilePath(string scssFile)
         {
             var file = Regex.Replace(scssFile, @"sass|scss", "css");
-
-            if (!string.IsNullOrWhiteSpace(OutputInProject) && bool.TryParse(OutputInProject, out bool b) && !b)
-            {
-                file = Path.Combine(OutputDirectory, file);
-            }
-
-            return file;
+            return Path.Combine(OutputDirectory, file);
         }
 
         private void ThrowUglifyErrors(UglifyResult result, string outputFilePath)
