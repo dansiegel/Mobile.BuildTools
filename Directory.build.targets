@@ -23,18 +23,11 @@ if(Directory.Exists(_DeleteDirectory))
   <Target Name="LocalPublish" 
           AfterTargets="Pack" 
           Condition=" '$(IsPackable)' ">
-    <!-- <PropertyGroup>
-    </PropertyGroup>
-    <ItemGroup>
-      <ToDelete Include="$(LocalArtifactStagingDirectory)/*.*" 
-                Condition=" '$(PackageOutputPath)' != '$(LocalArtifactStagingDirectory)' " />
-      <ToDelete Include="$(NuGetPackageRoot)/packages/$(PackageId)/**/*.*" />
-    </ItemGroup> -->
 
-    <_RecursiveDeleteTask _DeleteDirectory="$(NuGetPackageRoot)/$(PackageId.ToLower())" />
+    <_RecursiveDeleteTask _DeleteDirectory="$(NuGetPackageRoot)/$(PackageId.ToLower())"
+                          Condition="Exists('$(NuGetPackageRoot)/$(PackageId.ToLower())')" />
     <_RecursiveDeleteTask _DeleteDirectory="$(LocalArtifactStagingDirectory)"
-                          Condition=" '$(PackageOutputPath)' != '$(LocalArtifactStagingDirectory)' " />
-    <!-- <Delete Files="@(ToDelete)" /> -->
+                          Condition=" '$(PackageOutputPath)' == '$(LocalArtifactStagingDirectory)' " />
 
     <MakeDir Directories="$(LocalArtifactStagingDirectory)" 
              Condition="!Exists('$(LocalArtifactStagingDirectory)')" />
