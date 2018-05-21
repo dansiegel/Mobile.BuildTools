@@ -137,22 +137,26 @@
 
   <PropertyGroup>
     <CssGDependsOn>
+      _CollectScss;
+      _EnsureScssRuntimeIsAvailable;
       ProcessScss;
       $(CssGDependsOn);
     </CssGDependsOn>
     <PrepareResourcesDependsOn>
+      _CollectScss;
+      _EnsureScssRuntimeIsAvailable;
       ProcessScss;
       $(PrepareResourcesDependsOn)
     </PrepareResourcesDependsOn>
     <ProcessScssDependsOn>
       _CollectScss;
-      _EnsureScssRuntimeIsAvailable
+      _EnsureScssRuntimeIsAvailable;
     </ProcessScssDependsOn>
   </PropertyGroup>
 
   <Target Name="_CollectScss">
     <ItemGroup>
-      <_AllScss Include="@(None)" Condition="'%(Extension)' == '.scss'" />
+      <_AllScss Include="**\*.scss" />
       <_PartialScss Include="@(_AllScss)" Condition="$([MSBuild]::ValueOrDefault('%(Filename)', '').StartsWith('_'))" />
       <_Scss Include="@(_AllScss)" Exclude="@(_PartialScss)" />
     </ItemGroup>
@@ -173,8 +177,9 @@
   </Target>
 
   <Target Name="ProcessScss" 
+          BeforeTargets="CssG"
           Inputs="@(_Scss);@(_PartialScc)" 
-          Outputs="@(_Scss -> '$(IntermediateOutputPath)\%(Filename).css')" BeforeTargets="CssG">
+          Outputs="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')">
 
     <PropertyGroup>
       <ProcessScssDebug Condition=" '$(ProcessScssDebug)' == '' ">$(MobileBuildToolsDebug)</ProcessScssDebug>
@@ -190,9 +195,8 @@
     </ScssProcessorTask>
 
     <ItemGroup>
-      <EmbeddedResource Include="@(_Scss -> $'(IntermediateOutputPath)\%(RecursiveDir)%(Filename).css')">
-        <Link>%(RecursiveDir)%(Filename).css</Link>
-      </EmbeddedResource>
+      <EmbeddedResource Include="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')" 
+                        Link="%(RecursiveDir)%(Filename).css" />
     </ItemGroup>
 
   </Target>

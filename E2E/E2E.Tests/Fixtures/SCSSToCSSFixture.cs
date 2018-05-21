@@ -11,6 +11,7 @@ namespace E2E.Tests.Fixtures
     public class SCSSToCSSFixture
     {
         public const string ExpectedCSSResourceId = "E2E.Core.theme.style.css";
+        public const string SecondaryExpectedCSSResourceId = "E2E.Core.theme.anotherStyle.css";
         public const string ExpectedCSS = @".primaryButton{background-color:#006}^button{background-color:transparent}";
 
         [Fact]
@@ -21,11 +22,18 @@ namespace E2E.Tests.Fixtures
         }
 
         [Fact]
+        public void SecondaryCssIsEmbedded()
+        {
+            Assert.Contains(SecondaryExpectedCSSResourceId, CommonLib.GetManifestResourceNames());
+        }
+
+        [Fact]
         public void CssWasProperlyFormatted()
         {
             using (var stream = typeof(CommonLib).Assembly.GetManifestResourceStream(ExpectedCSSResourceId))
             using (var reader = new StreamReader(stream))
             {
+                Assert.NotNull(stream);
                 var css = reader.ReadToEnd();
                 Assert.Equal(ExpectedCSS, css);
             }
