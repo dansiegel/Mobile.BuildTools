@@ -164,6 +164,7 @@
 
   <Target Name="_EnsureScssRuntimeIsAvailable">
     <PropertyGroup>
+      <Prefer32Bit Condition=" '$(Prefer32Bit)' == '' ">true</Prefer32Bit>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' AND ('$(Prefer32Bit)' == 'true' OR '$(PlatformTarget)' == 'x86')">win-x86</ScssRuntime>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' AND '$(OS)' == 'Unix'">osx-x64</ScssRuntime>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' ">win-x64</ScssRuntime>
