@@ -83,5 +83,21 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var output = generator.ProcessSecret(pair);
             Assert.Contains($"const string {key}", output);
         }
+
+        [Fact]
+        public void GeneratesCorrectNamespace_WithSpecifiedBaseNamespace()
+        {
+            var generator = GetGenerator();
+            generator.BaseNamespace = "Foo.Bar";
+            generator.OutputPath = "/Repos/AwesomeProject/Foo/Helpers";
+            generator.ProjectBasePath = "/Repos/AwesomeProject/Foo";
+
+
+            string @namespace = null;
+            var exception = Record.Exception(() => @namespace = generator.GetNamespace());
+            Assert.Null(exception);
+
+            Assert.Equal("Foo.Bar.Helpers", @namespace);
+        }
     }
 }
