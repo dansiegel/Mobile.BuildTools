@@ -56,6 +56,7 @@ As part of the Build Tools, a number of Build Properties are added to better ass
 - IsAppCenter
 - IsAppVeyor
 - IsJenkins
+- IsTeamCity
 - IsVSTS
 - IsBuildHost
 
@@ -204,6 +205,7 @@ Automatic Build Versioning supports the following `Behavior`'s:
   - AppCenter
   - AppVeyor
   - Jenkins
+  - TeamCity
   - VSTS
 
 #### Configuring Automatic Versioning
