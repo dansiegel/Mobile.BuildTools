@@ -109,7 +109,7 @@ namespace Mobile.BuildTools.Generators
             }
         }
 
-        private string GetNamespace()
+        internal string GetNamespace()
         {
             Uri file = new Uri(OutputPath);
             // Must end in a slash to indicate folder
@@ -120,6 +120,16 @@ namespace Mobile.BuildTools.Generators
                     .ToString()
                     .Replace('/', '.')
                 );
+
+            if(!string.IsNullOrWhiteSpace(BaseNamespace))
+            {
+                var folderName = Path.GetFileName(ProjectBasePath);
+                relativePath = Regex.Replace(relativePath, folderName, BaseNamespace);
+            }
+            else
+            {
+                Log.LogWarning($"Using Fallback namespace: {relativePath}");
+            }
 
             return relativePath;
         }
