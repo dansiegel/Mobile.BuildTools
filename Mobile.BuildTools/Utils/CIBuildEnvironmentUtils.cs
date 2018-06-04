@@ -15,10 +15,14 @@ namespace Mobile.BuildTools.Utils
                                                      .Keys
                                                      .Cast<object>()
                                                      .Any(k => k.ToString() == "APPVEYOR_BUILD_NUMBER");
+        public static bool IsTeamCity => Environment.GetEnvironmentVariables()
+                                                     .Keys
+                                                     .Cast<object>()
+                                                     .Any(k => k.ToString() == "TEAMCITY_VERSION");
         public static bool IsJenkins => Environment.GetEnvironmentVariables()
                                                      .Keys
                                                      .Cast<object>()
-                                                     .Any(k => k.ToString() == "BUILD_NUMBER");
+                                                     .Any(k => k.ToString() == "BUILD_NUMBER") && !IsTeamCity;
         public static bool IsVSTS => Environment.GetEnvironmentVariables()
                                                      .Keys
                                                      .Cast<object>()

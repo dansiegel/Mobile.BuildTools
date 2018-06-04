@@ -25,9 +25,11 @@
     <IsAppVeyor Condition=" '$(IsAppVeyor)' == '' ">false</IsAppVeyor>
     <IsAppVeyor Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">true</IsAppVeyor>
     <IsJenkins Condition=" '$(IsJenkins)' == '' ">false</IsJenkins>
-    <IsJenkins Condition=" '$(BUILD_NUMBER)' != '' ">true</IsJenkins>
+    <IsJenkins Condition=" '$(BUILD_NUMBER)' != '' And '$(TEAMCITY_VERSION)' == '' ">true</IsJenkins>
+    <IsTeamCity Condition=" '$(IsTeamCity)' == '' ">false</IsTeamCity>
+    <IsTeamCity Condition=" '$(BUILD_NUMBER)' != '' And '$(TEAMCITY_VERSION)' != '' ">true</IsTeamCity>
     <IsBuildHost Condition=" '$(IsBuildHost)' == '' ">false</IsBuildHost>
-    <IsBuildHost Condition=" '$(IsAppCenter)' Or '$(IsVSTS)' Or '$(IsAppVeyor)' Or '$(IsJenkins)' ">true</IsBuildHost>
+    <IsBuildHost Condition=" '$(IsAppCenter)' Or '$(IsVSTS)' Or '$(IsAppVeyor)' Or '$(IsJenkins)' Or '$(IsTeamCity)' ">true</IsBuildHost>
   </PropertyGroup>
 
   <Choose>
