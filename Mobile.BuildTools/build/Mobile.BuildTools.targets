@@ -99,7 +99,7 @@
   <Target Name="IPACopyToStagingDirectory"
           AfterTargets="_ZipIpa"
           DependsOnTargets="_ZipIpa"
-          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' ">
+          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'true' And !'$(IsAppCenter)' ">
 
     <PropertyGroup>
       <__IpaFileName>$([System.IO.Path]::GetFileNameWithoutExtension('$(IpaPackagePath)'))</__IpaFileName>
@@ -124,7 +124,7 @@
   <Target Name="APKCopyToStagingDirectory"
           AfterTargets="_CreateBaseApk"
           DependsOnTargets="_CreateBaseApk"
-          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' ">
+          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'true' And !'$(IsAppCenter)' ">
     
     <ItemGroup>
       <__Generated_APK Include="$(OutputPath)\**\*.apk" />

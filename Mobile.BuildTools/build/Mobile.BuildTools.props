@@ -16,6 +16,7 @@
     <IsMacOSProject>false</IsMacOSProject>
     <IsTizenProject>false</IsTizenProject>
     <MobileBuildToolsTargets>$(MSBuildThisFileDirectory)Mobile.BuildTools.targets</MobileBuildToolsTargets>
+    <DisableBuildToolsArtifactCopy>false</DisableBuildToolsArtifactCopy>
     <BuildToolsArtifactOutputPath Condition=" '$(BuildToolsArtifactOutputPath)' == '' ">$([System.IO.Path]::Combine('$(SolutionDir)', 'Artifacts'))</BuildToolsArtifactOutputPath>
     <BuildToolsArtifactOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</BuildToolsArtifactOutputPath>
     <IsAppCenter Condition=" '$(IsAppCenter)' == '' ">false</IsAppCenter>
