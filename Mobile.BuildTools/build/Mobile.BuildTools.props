@@ -17,7 +17,7 @@
     <IsTizenProject>false</IsTizenProject>
     <MobileBuildToolsTargets>$(MSBuildThisFileDirectory)Mobile.BuildTools.targets</MobileBuildToolsTargets>
     <BuildToolsArtifactOutputPath Condition=" '$(BuildToolsArtifactOutputPath)' == '' ">$([System.IO.Path]::Combine('$(SolutionDir)', 'Artifacts'))</BuildToolsArtifactOutputPath>
-    <BuildToolsArtifactOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</BuildToolsArtifactOutputPath>
+    <BuildToolsArtifactOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$([System.IO.Path]::Combine('$(BUILD_ARTIFACTSTAGINGDIRECTORY)', 'App'))</BuildToolsArtifactOutputPath>
     <IsAppCenter Condition=" '$(IsAppCenter)' == '' ">false</IsAppCenter>
     <IsAppCenter Condition=" '$(APPCENTER_BUILD_ID)' != '' ">true</IsAppCenter>
     <IsVSTS Condition=" '$(IsVSTS)' == '' ">false</IsVSTS>
