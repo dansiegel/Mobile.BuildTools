@@ -121,17 +121,26 @@
 
   </Target>
 
-  <Target Name="APKCopyToStagingDirectory"
-          AfterTargets="_CreateBaseApk"
-          DependsOnTargets="_CreateBaseApk"
-          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' ">
-    
+  <Target Name="_CollectAPK"
+          BeforeTargets="APKCopyToStagingDirectory">
+
     <ItemGroup>
       <__Generated_APK Include="$(OutputPath)\**\*.apk" />
     </ItemGroup>
 
+    <Message Text="@(__Generated_APK)" />
+
+  </Target>
+
+  <Target Name="APKCopyToStagingDirectory"
+          AfterTargets="_CreateBaseApk;_CollectAPK"
+          DependsOnTargets="_CreateBaseApk;_CollectAPK"
+          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' "
+          Inputs="@(__Generated_APK)"
+          Outputs="@(__Generated_APK -> '$(BuildToolsArtifactOutputPath)%(Filename)%(Extension)')">
+
     <Copy SourceFiles="$(__Generated_APK)" 
-          DestinationFiles="$(BuildToolsArtifactOutputPath)\%(Filename)%(Extension)" />
+          DestinationFolder="$(BuildToolsArtifactOutputPath)" />
 
   </Target>
 
