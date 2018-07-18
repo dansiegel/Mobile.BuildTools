@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Utils;
 using Mobile.BuildTools.Versioning;
@@ -13,6 +9,8 @@ namespace Mobile.BuildTools.Generators
 {
     public abstract class BuildVersionGeneratorBase : IGenerator
     {
+        private static DateTimeOffset EPOCOffset => new DateTimeOffset(new DateTime(2018, 1, 1));
+
         public Behavior Behavior { get; set; }
         public VersionEnvironment VersionEnvironment { get; set; }
         public string ProjectPath { get; set; }
@@ -71,7 +69,8 @@ namespace Mobile.BuildTools.Generators
                 return CIBuildEnvironmentUtils.BuildNumber;
             }
 
-            return $"{VersionOffset + DateTimeOffset.Now.ToUnixTimeSeconds()}";
+            var timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds() - EPOCOffset.ToUnixTimeSeconds();
+            return $"{VersionOffset + timeStamp}";
         }
 
         protected string SanitizeVersion(string version)

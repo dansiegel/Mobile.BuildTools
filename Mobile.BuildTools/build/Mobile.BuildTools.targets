@@ -11,19 +11,23 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ScssProcessorTask"
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
 
+  <!-- Properties for the TemplateManifest Task -->
+  <PropertyGroup>
+    <BuildResourcesDirectoryName Condition=" '$(BuildResourcesDirectoryName)' == '' ">build</BuildResourcesDirectoryName>
+    <BuildResourcesDirRootPath Condition=" '$(BuildResourcesDirRootPath)' == '' ">$([System.IO.Path]::Combine($(SolutionDir), $(BuildResourcesDirectoryName)))</BuildResourcesDirRootPath>
+    <InfoPlistTemplateName Condition=" '$(InfoPlistTemplateName)' == '' ">BuildTemplateInfo.plist</InfoPlistTemplateName>
+    <AndroidManifestTemplateName Condition=" '$(AndroidManifestTemplateName)' == '' ">AndroidTemplateManifest.xml</AndroidManifestTemplateName>
+    <TemplateManifestPath Condition=" '$(IsAndroidProject)' ">$([System.IO.Path]::Combine('$(BuildResourcesDirRootPath)', '$(AndroidManifestTemplateName)'))</TemplateManifestPath>
+    <ManifestDestinationPath Condition=" '$(ManifestDestinationPath)' == '' And '$(IsAndroidProject)' ">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', "Properties", "AndroidManifest.xml"))</ManifestDestinationPath>
+    <TemplateManifestPath Condition=" '$(IsiOSProject)' ">$([System.IO.Path]::Combine('$(BuildResourcesDirRootPath)', '$(InfoPlistTemplateName)'))</TemplateManifestPath>
+    <ManifestDestinationPath Condition=" '$(ManifestDestinationPath)' == '' And '$(IsiOSProject)' ">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', "Info.plist"))</ManifestDestinationPath>
+    <ManifestVariablePrefix Condition=" '$(ManifestVariablePrefix)' == '' ">Manifest_</ManifestVariablePrefix>
+  </PropertyGroup>
+
   <Target Name="TemplateManifest" 
-          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build;_CleanMsymArchive;_CleanAppBundle;PrepareForBuild;_CoreCompileInterfaceDefinitions;_SetLatestTargetFrameworkVersion">
-    <PropertyGroup>
-      <BuildResourcesDirectoryName Condition=" '$(BuildResourcesDirectoryName)' == '' ">build</BuildResourcesDirectoryName>
-      <BuildResourcesDirRootPath Condition=" '$(BuildResourcesDirRootPath)' == '' ">$([System.IO.Path]::Combine($(SolutionDir), $(BuildResourcesDirectoryName)))</BuildResourcesDirRootPath>
-      <InfoPlistTemplateName Condition=" '$(InfoPlistTemplateName)' == '' ">BuildTemplateInfo.plist</InfoPlistTemplateName>
-      <AndroidManifestTemplateName Condition=" '$(AndroidManifestTemplateName)' == '' ">AndroidTemplateManifest.xml</AndroidManifestTemplateName>
-      <TemplateManifestPath Condition=" '$(IsAndroidProject)' ">$([System.IO.Path]::Combine('$(BuildResourcesDirRootPath)', '$(AndroidManifestTemplateName)'))</TemplateManifestPath>
-      <ManifestDestinationPath Condition=" '$(IsAndroidProject)' ">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', "Properties", "AndroidManifest.xml"))</ManifestDestinationPath>
-      <TemplateManifestPath Condition=" '$(IsiOSProject)' ">$([System.IO.Path]::Combine('$(BuildResourcesDirRootPath)', '$(InfoPlistTemplateName)'))</TemplateManifestPath>
-      <ManifestDestinationPath Condition=" '$(IsiOSProject)' ">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', "Info.plist"))</ManifestDestinationPath>
-      <ManifestVariablePrefix Condition=" '$(ManifestVariablePrefix)' == '' ">Manifest_</ManifestVariablePrefix>
-    </PropertyGroup>
+          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build;_CleanMsymArchive;_CleanAppBundle;PrepareForBuild;_CoreCompileInterfaceDefinitions;_SetLatestTargetFrameworkVersion"
+          Inputs="$(TemplateManifestPath)"
+          Outputs="$(ManifestDestinationPath)">
 
     <Message Condition=" '$(MobileBuildToolsDebug)' == 'true' " Text="Checking for Platform Template Configurations to Copy" />
     <Message Condition=" '$(MobileBuildToolsDebug)' == 'true' " Text="SdkShortFrameworkIdentifier: '$(_SdkShortFrameworkIdentifier)'" />
@@ -121,17 +125,26 @@
 
   </Target>
 
-  <Target Name="APKCopyToStagingDirectory"
-          AfterTargets="_CreateBaseApk"
-          DependsOnTargets="_CreateBaseApk"
-          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'true' And !'$(IsAppCenter)' ">
-    
+  <Target Name="_CollectAPK"
+          BeforeTargets="APKCopyToStagingDirectory">
+
     <ItemGroup>
       <__Generated_APK Include="$(OutputPath)\**\*.apk" />
     </ItemGroup>
 
+    <Message Text="@(__Generated_APK)" />
+
+  </Target>
+
+  <Target Name="APKCopyToStagingDirectory"
+          AfterTargets="_CreateBaseApk;_CollectAPK"
+          DependsOnTargets="_CreateBaseApk;_CollectAPK"
+          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' "
+          Inputs="@(__Generated_APK)"
+          Outputs="@(__Generated_APK -> '$(BuildToolsArtifactOutputPath)%(Filename)%(Extension)')">
+
     <Copy SourceFiles="$(__Generated_APK)" 
-          DestinationFiles="$(BuildToolsArtifactOutputPath)\%(Filename)%(Extension)" />
+          DestinationFolder="$(BuildToolsArtifactOutputPath)" />
 
   </Target>
 

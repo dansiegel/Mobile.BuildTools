@@ -21,7 +21,7 @@ if(Directory.Exists(_DeleteDirectory))
   </UsingTask>
 
   <Target Name="LocalPublish" 
-          AfterTargets="Pack" 
+          BeforeTargets="Pack;GenerateNuspec" 
           Condition=" '$(IsPackable)' ">
 
     <_RecursiveDeleteTask _DeleteDirectory="$(NuGetPackageRoot)/$(PackageId.ToLower())"
