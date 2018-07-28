@@ -13,6 +13,10 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ScssProcessorTask"
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
 
+  <!-- Import Xamarin Targets if we're using the framework -->
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets"
+          Condition=" $(IsiOSProject) "/>
+
   <Target Name="CIEnvironmentDump">
     <BuildEnvironmentDumpTask ProjectDirectory="$(MSBuildProjectDirectory)" />
   </Target>
@@ -48,7 +52,12 @@
                           ManifestOutputPath="$(ManifestDestinationPath)"
                           SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
                           DebugOutput="$(MobileBuildToolsDebug)" />
+  </Target>
 
+  <Target Name="SetApsEnvironmentToProduction"
+          AfterTargets="HandleTokenizedInfoPlist"
+          Condition=" '$(APSProductionEnvironment)' != '' And '$(APSProductionEnvironment)' != 'false' ">
+    <PropertyListEditor PropertyList="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent" Action="Set" Entry="aps-environment" Type="String" Value="production" />
   </Target>
 
   <Target Name="BuildHostSecrets"
