@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Logging;
@@ -12,6 +10,8 @@ namespace Mobile.BuildTools.Tasks
         public string Prefix { get; set; }
 
         public string Token { get; set; }
+
+        public string ProjectDirectory { get; set; }
 
         public string ManifestTemplatePath { get; set; }
 
@@ -36,12 +36,13 @@ namespace Mobile.BuildTools.Tasks
                 else if (File.Exists(ManifestTemplatePath))
                 {
                     Log.LogMessage($"Generating '{Path.GetFileName(ManifestOutputPath)}'");
-                    bool debug = false;
-                    bool.TryParse(DebugOutput, out debug);
+                    bool.TryParse(DebugOutput, out var debug);
                     var generator = new AppManifestGenerator()
                     {
                         Prefix = Prefix,
                         Token = Token,
+                        SdkShortFrameworkIdentifier = SdkShortFrameworkIdentifier,
+                        ProjectDirectory = ProjectDirectory,
                         ManifestOutputPath = ManifestOutputPath,
                         ManifestTemplatePath = ManifestTemplatePath,
                         DebugOutput = debug,

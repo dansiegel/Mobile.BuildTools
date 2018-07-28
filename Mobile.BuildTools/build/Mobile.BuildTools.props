@@ -100,6 +100,15 @@
     </Otherwise>
   </Choose>
 
+  <PropertyGroup>
+    <IsPlatformProject>false</IsPlatformProject>
+    <IsPlatformProject Condition=" $(IsAndroidProject) ">true</IsPlatformProject>
+    <IsPlatformProject Condition=" $(IsiOSProject) ">true</IsPlatformProject>
+    <IsPlatformProject Condition=" $(IsUWPProject) ">true</IsPlatformProject>
+    <IsPlatformProject Condition=" $(IsMacOSProject) ">true</IsPlatformProject>
+    <IsPlatformProject Condition=" $(IsTizenProject) ">true</IsPlatformProject>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(SolutionDir)' == '' Or '$(SolutionDir)' == '*Undefined*' ">
     <ProjectParentDir>$([System.IO.Directory]::GetParent($(MSBuildProjectDirectory)))</ProjectParentDir>
     <ProjectParentDirName>$([System.IO.Directory]::GetParent($(MSBuildProjectDirectory)).Name)</ProjectParentDirName>

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Mobile.BuildTools.Generators;
+using Mobile.BuildTools.Utils;
 using Mobile.BuildTools.Tests.Mocks;
 using Newtonsoft.Json;
 using Xunit;
@@ -30,6 +31,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
         private AppManifestGenerator CreateGenerator() =>
             new AppManifestGenerator()
             {
+                ProjectDirectory = Directory.GetCurrentDirectory(),
                 Log = new XunitLog(_testOutputHelper),
                 ManifestTemplatePath = TemplateManifestPath,
                 ManifestOutputPath = TemplateManifestOutputPath,
@@ -57,7 +59,8 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var generator = CreateGenerator();
             var template = File.ReadAllText(TemplateManifestPath);
             var match = generator.GetMatches(template).FirstOrDefault();
-            var processedTemplate = generator.ProcessMatch(template, match);
+            var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(Directory.GetCurrentDirectory(), true);
+            var processedTemplate = generator.ProcessMatch(template, match, variables);
             var json = JsonConvert.DeserializeAnonymousType(processedTemplate, new
             {
                 TemplatedParameter = "",
@@ -75,7 +78,8 @@ namespace Mobile.BuildTools.Tests.Fixtures
             generator.Token = @"%%";
             var template = File.ReadAllText(TemplateManifestPath);
             var match = generator.GetMatches(template).FirstOrDefault();
-            var processedTemplate = generator.ProcessMatch(template, match);
+            var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(Directory.GetCurrentDirectory(), true);
+            var processedTemplate = generator.ProcessMatch(template, match, variables);
             var json = JsonConvert.DeserializeAnonymousType(processedTemplate, new
             {
                 TemplatedParameter = "",
