@@ -89,8 +89,8 @@ namespace Mobile.BuildTools.Tests.Fixtures
         {
             var generator = GetGenerator();
             generator.BaseNamespace = "Foo.Bar";
-            generator.OutputPath = "/Repos/AwesomeProject/Foo/Helpers";
-            generator.ProjectBasePath = "/Repos/AwesomeProject/Foo";
+            generator.OutputPath = "file://Repos/AwesomeProject/Foo/Helpers";
+            generator.ProjectBasePath = "file://Repos/AwesomeProject/Foo";
 
 
             string @namespace = null;
