@@ -10,6 +10,8 @@
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
   <UsingTask TaskName="Mobile.BuildTools.Tasks.AutomaticBuildVersioningTask"
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.GenerateGitReleaseNotesTask"
+             AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ScssProcessorTask"
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
 
@@ -188,6 +190,20 @@
     <Copy SourceFiles="$(__Generated_APK)" 
           DestinationFolder="$(BuildToolsArtifactOutputPath)" />
 
+  </Target>
+  
+  <Target Name="GenerateGitReleaseNotes"
+          AfterTargets="CoreCompile"
+          Condition=" '$(EnableReleaseNotes)' == 'true' And !Exists($([System.IO.Path]::Combine('$(BuildToolsArtifactOutputPath)', 'releasenotes.md'))) ">
+    <PropertyGroup>
+      <ReleaseNotesLookbackDays Condition=" '$(ReleaseNotesLookbackDays)' == '' ">7</ReleaseNotesLookbackDays>
+      <ReleaseNotesLookbackCommits Condition=" '$(ReleaseNotesLookbackCommits)' == '' ">5</ReleaseNotesLookbackCommits>
+      <ReleaseNotesCharacterLimit Condition=" '$(ReleaseNotesCharacterLimit)' == '' ">0</ReleaseNotesCharacterLimit>
+    </PropertyGroup>
+    <GenerateGitReleaseNotesTask OutputDirectory="$(BuildToolsArtifactOutputPath)"
+                                 DateLookback="$(ReleaseNotesLookbackDays)"
+                                 MaxCommit="$(ReleaseNotesLookbackCommits)"
+                                 CharacterLimit="$(ReleaseNotesCharacterLimit)" />
   </Target>
 
   <PropertyGroup>
