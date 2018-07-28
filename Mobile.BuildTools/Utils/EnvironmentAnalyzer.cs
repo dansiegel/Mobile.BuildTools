@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Utils
@@ -10,7 +12,7 @@ namespace Mobile.BuildTools.Utils
         private const string DefaultSecretPrefix = "Secret_";
         private const string DefaultManifestPrefix = "Manifest_";
 
-        public static IDictionary<string, string> GatherEnvironmentVariables(string projectPath, bool includeManifest = false)
+        public static IDictionary<string, string> GatherEnvironmentVariables(string projectPath = null, bool includeManifest = false)
         {
             var env = new Dictionary<string, string>();
             foreach(var key in Environment.GetEnvironmentVariables().Keys)
@@ -18,7 +20,10 @@ namespace Mobile.BuildTools.Utils
                 env.Add(key.ToString(), Environment.GetEnvironmentVariable(key.ToString()));
             }
 
-            LoadSecrets(Path.Combine(projectPath, "secrets.json"), ref env);
+            if(!string.IsNullOrWhiteSpace(projectPath))
+            {
+                LoadSecrets(Path.Combine(projectPath, "secrets.json"), ref env); LoadSecrets(Path.Combine(projectPath, "secrets.json"), ref env);
+            }
 
             if (includeManifest)
             {
@@ -138,6 +143,29 @@ namespace Mobile.BuildTools.Utils
             }
 
             return prefixes;
+        }
+
+        public static IEnumerable<string> GetSecretKeys(IEnumerable<string> prefixes)
+        {
+            var variables = GatherEnvironmentVariables();
+            return variables.Keys.Where(k => prefixes.Any(p => k.StartsWith(p)));
+        }
+
+        public static IDictionary<string, string> GetSecrets(string sdkShortFrameworkIdentifier, string runtimePrefix = null)
+        {
+            var prefixes = GetSecretPrefixes(sdkShortFrameworkIdentifier, runtimePrefix);
+            var keys = GetSecretKeys(prefixes);
+            var variables = GatherEnvironmentVariables().Where(p => keys.Any(k => k == p.Key));
+            var output = new Dictionary<string, string>();
+            foreach(var prefix in prefixes)
+            {
+                foreach(var pair in variables.Where(v => v.Key.StartsWith(prefix)))
+                {
+                    var key = Regex.Replace(pair.Key, prefix, "");
+                    output.Add(key, pair.Value);
+                }
+            }
+            return output;
         }
 
         private static void LoadSecrets(string path, ref Dictionary<string, string> env)

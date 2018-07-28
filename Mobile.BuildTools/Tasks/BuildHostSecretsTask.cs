@@ -34,6 +34,7 @@ namespace Mobile.BuildTools.Tasks
                     bool.TryParse(DebugOutput, out var debug);
                     var generator = new BuildHostSecretsGenerator()
                     {
+                        SdkShortFrameworkIdentifier = SdkShortFrameworkIdentifier,
                         SecretsPrefix = SecretsPrefix,
                         SecretsJsonFilePath = SecretsJsonFilePath,
                         DebugOutput = debug,

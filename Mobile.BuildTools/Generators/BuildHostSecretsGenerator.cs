@@ -11,6 +11,8 @@ namespace Mobile.BuildTools.Generators
 {
     public class BuildHostSecretsGenerator : IGenerator
     {
+        public string SdkShortFrameworkIdentifier { get; set; }
+
         public string SecretsPrefix { get; set; }
 
         public string SecretsJsonFilePath { get; set; }
@@ -59,13 +61,13 @@ namespace Mobile.BuildTools.Generators
             File.WriteAllText(path, json);
         }
 
-        internal JObject GetJObjectFromSecrets(IEnumerable<object> secrets)
+        internal JObject GetJObjectFromSecrets(IDictionary<string, string> secrets)
         {
             var json = new JObject();
             foreach (var secret in secrets)
             {
-                var key = secret.ToString().Remove(0, SecretsPrefix.Length);
-                var value = Environment.GetEnvironmentVariable(secret.ToString());
+                var key = secret.Key;
+                var value = secret.Value;
                 if (double.TryParse(value, out var d))
                 {
                     json.Add(key, Math.Abs(d % 1) <= (double.Epsilon * 100) ? (int)d : d);
@@ -82,11 +84,7 @@ namespace Mobile.BuildTools.Generators
             return json;
         }
 
-        internal IEnumerable<object> GetSecrets() =>
-            Environment.GetEnvironmentVariables()
-                           .Keys
-                           .Cast<object>()
-                           .Where(e => $"{e}".StartsWith(SecretsPrefix, StringComparison.OrdinalIgnoreCase));
-
+        internal IDictionary<string, string> GetSecrets() =>
+            Utils.EnvironmentAnalyzer.GetSecrets(SdkShortFrameworkIdentifier, SecretsPrefix);
     }
 }

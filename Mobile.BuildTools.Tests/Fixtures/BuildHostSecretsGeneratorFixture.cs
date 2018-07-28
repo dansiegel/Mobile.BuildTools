@@ -72,11 +72,11 @@ namespace Mobile.BuildTools.Tests.Fixtures
             Assert.NotEmpty(secrets);
             foreach (var s in secrets)
             {
-                _testOutputHelper.WriteLine($"{s.GetType()}: {s}");
+                _testOutputHelper.WriteLine($"{s.GetType()}: {s.Key}: {s.Value}");
                 _testOutputHelper.WriteLine($"     ---- {Environment.GetEnvironmentVariable(s.ToString())}");
             }
 
-            Assert.Contains($"{SecretsPrefix}Test1", secrets);
+            Assert.Contains($"Test1", secrets.Keys);
         }
 
         [Fact]
