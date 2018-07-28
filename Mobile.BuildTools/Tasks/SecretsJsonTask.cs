@@ -42,8 +42,7 @@ namespace Mobile.BuildTools.Tasks
                     Log.LogMessage($"RootNamespace: {RootNamespace}");
                     Log.LogMessage($"OutputPath: {OutputPath}");
 
-                    bool debug = false;
-                    bool.TryParse(DebugOutput, out debug);
+                    bool.TryParse(DebugOutput, out var debug);
                     var generator = new SecretsClassGenerator()
                     {
                         ProjectBasePath = ProjectBasePath,

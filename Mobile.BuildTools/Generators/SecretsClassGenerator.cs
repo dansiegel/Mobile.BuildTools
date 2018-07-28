@@ -59,8 +59,8 @@ namespace Mobile.BuildTools.Generators
             var json = File.ReadAllText(SecretsJsonFilePath);
             var secrets = JObject.Parse(json);
 
-            string replacement = string.Empty;
-            string safeReplacement = string.Empty;
+            var replacement = string.Empty;
+            var safeReplacement = string.Empty;
 
             foreach (var secret in secrets)
             {
@@ -91,15 +91,15 @@ namespace Mobile.BuildTools.Generators
         {
             var value = secret.Value.ToString();
             var outputValue = safeOutput ? SafePlaceholder : value;
-            if (bool.TryParse(value, out bool b))
+            if (bool.TryParse(value, out var b))
             {
                 return $"{TabSpace}{TabSpace}internal const bool {secret.Key} = {outputValue.ToLower()};\n\n";
             }
-            else if (Regex.IsMatch(value, @"\d+\.\d+") && double.TryParse(value, out double d))
+            else if (Regex.IsMatch(value, @"\d+\.\d+") && double.TryParse(value, out var d))
             {
                 return $"{TabSpace}{TabSpace}internal const double {secret.Key} = {outputValue};\n\n";
             }
-            else if (int.TryParse(value, out int i))
+            else if (int.TryParse(value, out var i))
             {
                 return $"{TabSpace}{TabSpace}internal const int {secret.Key} = {outputValue};\n\n";
             }
@@ -111,14 +111,14 @@ namespace Mobile.BuildTools.Generators
 
         internal string GetNamespace()
         {
-            Uri file = new Uri(OutputPath);
+            var file = new Uri(OutputPath);
             // Must end in a slash to indicate folder
-            Uri folder = new Uri(ProjectBasePath);
-            string relativePath =
+            var folder = new Uri(ProjectBasePath);
+            var relativePath =
             Uri.UnescapeDataString(
                 folder.MakeRelativeUri(file)
-                    .ToString()
-                    .Replace('/', '.')
+                      .ToString()
+                      .Replace('/', '.')
                 );
 
             if(!string.IsNullOrWhiteSpace(BaseNamespace))

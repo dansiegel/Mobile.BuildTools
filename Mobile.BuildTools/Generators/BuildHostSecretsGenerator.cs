@@ -66,11 +66,11 @@ namespace Mobile.BuildTools.Generators
             {
                 var key = secret.ToString().Remove(0, SecretsPrefix.Length);
                 var value = Environment.GetEnvironmentVariable(secret.ToString());
-                if (double.TryParse(value, out double d))
+                if (double.TryParse(value, out var d))
                 {
                     json.Add(key, Math.Abs(d % 1) <= (double.Epsilon * 100) ? (int)d : d);
                 }
-                else if (bool.TryParse(value, out bool b))
+                else if (bool.TryParse(value, out var b))
                 {
                     json.Add(key, b);
                 }

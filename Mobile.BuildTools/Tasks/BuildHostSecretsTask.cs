@@ -31,7 +31,7 @@ namespace Mobile.BuildTools.Tasks
                 else
                 {
                     ValidateSecretsPrefix();
-                    bool.TryParse(DebugOutput, out bool debug);
+                    bool.TryParse(DebugOutput, out var debug);
                     var generator = new BuildHostSecretsGenerator()
                     {
                         SecretsPrefix = SecretsPrefix,
@@ -56,33 +56,7 @@ namespace Mobile.BuildTools.Tasks
         {
             if (!string.IsNullOrWhiteSpace(SecretsPrefix)) return;
 
-            switch (SdkShortFrameworkIdentifier)
-            {
-                case "monoandroid":
-                case "xamarinandroid":
-                case "xamarin.android":
-                    SecretsPrefix = "DroidSecret_";
-                    break;
-                case "xamarinios":
-                case "xamarin.ios":
-                    SecretsPrefix = "iOSSecret_";
-                    break;
-                case "win":
-                case "uap":
-                    SecretsPrefix = "UWPSecret_";
-                    break;
-                case "xamarinmac":
-                case "xamarin.mac":
-                    SecretsPrefix = "MacSecret_";
-                    break;
-                case "tizen":
-                    SecretsPrefix = "TizenSecret_";
-                    break;
-                default:
-                    SecretsPrefix = "Secret_";
-                    break;
-
-            }
+            SecretsPrefix = Utils.EnvironmentAnalyzer.GetSecretPrefix(SdkShortFrameworkIdentifier);
         }
     }
 }
