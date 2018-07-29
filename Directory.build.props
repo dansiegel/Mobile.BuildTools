@@ -6,8 +6,8 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <PackageLicenseUrl>https://github.com/dansiegel/Mobile.BuildTools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools/</PackageProjectUrl>
-    <LocalArtifactStagingDirectory>$(MSBuildThisFileDirectory)/Artifacts</LocalArtifactStagingDirectory>
-    <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)/Artifacts</PackageOutputPath>
+    <LocalArtifactStagingDirectory>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Artifacts'))</LocalArtifactStagingDirectory>
+    <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$([System.IO.Path]::Combine('$(BUILD_ARTIFACTSTAGINGDIRECTORY)', 'Artifacts'))</PackageOutputPath>
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' == '' ">$(LocalArtifactStagingDirectory)</PackageOutputPath>
     <IsPackable>!$(ProjectName.Contains("Test"))</IsPackable>
     <GeneratePackageOnBuild>$(IsPackable)</GeneratePackageOnBuild>

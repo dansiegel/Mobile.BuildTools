@@ -18,15 +18,27 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NewtonsoftPackagePath>$(NuGetPackageRoot)newtonsoft.json\11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
+    <SharpScssPackagePath>$(NuGetPackageRoot)sharpscss\1.3.8\lib\netstandard1.3\SharpScss.dll</SharpScssPackagePath>
+    <NUglifyPackagePath>$(NuGetPackageRoot)nuglify\1.5.10\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
+    <SharpScssRuntimePath>$(NuGetPackageRoot)sharpscss\1.3.8\runtimes\**</SharpScssRuntimePath>
+
+    <NewtonsoftPackagePath Condition=" !Exists('$(NewtonsoftPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
+    <SharpScssPackagePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.3.8\lib\netstandard1.3\SharpScss.dll</SharpScssPackagePath>
+    <NUglifyPackagePath Condition=" !Exists('$(NUglifyPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\nuglify\1.5.10\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
+    <SharpScssRuntimePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.3.8\runtimes\**</SharpScssRuntimePath>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- <PackageReference Include="Nerdbank.GitVersioning" Version="2.0.41" PrivateAssets="all" /> -->
     <None Remove="**\*.props;**\*.targets" />
     <Content Include="build/*.props;build/*.targets" Pack="true" PackagePath="build/" />
     <Content Include="$(OutputPath)/$(AssemblyName).dll;$(OutputPath)/$(AssemblyName).pdb" Pack="true" PackagePath="build/" />
-    <Content Include="$(NuGetPackageRoot)newtonsoft.json/11.0.2/lib/netstandard2.0/Newtonsoft.Json.dll" Link="build\Newtonsoft.Json.dll" Pack="true" PackagePath="build/" />
-    <Content Include="$(NuGetPackageRoot)sharpscss/1.3.8/lib/netstandard1.3/SharpScss.dll" Link="build\SharpScss.dll" Pack="true" PackagePath="build/" />
-    <Content Include="$(NuGetPackageRoot)nuglify/1.5.10/lib/netstandard1.3/NUglify.dll" Link="build\NUglify.dll" Pack="true" PackagePath="build/" />
-    <Content Include="$(NuGetPackageRoot)sharpscss/1.3.8/runtimes/**" Link="build/runtimes/%(RecursiveDir)%(Filename)%(Extension)" Pack="true" PackagePath="build/runtimes/" />
+    <Content Include="$(NewtonsoftPackagePath)" Link="build\Newtonsoft.Json.dll" Pack="true" PackagePath="build/" />
+    <Content Include="$(SharpScssPackagePath)" Link="build\SharpScss.dll" Pack="true" PackagePath="build/" />
+    <Content Include="$(NUglifyPackagePath)" Link="build\NUglify.dll" Pack="true" PackagePath="build/" />
+    <Content Include="$(SharpScssRuntimePath)" Link="build/runtimes/%(RecursiveDir)%(Filename)%(Extension)" Pack="true" PackagePath="build/runtimes/" />
   </ItemGroup>
 
   <ItemGroup>
