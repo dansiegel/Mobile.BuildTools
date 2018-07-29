@@ -10,7 +10,7 @@
       <Using Namespace="System.IO"/>  
       <Code Type="Fragment" Language="cs">  
 <![CDATA[  
-Log.LogMessage($"Directory to Delete '{_DeleteDirectory}'.");
+Log.LogMessage(string.Format("Directory to Delete '{0}'.", _DeleteDirectory));
 if(Directory.Exists(_DeleteDirectory))
 {
   Directory.Delete(_DeleteDirectory, true);
@@ -22,7 +22,7 @@ if(Directory.Exists(_DeleteDirectory))
 
   <Target Name="LocalPublish" 
           BeforeTargets="Pack;GenerateNuspec" 
-          Condition=" '$(IsPackable)' And $(OS) != 'Windows_NT' ">
+          Condition=" '$(IsPackable)' ">
 
     <_RecursiveDeleteTask _DeleteDirectory="$(NuGetPackageRoot)/$(PackageId.ToLower())"
                           Condition="Exists('$(NuGetPackageRoot)/$(PackageId.ToLower())')" />
