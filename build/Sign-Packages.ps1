@@ -6,7 +6,7 @@ if([string]::IsNullOrEmpty($env:SignClientSecret)){
     return;
 }
 
-dotnet tool install --tool-path . SignClient
+dotnet tool install SignClient -g
 
 # Setup Variables we need to pass into the sign client tool
 
@@ -18,7 +18,7 @@ $nupkgs = gci $env:BUILD_ARTIFACTSTAGINGDIRECTORY\*.nupkg -recurse | Select-Obje
 foreach ($nupkg in $nupkgs){
    Write-Host "Submitting $nupkg for signing"
 
-    .\SignClient 'sign' -c $appSettings -i $nupkg -f $fileList -r $env:SignClientUser -s $env:SignClientSecret -n 'Mobile.BuildTools' -d 'Mobile.BuildTools' -u 'https://github.com/dansiegel/Mobile.BuildTools'
+    SignClient 'sign' -c $appSettings -i $nupkg -f $fileList -r $env:SignClientUser -s $env:SignClientSecret -n 'Mobile.BuildTools' -d 'Mobile.BuildTools' -u 'https://github.com/dansiegel/Mobile.BuildTools'
 
     Write-Host "Finished signing $nupkg"
 }
