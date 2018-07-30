@@ -7,7 +7,7 @@
     <Description>Additional MSBuild targets and properties for .NET projects. Especially enhances Xamarin targets. Enables better development practices with CI/CD pipelines. See the Wiki on GitHub for more information in how to Get Started or customize your experience.</Description>
     <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
     <PackageReleaseNotes>
-      Shttps://github.com/dansiegel/Mobile.BuildTools/
+      https://github.com/dansiegel/Mobile.BuildTools/
     </PackageReleaseNotes>
     <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
