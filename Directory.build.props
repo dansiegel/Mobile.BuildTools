@@ -11,6 +11,11 @@
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' == '' ">$(LocalArtifactStagingDirectory)</PackageOutputPath>
     <IsPackable>!$(ProjectName.Contains("Test"))</IsPackable>
     <GeneratePackageOnBuild>$(IsPackable)</GeneratePackageOnBuild>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionPrefix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(VersionPrefix).$(BUILD_BUILDNUMBER)</VersionPrefix>
+    <VersionSuffix>ci</VersionSuffix>
+    <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
+    <VersionSuffix Condition=" '$(IS_RELEASE)' == 'true' "></VersionSuffix>
   </PropertyGroup>
 
 </Project>
