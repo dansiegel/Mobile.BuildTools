@@ -29,10 +29,6 @@ namespace Mobile.BuildTools.Tasks
                 {
                     Log.LogMessage($"No Template path specified for {SdkShortFrameworkIdentifier}");
                 }
-                else if (File.Exists(ManifestOutputPath))
-                {
-                    Log.LogMessage($"'{Path.GetFileName(ManifestOutputPath)}' already exists.");
-                }
                 else if (File.Exists(ManifestTemplatePath))
                 {
                     Log.LogMessage($"Generating '{Path.GetFileName(ManifestOutputPath)}'");
