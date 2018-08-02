@@ -5,9 +5,6 @@ namespace Mobile.BuildTools.Generators
 {
     public class iOSAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
     {
-        protected override string GetManifestPath() =>
-            Path.Combine(ProjectPath, "Info.plist");
-
         protected override void ProcessManifest(string plistPath, string buildNumber)
         {
             var infoPlist = XElement.Parse(File.ReadAllText(plistPath));
@@ -55,8 +52,7 @@ namespace Mobile.BuildTools.Generators
 
         private XElement GetNextKey(XNode node)
         {
-            var next = node.NextNode as XElement;
-            if (next == null) return null;
+            if (!(node.NextNode is XElement next)) return null;
 
             if (next.Name.LocalName == "key")
                 return next;

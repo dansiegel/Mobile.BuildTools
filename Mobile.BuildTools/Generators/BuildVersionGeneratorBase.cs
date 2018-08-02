@@ -11,9 +11,9 @@ namespace Mobile.BuildTools.Generators
     {
         private static DateTimeOffset EPOCOffset => new DateTimeOffset(new DateTime(2018, 1, 1));
 
+        public string ManifestPath { get; set; }
         public Behavior Behavior { get; set; }
         public VersionEnvironment VersionEnvironment { get; set; }
-        public string ProjectPath { get; set; }
         public int VersionOffset { get; set; }
         public ILog Log { get; set; }
         public bool? DebugOutput { get; set; }
@@ -33,16 +33,15 @@ namespace Mobile.BuildTools.Generators
                 return;
             }
 
-            var manifestPath = GetManifestPath();
-            if(string.IsNullOrWhiteSpace(manifestPath))
+            if(string.IsNullOrWhiteSpace(ManifestPath))
             {
                 Log.LogMessage("This platform is unsupported");
                 return;
             }
 
-            if(!File.Exists(manifestPath))
+            if(!File.Exists(ManifestPath))
             {
-                Log.LogWarning($"The '{Path.GetFileName(manifestPath)}' could not be found at the path '{manifestPath}'.");
+                Log.LogWarning($"The '{Path.GetFileName(ManifestPath)}' could not be found at the path '{ManifestPath}'.");
                 return;
             }
 
@@ -50,18 +49,16 @@ namespace Mobile.BuildTools.Generators
             Log.LogMessage($"Build Number: {BuildNumber}");
 
             Log.LogMessage("Processing Manifest");
-            ProcessManifest(manifestPath, BuildNumber);
+            ProcessManifest(ManifestPath, BuildNumber);
         }
 
         protected abstract void ProcessManifest(string path, string buildNumber);
-
-        protected abstract string GetManifestPath();
 
         protected string GetBuildNumber()
         {
             if(Behavior == Behavior.PreferBuildNumber && CIBuildEnvironmentUtils.IsBuildHost)
             {
-                if(int.TryParse(CIBuildEnvironmentUtils.BuildNumber, out int buildId))
+                if(int.TryParse(CIBuildEnvironmentUtils.BuildNumber, out var buildId))
                 {
                     return $"{buildId + VersionOffset}";
                 }

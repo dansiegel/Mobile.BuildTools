@@ -32,7 +32,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
             {
                 DebugOutput = true,
                 Log = new XunitLog(_testOutputHelper),
-                ProjectPath = ".",
+                ManifestPath = TemplateAndroidManifestPath,
                 VersionOffset = 0,
                 Behavior = behavior,
                 VersionEnvironment = VersionEnvironment.All

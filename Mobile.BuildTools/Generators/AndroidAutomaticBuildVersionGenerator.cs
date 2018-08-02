@@ -8,9 +8,6 @@ namespace Mobile.BuildTools.Generators
 {
     public class AndroidAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
     {
-        protected override string GetManifestPath() =>
-            Path.Combine(ProjectPath, "Properties", "AndroidManifest.xml");
-
         protected override void ProcessManifest(string path, string buildNumber)
         {
             var manifest = XElement.Parse(File.ReadAllText(path));

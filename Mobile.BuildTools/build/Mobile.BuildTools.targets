@@ -52,14 +52,21 @@
     <Message Text="ManifestOutputPath: '$(ManifestDestinationPath)'" />
   </Target>
 
+  <Target Name="_GatherManifests">
+    <PropertyGroup>
+      <TemlateAppManifest Condition=" '$(IsiOSProject)' ">$(_AppBundlePath)Info.plist</TemlateAppManifest>
+      <TemlateAppManifest Condition=" '$(IsAndroidProject)' ">$(IntermediateOutputPath)android\AndroidManifest.xml</TemlateAppManifest>
+    </PropertyGroup>
+  </Target>
+
   <Target Name="HandleTokenizedInfoPlist"
           AfterTargets="_CoreCompileInterfaceDefinitions"
           Condition=" $(IsiOSProject) ">
     <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
                           Prefix="$(ManifestVariablePrefix)"
                           Token="$(ManifestToken)"
-                          ManifestTemplatePath="$(_AppBundlePath)Info.plist"
-                          ManifestOutputPath="$(_AppBundlePath)Info.plist"
+                          ManifestTemplatePath="$(TemlateAppManifest)"
+                          ManifestOutputPath="$(TemlateAppManifest)"
                           SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
                           DebugOutput="$(MobileBuildToolsDebug)" />
   </Target>
@@ -76,13 +83,23 @@
     <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
                           Prefix="$(ManifestVariablePrefix)"
                           Token="$(ManifestToken)"
-                          ManifestTemplatePath="$(IntermediateOutputPath)android\AndroidManifest.xml"
-                          ManifestOutputPath="$(IntermediateOutputPath)android\AndroidManifest.xml"
+                          ManifestTemplatePath="$(TemlateAppManifest)"
+                          ManifestOutputPath="$(TemlateAppManifest)"
                           SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
                           DebugOutput="$(MobileBuildToolsDebug)" />
   </Target>
 
   <!-- TODO: Add Support for MacOS, Tizen & UWP -->
+
+  <Target Name="_GatherManifestForAutomaticVersioning"
+          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist">
+    <PropertyGroup>
+      <AutomaticVersionOffset Condition=" '$(AutomaticVersionOffset)' == '' ">0</AutomaticVersionOffset>
+      <AutomaticVersionEnvironment Condition=" '$(AutomaticVersionEnvironment)' == '' ">All</AutomaticVersionEnvironment>
+      <EnableAutomaticVersioning>false</EnableAutomaticVersioning>
+      <EnableAutomaticVersioning Condition=" '$(AutomaticVersionBehavior)' == 'PreferBuildNumber' Or '$(AutomaticVersionBehavior)' == 'Timestamp' ">true</EnableAutomaticVersioning>
+    </PropertyGroup>
+  </Target>
 
   <Target Name="BuildHostSecrets"
           BeforeTargets="Secrets;CoreCompile;_CoreXamlG;XamlG;XamlC;Build"
@@ -123,17 +140,12 @@
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
-          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist"
-          Condition=" '$(AutomaticVersionBehavior)' == 'PreferBuildNumber' Or '$(AutomaticVersionBehavior)' == 'Timestamp' ">
-    <PropertyGroup>
-      <AutomaticVersionOffset Condition=" '$(AutomaticVersionOffset)' == '' ">0</AutomaticVersionOffset>
-      <AutomaticVersionEnvironment Condition=" '$(AutomaticVersionEnvironment)' == '' ">All</AutomaticVersionEnvironment>
-    </PropertyGroup>
+          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist">
 
     <AutomaticBuildVersioningTask Behavior="$(AutomaticVersionBehavior)"
                                   VersionEnvironment="$(AutomaticVersionEnvironment)"
                                   VersionOffset="$(AutomaticVersionOffset)"
-                                  ProjectPath="$(MSBuildProjectDirectory)"
+                                  ManifestPath="$(TemlateAppManifest)"
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                   SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
                                   DebugOutput="$(MobileBuildToolsDebug)" />

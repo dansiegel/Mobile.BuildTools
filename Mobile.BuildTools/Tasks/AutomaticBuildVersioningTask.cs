@@ -1,8 +1,7 @@
-﻿using Mobile.BuildTools.Generators;
+﻿using System;
+using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Utils;
-using Mobile.BuildTools.Versioning;
-using System;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -10,9 +9,8 @@ namespace Mobile.BuildTools.Tasks
     {
         public string Behavior { get; set; }
         public string VersionEnvironment { get; set; }
-        public string ProjectPath { get; set; }
         public string VersionOffset { get; set; }
-
+        public string ManifestPath { get; set; }
         public string TargetFrameworkIdentifier { get; set; }
         public string SdkShortFrameworkIdentifier { get; set; }
 
@@ -57,14 +55,14 @@ namespace Mobile.BuildTools.Tasks
 
         private BuildVersionGeneratorBase GetGenerator()
         {
-            bool.TryParse(DebugOutput, out bool debug);
-            int.TryParse(VersionOffset, out int versionOffset);
-            Behavior behavior = Versioning.Behavior.Off;
+            bool.TryParse(DebugOutput, out var debug);
+            int.TryParse(VersionOffset, out var versionOffset);
+            var behavior = Versioning.Behavior.Off;
             if(!string.IsNullOrWhiteSpace(Behavior))
             {
                 Enum.TryParse(Behavior, out behavior);
             }
-            VersionEnvironment versionEnvironment = Versioning.VersionEnvironment.All;
+            var versionEnvironment = Versioning.VersionEnvironment.All;
             if (!string.IsNullOrWhiteSpace(VersionEnvironment))
             {
                 Enum.TryParse(VersionEnvironment, out versionEnvironment);
@@ -72,10 +70,8 @@ namespace Mobile.BuildTools.Tasks
 
             var framework = string.IsNullOrWhiteSpace(SdkShortFrameworkIdentifier) ? TargetFrameworkIdentifier : SdkShortFrameworkIdentifier;
 
-            switch (framework)
+            switch (framework.ToLower())
             {
-                case "MonoAndroid":
-                case "Xamarin.Android":
                 case "monoandroid":
                 case "xamarinandroid":
                 case "xamarin.android":
@@ -83,19 +79,18 @@ namespace Mobile.BuildTools.Tasks
                     {
                         DebugOutput = debug,
                         Log = (BuildHostLoggingHelper)Log,
-                        ProjectPath = ProjectPath,
+                        ManifestPath = ManifestPath,
                         VersionOffset = versionOffset,
                         Behavior = behavior,
                         VersionEnvironment = versionEnvironment
                     };
-                case "Xamarin.iOS":
                 case "xamarinios":
                 case "xamarin.ios":
                     return new iOSAutomaticBuildVersionGenerator
                     {
                         DebugOutput = debug,
                         Log = (BuildHostLoggingHelper)Log,
-                        ProjectPath = ProjectPath,
+                        ManifestPath = ManifestPath,
                         VersionOffset = versionOffset,
                         Behavior = behavior,
                         VersionEnvironment = versionEnvironment
