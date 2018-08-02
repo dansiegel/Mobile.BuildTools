@@ -60,7 +60,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var generator = CreateGenerator();
             generator.Execute();
 
-            Assert.Contains($"android:versionCode=\"{generator.BuildNumber}\"", File.ReadAllText(TemplateAndroidManifestOutputPath));
+            Assert.Contains($"android:versionCode=\"{generator.BuildNumber}\"", File.ReadAllText(generator.ManifestPath));
         }
 
         [Fact]
@@ -69,7 +69,8 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var generator = CreateGenerator();
             generator.Execute();
 
-            Assert.Contains($"android:versionName=\"1.0.{generator.BuildNumber}\"", File.ReadAllText(TemplateAndroidManifestOutputPath));
+            var contents = File.ReadAllText(generator.ManifestPath);
+            Assert.Contains($"android:versionName=\"1.0.{generator.BuildNumber}\"", contents);
         }
     }
 }
