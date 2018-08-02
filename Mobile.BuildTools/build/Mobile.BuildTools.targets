@@ -78,7 +78,7 @@
   </Target>
 
   <Target Name="HandleAndroidManifest"
-          DependsOnTargets="_GenerateJavaStubs"
+          AfterTargets="_GenerateJavaStubs"
           Condition=" $(IsAndroidProject) ">
     <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
                           Prefix="$(ManifestVariablePrefix)"
