@@ -53,8 +53,7 @@
   </Target>
 
   <Target Name="HandleTokenizedInfoPlist"
-          BeforeTargets="BeforeCodesign"
-          DependsOnTargets="_CompileAppManifest;_TemplateManifestCopy"
+          AfterTargets="_CoreCompileInterfaceDefinitions"
           Condition=" $(IsiOSProject) ">
     <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
                           Prefix="$(ManifestVariablePrefix)"
@@ -124,7 +123,7 @@
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
-          AfterTargets="TemplateManifest"
+          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist"
           Condition=" '$(AutomaticVersionBehavior)' == 'PreferBuildNumber' Or '$(AutomaticVersionBehavior)' == 'Timestamp' ">
     <PropertyGroup>
       <AutomaticVersionOffset Condition=" '$(AutomaticVersionOffset)' == '' ">0</AutomaticVersionOffset>
