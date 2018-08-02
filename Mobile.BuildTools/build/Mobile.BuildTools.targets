@@ -15,10 +15,6 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ScssProcessorTask"
              AssemblyFile="$(MSBuildThisFileDirectory)Mobile.BuildTools.dll"/>
 
-  <!-- Import Xamarin Targets if we're using the framework -->
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets"
-          Condition=" $(IsiOSProject) "/>
-
   <Target Name="CIEnvironmentDump">
     <BuildEnvironmentDumpTask ProjectDirectory="$(MSBuildProjectDirectory)" />
   </Target>
