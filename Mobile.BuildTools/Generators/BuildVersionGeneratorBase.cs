@@ -48,8 +48,20 @@ namespace Mobile.BuildTools.Generators
             BuildNumber = GetBuildNumber();
             Log.LogMessage($"Build Number: {BuildNumber}");
 
+            LogManifestContents();
+
             Log.LogMessage("Processing Manifest");
             ProcessManifest(ManifestPath, BuildNumber);
+
+            LogManifestContents();
+        }
+
+        private void LogManifestContents()
+        {
+            if (DebugOutput.HasValue && DebugOutput.Value)
+            {
+                Log.LogMessage(File.ReadAllText(ManifestPath));
+            }
         }
 
         protected abstract void ProcessManifest(string path, string buildNumber);
