@@ -70,8 +70,10 @@ namespace Mobile.BuildTools.Tasks
 
             var framework = string.IsNullOrWhiteSpace(SdkShortFrameworkIdentifier) ? TargetFrameworkIdentifier : SdkShortFrameworkIdentifier;
 
-            switch (framework.ToLower())
+            switch (framework)
             {
+                case "MonoAndroid":
+                case "Xamarin.Android":
                 case "monoandroid":
                 case "xamarinandroid":
                 case "xamarin.android":
@@ -84,6 +86,7 @@ namespace Mobile.BuildTools.Tasks
                         Behavior = behavior,
                         VersionEnvironment = versionEnvironment
                     };
+                case "Xamarin.iOS":
                 case "xamarinios":
                 case "xamarin.ios":
                     return new iOSAutomaticBuildVersionGenerator
