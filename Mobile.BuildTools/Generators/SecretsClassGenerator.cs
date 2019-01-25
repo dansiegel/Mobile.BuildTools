@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
@@ -124,6 +125,18 @@ namespace Mobile.BuildTools.Generators
         internal string ProcessSecret(KeyValuePair<string, JToken> secret, bool safeOutput = false)
         {
             var value = secret.Value.ToString();
+            var valueArray = Regex.Split(value, "(?<!\\\\);").Select(x => x.Replace("\\;", ";"));
+
+            if(valueArray.Count() > 1)
+            {
+                return GetArrayProperty(secret, valueArray, safeOutput);
+            }
+
+            return GetStandardProperty(secret, value, safeOutput);
+        }
+
+        internal string GetStandardProperty(KeyValuePair<string, JToken> secret, string value, bool safeOutput)
+        {
             var outputValue = safeOutput ? SafePlaceholder : value;
             if (bool.TryParse(value, out _))
             {
@@ -140,6 +153,32 @@ namespace Mobile.BuildTools.Generators
             else
             {
                 return $"{TabSpace}{TabSpace}internal const string {secret.Key} = \"{outputValue}\";\n\n";
+            }
+        }
+
+        internal string GetArrayProperty(KeyValuePair<string, JToken> secret, IEnumerable<string> values, bool safeOutput)
+        {
+            var checkValue = values.First();
+            //var outputValue = safeOutput ? SafePlaceholder : value;
+            if (bool.TryParse(checkValue, out _))
+            {
+                var outputValue = safeOutput ? SafePlaceholder : string.Join(", ", values);
+                return $"{TabSpace}{TabSpace}internal const bool[] {secret.Key} = new bool[] {{ {outputValue} }};\n\n";
+            }
+            else if (Regex.IsMatch(checkValue, @"\d+\.\d+") && double.TryParse(checkValue, out _))
+            {
+                var outputValue = safeOutput ? SafePlaceholder : string.Join(", ", values);
+                return $"{TabSpace}{TabSpace}internal const double[] {secret.Key} = new double[] {{ {outputValue} }};\n\n";
+            }
+            else if (int.TryParse(checkValue, out _))
+            {
+                var outputValue = safeOutput ? SafePlaceholder : string.Join(", ", values);
+                return $"{TabSpace}{TabSpace}internal const int[] {secret.Key} = new int[] {{ {outputValue} }};\n\n";
+            }
+            else
+            {
+                var outputValue = safeOutput ? SafePlaceholder : string.Join(", ", values.Select(x => $"\"{x}\""));
+                return $"{TabSpace}{TabSpace}internal const string[] {secret.Key} = new string[] {{ {outputValue} }};\n\n";
             }
         }
 
