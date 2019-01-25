@@ -127,6 +127,7 @@
     <SecretsJsonTask ProjectBasePath="$(MSBuildProjectDirectory)"
                      SecretsClassName="$(SecretsClassName)"
                      SecretsJsonFilePath="$(JsonSecretsFilePath)"
+                     Configuration="$(Configuration)"
                      RootNamespace="$(RootNamespace)"
                      OutputPath="$(SecretsOutputPath)"
                      IntermediateOutputPath="$(IntermediateOutputPath)"

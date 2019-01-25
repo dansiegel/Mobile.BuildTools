@@ -11,6 +11,8 @@ namespace Mobile.BuildTools.Tasks
     {
         private ITaskItem[] _generatedCodeFiles;
 
+        public string Configuration { get; set; }
+
         public string ProjectBasePath { get; set; }
 
         public string SecretsClassName { get; set; }
@@ -34,7 +36,8 @@ namespace Mobile.BuildTools.Tasks
 
             try
             {
-                if (File.Exists(SecretsJsonFilePath))
+                var configurationSecretsFilePath = $"{Path.GetFileNameWithoutExtension(SecretsJsonFilePath)}.{Configuration.ToLower()}{Path.GetExtension(SecretsJsonFilePath)}";
+                if (File.Exists(SecretsJsonFilePath) || File.Exists(configurationSecretsFilePath))
                 {
                     Log.LogMessage($"ProjectBasePath: {ProjectBasePath}");
                     Log.LogMessage($"SecretsClassName: {SecretsClassName}");
@@ -45,6 +48,7 @@ namespace Mobile.BuildTools.Tasks
                     bool.TryParse(DebugOutput, out var debug);
                     var generator = new SecretsClassGenerator()
                     {
+                        ConfigurationSecretsJsonFilePath = configurationSecretsFilePath,
                         ProjectBasePath = ProjectBasePath,
                         SecretsClassName = SecretsClassName,
                         SecretsJsonFilePath = SecretsJsonFilePath,
