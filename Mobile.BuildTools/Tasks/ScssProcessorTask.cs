@@ -76,7 +76,8 @@ namespace Mobile.BuildTools.Tasks
                     Logger.LogMessage($"minifying output to '{outputFile}'");
                     CssSettings settings = new CssSettings
                     {
-                        CommentMode = CssComment.None
+                        CommentMode = CssComment.None,
+                        TermSemicolons = true,
                     };
 
                     UglifyResult uglifyResult = Uglify.Css(result.Css, settings);
