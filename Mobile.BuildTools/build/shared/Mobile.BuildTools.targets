@@ -1,0 +1,18 @@
+<Project>
+
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.BuildEnvironmentDumpTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildDirectory)/Mobile.BuildTools.dll"/>
+
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ScssToCss.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ManifestsShared.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.AndroidManifest.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.iOSManifests.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ConfigurationManager.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.GitVersioning.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.Secrets.targets"/>
+
+  <Target Name="CIEnvironmentDump">
+    <BuildEnvironmentDumpTask ProjectDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+  
+</Project>

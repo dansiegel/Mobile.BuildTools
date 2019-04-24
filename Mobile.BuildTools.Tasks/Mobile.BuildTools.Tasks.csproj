@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\IPhoneDeviceType.cs" Link="Helpers/IPhoneDeviceType.cs" />
+    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\IPhoneDeviceCapabilities.cs" Link="Helpers/IPhoneDeviceCapabilities.cs" />
+    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\ManifestExtensions.cs" Link="Helpers/ManifestExtensions.cs" />
+    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs" Link="Helpers/PListObject.cs" />
+    <!--<ProjectReference Include="..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.iOSDev.csproj" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="15.3.409" PrivateAssets="all" CopyToOutputDirectory="Always" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.3.409" PrivateAssets="all" CopyToOutputDirectory="Always" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" PrivateAssets="all" CopyToOutputDirectory="Always" />
+    <PackageReference Include="SharpScss" Version="1.4.0" PrivateAssets="all" CopyToOutputDirectory="Always" />
+    <PackageReference Include="NUglify" Version="1.5.12" PrivateAssets="all" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+</Project>

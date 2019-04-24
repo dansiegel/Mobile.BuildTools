@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildDirectory)/Mobile.BuildTools.dll"/>
+
+  <Target Name="HandleTokenizedInfoPlist"
+          AfterTargets="_CoreCompileInterfaceDefinitions"
+          Condition=" $(IsiOSProject) ">
+    <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
+                          Prefix="$(ManifestVariablePrefix)"
+                          Token="$(ManifestToken)"
+                          ManifestTemplatePath="$(TemlateAppManifest)"
+                          ManifestOutputPath="$(TemlateAppManifest)"
+                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                          DebugOutput="$(MobileBuildToolsDebug)" />
+  </Target>
+
+  <Target Name="SetApsEnvironmentToProduction"
+          AfterTargets="HandleTokenizedInfoPlist"
+          Condition=" '$(APSProductionEnvironment)' != '' And '$(APSProductionEnvironment)' != 'false' ">
+    <PropertyListEditor PropertyList="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent" Action="Set" Entry="aps-environment" Type="String" Value="production" />
+  </Target>
+
+  <Target Name="IPACopyToStagingDirectory"
+          AfterTargets="_ZipIpa"
+          DependsOnTargets="_ZipIpa"
+          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' ">
+
+    <PropertyGroup>
+      <__IpaFileName>$([System.IO.Path]::GetFileNameWithoutExtension('$(IpaPackagePath)'))</__IpaFileName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <__Generated_dSYM Include="$([System.IO.Path]::GetDirectoryName('$(IpaPackagePath)'))\**" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(__Generated_dSYM)"
+          DestinationFolder="$(BuildToolsArtifactOutputPath)\$(__IpaFileName).app.dSYM\%(RecursiveDir)"
+          SkipUnchangedFiles="false"
+          OverwriteReadOnlyFiles="true"
+          Retries="3"
+          RetryDelayMilliseconds="300" />
+
+    <Copy SourceFiles="$(IpaPackagePath)"
+          DestinationFiles="$(BuildToolsArtifactOutputPath)\$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))" />
+
+  </Target>
+  
+</Project>

@@ -1,4 +1,5 @@
 <Project>
+
   <PropertyGroup>
     <Authors>Dan Siegel</Authors>
     <Copyright>© Dan Siegel</Copyright>
@@ -9,8 +10,6 @@
     <LocalArtifactStagingDirectory>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Artifacts'))</LocalArtifactStagingDirectory>
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$([System.IO.Path]::Combine('$(BUILD_ARTIFACTSTAGINGDIRECTORY)', 'Artifacts'))</PackageOutputPath>
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' == '' ">$(LocalArtifactStagingDirectory)</PackageOutputPath>
-    <IsPackable>!$(ProjectName.Contains("Test"))</IsPackable>
-    <GeneratePackageOnBuild>$(IsPackable)</GeneratePackageOnBuild>
     <VersionPrefix>2.0.0</VersionPrefix>
     <VersionPrefix Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(VersionPrefix).$(BUILD_BUILDNUMBER)</VersionPrefix>
     <VersionSuffix>ci</VersionSuffix>

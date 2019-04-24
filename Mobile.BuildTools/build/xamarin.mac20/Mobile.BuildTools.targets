@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.BuildEnvironmentDump.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ConfigurationManager.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.iOSManifests.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.GitVersioning.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ManifestsShared.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ScssToCss.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.Secrets.targets"/>
+
+</Project>

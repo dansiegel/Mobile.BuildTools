@@ -13,8 +13,6 @@ namespace Mobile.BuildTools.Tasks
 
         public string ProjectDirectory { get; set; }
 
-        public string ManifestTemplatePath { get; set; }
-
         public string ManifestOutputPath { get; set; }
 
         public string SdkShortFrameworkIdentifier { get; set; }
@@ -25,11 +23,11 @@ namespace Mobile.BuildTools.Tasks
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(ManifestOutputPath) || string.IsNullOrWhiteSpace(ManifestTemplatePath))
+                if (string.IsNullOrWhiteSpace(ManifestOutputPath))
                 {
                     Log.LogMessage($"No Template path specified for {SdkShortFrameworkIdentifier}");
                 }
-                else if (File.Exists(ManifestTemplatePath))
+                else if (File.Exists(ManifestOutputPath))
                 {
                     Log.LogMessage($"Generating '{Path.GetFileName(ManifestOutputPath)}'");
                     bool.TryParse(DebugOutput, out var debug);
@@ -40,7 +38,6 @@ namespace Mobile.BuildTools.Tasks
                         SdkShortFrameworkIdentifier = SdkShortFrameworkIdentifier,
                         ProjectDirectory = ProjectDirectory,
                         ManifestOutputPath = ManifestOutputPath,
-                        ManifestTemplatePath = ManifestTemplatePath,
                         DebugOutput = debug,
                         Log = (BuildHostLoggingHelper)Log,
                     };
@@ -49,16 +46,15 @@ namespace Mobile.BuildTools.Tasks
                 }
                 else
                 {
-                    Log.LogWarning($"Could not locate template manifest at '{ManifestTemplatePath}'");
+                    Log.LogWarning($"Could not locate template manifest at '{ManifestOutputPath}'");
                 }
             }
             catch (Exception e)
             {
                 Log.LogErrorFromException(e);
-
-                return false;
             }
-            return true;
+
+            return !Log.HasLoggedErrors;
         }
     }
 }

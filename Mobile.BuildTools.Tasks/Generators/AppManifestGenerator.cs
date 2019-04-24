@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Logging;
+using Xamarin.MacDev;
 
 namespace Mobile.BuildTools.Generators
 {
@@ -19,7 +20,7 @@ namespace Mobile.BuildTools.Generators
 
         public string ProjectDirectory { get; set; }
 
-        public string ManifestTemplatePath { get; set; }
+        //public string ManifestTemplatePath { get; set; }
 
         public string ManifestOutputPath { get; set; }
 
@@ -34,9 +35,9 @@ namespace Mobile.BuildTools.Generators
                 Token = DefaultToken;
             }
 
-            if (!File.Exists(ManifestTemplatePath))
+            if (!File.Exists(ManifestOutputPath))
             {
-                Log?.LogWarning("There is no Template Manifest at the path: '{0}'", ManifestTemplatePath);
+                Log?.LogWarning("There is no Template Manifest at the path: '{0}'", ManifestOutputPath);
             }
 
             if(DebugOutput == null)
@@ -44,15 +45,20 @@ namespace Mobile.BuildTools.Generators
                 DebugOutput = false;
             }
 
-            var template = File.ReadAllText(ManifestTemplatePath);
+            var template = ReadManifest();
+
             var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(ProjectDirectory, true);
             foreach (Match match in GetMatches(template))
             {
                 template = ProcessMatch(template, match, variables);
             }
 
-            WriteManifest(template);
+            SaveManifest(template);
         }
+
+        protected virtual string ReadManifest() => File.ReadAllText(ManifestOutputPath);
+
+        protected virtual void SaveManifest(string manifest) => File.WriteAllText(ManifestOutputPath, manifest);
 
         internal MatchCollection GetMatches(string template)
         {

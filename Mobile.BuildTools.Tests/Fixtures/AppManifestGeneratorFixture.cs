@@ -33,7 +33,6 @@ namespace Mobile.BuildTools.Tests.Fixtures
             {
                 ProjectDirectory = Directory.GetCurrentDirectory(),
                 Log = new XunitLog(_testOutputHelper),
-                ManifestTemplatePath = TemplateManifestPath,
                 ManifestOutputPath = TemplateManifestOutputPath,
                 Prefix = TestPrefix,
                 Token = AppManifestGenerator.DefaultToken
@@ -102,7 +101,6 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var match = matches.First();
             Assert.Equal("$$AADClientId$$", match.Value);
 
-            generator.ManifestTemplatePath = TemplateAndroidManifestPath;
             generator.ManifestOutputPath = TemplateAndroidManifestOutputPath;
             generator.DebugOutput = true;
 

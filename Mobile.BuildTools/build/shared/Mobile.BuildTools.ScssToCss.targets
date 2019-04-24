@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.ScssProcessorTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildDirectory)/Mobile.BuildTools.dll"/>
+
+  <PropertyGroup>
+    <CssGDependsOn>
+      _CollectScss;
+      _EnsureScssRuntimeIsAvailable;
+      ProcessScss;
+      $(CssGDependsOn);
+    </CssGDependsOn>
+    <PrepareResourcesDependsOn>
+      _CollectScss;
+      _EnsureScssRuntimeIsAvailable;
+      ProcessScss;
+      $(PrepareResourcesDependsOn)
+    </PrepareResourcesDependsOn>
+    <ProcessScssDependsOn>
+      _CollectScss;
+      _EnsureScssRuntimeIsAvailable;
+    </ProcessScssDependsOn>
+  </PropertyGroup>
+
+  <Target Name="_CollectScss">
+    <ItemGroup>
+      <_AllScss Include="**\*.scss" />
+      <_PartialScss Include="@(_AllScss)" Condition="$([MSBuild]::ValueOrDefault('%(Filename)', '').StartsWith('_'))" />
+      <_Scss Include="@(_AllScss)" Exclude="@(_PartialScss)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_EnsureScssRuntimeIsAvailable">
+    <PropertyGroup>
+      <ScssRuntime Condition=" '$(ScssRuntime)' == '' AND '$(OS)' == 'Unix'">osx-x64</ScssRuntime>
+      <ScssRuntime Condition=" '$(ScssRuntime)' == '' ">win-x86</ScssRuntime>
+      <!-- <ScssRuntime Condition=" '$(ScssRuntime)' == '' ">win-x64</ScssRuntime> -->
+    </PropertyGroup>
+    <ItemGroup>
+      <LibSass Include="$(MSBuildThisFileDirectory)runtimes\$(ScssRuntime)\native\libsass.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(LibSass)"
+          DestinationFiles="$(MSBuildThisFileDirectory)%(Filename)%(Extension)"
+          Condition="!Exists('$(MSBuildThisFileDirectory)%(Filename)%(Extension)')" />
+  </Target>
+
+  <Target Name="ProcessScss"
+          BeforeTargets="CssG"
+          Inputs="@(_Scss);@(_PartialScc)"
+          Outputs="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')">
+
+    <PropertyGroup>
+      <ProcessScssDebug Condition=" '$(ProcessScssDebug)' == '' ">$(MobileBuildToolsDebug)</ProcessScssDebug>
+    </PropertyGroup>
+
+    <ScssProcessorTask OutputDirectory="$(IntermediateOutputPath)"
+                       ScssFiles="@(_Scss)"
+                       DebugOutput="$(ProcessScssDebug)">
+      <Output ItemName="GeneratedFile"
+              TaskParameter="GeneratedCssFiles"/>
+      <Output ItemName="FilesWrite"
+              TaskParameter="GeneratedCssFiles"/>
+    </ScssProcessorTask>
+
+    <ItemGroup>
+      <EmbeddedResource Include="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')"
+                        Link="%(RecursiveDir)%(Filename).css" />
+    </ItemGroup>
+
+  </Target>
+
+</Project>
