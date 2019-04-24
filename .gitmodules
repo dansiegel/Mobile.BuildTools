@@ -1,0 +1,3 @@
+[submodule "external/Xamarin.MacDev"]
+	path = external/Xamarin.MacDev
+	url = https://github.com/xamarin/Xamarin.MacDev.git
