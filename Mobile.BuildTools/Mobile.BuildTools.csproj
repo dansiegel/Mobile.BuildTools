@@ -19,71 +19,60 @@
     <NUglifyPackagePath>$(NuGetPackageRoot)nuglify\1.5.12\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
     <SharpScssRuntimePath>$(NuGetPackageRoot)sharpscss\1.4.0\runtimes\**</SharpScssRuntimePath>
 
+    <!-- Hack because Azure DevOps Windows Hosts are stupid! -->
     <NewtonsoftPackagePath Condition=" !Exists('$(NewtonsoftPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\12.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
     <SharpScssPackagePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.4.0\lib\netstandard1.3\SharpScss.dll</SharpScssPackagePath>
     <NUglifyPackagePath Condition=" !Exists('$(NUglifyPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\nuglify\1.5.12\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
     <SharpScssRuntimePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.4.0\runtimes\**</SharpScssRuntimePath>
-
   </PropertyGroup>
-
-  <ItemGroup>
-    <MobileBuildToolsSharedTargets Include="build/shared/**" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-    <!-- <PackageReference Include="Nerdbank.GitVersioning" Version="2.0.41" PrivateAssets="all" /> -->
-    <!--<None Remove="**\*.props;**\*.targets" />-->
-    <!--<MobileBuildToolsBuildAssembly Include="$(OutputPath)/*" />-->
-    <!--<MobileBuildToolsBuildAssembly Include="$(NewtonsoftPackagePath)" Link="build\Newtonsoft.Json.dll" />
-    <MobileBuildToolsBuildAssembly Include="$(SharpScssPackagePath)" Link="build\SharpScss.dll" />
-    <MobileBuildToolsBuildAssembly Include="$(NUglifyPackagePath)" Link="build\NUglify.dll" />-->
-    <!--<BuildAssembly Include="$(SharpScssRuntimePath)" Link="build/runtimes/%(RecursiveDir)%(Filename)%(Extension)" Pack="true" PackagePath="build/netstandard/runtimes/" />-->
-
-    <!--<Content Include="@(MobileBuildToolsBuildAssembly)" Link="build/compiled/%(Filename)%(Extension)" Pack="true" PackagePath="build/" />
-    <Content Include="@(SharpScssRuntimePath)" Link="build/runtimes/%(Filename)%(Extension)" Pack="true" PackagePath="build/runtimes" />-->
-  </ItemGroup>
-
-  <!--<ItemGroup>
-    <CommonMobileBuildToolsTargets Include="build/*.props;build/*.targets" />
-    <Content Include="build/$(TargetFramework)/*" Pack="true" PackagePath="build/$(TargetFramework)" />
-    <Content Include="@(CommonMobileBuildToolsTargets)" Link="build/$(TargetFramework)/%(Filename)%(Extension)" Pack="true" PackagePath="build/$(TargetFramework)/" />
-  </ItemGroup>-->
-
-  <!--<ItemGroup>
-    <Content Include="build/netstandard2.0/*" Pack="true" PackagePath="build/netstandard2.0/" />
-    <Content Include="build/MonoAndroid10/*" Pack="true" PackagePath="build/MonoAndroid80/" />
-    <Content Include="build/Xamarin.iOS10/*" Pack="true" PackagePath="build/Xamarin.iOS10/" />
-    <Content Include="build/Xamarin.Mac20/*" Pack="true" PackagePath="build/Xamarin.Mac20/" />
-    <Content Include="build/uap10.0.16299/*" Pack="true" PackagePath="build/uap10.0.16299/" />
-    <Content Include="@(CommonMobileBuildToolsTargets)" Link="build/netstandard2.0/%(Filename)%(Extension)" Pack="true" PackagePath="build/netstandard2.0/" />
-    <Content Include="@(CommonMobileBuildToolsTargets)" Link="build/MonoAndroid10/%(Filename)%(Extension)" Pack="true" PackagePath="build/MonoAndroid80/" />
-    <Content Include="@(CommonMobileBuildToolsTargets)" Link="build/Xamarin.iOS10/%(Filename)%(Extension)" Pack="true" PackagePath="build/Xamarin.iOS10/" />
-    <Content Include="@(CommonMobileBuildToolsTargets)" Link="build/Xamarin.Mac20/%(Filename)%(Extension)" Pack="true" PackagePath="build/Xamarin.Mac20/" />
-    <Content Include="@(CommonMobileBuildToolsTargets)" Link="build/uap10.0.16299/%(Filename)%(Extension)" Pack="true" PackagePath="build/uap10.0.16299/" />
-    <Content Include="@(MobileBuildToolsBuildAssembly)" Link="build/compiled/%(Filename)%(Extension)" Pack="true" PackagePath="build/" />
-    <Content Include="@(SharpScssRuntimePath)" Link="build/runtimes/%(Filename)%(Extension)" Pack="true" PackagePath="build/runtimes" />
-  </ItemGroup>-->
 
   <!-- lib contents -->
   <ItemGroup>
-    <Content Include="../Mobile.BuildTools.Configuration/bin/$(Configuration)/netstandard2.0/**" Link="lib/netstandard2.0/%(FileName)%(Extension)" Pack="true" PackagePath="lib/netstandard2.0/" />
-    <Content Include="../Mobile.BuildTools.Configuration/bin/$(Configuration)/MonoAndroid80/80/**" Link="lib/MonoAndroid80/%(FileName)%(Extension)" Pack="true" PackagePath="lib/MonoAndroid80/" />
-    <Content Include="../Mobile.BuildTools.Configuration/bin/$(Configuration)/Xamarin.iOS10/**" Link="lib/Xamarin.iOS10/%(FileName)%(Extension)" Pack="true" PackagePath="lib/Xamarin.iOS10/" />
-    <Content Include="../Mobile.BuildTools.Configuration/bin/$(Configuration)/Xamarin.Mac20/**" Link="lib/Xamarin.Mac20/%(FileName)%(Extension)" Pack="true" PackagePath="lib/Xamarin.Mac20/" />
-    <Content Include="../Mobile.BuildTools.Configuration/bin/$(Configuration)/uap10.0.16299/**" Link="lib/uap10.0.16299/%(FileName)%(Extension)" Pack="true" PackagePath="lib/uap10.0.16299/" />
+    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\netstandard2.0\**" Link="lib/netstandard2.0/%(FileName)%(Extension)" Pack="true" PackagePath="lib/netstandard2.0/" />
+    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\MonoAndroid80/80\**" Link="lib/MonoAndroid80/%(FileName)%(Extension)" Pack="true" PackagePath="lib/MonoAndroid80/" />
+    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\Xamarin.iOS10\**" Link="lib/Xamarin.iOS10/%(FileName)%(Extension)" Pack="true" PackagePath="lib/Xamarin.iOS10/" />
+    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\Xamarin.Mac20\**" Link="lib/Xamarin.Mac20/%(FileName)%(Extension)" Pack="true" PackagePath="lib/Xamarin.Mac20/" />
+    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\uap10.0.16299\**" Link="lib/uap10.0.16299/%(FileName)%(Extension)" Pack="true" PackagePath="lib/uap10.0.16299/" />
   </ItemGroup>
 
-  <!--<ItemGroup>
-    <Content Include="build/$(TargetFramework)/*" Pack="true" PackagePath="build/$(TargetFramework)" />
-    <Content Include="@(CommonMobileBuildToolsTargets)" Link="build/$(TargetFramework)/%(Filename)%(Extension)" Pack="true" PackagePath="build/$(TargetFramework)" />
-    <Content Include="../Mobile.BuildTools.Configuration/bin/$(Configuration)/$(TargetFramework)/**" Pack="true" PackagePath="lib/$(TargetFramework)" />
-  </ItemGroup>-->
+  <!-- build contents -->
+  <ItemGroup>
+    <Content Include="build\netstandard2.0\**" Pack="True" PackagePath="build\netstandard2.0" />
+    <Content Include="build\shared\**" Pack="True" PackagePath="build\netstandard2.0" />
 
-  <!-- <ItemGroup>
-    <CommonMobileBuildToolsTargets Remove="build\Mobile.BuildTools.BuildEnvironmentDump.targets" />
-  </ItemGroup> -->
+    <Content Include="build\monoandroid80\**" Pack="True" PackagePath="build\monoandroid80" />
+    <Content Include="build\shared\**" Pack="True" PackagePath="build\monoandroid80" />
+    
+    <Content Include="build\xamarin.ios10\**" Pack="True" PackagePath="build\xamarin.ios10" />
+    <Content Include="build\shared\**" Pack="True" PackagePath="build\xamarin.ios10" />
+    
+    <Content Include="build\xamarin.mac20\**" Pack="True" PackagePath="build\xamarin.mac20" />
+    <Content Include="build\shared\**" Pack="True" PackagePath="build\xamarin.mac20" />
+    
+    <Content Include="build\uap10.0.16299\**" Pack="True" PackagePath="build\uap10.0.16299" />
+    <Content Include="build\shared\**" Pack="True" PackagePath="build\uap10.0.16299" />
+  </ItemGroup>
 
+  <!-- build binaries -->
+  <ItemGroup>
+    <Content Include="../Mobile.BuildTools.Tasks\bin\$(Configuration)\netstandard2.0\**" Link="build\%(FileName)%(Extension)" Pack="true" PackagePath="build\" />
+    <Content Include="$(NewtonsoftPackagePath)" Link="build\%(FileName)%(Extension)" Pack="true" PackagePath="build" />
+    <Content Include="$(SharpScssPackagePath)" Link="build\%(FileName)%(Extension)" Pack="true" PackagePath="build" />
+    <Content Include="$(NUglifyPackagePath)" Link="build\%(FileName)%(Extension)" Pack="true" PackagePath="build" />
+    <Content Include="$(SharpScssRuntimePath)" Link="build\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\runtimes" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
   
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac')) ">
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mobile.BuildTools.Configuration\Mobile.BuildTools.Configuration.csproj" PrivateAssets="all" />
@@ -93,14 +82,5 @@
   <ItemGroup>
     <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
   </ItemGroup>
-
-  <Target Name="LocalPublish"
-          BeforeTargets="CoreCompile">
-    <Copy SourceFiles="@(MobileBuildToolsSharedTargets)"
-          DestinationFolder="$(IntermediateOutputPath)/build/$(TargetFramework)" />
-    <Copy SourceFiles="build/$(TargetFramework)/**"
-          DestinationFolder="$(IntermediateOutputPath)/build/$(TargetFramework)" />
-    <Content Include="$(IntermediateOutputPath)/build/$(TargetFramework)" Pack="True" PackagePath="build/$(TargetFramework)" />
-  </Target>
 
 </Project>
