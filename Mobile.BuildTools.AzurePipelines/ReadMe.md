@@ -1,0 +1,3 @@
+# Mobile.BulidTools Build Tasks
+
+This project contains the Azure Pipelines CI/CD tasks for updating Android and iOS builds. This will allow you to swap resources and manifests to develop a great DevOps story by Building your App Once, and Deploying to Dev, QA, Stage, Production with an updated app bundle. To take full advantage of this you will need to be using Mobile.BuildTools 2.0 with the Mobile.BuildTools ConfigurationManager.
