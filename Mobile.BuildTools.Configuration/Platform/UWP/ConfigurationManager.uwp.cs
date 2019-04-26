@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Mobile.BuildTools.Configuration
 {
@@ -44,6 +41,6 @@ namespace Mobile.BuildTools.Configuration
         }
 
         private static StreamReader GetStreamReader(string config) =>
-            new StreamReader(Path.Combine(config));
+            new StreamReader(Path.Combine("Assets", config));
     }
 }

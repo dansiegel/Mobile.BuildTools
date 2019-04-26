@@ -14,6 +14,20 @@ namespace Mobile.BuildTools.Configuration
             _source = source;
         }
 
+        public bool HasKey(string name) => _source.Any(p => p.Key == name);
+
+        public bool TryGetValue(string name, out string value)
+        {
+            if(HasKey(name))
+            {
+                value = _source.First(p => p.Key == name).Value;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
         public IEnumerable<string> AllKeys => this.Select(pair => pair.Key);
 
         public string this[string name] => _source.SingleOrDefault(kv => kv.Key.Equals(name)).Value;
