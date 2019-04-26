@@ -8,4 +8,13 @@
   <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ScssToCss.targets"/>
   <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.Secrets.targets"/>
 
+  <Target Name="HandlePlatformAppConfig"
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
+          Inputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs/%(Filename)%(Extension)')">
+    <ItemGroup>
+      <BundleResource Include="$(IntermediateOutputPath)configs/**')"
+                      Link="Assets/%(Filename)%(Extension)"/>
+    </ItemGroup>
+  </Target>
+
 </Project>

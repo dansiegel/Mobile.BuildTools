@@ -6,39 +6,36 @@
 
   <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ManifestsShared.targets"/>
 
+  <Target Name="_GatherManifests">
+    <PropertyGroup>
+      <TemlateAppManifest>$(IntermediateOutputPath)android\AndroidManifest.xml</TemlateAppManifest>
+    </PropertyGroup>
+  </Target>
+
   <Target Name="HandleAndroidManifest"
           AfterTargets="_GenerateJavaStubs"
-          Condition=" $(IsAndroidProject) ">
+          DependsOnTargets="_SetLatestTargetFrameworkVersion">
     <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
                           Prefix="$(ManifestVariablePrefix)"
                           Token="$(ManifestToken)"
                           ManifestTemplatePath="$(TemlateAppManifest)"
                           ManifestOutputPath="$(TemlateAppManifest)"
                           SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                          ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
                           DebugOutput="$(MobileBuildToolsDebug)" />
   </Target>
 
-  <Target Name="_CollectAPK"
-          BeforeTargets="APKCopyToStagingDirectory">
+  <Target Name="AutomaticBuildVersioning"
+          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist">
 
-    <ItemGroup>
-      <__Generated_APK Include="$(OutputPath)\**\*.apk" />
-    </ItemGroup>
-
-    <Message Text="@(__Generated_APK)" />
-
+    <AutomaticBuildVersioningTask Behavior="$(AutomaticVersionBehavior)"
+                                  VersionEnvironment="$(AutomaticVersionEnvironment)"
+                                  VersionOffset="$(AutomaticVersionOffset)"
+                                  ManifestPath="$(TemlateAppManifest)"
+                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                  SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                                  ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
+                                  DebugOutput="$(MobileBuildToolsDebug)" />
   </Target>
 
-  <Target Name="APKCopyToStagingDirectory"
-          AfterTargets="_CreateBaseApk;_CollectAPK"
-          DependsOnTargets="_CreateBaseApk;_CollectAPK"
-          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' "
-          Inputs="@(__Generated_APK)"
-          Outputs="@(__Generated_APK -> '$(BuildToolsArtifactOutputPath)%(Filename)%(Extension)')">
-
-    <Copy SourceFiles="$(__Generated_APK)"
-          DestinationFolder="$(BuildToolsArtifactOutputPath)" />
-
-  </Target>
-  
 </Project>

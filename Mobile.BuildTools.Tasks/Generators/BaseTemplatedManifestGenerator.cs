@@ -8,7 +8,7 @@ using Xamarin.MacDev;
 
 namespace Mobile.BuildTools.Generators
 {
-    public class AppManifestGenerator : IGenerator
+    public abstract class BaseTemplatedManifestGenerator : IGenerator
     {
         internal const string DefaultToken = @"\$\$";
 

@@ -9,4 +9,37 @@
   <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ScssToCss.targets"/>
   <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.Secrets.targets"/>
 
+  <Target Name="_CollectAPK"
+          BeforeTargets="APKCopyToStagingDirectory">
+
+    <ItemGroup>
+      <__Generated_APK Include="$(OutputPath)\**\*.apk" />
+    </ItemGroup>
+
+    <Message Text="@(__Generated_APK)" />
+
+  </Target>
+
+  <Target Name="APKCopyToStagingDirectory"
+          AfterTargets="_CreateBaseApk;_CollectAPK"
+          DependsOnTargets="_CreateBaseApk;_CollectAPK"
+          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' "
+          Inputs="@(__Generated_APK)"
+          Outputs="@(__Generated_APK -> '$(BuildToolsArtifactOutputPath)%(Filename)%(Extension)')">
+
+    <Copy SourceFiles="$(__Generated_APK)"
+          DestinationFolder="$(BuildToolsArtifactOutputPath)"
+          ContinueOnError="true"/>
+
+  </Target>
+
+  <Target Name="HandlePlatformAppConfig"
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
+          Inputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs/%(Filename)%(Extension)')">
+    <ItemGroup>
+      <AndroidResource Include="$(IntermediateOutputPath)configs/**')"
+                       Link="%(Filename)%(Extension)"/>
+    </ItemGroup>
+  </Target>
+
 </Project>

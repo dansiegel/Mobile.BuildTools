@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Logging;
+using Mobile.BuildTools.Tasks.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -16,6 +17,7 @@ namespace Mobile.BuildTools.Tasks
         public string ManifestOutputPath { get; set; }
 
         public string SdkShortFrameworkIdentifier { get; set; }
+        public string[] ReferenceAssemblyPaths { get; set; }
 
         public string DebugOutput { get; set; }
 
@@ -31,18 +33,39 @@ namespace Mobile.BuildTools.Tasks
                 {
                     Log.LogMessage($"Generating '{Path.GetFileName(ManifestOutputPath)}'");
                     bool.TryParse(DebugOutput, out var debug);
-                    var generator = new AppManifestGenerator()
+                    IGenerator generator = null;
+                    switch(SdkShortFrameworkIdentifier.GetTargetPlatform())
                     {
-                        Prefix = Prefix,
-                        Token = Token,
-                        SdkShortFrameworkIdentifier = SdkShortFrameworkIdentifier,
-                        ProjectDirectory = ProjectDirectory,
-                        ManifestOutputPath = ManifestOutputPath,
-                        DebugOutput = debug,
-                        Log = (BuildHostLoggingHelper)Log,
-                    };
+                        case Platform.iOS:
+                            generator = new TemplatedPlistGenerator()
+                            {
+                                Prefix = Prefix,
+                                Token = Token,
+                                SdkShortFrameworkIdentifier = SdkShortFrameworkIdentifier,
+                                ProjectDirectory = ProjectDirectory,
+                                ManifestOutputPath = ManifestOutputPath,
+                                DebugOutput = debug,
+                                Log = (BuildHostLoggingHelper)Log,
+                            };
+                            break;
+                        case Platform.Android:
+                            new TemplatedAndroidAppManifestGenerator(ReferenceAssemblyPaths)
+                            {
+                                Prefix = Prefix,
+                                Token = Token,
+                                SdkShortFrameworkIdentifier = SdkShortFrameworkIdentifier,
+                                ProjectDirectory = ProjectDirectory,
+                                ManifestOutputPath = ManifestOutputPath,
+                                DebugOutput = debug,
+                                Log = (BuildHostLoggingHelper)Log,
+                            };
+                            break;
+                        default:
+                            Log.LogError($"Platform {SdkShortFrameworkIdentifier} is unsupported");
+                            break;
+                    }
 
-                    generator.Execute();
+                    generator?.Execute();
                 }
                 else
                 {

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Logging;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -57,7 +58,7 @@ namespace Mobile.BuildTools.Tasks
         {
             if (!string.IsNullOrWhiteSpace(SecretsPrefix)) return;
 
-            SecretsPrefix = Utils.EnvironmentAnalyzer.GetSecretPrefix(SdkShortFrameworkIdentifier);
+            SecretsPrefix = EnvironmentAnalyzer.GetSecretPrefix(SdkShortFrameworkIdentifier);
         }
     }
 }

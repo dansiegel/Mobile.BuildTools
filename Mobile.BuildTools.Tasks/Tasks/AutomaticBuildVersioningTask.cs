@@ -1,6 +1,7 @@
 ﻿using System;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Logging;
+using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
@@ -13,6 +14,7 @@ namespace Mobile.BuildTools.Tasks
         public string ManifestPath { get; set; }
         public string TargetFrameworkIdentifier { get; set; }
         public string SdkShortFrameworkIdentifier { get; set; }
+        public string[] ReferenceAssemblyPaths { get; set; }
 
         public string DebugOutput { get; set; }
 
@@ -25,32 +27,27 @@ namespace Mobile.BuildTools.Tasks
                 if(generator == null)
                 {
                     Log.LogMessage($"The current target framework '{SdkShortFrameworkIdentifier}' is not supported for Automatic Versioning");
-                    return true;
                 }
-
-                if(generator.Behavior == Versioning.Behavior.Off)
+                else if(generator.Behavior == Versioning.Behavior.Off)
                 {
                     Log.LogMessage("Automatic versioning has been disabled.");
-                    return true;
                 }
-
-                if(CIBuildEnvironmentUtils.IsBuildHost && generator.VersionEnvironment == Versioning.VersionEnvironment.Local)
+                else if(CIBuildEnvironmentUtils.IsBuildHost && generator.VersionEnvironment == Versioning.VersionEnvironment.Local)
                 {
                     Log.LogMessage("Your current settings are to only build on your local machine, however it appears you are building on a Build Host.");
-                    return true;
                 }
-
-                Log.LogMessage("Executing Automatic Version Generator");
-                generator.Execute();
+                else
+                {
+                    Log.LogMessage("Executing Automatic Version Generator");
+                    generator.Execute();
+                }
             }
             catch (Exception e)
             {
-                Log.LogMessage(e.ToString());
-                //Log.LogErrorFromException(e);
-
-                return false;
+                Log.LogErrorFromException(e);
             }
-            return true;
+
+            return !Log.HasLoggedErrors;
         }
 
         private BuildVersionGeneratorBase GetGenerator()
@@ -62,6 +59,7 @@ namespace Mobile.BuildTools.Tasks
             {
                 Enum.TryParse(Behavior, out behavior);
             }
+
             var versionEnvironment = Versioning.VersionEnvironment.All;
             if (!string.IsNullOrWhiteSpace(VersionEnvironment))
             {
@@ -70,13 +68,9 @@ namespace Mobile.BuildTools.Tasks
 
             var framework = string.IsNullOrWhiteSpace(SdkShortFrameworkIdentifier) ? TargetFrameworkIdentifier : SdkShortFrameworkIdentifier;
 
-            switch (framework)
+            switch (framework.GetTargetPlatform())
             {
-                case "MonoAndroid":
-                case "Xamarin.Android":
-                case "monoandroid":
-                case "xamarinandroid":
-                case "xamarin.android":
+                case Platform.Android:
                     return new AndroidAutomaticBuildVersionGenerator
                     {
                         DebugOutput = debug,
@@ -84,11 +78,10 @@ namespace Mobile.BuildTools.Tasks
                         ManifestPath = ManifestPath,
                         VersionOffset = versionOffset,
                         Behavior = behavior,
-                        VersionEnvironment = versionEnvironment
+                        VersionEnvironment = versionEnvironment,
+                        ReferenceAssemblyPaths = ReferenceAssemblyPaths
                     };
-                case "Xamarin.iOS":
-                case "xamarinios":
-                case "xamarin.ios":
+                case Platform.iOS:
                     return new iOSAutomaticBuildVersionGenerator
                     {
                         DebugOutput = debug,
@@ -98,15 +91,11 @@ namespace Mobile.BuildTools.Tasks
                         Behavior = behavior,
                         VersionEnvironment = versionEnvironment
                     };
-                case "win":
-                case "uap":
+                case Platform.UWP:
                     return null;
-                case "Xamarin.Mac":
-                case "xamarinmac":
-                case "xamarin.mac":
+                case Platform.macOS:
                     return null;
-                case "Tizen":
-                case "tizen":
+                case Platform.Tizen:
                     return null;
                 default:
                     return null;

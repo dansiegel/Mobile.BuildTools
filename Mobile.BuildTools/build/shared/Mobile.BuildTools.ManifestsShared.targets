@@ -39,24 +39,9 @@
     <Message Text="ManifestOutputPath: '$(ManifestDestinationPath)'" />
   </Target>
 
-  <Target Name="_GatherManifests">
-    <PropertyGroup>
-      <TemlateAppManifest Condition=" '$(IsiOSProject)' ">$(_AppBundlePath)Info.plist</TemlateAppManifest>
-      <TemlateAppManifest Condition=" '$(IsAndroidProject)' ">$(IntermediateOutputPath)android\AndroidManifest.xml</TemlateAppManifest>
-    </PropertyGroup>
-  </Target>
+  
 
-  <Target Name="AutomaticBuildVersioning"
-          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist">
-
-    <AutomaticBuildVersioningTask Behavior="$(AutomaticVersionBehavior)"
-                                  VersionEnvironment="$(AutomaticVersionEnvironment)"
-                                  VersionOffset="$(AutomaticVersionOffset)"
-                                  ManifestPath="$(TemlateAppManifest)"
-                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                                  SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
-                                  DebugOutput="$(MobileBuildToolsDebug)" />
-  </Target>
+  
 
   <Target Name="_GatherManifestForAutomaticVersioning"
           AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist">

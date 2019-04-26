@@ -27,6 +27,11 @@ namespace Mobile.BuildTools.Logging
             _taskLoggingHelper.LogMessage(message);
         }
 
+        void ILog.LogErrorFromException(Exception ex)
+        {
+            _taskLoggingHelper.LogErrorFromException(ex);
+        }
+
         public static implicit operator BuildHostLoggingHelper(TaskLoggingHelper logger) =>
             new BuildHostLoggingHelper(logger);
     }

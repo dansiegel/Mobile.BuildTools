@@ -3,7 +3,7 @@ using Xamarin.MacDev;
 
 namespace Mobile.BuildTools.Generators
 {
-    public class TemplatedPlistGenerator : AppManifestGenerator
+    public class TemplatedPlistGenerator : BaseTemplatedManifestGenerator
     {
         protected override string ReadManifest() => PDictionary.FromFile(ManifestOutputPath).ToXml();
 

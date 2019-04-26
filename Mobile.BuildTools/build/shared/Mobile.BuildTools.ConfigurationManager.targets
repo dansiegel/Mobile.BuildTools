@@ -1,4 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
-  
+
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.ConfigurationManagerHandlerTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildDirectory)/Mobile.BuildTools.dll"/>
+
+  <Target Name="_CollectAppConfigs"
+          BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <MobileBuildToolsConfigs Include="$(MSBuildProjectDirectory)/app*.config" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ConfigurationManagerTransformAndCopy"
+          Inputs="@(MobileBuildToolsConfigs)"
+          Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs/%(Filename)%(Extension)')">
+    <ConfigurationManagerHandlerTask ProjectDirectory="$(MSBuildProjectDirectory)"
+                                     BuildConfiguration="$(Configuration)"
+                                     IntermediateOutputPath="$(IntermediateOutputPath)"
+                                     DebugOutput="$(MobileBuildToolsDebug)">
+      <Output ItemName="GeneratedFile"
+              TaskParameter="OutputConfigs"/>
+      <Output ItemName="FilesWrite"
+              TaskParameter="OutputConfigs"/>
+    </ConfigurationManagerHandlerTask>
+  </Target>
+
 </Project>

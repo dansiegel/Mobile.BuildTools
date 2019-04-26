@@ -2,15 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-
-    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\IPhoneDeviceType.cs" Link="Helpers/IPhoneDeviceType.cs" />
-    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\IPhoneDeviceCapabilities.cs" Link="Helpers/IPhoneDeviceCapabilities.cs" />
-    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\ManifestExtensions.cs" Link="Helpers/ManifestExtensions.cs" />
-    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs" Link="Helpers/PListObject.cs" />
-    <!--<ProjectReference Include="..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.iOSDev.csproj" />-->
+    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\*.cs" Link="Sdk\MaciOS\%(Filename)%(Extension)" />
+    <Compile Include="..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\*.cs" Link="Sdk\Android\%(Filename)%(Extension)" />
+    <Compile Include="..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Sdks\*.cs" Link="Sdk\Android\Sdks\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

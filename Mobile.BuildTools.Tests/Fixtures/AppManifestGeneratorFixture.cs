@@ -28,14 +28,14 @@ namespace Mobile.BuildTools.Tests.Fixtures
             Environment.SetEnvironmentVariable($"{TestPrefix}CustomTokenParameter", nameof(AppManifestGeneratorFixture));
         }
 
-        private AppManifestGenerator CreateGenerator() =>
-            new AppManifestGenerator()
+        private BaseTemplatedManifestGenerator CreateGenerator() =>
+            new BaseTemplatedManifestGenerator()
             {
                 ProjectDirectory = Directory.GetCurrentDirectory(),
                 Log = new XunitLog(_testOutputHelper),
                 ManifestOutputPath = TemplateManifestOutputPath,
                 Prefix = TestPrefix,
-                Token = AppManifestGenerator.DefaultToken
+                Token = BaseTemplatedManifestGenerator.DefaultToken
             };
 
         [Fact]

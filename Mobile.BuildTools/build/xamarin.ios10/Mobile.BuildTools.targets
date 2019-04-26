@@ -8,4 +8,31 @@
   <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ScssToCss.targets"/>
   <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.Secrets.targets"/>
 
+  <Target Name="_GatherManifests">
+    <PropertyGroup>
+      <TemlateAppManifest>$(_AppBundlePath)Info.plist</TemlateAppManifest>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="AutomaticBuildVersioning"
+          AfterTargets="HandleTokenizedInfoPlist">
+
+    <AutomaticBuildVersioningTask Behavior="$(AutomaticVersionBehavior)"
+                                  VersionEnvironment="$(AutomaticVersionEnvironment)"
+                                  VersionOffset="$(AutomaticVersionOffset)"
+                                  ManifestPath="$(TemlateAppManifest)"
+                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                  SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                                  DebugOutput="$(MobileBuildToolsDebug)" />
+  </Target>
+
+  <Target Name="HandlePlatformAppConfig"
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
+          Inputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs/%(Filename)%(Extension)')">
+    <ItemGroup>
+      <BundleResource Include="$(IntermediateOutputPath)configs/**')"
+                      Link="Assets/%(Filename)%(Extension)"/>
+    </ItemGroup>
+  </Target>
+
 </Project>

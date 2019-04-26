@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -11,10 +12,10 @@ namespace Mobile.BuildTools.Tasks
 
         public override bool Execute()
         {
-            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(ProjectDirectory, true);
+            var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(ProjectDirectory, true);
 
-            string message = null;
-            if(variables.Any())
+            string message;
+            if (variables.Any())
             {
                 message = $"Found {variables.Count} Environment Variables\n";
                 foreach(var variable in variables)

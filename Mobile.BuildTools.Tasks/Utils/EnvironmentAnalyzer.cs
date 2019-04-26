@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Mobile.BuildTools.Tasks.Utils;
 using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Utils
@@ -22,7 +23,7 @@ namespace Mobile.BuildTools.Utils
 
             if(!string.IsNullOrWhiteSpace(projectPath))
             {
-                LoadSecrets(Path.Combine(projectPath, "secrets.json"), ref env); LoadSecrets(Path.Combine(projectPath, "secrets.json"), ref env);
+                LoadSecrets(Path.Combine(projectPath, "secrets.json"), ref env);
             }
 
             if (includeManifest)
@@ -50,73 +51,45 @@ namespace Mobile.BuildTools.Utils
 
         private static string GetPlatformManifestPrefix(string sdkShortFrameworkIdentifier)
         {
-            switch (sdkShortFrameworkIdentifier)
+            switch (sdkShortFrameworkIdentifier.GetTargetPlatform())
             {
-                case "monoandroid":
-                case "xamarinandroid":
-                case "xamarin.android":
+                case Platform.Android:
                     return "DroidManifest_";
-                case "xamarinios":
-                case "xamarin.ios":
+                case Platform.iOS:
                     return "iOSManifest_";
-                case "win":
-                case "uap":
+                case Platform.UWP:
                     return "UWPManifest_";
-                case "xamarinmac":
-                case "xamarin.mac":
+                case Platform.macOS:
                     return "MacManifest_";
-                case "tizen":
+                case Platform.Tizen:
                     return "TizenManifest_";
                 default:
                     return null;
-
             }
         }
 
         public static string GetSecretPrefix(string sdkShortFrameworkIdentifier)
         {
-            switch (sdkShortFrameworkIdentifier)
+            switch (sdkShortFrameworkIdentifier.GetTargetPlatform())
             {
-                case "monoandroid":
-                case "xamarinandroid":
-                case "xamarin.android":
+                case Platform.Android:
                     return "DroidSecret_";
-                case "xamarinios":
-                case "xamarin.ios":
+                case Platform.iOS:
                     return "iOSSecret_";
-                case "win":
-                case "uap":
+                case Platform.UWP:
                     return "UWPSecret_";
-                case "xamarinmac":
-                case "xamarin.mac":
+                case Platform.macOS:
                     return "MacSecret_";
-                case "tizen":
+                case Platform.Tizen:
                     return "TizenSecret_";
                 default:
                     return DefaultSecretPrefix;
-
             }
         }
 
         private static bool IsPlatformProject(string sdkShortFrameworkIdentifier)
         {
-            switch (sdkShortFrameworkIdentifier)
-            {
-                case "monoandroid":
-                case "xamarinandroid":
-                case "xamarin.android":
-                case "xamarinios":
-                case "xamarin.ios":
-                case "win":
-                case "uap":
-                case "xamarinmac":
-                case "xamarin.mac":
-                case "tizen":
-                    return true;
-                default:
-                    return false;
-
-            }
+            return sdkShortFrameworkIdentifier.GetTargetPlatform() != Platform.Unsupported;
         }
 
         public static IEnumerable<string> GetSecretPrefixes(string sdkShortFrameworkIdentifier, string runtimePrefix = null, bool forceIncludeDefault = false)
@@ -140,6 +113,7 @@ namespace Mobile.BuildTools.Utils
             if(forceIncludeDefault && !prefixes.Contains(DefaultSecretPrefix))
             {
                 prefixes.Add(DefaultSecretPrefix);
+                prefixes.Add($"MB{DefaultManifestPrefix}");
             }
 
             return prefixes;
