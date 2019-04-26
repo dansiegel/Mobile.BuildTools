@@ -15,6 +15,7 @@
     <VersionSuffix>ci</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_RELEASE)' == 'true' "></VersionSuffix>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
 </Project>
