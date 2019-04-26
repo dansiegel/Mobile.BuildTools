@@ -26,15 +26,6 @@
     <SharpScssRuntimePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.4.0\runtimes\**</SharpScssRuntimePath>
   </PropertyGroup>
 
-  <!-- lib contents -->
-  <ItemGroup>
-    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\netstandard2.0\**" Link="lib/netstandard2.0/%(FileName)%(Extension)" Pack="true" PackagePath="lib/netstandard2.0/" />
-    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\MonoAndroid80/80\**" Link="lib/MonoAndroid80/%(FileName)%(Extension)" Pack="true" PackagePath="lib/MonoAndroid80/" />
-    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\Xamarin.iOS10\**" Link="lib/Xamarin.iOS10/%(FileName)%(Extension)" Pack="true" PackagePath="lib/Xamarin.iOS10/" />
-    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\Xamarin.Mac20\**" Link="lib/Xamarin.Mac20/%(FileName)%(Extension)" Pack="true" PackagePath="lib/Xamarin.Mac20/" />
-    <Content Include="../Mobile.BuildTools.Configuration\bin\$(Configuration)\uap10.0.16299\**" Link="lib/uap10.0.16299/%(FileName)%(Extension)" Pack="true" PackagePath="lib/uap10.0.16299/" />
-  </ItemGroup>
-
   <!-- build contents -->
   <ItemGroup>
     <Content Include="build\netstandard2.0\**" Pack="True" PackagePath="build\netstandard2.0" />
@@ -62,20 +53,8 @@
     <Content Include="$(SharpScssRuntimePath)" Link="build\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\runtimes" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac')) ">
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Mobile.BuildTools.Configuration\Mobile.BuildTools.Configuration.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Mobile.BuildTools.Configuration\Mobile.BuildTools.Configuration.csproj" />
     <ProjectReference Include="..\Mobile.BuildTools.Tasks\Mobile.BuildTools.Tasks.csproj" PrivateAssets="all" />
   </ItemGroup>
 
