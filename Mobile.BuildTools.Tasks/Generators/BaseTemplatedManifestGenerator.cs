@@ -20,8 +20,6 @@ namespace Mobile.BuildTools.Generators
 
         public string ProjectDirectory { get; set; }
 
-        //public string ManifestTemplatePath { get; set; }
-
         public string ManifestOutputPath { get; set; }
 
         public bool? DebugOutput { get; set; }
@@ -56,9 +54,9 @@ namespace Mobile.BuildTools.Generators
             SaveManifest(template);
         }
 
-        protected virtual string ReadManifest() => File.ReadAllText(ManifestOutputPath);
+        protected abstract string ReadManifest();
 
-        protected virtual void SaveManifest(string manifest) => File.WriteAllText(ManifestOutputPath, manifest);
+        protected abstract void SaveManifest(string manifest);
 
         internal MatchCollection GetMatches(string template)
         {

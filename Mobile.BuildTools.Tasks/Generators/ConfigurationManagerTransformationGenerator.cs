@@ -8,6 +8,7 @@ using System.Xml.Xsl;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Mobile.BuildTools.Configuration;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Logging;
 
@@ -29,7 +30,9 @@ namespace Mobile.BuildTools.Tasks.Generators
             var configFileName = Path.GetFileNameWithoutExtension(BaseConfigPath);
             var transformationConfigPath = Path.Combine(parentDirectory.FullName, $"{configFileName}.{BuildConfiguration}{Path.GetExtension(BaseConfigPath)}");
 
-            var updatedConfig = TransformXDocument(BaseConfigPath, transformationConfigPath);
+
+            var updatedConfig = TransformationHelper.Transform(File.ReadAllText(BaseConfigPath),
+                                                               File.ReadAllText(transformationConfigPath));
             if (updatedConfig is null) return;
 
             var outputFile = Path.Combine(BaseConfigPath, Path.GetFileName(BaseConfigPath));
@@ -39,37 +42,6 @@ namespace Mobile.BuildTools.Tasks.Generators
             {
                 Log.LogMessage("*************** Transformed app.config ******************************");
                 Log.LogMessage(updatedConfig.ToString());
-            }
-        }
-
-        private XDocument TransformXDocument(string inputXmlFile, string xslFile)
-        {
-            try
-            {
-                var inputXml = XDocument.Parse(inputXmlFile);
-
-                if (DebugOutput ?? false)
-                {
-                    Log.LogMessage("*************** Initial app.config ******************************");
-                    Log.LogMessage(inputXml.ToString());
-                }
-
-                var xslt = new XslCompiledTransform();
-                var sb = new StringBuilder();
-                using (var writer = XmlWriter.Create(sb))
-                {
-                    xslt.Load(xslFile);
-                    xslt.Transform(inputXml.CreateReader(ReaderOptions.None), writer);
-                    writer.Close();
-                    writer.Flush();
-                }
-
-                return XDocument.Parse(sb.ToString());
-            }
-            catch (Exception ex)
-            {
-                Log.LogErrorFromException(ex);
-                return null;
             }
         }
     }

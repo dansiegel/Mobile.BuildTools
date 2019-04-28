@@ -7,7 +7,8 @@
   <Target Name="_CollectAppConfigs"
           BeforeTargets="CoreCompile">
     <ItemGroup>
-      <MobileBuildToolsConfigs Include="$(MSBuildProjectDirectory)/app*.config" />
+      <MobileBuildToolsConfigs Include="$(MSBuildProjectDirectory)/app.config" />
+      <MobileBuildToolsConfigs Include="$(MSBuildProjectDirectory)/app.*.config" />
     </ItemGroup>
   </Target>
 
