@@ -27,15 +27,6 @@ If these projects have helped you reduce time to develop and made your app bette
 
 - [AppCenter.DemoApp](https://github.com/dansiegel/AppCenter.DemoApp) - Sample Xamarin Forms app that protects the Info.plist &amp; AndroidManifest.xml, injects the AppCenter App Secrets, and automatically increments the app version on each build using timestamps locally and the Build Id when on built AppCenter.
 
-## Prism MFractor Config
-
-As part of the DevOps tooling, you can now easily include an MFractor config to enable MFractor to better utilize Prism naming conventions. If you have modified your project structure you can always override individual settings by adding your own MFractor config. More information can be found in the [MFractor Docs](http://docs.mfractor.com/). Configurations are available both for generic Prism applications and those using the Prism QuickStart Templates.
-
-| MFractor Config | NuGet |
-| --------------- | ----- |
-| [Prism.MFractor.Config][PrismNuGet] | [![PrismNuGetShield]][PrismNuGet] |
-| [Prism.QuickStart.MFractor.Config][QuickStartNuGet] | [![QuickStartNuGetShield]][QuickStartNuGet] |
-
 ## Mobile.BuildTools
 
 For more information on the various Build Tasks, and Properties please see the WIKI.
@@ -43,16 +34,17 @@ For more information on the various Build Tasks, and Properties please see the W
 | Package | NuGet |
 | --------------- | ----- |
 | [Mobile.BuildTools][BuildToolsNuGet] | [![BuildToolsNuGetShield]][BuildToolsNuGet] |
+| [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] |
 
 ### Upgrading to v2
 
 It's important that builds have some consistancy. For that reason the Mobile.BuildTools will continue to operate much the same way. You shouldn't have to make ANY changes when upgrading from v1.x. Version 2.0 is all about making it even easier, and introduces some changes to help.
 
-A large focus here is on handling your Manifests for iOS and Android. As a result the underlying build Targets around handling and Manifests have been completely rewritten to eliminate the need to maintain both a Templated Manifest and a working Manifest (for local development excluded from Source Control). For more information see what's new in v2.0 in the WIKI.
+Much of the Mobile.BuildTools will continue to opperate much the same way that you're used to. However handling Manifests is now completely different! For v2.0 we now use the same tooling that the Xamarin Team uses internally to process your plists and Android Manifest. This means that we can seamlessly update your plist during the build process allowing you to tokenize your Manifests in place and inject secrets safely into them at build. These tasks are optimized so that your first build will handle the replacements and we won't touch it again unless there is a need to.
 
-As part of the Build Tools, a number of Build Properties are added to better assist your DevOps pipeline by adding intelligence to the Build Process.
+#### Introducing app.config Support!
 
-
+One of the exciting new features in v2.0 is support for the trusty and familiar app.config. This great feature is built on top of the fantastic work from [Chase Florell](https://github.com/chaseflorell). For those coming from a WPF or ASP.NET background this should feel very familiar and we fully support build time transformations allowing us to inject these assets into your app.
 
 [PrismNuGetShield]: https://img.shields.io/nuget/vpre/Prism.MFractor.Config.svg
 [QuickStartNuGetShield]: https://img.shields.io/nuget/vpre/Prism.QuickStart.MFractor.Config.svg
@@ -60,3 +52,6 @@ As part of the Build Tools, a number of Build Properties are added to better ass
 [QuickStartNuGet]: https://www.nuget.org/packages/Prism.QuickStart.MFractor.Config/
 [BuildToolsNuGet]: https://www.nuget.org/packages/Mobile.BuildTools/
 [BuildToolsNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.svg
+
+[BuildToolsConfigNuGet]: https://www.nuget.org/packages/Mobile.BuildTools.Configuration/
+[BuildToolsConfigNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.Configuration.svg
