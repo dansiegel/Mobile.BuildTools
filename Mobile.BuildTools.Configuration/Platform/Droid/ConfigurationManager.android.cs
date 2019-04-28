@@ -8,11 +8,12 @@ namespace Mobile.BuildTools.Configuration
 {
     public partial class ConfigurationManager
     {
+        private const string DEFAULT_CONFIG_FILENAME = "app.config";
         private static string _currentConfigName = DEFAULT_CONFIG_FILENAME;
         private static Context _currentContext;
         private static Context CurrentContext => _currentContext ?? Application.Context;
 
-        public static void Init(string config = "app.config") => Init(Application.Context, config);
+        public static void Init(string config = DEFAULT_CONFIG_FILENAME) => Init(Application.Context, config);
 
         public static void Init(Context context, string config = DEFAULT_CONFIG_FILENAME)
         {
@@ -25,30 +26,15 @@ namespace Mobile.BuildTools.Configuration
             _currentContext = context;
             _currentConfigName = config;
 
-            using (var configStream = new StreamReader(context.Assets.Open(config)))
-            using (var environmentStream = new StreamReader(context.Assets.Open(environmentConfig)))
+            using (var configStream = GetStreamReader(config))
+            using (var environmentStream = GetStreamReader(environmentConfig))
             {
-                var xDocument = TransformXDocument(configStream.ReadToEnd(), environmentStream.ReadToEnd());
+                var xDocument = TransformationHelper.Transform(configStream.ReadToEnd(), environmentStream.ReadToEnd());
                 InitInternal(xDocument);
             }
         }
 
-        public static void TransformForEnvironment(string environmentName)
-        {
-            var fileName = Path.GetFileNameWithoutExtension(_currentConfigName);
-            using (var configStream = new StreamReader(_currentContext.Assets.Open(_currentConfigName)))
-            using (var environmentStream = new StreamReader(_currentContext.Assets.Open($"{fileName}.{environmentName}.config")))
-            {
-                var xDocument = TransformXDocument(configStream.ReadToEnd(), environmentStream.ReadToEnd());
-                InitInternal(xDocument);
-            }
-        }
-
-        public static void Update(string config = DEFAULT_CONFIG_FILENAME)
-        {
-            _currentConfigName = config;
-            using (var stream = new StreamReader(_currentContext.Assets.Open(config)))
-                Init(stream);
-        }
+        private static StreamReader GetStreamReader(string config) =>
+            new StreamReader(CurrentContext.Assets.Open(config));
     }
 }

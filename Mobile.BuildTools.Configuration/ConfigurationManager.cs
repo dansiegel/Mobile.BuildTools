@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Xsl;
 
 #pragma warning disable IDE0040 // Add accessibility modifiers
 #pragma warning disable IDE1006 // Naming Styles
@@ -20,7 +17,6 @@ namespace Mobile.BuildTools.Configuration
         private const string APP_SETTINGS = "appSettings";
         private const string CONNECTION_STRING = "connectionString";
         private const string CONNECTION_STRINGS = "connectionStrings";
-        private const string DEFAULT_CONFIG_FILENAME = "app.config";
         private const string KEY = "key";
         private const string NAME = "name";
         private const string PROVIDER_NAME = "providerName";
@@ -59,6 +55,24 @@ namespace Mobile.BuildTools.Configuration
         NameValueCollection IConfigurationManager.AppSettings => _appSettings;
         ReadOnlyDictionary<string, ConnectionStringSettings> IConfigurationManager.ConnectionStrings => _connectionStrings;
 
+        public static void TransformForEnvironment(string environmentName)
+        {
+            var fileName = Path.GetFileNameWithoutExtension(_currentConfigName);
+            using (var configStream = GetStreamReader(_currentConfigName))
+            using (var environmentStream = GetStreamReader($"{fileName}.{environmentName}.config"))
+            {
+                var xDocument = TransformationHelper.Transform(configStream.ReadToEnd(), environmentStream.ReadToEnd());
+                InitInternal(xDocument);
+            }
+        }
+
+        public static void Update(string config = DEFAULT_CONFIG_FILENAME)
+        {
+            _currentConfigName = config;
+            using (var stream = GetStreamReader(config))
+                Init(stream);
+        }
+
         protected static void Init(StreamReader streamReader)
         {
             using (var reader = XmlReader.Create(streamReader))
@@ -70,50 +84,36 @@ namespace Mobile.BuildTools.Configuration
 
         protected static void InitInternal(XDocument xDocument)
         {
-            var xNodes = xDocument.Nodes();
-            if (xNodes.Count() <= 1) return;
-            var appSettings = xDocument.Descendants()
-                .Where(t => t.Name == APP_SETTINGS)
-                .Elements()
-                .ToList()
-                .Select(GenerateKeyValueFromItem)
-                .Where(i => !string.IsNullOrWhiteSpace(i.Key))
-                .ToList();
-
-            var connectionStrings = xDocument.Descendants()
-                .Where(t => t.Name == CONNECTION_STRINGS)
-                .Elements()
-                .ToDictionary(xElement => xElement.Attribute(KEY)?.Value.ToString(), GenerateConnetionStringSettingsFromItem);
-
-            _current = new ConfigurationManager(new NameValueCollection(appSettings), new ReadOnlyDictionary<string, ConnectionStringSettings>(connectionStrings));
-        }
-
-        private static XDocument TransformXDocument(string inputXmlFile, string xslFile)
-        {
             try
             {
-                var inputXml = XDocument.Parse(inputXmlFile);
-                var xslt = new XslCompiledTransform();
-                var sb = new StringBuilder();
-                using (var writer = XmlWriter.Create(sb))
-                {
-                    xslt.Load(xslFile);
-                    xslt.Transform(inputXml.CreateReader(ReaderOptions.None), writer);
-                    writer.Close();
-                    writer.Flush();
-                }
+                if (!xDocument.Nodes().Any()) return;
 
-                return XDocument.Parse(sb.ToString());
+                var appSettings = xDocument.Descendants()
+                    .Where(t => t.Name == APP_SETTINGS)
+                    .Elements()
+                    .ToList()
+                    .Select(GenerateKeyValueFromItem)
+                    .Where(i => !string.IsNullOrWhiteSpace(i.Key))
+                    .ToList();
+
+                var decendents = xDocument.Descendants().Where(t => t.Name == CONNECTION_STRINGS);
+                var elements = decendents.Elements();
+
+
+                var connectionStrings = xDocument.Descendants()
+                        .Where(t => t.Name == CONNECTION_STRINGS)
+                        .Elements()
+                        .ToDictionary(xElement => xElement.Attribute(NAME)?.Value.ToString(), GenerateConnectionStringSettingsFromItem);
+
+                _current = new ConfigurationManager(new NameValueCollection(appSettings), new ReadOnlyDictionary<string, ConnectionStringSettings>(connectionStrings));
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Trace.WriteLine(ex);
-                //handle the exception your way
-                return new XDocument();
             }
         }
 
-        private static ConnectionStringSettings GenerateConnetionStringSettingsFromItem(XElement xElement) => new ConnectionStringSettings(xElement.Attribute(NAME)?.Value,
+        private static ConnectionStringSettings GenerateConnectionStringSettingsFromItem(XElement xElement) => new ConnectionStringSettings(xElement.Attribute(NAME)?.Value,
             xElement.Attribute(PROVIDER_NAME)?.Value,
             xElement.Attribute(CONNECTION_STRING)?.Value);
 

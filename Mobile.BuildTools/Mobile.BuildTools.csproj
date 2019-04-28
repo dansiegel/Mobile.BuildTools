@@ -18,12 +18,14 @@
     <SharpScssPackagePath>$(NuGetPackageRoot)sharpscss\1.4.0\lib\netstandard1.3\SharpScss.dll</SharpScssPackagePath>
     <NUglifyPackagePath>$(NuGetPackageRoot)nuglify\1.5.12\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
     <SharpScssRuntimePath>$(NuGetPackageRoot)sharpscss\1.4.0\runtimes\**</SharpScssRuntimePath>
+    <XdtPath>$(NuGetPackageRoot)microsoft.web.xdt\3.0.0\lib\netstandard2.0\Microsoft.Web.XmlTransform.dll</XdtPath>
 
     <!-- Hack because Azure DevOps Windows Hosts are stupid! -->
     <NewtonsoftPackagePath Condition=" !Exists('$(NewtonsoftPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\12.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
     <SharpScssPackagePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.4.0\lib\netstandard1.3\SharpScss.dll</SharpScssPackagePath>
     <NUglifyPackagePath Condition=" !Exists('$(NUglifyPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\nuglify\1.5.12\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
     <SharpScssRuntimePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.4.0\runtimes\**</SharpScssRuntimePath>
+    <XdtPath Condition=" !Exists('$(XdtPath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\microsoft.web.xdt\3.0.0\lib\netstandard2.0\Microsoft.Web.XmlTransform.dll</XdtPath>
   </PropertyGroup>
 
   <!-- build contents -->
