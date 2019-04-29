@@ -1,0 +1,59 @@
+parameters:
+  solution: '*.sln'
+  baseSolutionDirectory: ''
+  appRootDirectory: ''
+  csprojName: ''
+  buildConfiguration: 'Debug'
+  nugetVersion: ''
+
+jobs:
+- job: AndroidBuild
+  displayName: Build Sample Android App
+  dependsOn: BuildNuGet
+  condition: succeeded()
+  queue:
+    vmImage: $(MacAgent)
+    demands:
+    - MSBuild
+    - Xamarin.Android
+    - JDK
+    - AndroidSDK
+
+  steps:
+  - task: vs-publisher-473885.motz-mobile-buildtasks.android-manifest-version.android-manifest-version@0
+    displayName: 'Bump Android Versions in AndroidManifest.xml'
+    inputs:
+      sourcePath: ${{ parameters.appRootDirectory }}/Properties/AndroidManifest.xml
+      versionName: '2.0.$(Build.BuildId)'
+
+  - template: ../steps/local-nuget-restore.yml
+    parameters:
+      version: ${{ parameters.nugetVersion }}
+      workingDirectory: ${{ parameters.baseSolutionDirectory }}
+
+  - task: XamarinAndroid@1
+    displayName: 'Build Xamarin.Android project'
+    inputs:
+      projectFile: ${{ parameters.appRootDirectory }}/${{ parameters.csprojName }}
+      outputDirectory: '$(Build.BinariesDirectory)/${{ parameters.buildConfiguration }}'
+      configuration: '${{ parameters.buildConfiguration }}'
+    env:
+      Secret_SampleString: 'Sample String'
+      Secret_SampleInt: '1'
+      Secret_SampleDouble: '2.1'
+      Secret_SampleBool: 'true'
+
+  - task: AndroidSigning@3
+    displayName: 'Signing and aligning APK file(s) $(Build.BinariesDirectory)/${{ parameters.buildConfiguration }}/*.apk'
+    inputs:
+      apkFiles: '$(Build.BinariesDirectory)/${{ parameters.buildConfiguration }}/*.apk'
+      apksignerKeystoreFile: $(KeystoreFileName)
+      apksignerKeystorePassword: '$(KeystorePassword)'
+      apksignerKeystoreAlias: '$(KeystoreName)'
+      apksignerKeyPassword: '$(KeystorePassword)'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: Droid'
+    inputs:
+      PathtoPublish: '$(Build.BinariesDirectory)/${{ parameters.buildConfiguration }}'
+      ArtifactName: Droid

@@ -1,0 +1,10 @@
+parameters:
+  projects: '**/*.Tests.csproj'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    command: test
+    projects: ${{ parameters.projects }}
+    arguments: '-c $(BuildConfiguration) --collect:"Code Coverage" --no-build'

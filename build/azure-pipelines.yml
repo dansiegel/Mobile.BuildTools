@@ -1,0 +1,116 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+    - v2.0
+  paths:
+    exclude:
+    - README.md
+    - .editorconfig
+    - .gitignore
+
+pr:
+  branches:
+    include:
+    - master
+    - v2.0
+  paths:
+    exclude:
+    - README.md
+    - .editorconfig
+    - .gitignore
+
+name: $(Build.BuildId)
+
+variables:
+- name: WindowsAgent
+  value: windows-2019
+- name: MacAgent
+  value: macOS-10.14
+- name: NuGetVersion
+  value: '4.9.4'
+- name: BuildConfiguration
+  value: 'Release'
+- name: BuildPlatform
+  value: 'Any CPU'
+- name: TargetSolution
+  value: 'JWForex.sln'
+- group: 'Code Signing'
+
+stages:
+- stage: Build
+  displayName: Run Build
+  jobs:
+  - template: jobs/build-library.yml
+    parameters:
+      solution: Mobile.BuildTools.sln
+      nugetVersion: $(NuGetVersion)
+
+- stage: Test
+  displayName: Run Tests
+  jobs:
+  - template: jobs/integration-tests.yml
+    parameters:
+      solution: E2E/E2E.sln
+      nugetVersion: $(NuGetVersion)
+      vmImage: $(WindowsAgent)
+      jobName: IntegrationTestsWin
+      displayName: Integration Tests (Windows)
+
+  - template: jobs/integration-tests.yml
+    parameters:
+      solution: E2E/E2E.sln
+      nugetVersion: $(NuGetVersion)
+      vmImage: $(MacAgent)
+      jobName: IntegrationTestsMac
+      displayName: Integration Tests (Mac)
+
+  - template: jobs/android.yml
+    parameters:
+      solution: E2EApp.sln
+      baseSolutionDirectory: E2E/E2EApp
+      appRootDirectory: E2E/E2EApp/E2EApp.Android
+      csprojName: E2EApp.Android.csproj
+      nugetVersion: $(NuGetVersion)
+
+  - template: jobs/ios.yml
+    parameters:
+      solution: E2EApp.sln
+      baseSolutionDirectory: E2E/E2EApp
+      appRootDirectory: E2E/E2EApp/E2EApp.iOS
+      csprojName: E2EApp.iOS.csproj
+      nugetVersion: $(NuGetVersion)
+
+- stage: Release
+  dependsOn: Test
+  jobs:
+  - deployment: deploy
+    displayName: Deploy to MyGet
+    environment: 'MyGet'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: NuGetCommand@2
+            displayName: 'NuGet push'
+            inputs:
+              command: push
+              packagesToPush: '**/*.nupkg'
+              nuGetFeedType: external
+              publishFeedCredentials: 'MyGet-DanSiegel'
+  - deployment: deploy
+    displayName: Deploy to NuGet
+    environment: 'NuGet'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: NuGetCommand@2
+            displayName: 'NuGet push'
+            inputs:
+              command: push
+              packagesToPush: '**/*.nupkg;!**/*-ci.nupkg'
+              nuGetFeedType: external
+              publishFeedCredentials: 'NuGet'
+

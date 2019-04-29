@@ -1,0 +1,50 @@
+parameters:
+  solution: '**/*.sln'
+  nugetVersion: ''
+
+jobs:
+- job: BuildNuGet
+  displayName: Build NuGet & Run Basic Unit Tests
+  pool:
+    vmImage: $(WindowsAgent)
+    demands:
+    - msbuild
+    - vstest
+  steps:
+  - template: steps/nuget-restore.yml
+    parameters:
+      version: ${{ parameters.nugetVersion }}
+      solution: Mobile.BuildTools.sln
+
+  - powershell: |
+    Write-Host "List Cached Packages"
+    
+    ls $env:LOCALAPPDATA\Temp\NuGetScratch
+    displayName: 'PowerShell Script'
+
+  - task: MSBuild@1
+    displayName: 'Build solution Mobile.BuildTools.sln'
+    inputs:
+      solution: Mobile.BuildTools.sln
+      platform: '$(BuildPlatform)'
+      configuration: '$(BuildConfiguration)'
+      createLogFile: true
+
+  - template: ../steps/unit-tests.yml
+    parameters:
+      projects: 'Mobile.BuildTools.*/*.Tests.csproj'
+
+  - task: PowerShell@2
+    displayName: 'Sign-Packages.ps1'
+    inputs:
+      targetType: filePath
+      filePath: './build/Sign-Packages.ps1'
+      workingDirectory: '$(Build.ArtifactStagingDirectory)/Artifacts'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: Artifacts'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/Artifacts'
+      ArtifactName: Artifacts
+
+

@@ -1,0 +1,65 @@
+parameters:
+  solution: '*.sln'
+  baseSolutionDirectory: ''
+  appRootDirectory: ''
+  csprojName: ''
+  buildConfiguration: 'Debug'
+  nugetVersion: ''
+
+jobs:
+- job: iOSBuild
+  displayName: Build Sample iOS App
+  dependsOn: BuildNuGet
+  condition: succeeded()
+  queue:
+    vmImage: $(MacAgent)
+    demands:
+    - xcode
+    - Xamarin.iOS
+
+  steps:
+  - task: InstallAppleCertificate@2
+    displayName: 'Install an Apple certificate'
+    inputs:
+      certSecureFile: $(iOSCertificateFile)
+      certPwd: '$(iOSCertificatePassword)'
+
+  - task: InstallAppleProvisioningProfile@1
+    displayName: 'Install an Apple provisioning profile'
+    inputs:
+      provProfileSecureFile: $(iOSProvisioningProfile)
+
+  - task: vs-publisher-473885.motz-mobile-buildtasks.ios-bundle-version.ios-bundle-version@0
+    displayName: 'Bump iOS Versions in Info.plist'
+    inputs:
+      sourcePath: ${{ parameters.appRootDirectory }}/Info.plist
+      versionName: '2.0.$(Build.BuildId)'
+
+  - template: ../steps/local-nuget-restore.yml
+    parameters:
+      version: ${{ parameters.nugetVersion }}
+      workingDirectory: ${{ parameters.baseSolutionDirectory }}
+
+  - bash: |
+       # To manually select a Xamarin SDK version on the Hosted macOS agent, run this script with the SDK version you want to target
+       # https://go.microsoft.com/fwlink/?linkid=871629
+
+       sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 5_18_1
+    displayName: 'Select Xamarin SDK version'
+
+  - task: XamariniOS@2
+    displayName: 'Build Xamarin.iOS solution'
+    inputs:
+      solutionFile: '${{ parameters.appRootDirectory }}/${{ parameters.csprojName }}'
+      configuration: ${{ parameters.buildConfiguration }}
+    env:
+      Secret_SampleString: 'Sample String'
+      Secret_SampleInt: '1'
+      Secret_SampleDouble: '2.1'
+      Secret_SampleBool: 'true'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: iOS'
+    inputs:
+      PathtoPublish: '${{ parameters.appRootDirectory }}/bin/iPhone/${{ parameters.buildConfiguration }}'
+      ArtifactName: iOS

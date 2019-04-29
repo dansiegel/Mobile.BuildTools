@@ -23,9 +23,9 @@
 	<key>MinimumOSVersion</key>
 	<string>8.0</string>
 	<key>CFBundleDisplayName</key>
-	<string>E2EApp</string>
+	<string>E2E App</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.avantipoint.E2EApp</string>
+	<string>com.avantipoint.e2eapp</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
