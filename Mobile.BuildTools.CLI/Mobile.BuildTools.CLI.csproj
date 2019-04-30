@@ -9,11 +9,19 @@
     <OutputType>Exe</OutputType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Mobile.BuildTools for the CLI. This tooling provides an ability to process swap package assets and resign your iOS or Android apps.</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.3.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Mobile.BuildTools.Tasks\Sdk\**\*.cs" Link="Sdk\%(RecursiveDir)%(FileName)%(Extension)" />
+    <Compile Include="..\external\Xamarin.MacDev\Xamarin.MacDev\*.cs" Link="Sdk\MaciOS\%(Filename)%(Extension)" />
+    <Compile Include="..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\*.cs" Link="Sdk\Android\%(Filename)%(Extension)" />
+    <Compile Include="..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Sdks\*.cs" Link="Sdk\Android\Sdks\%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

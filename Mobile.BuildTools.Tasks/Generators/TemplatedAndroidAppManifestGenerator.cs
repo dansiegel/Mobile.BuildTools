@@ -7,7 +7,7 @@ namespace Mobile.BuildTools.Generators
     {
         public TemplatedAndroidAppManifestGenerator(string[] referenceAssemblyPaths)
         {
-            new AndroidVersions(referenceAssemblyPaths);
+            AndroidVersions = new AndroidVersions(referenceAssemblyPaths);
         }
 
         public AndroidVersions AndroidVersions { get; set; }
