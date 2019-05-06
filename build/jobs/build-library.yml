@@ -16,11 +16,8 @@ jobs:
       version: ${{ parameters.nugetVersion }}
       solution: Mobile.BuildTools.sln
 
-  - powershell: |
-    Write-Host "List Cached Packages"
-    
-    ls $env:LOCALAPPDATA\Temp\NuGetScratch
-    displayName: 'PowerShell Script'
+  - powershell: ls $env:LOCALAPPDATA\Temp\NuGetScratch
+    displayName: 'List Cached Packages'
 
   - task: MSBuild@1
     displayName: 'Build solution Mobile.BuildTools.sln'
@@ -35,11 +32,16 @@ jobs:
       projects: 'Mobile.BuildTools.*/*.Tests.csproj'
 
   - task: PowerShell@2
-    displayName: 'Sign-Packages.ps1'
+    displayName: 'Authenticode Sign Artifacts'
     inputs:
-      targetType: filePath
-      filePath: './build/Sign-Packages.ps1'
-      workingDirectory: '$(Build.ArtifactStagingDirectory)/Artifacts'
+      filePath: 'build\Sign-Packages.ps1'
+    env:
+      SignClientUser: $(SignClientUser)
+      SignClientSecret: $(SignClientSecret)
+      SignClientClientId: $(SignClientClientId)
+      SignClientTenantId: $(SignClientTenantId)
+      SignServiceResourceId: $(SignServiceResourceId)
+    condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: Artifacts'

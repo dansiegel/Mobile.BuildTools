@@ -37,6 +37,7 @@ variables:
 - name: TargetSolution
   value: 'JWForex.sln'
 - group: 'Code Signing'
+- group: 'AppSigning'
 
 stages:
 - stage: Build
@@ -49,6 +50,7 @@ stages:
 
 - stage: Test
   displayName: Run Tests
+  dependsOn: Build
   jobs:
   - template: jobs/integration-tests.yml
     parameters:
@@ -83,6 +85,7 @@ stages:
   #     nugetVersion: $(NuGetVersion)
 
 - stage: Release
+  displayName: Deploy NuGet Artifacts
   dependsOn: Test
   jobs:
   - deployment: deploy
