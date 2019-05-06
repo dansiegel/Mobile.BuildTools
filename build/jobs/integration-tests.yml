@@ -5,7 +5,7 @@ parameters:
   jobName: ''
 
 jobs:
-- job: $${{ parameters.jobName }}
+- job: ${{ parameters.jobName }}
   displayName: ${{ parameters.displayName }}
   dependsOn: BuildNuGet
   pool:
