@@ -66,21 +66,21 @@ stages:
       jobName: IntegrationTestsMac
       displayName: Integration Tests (Mac)
 
-  - template: jobs/android.yml
-    parameters:
-      solution: E2EApp.sln
-      baseSolutionDirectory: E2E/E2EApp
-      appRootDirectory: E2E/E2EApp/E2EApp.Android
-      csprojName: E2EApp.Android.csproj
-      nugetVersion: $(NuGetVersion)
+  # - template: jobs/android.yml
+  #   parameters:
+  #     solution: E2EApp.sln
+  #     baseSolutionDirectory: E2E/E2EApp
+  #     appRootDirectory: E2E/E2EApp/E2EApp.Android
+  #     csprojName: E2EApp.Android.csproj
+  #     nugetVersion: $(NuGetVersion)
 
-  - template: jobs/ios.yml
-    parameters:
-      solution: E2EApp.sln
-      baseSolutionDirectory: E2E/E2EApp
-      appRootDirectory: E2E/E2EApp/E2EApp.iOS
-      csprojName: E2EApp.iOS.csproj
-      nugetVersion: $(NuGetVersion)
+  # - template: jobs/ios.yml
+  #   parameters:
+  #     solution: E2EApp.sln
+  #     baseSolutionDirectory: E2E/E2EApp
+  #     appRootDirectory: E2E/E2EApp/E2EApp.iOS
+  #     csprojName: E2EApp.iOS.csproj
+  #     nugetVersion: $(NuGetVersion)
 
 - stage: Release
   dependsOn: Test
