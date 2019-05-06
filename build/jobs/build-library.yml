@@ -11,7 +11,7 @@ jobs:
     - msbuild
     - vstest
   steps:
-  - template: steps/nuget-restore.yml
+  - template: ../steps/nuget-restore.yml
     parameters:
       version: ${{ parameters.nugetVersion }}
       solution: Mobile.BuildTools.sln
