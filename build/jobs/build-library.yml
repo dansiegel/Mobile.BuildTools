@@ -26,6 +26,11 @@ jobs:
   - powershell: ls $env:LOCALAPPDATA\Temp\NuGetScratch
     displayName: 'List Cached Packages'
 
+  - powershell: |
+     Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?linkid=864422 -OutFile ./win10.0.16299sdk.exe
+     ./win10.0.16299sdk.exe
+    displayName: Download Windows 10 16299 SDK
+
   - task: MSBuild@1
     displayName: 'Build solution Mobile.BuildTools.sln'
     inputs:
