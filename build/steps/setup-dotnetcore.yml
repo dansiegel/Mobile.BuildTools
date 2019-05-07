@@ -5,3 +5,4 @@ steps:
     packageType: sdk
     version: 3.x
     installationPath: $(Agent.ToolsDirectory)/dotnet
+    includePreviewVersions: true
