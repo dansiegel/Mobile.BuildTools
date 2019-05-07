@@ -98,6 +98,10 @@ stages:
       displayName: 'Process Release'
       inputs:
         filePath: 'build\Process-Release.ps1'
+    - task: DownloadPipelineArtifact@1
+      inputs:
+        artifactName: 'Artifacts'
+      condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
     - task: jakobehn.jakobehn-vsts-github-tasks.publish-github-release.PublishGitHubRelease@0
       displayName: 'Publish GitHub Release - Preview'
       inputs:

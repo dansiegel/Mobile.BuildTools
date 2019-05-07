@@ -11,6 +11,11 @@ jobs:
     - msbuild
     - vstest
   steps:
+  - checkout: self
+    clean: true
+    lfs: true
+    submodules: true
+
   - template: ../steps/setup-dotnetcore.yml
 
   - template: ../steps/nuget-restore.yml
@@ -45,10 +50,10 @@ jobs:
       SignServiceResourceId: $(SignServiceResourceId)
     condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: Artifacts'
+  - task: PublishPipelineArtifact@0
+    displayName: 'Publish Artifacts'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/Artifacts'
-      ArtifactName: Artifacts
+      artifactName: Artifacts
+      targetPath: '$(Build.ArtifactStagingDirectory)/Artifacts'
 
 
