@@ -9,7 +9,6 @@ parameters:
 jobs:
 - job: iOSBuild
   displayName: Build Sample iOS App
-  dependsOn: BuildNuGet
   condition: succeeded()
   queue:
     vmImage: $(MacAgent)

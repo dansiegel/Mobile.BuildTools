@@ -7,7 +7,6 @@ parameters:
 jobs:
 - job: ${{ parameters.jobName }}
   displayName: ${{ parameters.displayName }}
-  dependsOn: BuildNuGet
   pool:
     vmImage: ${{ parameters.vmImage }}
     demands:

@@ -9,7 +9,6 @@ parameters:
 jobs:
 - job: AndroidBuild
   displayName: Build Sample Android App
-  dependsOn: BuildNuGet
   condition: succeeded()
   queue:
     vmImage: $(MacAgent)
