@@ -14,6 +14,16 @@ steps:
     downloadPath: $(Pipeline.Workspace)
 
 - powershell: |
+   Write-Host "Pipeline Workspace"
+   cd $env:PIPELINE_WORKSPACE
+   pwd
+   ls
+   Write-Host "Artifacts Directory"
+   cd .\Artifacts
+   pwd
+   ls
+
+- powershell: |
    nuget help | head -1 
    nuget locals global-packages -clear
    nuget restore -source "$($env:PIPELINE_WORKSPACE)\Artifacts;https://api.nuget.org/v3/index.json"
