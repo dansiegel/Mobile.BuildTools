@@ -43,18 +43,6 @@ jobs:
     parameters:
       projects: 'Mobile.BuildTools.*/*.Tests.csproj'
 
-  - task: PowerShell@2
-    displayName: 'Authenticode Sign Artifacts'
-    inputs:
-      filePath: 'build\Sign-Packages.ps1'
-    env:
-      SignClientUser: $(SignClientUser)
-      SignClientSecret: $(SignClientSecret)
-      SignClientClientId: $(SignClientClientId)
-      SignClientTenantId: $(SignClientTenantId)
-      SignServiceResourceId: $(SignServiceResourceId)
-    condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
-
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Artifacts'
     inputs:

@@ -98,10 +98,32 @@ stages:
       displayName: 'Process Release'
       inputs:
         filePath: 'build\Process-Release.ps1'
+
     - task: DownloadPipelineArtifact@1
       inputs:
         artifactName: 'Artifacts'
       condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
+
+    - powershell: mv $(Pipeline.Workspace)/Artifacts/*.nupkg $(Build.BuildStagingDirectory)
+
+    - task: PowerShell@2
+      displayName: 'Authenticode Sign Artifacts'
+      inputs:
+        filePath: 'build\Sign-Packages.ps1'
+      env:
+        SignClientUser: $(SignClientUser)
+        SignClientSecret: $(SignClientSecret)
+        SignClientClientId: $(SignClientClientId)
+        SignClientTenantId: $(SignClientTenantId)
+        SignServiceResourceId: $(SignServiceResourceId)
+      condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
+
+    - task: PublishPipelineArtifact@0
+      displayName: 'Publish Artifacts'
+      inputs:
+        artifactName: Signed
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+
     - task: jakobehn.jakobehn-vsts-github-tasks.publish-github-release.PublishGitHubRelease@0
       displayName: 'Publish GitHub Release - Preview'
       inputs:
@@ -112,7 +134,7 @@ stages:
         tagName: 'v$(VersionName)'
         releaseName: '$(ReleaseDisplayName)'
         prerelease: $(IsPreview)
-        assetsPattern: '$(System.DefaultWorkingDirectory)\**\*.nupkg'
+        assetsPattern: '$(Build.ArtifactStagingDirectory)\**\*.nupkg'
       condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
     
   - deployment: myget
@@ -123,11 +145,15 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: DownloadPipelineArtifact@1
+            inputs:
+              artifactName: 'Signed'
+
           - task: NuGetCommand@2
             displayName: 'NuGet push'
             inputs:
               command: push
-              packagesToPush: '**/*.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/Signed/*.nupkg'
               nuGetFeedType: external
               publishFeedCredentials: 'MyGet-DanSiegel'
   - deployment: nuget
@@ -138,11 +164,15 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: DownloadPipelineArtifact@1
+            inputs:
+              artifactName: 'Signed'
+
           - task: NuGetCommand@2
             displayName: 'NuGet push'
             inputs:
               command: push
-              packagesToPush: '**/*.nupkg;!**/*-ci.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/Signed/*.nupkg;!$(Pipeline.Workspace)/Signed/*-ci.nupkg!$(Pipeline.Workspace)/Signed/*.symbols.nupkg'
               nuGetFeedType: external
               publishFeedCredentials: 'NuGet'
     condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
