@@ -11,6 +11,7 @@ steps:
 - task: DownloadPipelineArtifact@1
   inputs:
     artifactName: 'Artifacts'
+    downloadPath: $(Pipeline.Workspace)
 
 - powershell: |
    nuget help | head -1 
