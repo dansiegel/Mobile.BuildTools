@@ -16,9 +16,9 @@ jobs:
   - template: ../steps/setup-dotnetcore.yml
 
   - task: DownloadPipelineArtifact@1
-      inputs:
-        artifactName: 'Artifacts'
-        downloadPath: $(System.DefaultWorkingDirectory)
+    inputs:
+      artifactName: 'Artifacts'
+      downloadPath: $(System.DefaultWorkingDirectory)
 
   - template: ../steps/local-nuget-restore.yml
     parameters:
