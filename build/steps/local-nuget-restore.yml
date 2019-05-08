@@ -14,14 +14,8 @@ steps:
     downloadPath: $(Pipeline.Workspace)
 
 - powershell: |
-   Write-Host "Pipeline Workspace"
-   cd $env:PIPELINE_WORKSPACE
-   pwd
-   ls
-   Write-Host "Artifacts Directory"
-   cd .\Artifacts
-   pwd
-   ls
+   Write-Host "Pipeline Workspace $env:PIPELINE_WORKSPACE"
+   Get-ChildItem -Path $env:PIPELINE_WORKSPACE -Filter *.nupkg -Recurse -File -Name| ForEach-Object { $_ }
 
 - powershell: |
    nuget help | head -1 
