@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <None Update="Templates\**\*" CopyToOutputDirectory="Always" />
-    </None>
   </ItemGroup>
 
 </Project>
