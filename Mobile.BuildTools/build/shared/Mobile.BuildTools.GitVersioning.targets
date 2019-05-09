@@ -2,7 +2,7 @@
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.GenerateGitReleaseNotesTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildDirectory)/Mobile.BuildTools.dll"/>
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Target Name="GenerateGitReleaseNotes"
           AfterTargets="CoreCompile"

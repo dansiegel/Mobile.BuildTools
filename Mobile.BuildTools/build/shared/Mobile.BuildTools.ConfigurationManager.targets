@@ -2,7 +2,7 @@
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ConfigurationManagerHandlerTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildDirectory)/Mobile.BuildTools.dll"/>
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Target Name="_CollectAppConfigs"
           BeforeTargets="CoreCompile">

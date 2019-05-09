@@ -1,7 +1,7 @@
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.BuildEnvironmentDumpTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildDirectory)/Mobile.BuildTools.dll"/>
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ScssToCss.targets"/>
   <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ManifestsShared.targets"/>

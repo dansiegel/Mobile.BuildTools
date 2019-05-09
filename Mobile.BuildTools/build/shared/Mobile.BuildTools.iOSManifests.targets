@@ -2,7 +2,7 @@
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildDirectory)/Mobile.BuildTools.dll"/>
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Target Name="HandleTokenizedInfoPlist"
           AfterTargets="_CoreCompileInterfaceDefinitions"

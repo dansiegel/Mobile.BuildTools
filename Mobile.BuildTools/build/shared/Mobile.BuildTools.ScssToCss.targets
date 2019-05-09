@@ -2,7 +2,7 @@
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ScssProcessorTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildDirectory)/Mobile.BuildTools.dll"/>
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <PropertyGroup>
     <CssGDependsOn>
