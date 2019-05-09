@@ -20,7 +20,7 @@ if(Directory.Exists(_DeleteDirectory))
     </Task>
   </UsingTask>
 
-  <Target Name="LocalPublish" 
+  <!--<Target Name="LocalPublish" 
           BeforeTargets="Pack;GenerateNuspec" 
           Condition=" '$(IsPackable)' ">
 
@@ -34,5 +34,5 @@ if(Directory.Exists(_DeleteDirectory))
     <Copy SourceFiles="$(PackageTargetPath)" 
           DestinationFolder="$(LocalArtifactStagingDirectory)"
           Condition=" '$(PackageOutputPath)' != '$(LocalArtifactStagingDirectory)' " />
-  </Target>
+  </Target>-->
 </Project>

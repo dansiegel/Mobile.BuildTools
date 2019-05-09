@@ -1,8 +1,8 @@
 ﻿using Xamarin.Forms;
 
-namespace E2EApp
+namespace E2EApp.Views
 {
-    public partial class MainPage : ContentPage
+    public partial class AppConfigPage
     {
         public MainPage()
         {
