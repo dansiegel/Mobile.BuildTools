@@ -3,6 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools", "Mobile.BuildTools\Mobile.BuildTools.csproj", "{ECB330A6-90E5-4EF2-8889-86DE2AC0723E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2F944DD2-FC30-4CD7-B73F-E377EA741902} = {2F944DD2-FC30-4CD7-B73F-E377EA741902}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.Tests", "Mobile.BuildTools.Tests\Mobile.BuildTools.Tests.csproj", "{22808734-C8D3-431E-AA9A-92432DE4EB6A}"
 EndProject
@@ -24,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.CLI", "Mobile.BuildTools.CLI\Mobile.BuildTools.CLI.csproj", "{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BuildTools.Configuration.Tests", "Mobile.BuildTools.Configuration.Tests\Mobile.BuildTools.Configuration.Tests.csproj", "{82EF42A8-49A3-4086-A045-5E2C2F094C04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.Configuration.Tests", "Mobile.BuildTools.Configuration.Tests\Mobile.BuildTools.Configuration.Tests.csproj", "{82EF42A8-49A3-4086-A045-5E2C2F094C04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
