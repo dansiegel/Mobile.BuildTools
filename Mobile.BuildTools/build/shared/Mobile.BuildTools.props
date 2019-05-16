@@ -16,7 +16,7 @@
     <IsMacOSProject>false</IsMacOSProject>
     <IsTizenProject>false</IsTizenProject>
     <MobileBuildToolsTargets>$(MSBuildThisFileDirectory)Mobile.BuildTools.targets</MobileBuildToolsTargets>
-    <_MobileBuildToolsParentBuildTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..', 'Mobile.BuildTools.Tasks.dll'))</_MobileBuildToolsParentBuildTasksDll>
+    <_MobileBuildToolsParentBuildTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Tasks.dll'))</_MobileBuildToolsParentBuildTasksDll>
     <BuildToolsArtifactOutputPath Condition=" '$(BuildToolsArtifactOutputPath)' == '' ">$([System.IO.Path]::Combine('$(SolutionDir)', 'Artifacts'))</BuildToolsArtifactOutputPath>
     <BuildToolsArtifactOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$([System.IO.Path]::Combine('$(BUILD_ARTIFACTSTAGINGDIRECTORY)', 'App'))</BuildToolsArtifactOutputPath>
     <IsAppCenter Condition=" '$(IsAppCenter)' == '' ">false</IsAppCenter>
