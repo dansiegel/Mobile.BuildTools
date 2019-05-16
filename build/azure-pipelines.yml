@@ -104,26 +104,6 @@ stages:
         artifactName: 'Artifacts'
       condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
 
-    - powershell: mv $(Pipeline.Workspace)/Artifacts/*.nupkg $(Build.BuildStagingDirectory)
-
-    - task: PowerShell@2
-      displayName: 'Authenticode Sign Artifacts'
-      inputs:
-        filePath: 'build\Sign-Packages.ps1'
-      env:
-        SignClientUser: $(SignClientUser)
-        SignClientSecret: $(SignClientSecret)
-        SignClientClientId: $(SignClientClientId)
-        SignClientTenantId: $(SignClientTenantId)
-        SignServiceResourceId: $(SignServiceResourceId)
-      condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
-
-    - task: PublishPipelineArtifact@0
-      displayName: 'Publish Artifacts'
-      inputs:
-        artifactName: Signed
-        targetPath: '$(Build.ArtifactStagingDirectory)'
-
     - task: jakobehn.jakobehn-vsts-github-tasks.publish-github-release.PublishGitHubRelease@0
       displayName: 'Publish GitHub Release - Preview'
       inputs:
@@ -134,7 +114,7 @@ stages:
         tagName: 'v$(VersionName)'
         releaseName: '$(ReleaseDisplayName)'
         prerelease: $(IsPreview)
-        assetsPattern: '$(Build.ArtifactStagingDirectory)\**\*.nupkg'
+        assetsPattern: '$(Pipeline.Workspace)\Artifacts\*.nupkg'
       condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
     
   - deployment: myget
@@ -147,13 +127,13 @@ stages:
           steps:
           - task: DownloadPipelineArtifact@1
             inputs:
-              artifactName: 'Signed'
+              artifactName: 'Artifacts'
 
           - task: NuGetCommand@2
             displayName: 'NuGet push'
             inputs:
               command: push
-              packagesToPush: '$(Pipeline.Workspace)/Signed/*.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/Artifacts/*.nupkg'
               nuGetFeedType: external
               publishFeedCredentials: 'MyGet-DanSiegel'
   - deployment: nuget
@@ -166,13 +146,13 @@ stages:
           steps:
           - task: DownloadPipelineArtifact@1
             inputs:
-              artifactName: 'Signed'
+              artifactName: 'Artifacts'
 
           - task: NuGetCommand@2
             displayName: 'NuGet push'
             inputs:
               command: push
-              packagesToPush: '$(Pipeline.Workspace)/Signed/*.nupkg;!$(Pipeline.Workspace)/Signed/*-ci.nupkg!$(Pipeline.Workspace)/Signed/*.symbols.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/Artifacts/*.nupkg;!$(Pipeline.Workspace)/Artifacts/*-ci.nupkg!$(Pipeline.Workspace)/Artifacts/*.symbols.nupkg'
               nuGetFeedType: external
               publishFeedCredentials: 'NuGet'
     condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
