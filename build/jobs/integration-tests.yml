@@ -12,6 +12,8 @@ jobs:
     demands:
     - msbuild
   steps:
+  - powershell: rm global.json
+
   - template: ../steps/local-nuget-restore.yml
     parameters:
       version: ${{ parameters.nugetVersion }}
