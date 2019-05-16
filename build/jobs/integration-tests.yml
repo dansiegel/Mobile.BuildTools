@@ -12,8 +12,6 @@ jobs:
     demands:
     - msbuild
   steps:
-  - template: ../steps/setup-dotnetcore.yml
-
   - template: ../steps/local-nuget-restore.yml
     parameters:
       version: ${{ parameters.nugetVersion }}
