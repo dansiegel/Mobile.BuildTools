@@ -80,10 +80,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mobile.BuildTools.Configuration\Mobile.BuildTools.Configuration.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
   </ItemGroup>
 
