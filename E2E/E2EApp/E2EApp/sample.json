@@ -1,0 +1,11 @@
+{
+  // This is a sample of a secrets.json file that should be placed here.
+  "SampleString": "this is a string",
+  "SampleInt": 1,
+  "SampleIntFromString": "1",
+  "SampleDouble": 2.1,
+  "SampleDoubleFromString": "2.1",
+  "SampleBool": true,
+  "SampleBoolFromString": "true",
+  "SampleArray": "Foo,Bar"
+}

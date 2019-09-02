@@ -1,4 +1,4 @@
-$currentDirectory = split-path $MyInvocation.MyCommand.Definition
+$currentDirectory = Split-Path $MyInvocation.MyCommand.Definition
 
 # See if we have the ClientSecret available
 if([string]::IsNullOrEmpty($env:SignClientSecret)){
@@ -6,19 +6,36 @@ if([string]::IsNullOrEmpty($env:SignClientSecret)){
     return;
 }
 
-dotnet tool install SignClient -g
+dotnet tool install --tool-path . SignClient
 
 # Setup Variables we need to pass into the sign client tool
 
 $appSettings = "$currentDirectory\appsettings.json"
 $fileList = "$currentDirectory\filelist.txt"
+$repoName = $env:BUILD_REPOSITORY_NAME -replace ".*/",""
 
-$nupkgs = gci $env:BUILD_ARTIFACTSTAGINGDIRECTORY\*.nupkg -recurse | Select-Object -ExpandProperty FullName
+$azureAd = @{
+    SignClient = @{
+        AzureAd = @{
+            AADInstance = $env:SignClientAADInstance
+            ClientId = $env:SignClientClientId
+            TenantId = $env:SignClientTenantId
+        }
+        Service = @{
+            Url = $env:SignServiceUrl
+            ResourceId = $env:SignServiceResourceId
+        }
+    }
+}
+
+$azureAd | ConvertTo-Json -Compress | Out-File $appSettings
+
+$nupkgs = Get-ChildItem $env:BUILD_ARTIFACTSTAGINGDIRECTORY\*.nupkg -recurse | Select-Object -ExpandProperty FullName
 
 foreach ($nupkg in $nupkgs){
-   Write-Host "Submitting $nupkg for signing"
+    Write-Host "Submitting $nupkg for signing"
 
-    SignClient 'sign' -c $appSettings -i $nupkg -f $fileList -r $env:SignClientUser -s $env:SignClientSecret -n 'Mobile.BuildTools' -d 'Mobile.BuildTools' -u 'https://github.com/dansiegel/Mobile.BuildTools'
+    .\SignClient 'sign' -c $appSettings -i $nupkg -f $fileList -r $env:SignClientUser -s $env:SignClientSecret -n $repoName -d $repoName -u $env:BUILD_REPOSITORY_URI
 
     Write-Host "Finished signing $nupkg"
 }

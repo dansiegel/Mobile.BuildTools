@@ -1,0 +1,31 @@
+parameters:
+  solution: '**/*.sln'
+  nugetVersion: ''
+  vmImage: ''
+  jobName: ''
+
+jobs:
+- job: ${{ parameters.jobName }}
+  displayName: ${{ parameters.displayName }}
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+    demands:
+    - msbuild
+  steps:
+  - powershell: rm global.json
+
+  - template: ../steps/local-nuget-restore.yml
+    parameters:
+      version: ${{ parameters.nugetVersion }}
+      workingDirectory: E2E
+
+  - task: MSBuild@1
+    displayName: 'Build solution E2E/E2E.sln'
+    inputs:
+      solution: E2E/E2E.sln
+      platform: '$(BuildPlatform)'
+      configuration: '$(BuildConfiguration)'
+
+  - template: ../steps/unit-tests.yml
+    parameters:
+      projects: '**/E2E.Tests/*.Tests.csproj'

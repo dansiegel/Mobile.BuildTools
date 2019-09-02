@@ -75,9 +75,9 @@ dotnet_naming_rule.non_public_members_must_be_lower_case.style = all_lower_case_
 # CSharp code style settings:
 [*.cs]
 # Do not prefer "var" everywhere
-csharp_style_var_for_built_in_types = true:error
-csharp_style_var_when_type_is_apparent = true:error
-csharp_style_var_elsewhere = true:error
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = true:suggestion
 
 # Prefer method-like constructs to have a block body
 csharp_style_expression_bodied_methods = true:suggestion

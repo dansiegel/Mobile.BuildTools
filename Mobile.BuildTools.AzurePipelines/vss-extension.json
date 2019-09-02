@@ -1,0 +1,24 @@
+{
+  "manifestVersion": 0,
+  "id": "tools",
+  "version": "0.0.1",
+  "name": "mobile-buildtools",
+  "publisher": "Dan Siegel",
+  "description": "Tools to help you Rebundle your Android & iOS app with fresh resources",
+  "targets": [
+    {
+    "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "categories": [
+    "Build and release"
+  ],
+  "tags": [
+    "rebundle"
+  ],
+  "links": {
+    "home": {
+      "uri": "https://dansiegel.net"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+
+  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ManifestsShared.targets"/>
+
+  <Target Name="_GatherManifests">
+    <PropertyGroup>
+      <TemlateAppManifest>$(IntermediateOutputPath)android\AndroidManifest.xml</TemlateAppManifest>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="HandleAndroidManifest"
+          AfterTargets="_GenerateJavaStubs"
+          DependsOnTargets="_SetLatestTargetFrameworkVersion">
+    <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
+                          Prefix="$(ManifestVariablePrefix)"
+                          Token="$(ManifestToken)"
+                          ManifestTemplatePath="$(TemlateAppManifest)"
+                          ManifestOutputPath="$(TemlateAppManifest)"
+                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                          ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
+                          DebugOutput="$(MobileBuildToolsDebug)" />
+  </Target>
+
+  <Target Name="AutomaticBuildVersioning"
+          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist">
+
+    <AutomaticBuildVersioningTask Behavior="$(AutomaticVersionBehavior)"
+                                  VersionEnvironment="$(AutomaticVersionEnvironment)"
+                                  VersionOffset="$(AutomaticVersionOffset)"
+                                  ManifestPath="$(TemlateAppManifest)"
+                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                  SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                                  ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
+                                  DebugOutput="$(MobileBuildToolsDebug)" />
+  </Target>
+
+</Project>

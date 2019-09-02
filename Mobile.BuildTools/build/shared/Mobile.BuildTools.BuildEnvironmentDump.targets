@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.BuildEnvironmentDumpTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+
+  <Target Name="CIEnvironmentDump">
+    <BuildEnvironmentDumpTask ProjectDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+
+</Project>

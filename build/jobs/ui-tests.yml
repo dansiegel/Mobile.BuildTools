@@ -1,0 +1,25 @@
+parameters:
+  solution: '**/*.sln'
+  nugetVersion: ''
+  baseSolutionDirectory: ''
+
+jobs:
+- job: Run UI Tests
+  displayName: Run UI Tests
+  pool:
+    vmImage: $(MacAgent)
+    demands:
+    - msbuild
+    - vstest
+  steps:
+  - template: ../steps/local-nuget-restore.yml
+    parameters:
+      version: ${{ parameters.nugetVersion }}
+      workingDirectory: ${{ parameters.baseSolutionDirectory }}
+
+  - task: MSBuild@1
+    displayName: 'Build solution Mobile.BuildTools.sln'
+    inputs:
+      solution: Mobile.BuildTools.sln
+      platform: '$(BuildPlatform)'
+      configuration: 'Debug'

@@ -1,0 +1,23 @@
+parameters:
+  workingDirectory: ''
+  version: '4.9.4'
+
+steps:
+- task: NuGetToolInstaller@0
+  displayName: Use NuGet ${{ parameters.version }}
+  inputs:
+    versionSpec: ${{ parameters.version }}
+
+- task: DownloadPipelineArtifact@1
+  inputs:
+    artifactName: 'Artifacts'
+    downloadPath: $(Pipeline.Workspace)
+
+- powershell: |
+   nuget help | head -1 
+   nuget locals global-packages -clear
+   nuget restore -source "$($env:PIPELINE_WORKSPACE);https://api.nuget.org/v3/index.json"
+
+  workingDirectory: ${{ parameters.workingDirectory }}
+  displayName: 'NuGet Restore'
+
