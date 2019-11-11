@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="MSBuild.Sdk.Extras/2.0.24">
+<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;MonoAndroid80;Xamarin.iOS10;Xamarin.Mac20;uap10.0.16299</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;monoandroid80;xamarin.ios10;xamarin.mac20;uap10.0.16299</TargetFrameworks>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <Description>Additional MSBuild targets and properties for .NET projects. Especially enhances Xamarin targets. Enables better development practices with CI/CD pipelines. See the Wiki on GitHub for more information in how to Get Started or customize your experience.</Description>
     <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
@@ -14,16 +14,16 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <NewtonsoftPackagePath>$(NuGetPackageRoot)newtonsoft.json\12.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
+    <NewtonsoftPackagePath>$(NuGetPackageRoot)newtonsoft.json\12.0.3\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
     <SharpScssPackagePath>$(NuGetPackageRoot)sharpscss\1.4.0\lib\netstandard1.3\SharpScss.dll</SharpScssPackagePath>
-    <NUglifyPackagePath>$(NuGetPackageRoot)nuglify\1.5.12\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
+    <NUglifyPackagePath>$(NuGetPackageRoot)nuglify\1.5.13\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
     <SharpScssRuntimePath>$(NuGetPackageRoot)sharpscss\1.4.0\runtimes\**</SharpScssRuntimePath>
     <XdtPath>$(NuGetPackageRoot)microsoft.web.xdt\3.0.0\lib\netstandard2.0\Microsoft.Web.XmlTransform.dll</XdtPath>
 
     <!-- Hack because Azure DevOps Windows Hosts are stupid! -->
-    <NewtonsoftPackagePath Condition=" !Exists('$(NewtonsoftPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\12.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
+    <NewtonsoftPackagePath Condition=" !Exists('$(NewtonsoftPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\12.0.3\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
     <SharpScssPackagePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.4.0\lib\netstandard1.3\SharpScss.dll</SharpScssPackagePath>
-    <NUglifyPackagePath Condition=" !Exists('$(NUglifyPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\nuglify\1.5.12\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
+    <NUglifyPackagePath Condition=" !Exists('$(NUglifyPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\nuglify\1.5.13\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
     <SharpScssRuntimePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.4.0\runtimes\**</SharpScssRuntimePath>
     <XdtPath Condition=" !Exists('$(XdtPath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\microsoft.web.xdt\3.0.0\lib\netstandard2.0\Microsoft.Web.XmlTransform.dll</XdtPath>
   </PropertyGroup>
@@ -35,13 +35,13 @@
 
     <Content Include="build\monoandroid80\**" Pack="True" PackagePath="build\monoandroid80" />
     <Content Include="build\shared\**" Pack="True" PackagePath="build\monoandroid80" />
-    
+
     <Content Include="build\xamarin.ios10\**" Pack="True" PackagePath="build\xamarin.ios10" />
     <Content Include="build\shared\**" Pack="True" PackagePath="build\xamarin.ios10" />
-    
+
     <Content Include="build\xamarin.mac20\**" Pack="True" PackagePath="build\xamarin.mac20" />
     <Content Include="build\shared\**" Pack="True" PackagePath="build\xamarin.mac20" />
-    
+
     <Content Include="build\uap10.0.16299\**" Pack="True" PackagePath="build\uap10.0.16299" />
     <Content Include="build\shared\**" Pack="True" PackagePath="build\uap10.0.16299" />
   </ItemGroup>

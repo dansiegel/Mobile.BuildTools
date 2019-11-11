@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.24">
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;MonoAndroid80;Xamarin.iOS10;Xamarin.Mac20;uap10.0.16299</TargetFrameworks>
@@ -11,40 +11,40 @@
     <Compile Remove="Platform/**/*.cs" />
     <None Include="Platform/**/*.cs" />
   </ItemGroup>
-  
+
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
     <None Remove="**/Platform/NetStandard/**/*.cs" />
     <Compile Include="**/Platform/NetStandard/**/*.cs" />
   </ItemGroup>
-  
+
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <Reference Include="System.Xml.Linq" />
     <None Remove="**/Platform/Droid/**/*.cs" />
     <Compile Include="**/Platform/Droid/**/*.cs" />
   </ItemGroup>
-  
+
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
     <Reference Include="System.Xml.Linq" />
     <None Remove="**/Platform/iOS/**/*.cs" />
     <Compile Include="**/Platform/iOS/**/*.cs" />
   </ItemGroup>
-  
+
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac')) ">
     <Reference Include="netstandard" />
     <Reference Include="System.Xml.Linq" />
     <None Remove="**/Platform/iOS/**/*.cs" />
     <Compile Include="**/Platform/iOS/**/*.cs" />
   </ItemGroup>
-  
+
   <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
     <None Remove="**/Platform/UWP/**/*.cs" />
     <Compile Include="**/Platform/UWP/**/*.cs" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Mobile.BuildTools\Mobile.BuildTools.csproj" />
   </ItemGroup>
