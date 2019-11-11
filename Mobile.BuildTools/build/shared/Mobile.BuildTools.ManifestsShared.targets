@@ -4,8 +4,6 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.AutomaticBuildVersioningTask"
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
-  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ManifestsShared.targets"/>
-
   <!-- Properties for the TemplateManifest Task -->
   <PropertyGroup>
     <BuildResourcesDirectoryName Condition=" '$(BuildResourcesDirectoryName)' == '' ">build</BuildResourcesDirectoryName>
