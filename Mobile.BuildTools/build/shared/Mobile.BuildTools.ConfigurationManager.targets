@@ -7,14 +7,14 @@
   <Target Name="_CollectAppConfigs"
           BeforeTargets="CoreCompile">
     <ItemGroup>
-      <MobileBuildToolsConfigs Include="$(MSBuildProjectDirectory)/app.config" />
-      <MobileBuildToolsConfigs Include="$(MSBuildProjectDirectory)/app.*.config" />
+      <MobileBuildToolsConfigs Condition=" Exists('$(MSBuildProjectDirectory)/app.config') " Include="$(MSBuildProjectDirectory)/app.config" />
+      <MobileBuildToolsConfigs Condition=" Exists('$(MSBuildProjectDirectory)/app.config') " Include="$(MSBuildProjectDirectory)/app.*.config" />
     </ItemGroup>
   </Target>
 
   <Target Name="ConfigurationManagerTransformAndCopy"
           Inputs="@(MobileBuildToolsConfigs)"
-          Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs/%(Filename)%(Extension)')">
+          Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
     <ConfigurationManagerHandlerTask ProjectDirectory="$(MSBuildProjectDirectory)"
                                      BuildConfiguration="$(Configuration)"
                                      IntermediateOutputPath="$(IntermediateOutputPath)"

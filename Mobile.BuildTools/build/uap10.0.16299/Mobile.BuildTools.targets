@@ -10,10 +10,11 @@
 
   <Target Name="HandlePlatformAppConfig"
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
-          Inputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs/%(Filename)%(Extension)')">
+          Inputs="@(MobileBuildToolsConfigs)"
+          Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
     <ItemGroup>
-      <BundleResource Include="$(IntermediateOutputPath)configs/**')"
-                      Link="Assets/%(Filename)%(Extension)"/>
+      <BundleResource Include="$(IntermediateOutputPath)configs\**')"
+                      Link="Assets/%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 

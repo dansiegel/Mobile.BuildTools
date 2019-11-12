@@ -10,10 +10,11 @@
 
   <Target Name="HandlePlatformAppConfig"
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
-          Inputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs/%(Filename)%(Extension)')">
+          Inputs="@(MobileBuildToolsConfigs)"
+          Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
 
     <ItemGroup>
-      <ProcessedAppConfig Include="$(IntermediateOutputPath)configs/**')" />
+      <ProcessedAppConfig Include="$(IntermediateOutputPath)configs\**')" />
     </ItemGroup>
 
     <Copy SourceFiles="@(ProcessedAppConfig)"
