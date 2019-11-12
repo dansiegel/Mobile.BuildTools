@@ -5,7 +5,7 @@
     <Copyright>© Dan Siegel</Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/dansiegel/Mobile.BuildTools/master/logo/icon.png</PackageIconUrl>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <PackageLicenseUrl>https://github.com/dansiegel/Mobile.BuildTools/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools/</PackageProjectUrl>
     <LocalArtifactStagingDirectory>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Artifacts'))</LocalArtifactStagingDirectory>
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$([System.IO.Path]::Combine('$(BUILD_ARTIFACTSTAGINGDIRECTORY)', 'Artifacts'))</PackageOutputPath>
@@ -18,4 +18,11 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <TasksBinaryOutputDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Artifacts', 'TasksBin'))</TasksBinaryOutputDir>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(IsPackable)">
+    <None Include="$(MSBuildThisFileDirectory)logo\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>

@@ -11,72 +11,67 @@
     </PackageReleaseNotes>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <NoWarn>1701;1702;XA0101</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
-    <NewtonsoftPackagePath>$(NuGetPackageRoot)newtonsoft.json\12.0.3\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
-    <SharpScssPackagePath>$(NuGetPackageRoot)sharpscss\1.4.0\lib\netstandard1.3\SharpScss.dll</SharpScssPackagePath>
-    <NUglifyPackagePath>$(NuGetPackageRoot)nuglify\1.5.13\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
-    <SharpScssRuntimePath>$(NuGetPackageRoot)sharpscss\1.4.0\runtimes\**</SharpScssRuntimePath>
-    <XdtPath>$(NuGetPackageRoot)microsoft.web.xdt\3.0.0\lib\netstandard2.0\Microsoft.Web.XmlTransform.dll</XdtPath>
-
-    <!-- Hack because Azure DevOps Windows Hosts are stupid! -->
-    <NewtonsoftPackagePath Condition=" !Exists('$(NewtonsoftPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\12.0.3\lib\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
-    <SharpScssPackagePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.4.0\lib\netstandard1.3\SharpScss.dll</SharpScssPackagePath>
-    <NUglifyPackagePath Condition=" !Exists('$(NUglifyPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\nuglify\1.5.13\lib\netstandard1.3\NUglify.dll</NUglifyPackagePath>
-    <SharpScssRuntimePath Condition=" !Exists('$(SharpScssPackagePath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\sharpscss\1.4.0\runtimes\**</SharpScssRuntimePath>
-    <XdtPath Condition=" !Exists('$(XdtPath)') ">$(ProgramW6432)\dotnet\sdk\NuGetFallbackFolder\microsoft.web.xdt\3.0.0\lib\netstandard2.0\Microsoft.Web.XmlTransform.dll</XdtPath>
+    <NewtonsoftPackagePath>$(TasksBinaryOutputDir)\netstandard2.0\Newtonsoft.Json.dll</NewtonsoftPackagePath>
+    <SharpScssPackagePath>$(TasksBinaryOutputDir)\netstandard2.0\SharpScss.dll</SharpScssPackagePath>
+    <NUglifyPackagePath>$(TasksBinaryOutputDir)\netstandard2.0\NUglify.dll</NUglifyPackagePath>
+    <SharpScssRuntimePath>$(TasksBinaryOutputDir)\netstandard2.0\runtimes\**</SharpScssRuntimePath>
+    <XdtPath>$(TasksBinaryOutputDir)\netstandard2.0\Microsoft.Web.XmlTransform.dll</XdtPath>
+    <BuildToolsDll>$(TasksBinaryOutputDir)\netstandard2.0\Mobile.BuildTools.Tasks.dll</BuildToolsDll>
   </PropertyGroup>
 
   <!-- build contents -->
   <ItemGroup>
-    <Content Include="build\netstandard2.0\**" Pack="True" PackagePath="build\netstandard2.0" />
-    <Content Include="build\shared\**" Pack="True" PackagePath="build\netstandard2.0" />
+    <None Include="build\netstandard2.0\**" Pack="True" PackagePath="build\netstandard2.0" />
+    <None Include="build\shared\**" Pack="True" PackagePath="build\netstandard2.0" />
 
-    <Content Include="build\monoandroid80\**" Pack="True" PackagePath="build\monoandroid80" />
-    <Content Include="build\shared\**" Pack="True" PackagePath="build\monoandroid80" />
+    <None Include="build\monoandroid80\**" Pack="True" PackagePath="build\monoandroid80" />
+    <None Include="build\shared\**" Pack="True" PackagePath="build\monoandroid80" />
 
-    <Content Include="build\xamarin.ios10\**" Pack="True" PackagePath="build\xamarin.ios10" />
-    <Content Include="build\shared\**" Pack="True" PackagePath="build\xamarin.ios10" />
+    <None Include="build\xamarin.ios10\**" Pack="True" PackagePath="build\xamarin.ios10" />
+    <None Include="build\shared\**" Pack="True" PackagePath="build\xamarin.ios10" />
 
-    <Content Include="build\xamarin.mac20\**" Pack="True" PackagePath="build\xamarin.mac20" />
-    <Content Include="build\shared\**" Pack="True" PackagePath="build\xamarin.mac20" />
+    <None Include="build\xamarin.mac20\**" Pack="True" PackagePath="build\xamarin.mac20" />
+    <None Include="build\shared\**" Pack="True" PackagePath="build\xamarin.mac20" />
 
-    <Content Include="build\uap10.0.16299\**" Pack="True" PackagePath="build\uap10.0.16299" />
-    <Content Include="build\shared\**" Pack="True" PackagePath="build\uap10.0.16299" />
+    <None Include="build\uap10.0.16299\**" Pack="True" PackagePath="build\uap10.0.16299" />
+    <None Include="build\shared\**" Pack="True" PackagePath="build\uap10.0.16299" />
   </ItemGroup>
 
   <!-- build binaries -->
   <ItemGroup>
-    <Content Include="..\Mobile.BuildTools.Tasks\bin\$(Configuration)\netcoreapp2.1\**" Link="build\netstandard2.0\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0" />
-    <Content Include="$(NewtonsoftPackagePath)" Link="build\netstandard2.0\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0" />
-    <Content Include="$(SharpScssPackagePath)" Link="build\netstandard2.0\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0" />
-    <Content Include="$(NUglifyPackagePath)" Link="build\netstandard2.0\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0" />
-    <Content Include="$(SharpScssRuntimePath)" Link="build\netstandard2.0\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0\runtimes" />
+    <None Include="$(BuildToolsDll)" Link="build\netstandard2.0\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0" />
+    <None Include="$(NewtonsoftPackagePath)" Link="build\netstandard2.0\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0" />
+    <None Include="$(SharpScssPackagePath)" Link="build\netstandard2.0\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0" />
+    <None Include="$(NUglifyPackagePath)" Link="build\netstandard2.0\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0" />
+    <None Include="$(SharpScssRuntimePath)" Link="build\netstandard2.0\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\netstandard2.0\runtimes" />
 
-    <Content Include="..\Mobile.BuildTools.Tasks\bin\$(Configuration)\netcoreapp2.1\**" Link="build\monoandroid80\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80" />
-    <Content Include="$(NewtonsoftPackagePath)" Link="build\monoandroid80\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80" />
-    <Content Include="$(SharpScssPackagePath)" Link="build\monoandroid80\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80" />
-    <Content Include="$(NUglifyPackagePath)" Link="build\monoandroid80\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80" />
-    <Content Include="$(SharpScssRuntimePath)" Link="build\monoandroid80\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80\runtimes" />
+    <None Include="$(BuildToolsDll)" Link="build\monoandroid80\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80" />
+    <None Include="$(NewtonsoftPackagePath)" Link="build\monoandroid80\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80" />
+    <None Include="$(SharpScssPackagePath)" Link="build\monoandroid80\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80" />
+    <None Include="$(NUglifyPackagePath)" Link="build\monoandroid80\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80" />
+    <None Include="$(SharpScssRuntimePath)" Link="build\monoandroid80\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\monoandroid80\runtimes" />
 
-    <Content Include="..\Mobile.BuildTools.Tasks\bin\$(Configuration)\netcoreapp2.1\**" Link="build\xamarin.ios10\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10" />
-    <Content Include="$(NewtonsoftPackagePath)" Link="build\xamarin.ios10\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10" />
-    <Content Include="$(SharpScssPackagePath)" Link="build\xamarin.ios10\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10" />
-    <Content Include="$(NUglifyPackagePath)" Link="build\xamarin.ios10\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10" />
-    <Content Include="$(SharpScssRuntimePath)" Link="build\xamarin.ios10\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10\runtimes" />
+    <None Include="$(BuildToolsDll)" Link="build\xamarin.ios10\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10" />
+    <None Include="$(NewtonsoftPackagePath)" Link="build\xamarin.ios10\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10" />
+    <None Include="$(SharpScssPackagePath)" Link="build\xamarin.ios10\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10" />
+    <None Include="$(NUglifyPackagePath)" Link="build\xamarin.ios10\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10" />
+    <None Include="$(SharpScssRuntimePath)" Link="build\xamarin.ios10\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.ios10\runtimes" />
 
-    <Content Include="..\Mobile.BuildTools.Tasks\bin\$(Configuration)\netcoreapp2.1\**" Link="build\xamarin.mac20\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20" />
-    <Content Include="$(NewtonsoftPackagePath)" Link="build\xamarin.mac20\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20" />
-    <Content Include="$(SharpScssPackagePath)" Link="build\xamarin.mac20\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20" />
-    <Content Include="$(NUglifyPackagePath)" Link="build\xamarin.mac20\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20" />
-    <Content Include="$(SharpScssRuntimePath)" Link="build\xamarin.mac20\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20\runtimes" />
+    <None Include="$(BuildToolsDll)" Link="build\xamarin.mac20\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20" />
+    <None Include="$(NewtonsoftPackagePath)" Link="build\xamarin.mac20\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20" />
+    <None Include="$(SharpScssPackagePath)" Link="build\xamarin.mac20\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20" />
+    <None Include="$(NUglifyPackagePath)" Link="build\xamarin.mac20\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20" />
+    <None Include="$(SharpScssRuntimePath)" Link="build\xamarin.mac20\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\xamarin.mac20\runtimes" />
 
-    <Content Include="..\Mobile.BuildTools.Tasks\bin\$(Configuration)\netcoreapp2.1\**" Link="build\uap10.0.16299\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299" />
-    <Content Include="$(NewtonsoftPackagePath)" Link="build\uap10.0.16299\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299" />
-    <Content Include="$(SharpScssPackagePath)" Link="build\uap10.0.16299\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299" />
-    <Content Include="$(NUglifyPackagePath)" Link="build\uap10.0.16299\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299" />
-    <Content Include="$(SharpScssRuntimePath)" Link="build\uap10.0.16299\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299\runtimes" />
+    <None Include="$(BuildToolsDll)" Link="build\uap10.0.16299\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299" />
+    <None Include="$(NewtonsoftPackagePath)" Link="build\uap10.0.16299\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299" />
+    <None Include="$(SharpScssPackagePath)" Link="build\uap10.0.16299\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299" />
+    <None Include="$(NUglifyPackagePath)" Link="build\uap10.0.16299\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299" />
+    <None Include="$(SharpScssRuntimePath)" Link="build\uap10.0.16299\runtimes\%(FileName)%(Extension)" Pack="true" PackagePath="build\uap10.0.16299\runtimes" />
   </ItemGroup>
 
   <ItemGroup>
