@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Xamarin.MacDev;
 
-namespace Mobile.BuildTools.Generators
+namespace Mobile.BuildTools.Generators.Versioning
 {
     public class iOSAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
     {

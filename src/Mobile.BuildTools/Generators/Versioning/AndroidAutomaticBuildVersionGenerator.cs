@@ -1,6 +1,6 @@
 ﻿using Xamarin.Android.Tools;
 
-namespace Mobile.BuildTools.Generators
+namespace Mobile.BuildTools.Generators.Versioning
 {
     public class AndroidAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
     {

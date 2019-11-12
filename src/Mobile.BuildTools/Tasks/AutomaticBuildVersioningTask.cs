@@ -1,5 +1,5 @@
 ﻿using System;
-using Mobile.BuildTools.Generators;
+using Mobile.BuildTools.Generators.Versioning;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Utils;

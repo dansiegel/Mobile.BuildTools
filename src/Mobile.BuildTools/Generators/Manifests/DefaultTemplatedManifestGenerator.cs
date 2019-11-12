@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Mobile.BuildTools.Generators
+namespace Mobile.BuildTools.Generators.Manifests
 {
     internal class DefaultTemplatedManifestGenerator : BaseTemplatedManifestGenerator
     {

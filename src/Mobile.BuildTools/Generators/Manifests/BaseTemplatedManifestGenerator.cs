@@ -6,7 +6,7 @@ using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Logging;
 using Xamarin.MacDev;
 
-namespace Mobile.BuildTools.Generators
+namespace Mobile.BuildTools.Generators.Manifests
 {
     public abstract class BaseTemplatedManifestGenerator : IGenerator
     {

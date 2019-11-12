@@ -5,7 +5,7 @@ using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Utils;
 using Mobile.BuildTools.Versioning;
 
-namespace Mobile.BuildTools.Generators
+namespace Mobile.BuildTools.Generators.Versioning
 {
     public abstract class BuildVersionGeneratorBase : IGenerator
     {

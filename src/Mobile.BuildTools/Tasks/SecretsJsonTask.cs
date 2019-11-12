@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.Build.Framework;
-using Mobile.BuildTools.Generators;
+using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Logging;
 
 namespace Mobile.BuildTools.Tasks

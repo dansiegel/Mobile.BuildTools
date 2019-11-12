@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using Mobile.BuildTools.Generators;
+using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Utils;
 

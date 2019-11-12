@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Build.Framework;
 using Mobile.BuildTools.Logging;
-using Mobile.BuildTools.Tasks.Generators;
+using Mobile.BuildTools.Tasks.Generators.AppConfig;
 
 namespace Mobile.BuildTools.Tasks.Tasks
 {

@@ -9,7 +9,7 @@ using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Logging;
 using Newtonsoft.Json.Linq;
 
-namespace Mobile.BuildTools.Generators
+namespace Mobile.BuildTools.Generators.Secrets
 {
     public class SecretsClassGenerator : IGenerator
     {

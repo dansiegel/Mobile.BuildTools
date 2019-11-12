@@ -12,7 +12,7 @@ using Mobile.BuildTools.Configuration;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Logging;
 
-namespace Mobile.BuildTools.Tasks.Generators
+namespace Mobile.BuildTools.Tasks.Generators.AppConfig
 {
     public class ConfigurationManagerTransformationGenerator : IGenerator
     {
