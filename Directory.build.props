@@ -4,6 +4,7 @@
     <Authors>Dan Siegel</Authors>
     <Copyright>© Dan Siegel</Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/dansiegel/Mobile.BuildTools/master/logo/icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <DevelopmentDependency>true</DevelopmentDependency>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools/</PackageProjectUrl>
@@ -16,10 +17,6 @@
     <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_RELEASE)' == 'true' "></VersionSuffix>
     <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TasksBinaryOutputDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Artifacts', 'TasksBin'))</TasksBinaryOutputDir>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsPackable)">
