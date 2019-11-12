@@ -4,8 +4,6 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
-  <Import Project="$(MSBuildThisFileDirectory)Mobile.BuildTools.ManifestsShared.targets"/>
-
   <Target Name="_GatherManifests">
     <PropertyGroup>
       <TemlateAppManifest>$(IntermediateOutputPath)android\AndroidManifest.xml</TemlateAppManifest>

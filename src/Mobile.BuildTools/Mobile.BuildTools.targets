@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Import Project="AndroidManifest.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid'" />
+  <Import Project="MonoAndroid.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid'" />
+  <Import Project="iOS.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS'" />
+  <Import Project="iOSManifests.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS'" />
+  <Import Project="Mac.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'" />
+  <Import Project="UAP.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'UAP'" />
+  <Import Project="NetStandard.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'netstandard'" />
+
+  <Import Project="BuildEnvironmentDump.targets" />
+  <Import Project="ConfigurationManager.targets" />
+  <Import Project="GitVersioning.targets" />
+  <Import Project="ManifestsShared.targets" />
+  <Import Project="ScssToCss.targets" />
+  <Import Project="Secrets.targets" />
+</Project>

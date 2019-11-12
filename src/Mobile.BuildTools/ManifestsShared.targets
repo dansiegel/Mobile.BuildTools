@@ -37,10 +37,6 @@
     <Message Text="ManifestOutputPath: '$(ManifestDestinationPath)'" />
   </Target>
 
-  
-
-  
-
   <Target Name="_GatherManifestForAutomaticVersioning"
           AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist">
     <PropertyGroup>

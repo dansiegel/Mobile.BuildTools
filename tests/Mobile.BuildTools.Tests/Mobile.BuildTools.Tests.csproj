@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mobile.BuildTools.Tasks\Mobile.BuildTools.Tasks.csproj" />
+    <ProjectReference Include="..\..\src\Mobile.BuildTools\Mobile.BuildTools.csproj" />
   </ItemGroup>
 
   <ItemGroup>

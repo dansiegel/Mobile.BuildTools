@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <Target Name="HandlePlatformAppConfig"
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
+          Inputs="@(MobileBuildToolsConfigs)"
+          Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
+    <ItemGroup>
+      <BundleResource Include="$(IntermediateOutputPath)configs\**')"
+                      Link="Assets/%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

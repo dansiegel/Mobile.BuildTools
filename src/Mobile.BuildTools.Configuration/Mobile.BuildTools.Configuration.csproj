@@ -45,8 +45,4 @@
     <PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Mobile.BuildTools\Mobile.BuildTools.csproj" />
-  </ItemGroup>
-
 </Project>

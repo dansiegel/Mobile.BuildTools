@@ -39,3 +39,38 @@ While for most applications it would never make any sense to bundle configs like
 
 For more information and configuration settings be sure to check out the Wiki at:
 https://github.com/dansiegel/Mobile.BuildTools/wiki
+
+## Image & Icon Management
+
+One of the great new features in Mobile.BuildTools 2.0 is the fact that we now natively handle your image assets. You can now safely remove all of those images that just clutter up your project and aren't great for Git in the first place. So how does it work? Let's assume you have a folder structure like the following in the root of your solution:
+
+```
+- Images
+  - Shared
+  - iOS
+  - Android
+  - Dev
+  - Prod
+```
+
+Give this structure we might update our projects as follows:
+
+```xml
+<Project>
+  <PropertyGroup>
+    <ImageAssetsDirectory>..\..\Images\Shared;..\..\Images\iOS</ImageAssetsDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(Configuration) == 'Debug' >
+    <ImageAssetsDirectory>$(ImageAssetsDirectory);..\..\Images\Dev</ImageAssetsDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(Configuration) == 'Store' >
+    <ImageAssetsDirectory>$(ImageAssetsDirectory);..\..\Images\Prod</ImageAssetsDirectory>
+  </PropertyGroup>
+</Project>
+```
+
+Now when you build it will automatically pick up the images in any of the specified image folders.
+
+### Images on iOS
+
+Each platform is a little different and as such it will generate images based on how the platform works. When the Image targets run, it will scan your iOS project for App Icon Sets. The key here is that it is going to look for a matching output name and at the Contents.json for what actual outputs need to be created. If no icon set is found it will create them as more traditional Resources with a @1x, @2x, & @3x output. The @3x version will be the original size of the image in your Images folder.

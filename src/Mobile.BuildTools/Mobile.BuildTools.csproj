@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageId>$(AssemblyName)</PackageId>
+    <Description>Additional MSBuild targets and properties for .NET projects. Especially enhances Xamarin targets. Enables better development practices with CI/CD pipelines. See the Wiki on GitHub for more information in how to Get Started or customize your experience.</Description>
+    <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
+    <PackageReleaseNotes>https://github.com/dansiegel/Mobile.BuildTools/</PackageReleaseNotes>
+    <PrimaryOutputKind>build</PrimaryOutputKind>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\*.cs" Link="Sdk\MaciOS\%(Filename)%(Extension)" />
+    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\*.cs" Link="Sdk\Android\%(Filename)%(Extension)" />
+    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Sdks\*.cs" Link="Sdk\Android\Sdks\%(Filename)%(Extension)" />
+    <Compile Include="..\Mobile.BuildTools.Configuration\TransformationHelper.cs" Link="Utils\TransformationHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="*.targets;*.props" Pack="true" Kind="$(PrimaryOutputKind)" />
+    <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="15.9.20" Pack="false" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" Pack="false" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
+    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.5-dev.10" PrivateAssets="all" />
+    <!-- Add `native` to the CopyToOutput to capture all runtimes -->
+    <PackageReference Include="SharpScss" Version="1.4.0" PrivateAssets="all" CopyToOutput="runtime,osx-x64;win-x64" />
+    <PackageReference Include="NUglify" Version="1.5.13" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="IncludeCopyToOutputFromPackage"
+          Inputs="@(PackageReference -> HasMetadata('CopyToOutput'))"
+          Outputs="%(PackageReference.Identity)"
+          DependsOnTargets="ResolvePackageAssets"
+          AfterTargets="ResolveReferences">
+    <PropertyGroup>
+      <CopyToOutputPackageId>%(PackageReference.Identity)</CopyToOutputPackageId>
+      <CopyToOutputAssetType>%(PackageReference.CopyToOutput)</CopyToOutputAssetType>
+    </PropertyGroup>
+    <ItemGroup>
+      <!-- We could want to include other stuff transitively, like content or tools -->
+      <PackageItems Include="@(RuntimeTargetsCopyLocalItems)" />
+    </ItemGroup>
+    <ItemGroup>
+      <CopyLocalPackageFile Include="@(PackageItems)"
+                            Condition="'%(PackageItems.NuGetPackageId)' == '$(CopyToOutputPackageId)' And
+                            ('$(CopyToOutputAssetType.Contains(%(PackageItems.AssetType)))' == 'true' Or '$(CopyToOutputAssetType.Contains(%(PackageItems.RuntimeIdentifier)))' == 'true')" />
+      <PackageFile Include="@(CopyLocalPackageFile)" PackagePath="%(CopyLocalPackageFile.PathInPackage)" />
+    </ItemGroup>
+    <ItemGroup>
+      <RuntimeCopyLocalPackageFiles Include="@(RuntimeCopyLocalItems)"
+                                    Condition="'%(RuntimeCopyLocalItems.NuGetPackageId)' == '$(CopyToOutputPackageId)' And $(CopyToOutputAssetType.Contains('%(RuntimeCopyLocalItems.AssetType)'))" />
+      <ReferenceCopyLocalPaths Include="@(RuntimeCopyLocalPackageFiles)" />
+      <PackageFile Include="@(RuntimeCopyLocalPackageFiles)" Kind="$(PrimaryOutputKind)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

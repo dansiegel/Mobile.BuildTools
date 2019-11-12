@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mobile.BuildTools.Configuration\Mobile.BuildTools.Configuration.csproj" />
+    <ProjectReference Include="..\..\src\Mobile.BuildTools.Configuration\Mobile.BuildTools.Configuration.csproj" />
   </ItemGroup>
 
   <ItemGroup>
