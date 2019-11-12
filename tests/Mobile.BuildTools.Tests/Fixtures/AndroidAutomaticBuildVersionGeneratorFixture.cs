@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Xml;
-using Mobile.BuildTools.Generators;
+using Mobile.BuildTools.Generators.Versioning;
 using Mobile.BuildTools.Tests.Mocks;
 using Mobile.BuildTools.Versioning;
 using Xunit;

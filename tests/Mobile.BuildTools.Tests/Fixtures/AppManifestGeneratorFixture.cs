@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Mobile.BuildTools.Generators;
-using Mobile.BuildTools.Utils;
+using Mobile.BuildTools.Generators.Manifests;
 using Mobile.BuildTools.Tests.Mocks;
+using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;

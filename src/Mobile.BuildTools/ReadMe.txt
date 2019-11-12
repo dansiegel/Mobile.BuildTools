@@ -74,3 +74,53 @@ Now when you build it will automatically pick up the images in any of the specif
 ### Images on iOS
 
 Each platform is a little different and as such it will generate images based on how the platform works. When the Image targets run, it will scan your iOS project for App Icon Sets. The key here is that it is going to look for a matching output name and at the Contents.json for what actual outputs need to be created. If no icon set is found it will create them as more traditional Resources with a @1x, @2x, & @3x output. The @3x version will be the original size of the image in your Images folder.
+
+## App Wide Config
+
+You can provide a solution wide configuration. The solution wide configuration must be named buildtools.json
+
+```json
+{
+  "artifactCopy": {
+    "disable": false // false by default
+  },
+  "automaticVersioning": {
+    "behavior": "PreferBuildNumber|Timestamp|Off", // PreferBuildNumber by default
+    "environment": "All|BuildHost|Local", // All by default
+    "versionOffset": 100 // 0 by default
+  },
+  "css": {
+    "minify": false, // not actually supported by Xamarin.Forms
+    "bundleScss": false // false by default
+  },
+  "images": {
+    // Note: All directories are relative from the configuration file
+    "directories": [
+      "Images/Shared"
+    ],
+    // Conditional Directory are added to the directories above
+    "conditionalDirectories": {
+      "Debug": [
+        "Images/Debug"
+      ],
+      "Store": [
+        "Images/Store"
+      ]
+    }
+  },
+  "projectSecrets": {
+    "Contoso": {
+      "AzureAdClientId": {
+        "type": "String"
+      },
+      "AzureAdScopes": {
+        "isArray": true,
+        "delimiter": ";"
+      }
+    },
+    "Contoso.Android": {
+      "AzureAdDataScheme": null // will use String by default
+    }
+  }
+}
+```

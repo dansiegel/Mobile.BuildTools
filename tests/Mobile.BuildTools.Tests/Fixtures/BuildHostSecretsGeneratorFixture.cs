@@ -1,5 +1,5 @@
 using System;
-using Mobile.BuildTools.Generators;
+using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Tests.Mocks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

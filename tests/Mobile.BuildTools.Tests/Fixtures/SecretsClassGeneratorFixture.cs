@@ -1,7 +1,7 @@
-﻿using Mobile.BuildTools.Generators;
+﻿using System.Collections.Generic;
+using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Tests.Mocks;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using Xunit;
 using Xunit.Abstractions;
 
