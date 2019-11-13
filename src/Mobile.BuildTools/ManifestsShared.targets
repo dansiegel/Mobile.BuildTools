@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
-  
+
   <UsingTask TaskName="Mobile.BuildTools.Tasks.AutomaticBuildVersioningTask"
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
@@ -38,7 +38,7 @@
   </Target>
 
   <Target Name="_GatherManifestForAutomaticVersioning"
-          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist">
+          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist;MobileBuildToolsInit">
     <PropertyGroup>
       <AutomaticVersionOffset Condition=" '$(AutomaticVersionOffset)' == '' ">0</AutomaticVersionOffset>
       <AutomaticVersionEnvironment Condition=" '$(AutomaticVersionEnvironment)' == '' ">All</AutomaticVersionEnvironment>

@@ -5,7 +5,7 @@
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Target Name="HandleTokenizedInfoPlist"
-          AfterTargets="_CoreCompileInterfaceDefinitions"
+          AfterTargets="_CoreCompileInterfaceDefinitions;MobileBuildToolsInit"
           Condition=" $(IsiOSProject) ">
     <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
                           Prefix="$(ManifestVariablePrefix)"
@@ -46,5 +46,5 @@
           DestinationFiles="$(BuildToolsArtifactOutputPath)\$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))" />
 
   </Target>
-  
+
 </Project>

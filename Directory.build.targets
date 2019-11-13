@@ -6,9 +6,9 @@
       <_DeleteDirectory ParameterType="System.String" Required="true" />
     </ParameterGroup>
     <Task>  
-      <Using Namespace="System"/>  
-      <Using Namespace="System.IO"/>  
-      <Code Type="Fragment" Language="cs">  
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <Code Type="Fragment" Language="cs">
 <![CDATA[  
 Log.LogMessage(string.Format("Directory to Delete '{0}'.", _DeleteDirectory));
 if(Directory.Exists(_DeleteDirectory))

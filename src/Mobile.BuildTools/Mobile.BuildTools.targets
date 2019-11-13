@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
+
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.LocateBuildToolsConfigTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+
   <Import Project="AndroidManifest.targets"
           Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid'" />
   <Import Project="MonoAndroid.targets"
@@ -21,4 +25,31 @@
   <Import Project="ManifestsShared.targets" />
   <Import Project="ScssToCss.targets" />
   <Import Project="Secrets.targets" />
+
+  <Target Name="MobileBuildToolsInit"
+          DependsOn="_LocateBuildToolsConfig"
+          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC">
+
+  </Target>
+
+  <Target Name="_LocateBuildToolsConfig"
+          BeforeTargets="CoreCompile">
+    <LocateBuildToolsConfigTask ProjectDir=""
+                                SolutionDir="">
+      <Output ItemName="_LocatedSolutionDirectory"
+              TaskParameter="LocatedSolutionDirectory" />
+      <Output ItemName="_Configuration"
+              TaskParameter="Configuration" />
+    </LocateBuildToolsConfigTask>
+
+    <PropertyGroup Condition=" $(SolutionDir) == '' ">
+      <SolutionDir>@(_LocatedSolutionDirectory)</SolutionDir>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <BuildToolsConfigurationPath>@(Configuration)</BuildToolsConfigurationPath>
+    </PropertyGroup>
+  </Target>
+
+
 </Project>

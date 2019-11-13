@@ -47,6 +47,7 @@
 
   <Target Name="ProcessScss"
           BeforeTargets="CssG"
+          DependsOn="MobileBuildToolsInit"
           Inputs="@(_Scss);@(_PartialScc)"
           Outputs="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')">
 
