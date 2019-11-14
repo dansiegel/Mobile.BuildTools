@@ -18,6 +18,8 @@ namespace Mobile.BuildTools.Models.AppIcons
 
         public bool ShouldBeVisible { get; set; }
 
+        public string WatermarkFilePath { get; set; }
+
         public new bool Equals(object x, object y)
         {
             if (x is OutputImage image1 && y is OutputImage image2)

@@ -1,4 +1,4 @@
-﻿namespace Mobile.BuildTools.Versioning
+﻿namespace Mobile.BuildTools.Models
 {
     public enum VersionEnvironment
     {

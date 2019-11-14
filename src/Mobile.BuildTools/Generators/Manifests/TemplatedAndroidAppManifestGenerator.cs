@@ -1,11 +1,13 @@
 ﻿using System.Xml.Linq;
+using Mobile.BuildTools.Build;
 using Xamarin.Android.Tools;
 
 namespace Mobile.BuildTools.Generators.Manifests
 {
-    public class TemplatedAndroidAppManifestGenerator : BaseTemplatedManifestGenerator
+    internal class TemplatedAndroidAppManifestGenerator : BaseTemplatedManifestGenerator
     {
-        public TemplatedAndroidAppManifestGenerator(string[] referenceAssemblyPaths)
+        public TemplatedAndroidAppManifestGenerator(IBuildConfiguration configuration, string[] referenceAssemblyPaths)
+            : base(configuration)
         {
             AndroidVersions = new AndroidVersions(referenceAssemblyPaths);
         }

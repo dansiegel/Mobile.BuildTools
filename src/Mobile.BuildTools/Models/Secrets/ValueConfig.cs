@@ -11,8 +11,5 @@ namespace Mobile.BuildTools.Models.Secrets
 
         [JsonProperty("isArray")]
         public bool IsArray { get; set; }
-
-        [JsonProperty("delimiter")]
-        public string Delimiter { get; set; }
     }
 }

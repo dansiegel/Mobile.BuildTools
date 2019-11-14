@@ -1,33 +1,31 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Mobile.BuildTools.Logging;
+using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Utils;
-using Mobile.BuildTools.Versioning;
 
 namespace Mobile.BuildTools.Generators.Versioning
 {
-    public abstract class BuildVersionGeneratorBase : IGenerator
+    internal abstract class BuildVersionGeneratorBase : GeneratorBase
     {
+        public BuildVersionGeneratorBase(IBuildConfiguration buildConfiguration)
+            : base(buildConfiguration)
+        {
+        }
+
         private static DateTimeOffset EPOCOffset => new DateTimeOffset(new DateTime(2018, 1, 1));
 
-        public string ManifestPath { get; set; }
-        public Behavior Behavior { get; set; }
-        public VersionEnvironment VersionEnvironment { get; set; }
-        public int VersionOffset { get; set; }
-        public ILog Log { get; set; }
-        public bool? DebugOutput { get; set; }
+        private string ManifestPath { get; }
+        public VersionBehavior Behavior => Build.Configuration.AutomaticVersioning.Behavior;
+        public VersionEnvironment VersionEnvironment => Build.Configuration.AutomaticVersioning.Environment;
+        public int VersionOffset => Build.Configuration.AutomaticVersioning.VersionOffset;
 
         internal string BuildNumber { get; private set; }
 
-        public void Execute()
+        protected override void Execute()
         {
-            if (DebugOutput == null)
-            {
-                DebugOutput = false;
-            }
-
-            if(Behavior == Behavior.Off)
+            if(Behavior == VersionBehavior.Off)
             {
                 Log.LogMessage("Automatic versioning has been disabled. Please update your project settings to enable automatic versioning.");
                 return;
@@ -58,7 +56,7 @@ namespace Mobile.BuildTools.Generators.Versioning
 
         private void LogManifestContents()
         {
-            if (DebugOutput.HasValue && DebugOutput.Value)
+            if (Build.Configuration.Debug)
             {
                 Log.LogMessage(File.ReadAllText(ManifestPath));
             }
@@ -68,7 +66,7 @@ namespace Mobile.BuildTools.Generators.Versioning
 
         protected string GetBuildNumber()
         {
-            if(Behavior == Behavior.PreferBuildNumber && CIBuildEnvironmentUtils.IsBuildHost)
+            if(Behavior == VersionBehavior.PreferBuildNumber && CIBuildEnvironmentUtils.IsBuildHost)
             {
                 if(int.TryParse(CIBuildEnvironmentUtils.BuildNumber, out var buildId))
                 {

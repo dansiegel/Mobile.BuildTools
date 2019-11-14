@@ -2,8 +2,8 @@
 {
     public class AutomaticVersioning
     {
-        public VersioningBehavior Behavior { get; set; }
-        public VersioningEnvironment Environment { get; set; }
+        public VersionBehavior Behavior { get; set; }
+        public VersionEnvironment Environment { get; set; }
         public int VersionOffset { get; set; }
     }
 }

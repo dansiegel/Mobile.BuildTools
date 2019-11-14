@@ -1,10 +1,16 @@
 ﻿using System.IO;
+using Mobile.BuildTools.Build;
 using Xamarin.MacDev;
 
 namespace Mobile.BuildTools.Generators.Versioning
 {
-    public class iOSAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
+    internal class iOSAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
     {
+        public iOSAutomaticBuildVersionGenerator(IBuildConfiguration buildConfiguration)
+            : base(buildConfiguration)
+        {
+        }
+
         protected override void ProcessManifest(string plistPath, string buildNumber)
         {
             var infoPlist = PDictionary.FromFile(plistPath);

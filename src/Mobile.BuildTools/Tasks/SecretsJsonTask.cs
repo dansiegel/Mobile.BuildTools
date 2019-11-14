@@ -1,12 +1,14 @@
 using System;
 using System.IO;
 using Microsoft.Build.Framework;
+using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Logging;
 
 namespace Mobile.BuildTools.Tasks
 {
-    public class SecretsJsonTask : Microsoft.Build.Utilities.Task
+    public class SecretsJsonTask : BuildToolsTaskBase
     {
         private ITaskItem[] _generatedCodeFiles;
 
@@ -22,56 +24,35 @@ namespace Mobile.BuildTools.Tasks
 
         public string OutputPath { get; set; }
 
-        public string IntermediateOutputPath { get; set; }
-
-        public string DebugOutput { get; set; }
-
         [Output]
         public ITaskItem[] GeneratedCodeFiles => _generatedCodeFiles ?? new ITaskItem[0];
 
-        public override bool Execute()
+        internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            if (!ValidateParameters()) return false;
-
-            try
+            var configurationSecretsFilePath = $"{Path.GetFileNameWithoutExtension(SecretsJsonFilePath)}.{Configuration.ToLower()}{Path.GetExtension(SecretsJsonFilePath)}";
+            if (File.Exists(SecretsJsonFilePath) || File.Exists(configurationSecretsFilePath))
             {
-                var configurationSecretsFilePath = $"{Path.GetFileNameWithoutExtension(SecretsJsonFilePath)}.{Configuration.ToLower()}{Path.GetExtension(SecretsJsonFilePath)}";
-                if (File.Exists(SecretsJsonFilePath) || File.Exists(configurationSecretsFilePath))
-                {
-                    Log.LogMessage($"ProjectBasePath: {ProjectBasePath}");
-                    Log.LogMessage($"SecretsClassName: {SecretsClassName}");
-                    Log.LogMessage($"SecretsJsonFilePath: {SecretsJsonFilePath}");
-                    Log.LogMessage($"RootNamespace: {RootNamespace}");
-                    Log.LogMessage($"OutputPath: {OutputPath}");
+                Log.LogMessage($"ProjectBasePath: {ProjectBasePath}");
+                Log.LogMessage($"SecretsClassName: {SecretsClassName}");
+                Log.LogMessage($"SecretsJsonFilePath: {SecretsJsonFilePath}");
+                Log.LogMessage($"RootNamespace: {RootNamespace}");
+                Log.LogMessage($"OutputPath: {OutputPath}");
 
-                    bool.TryParse(DebugOutput, out var debug);
-                    var generator = new SecretsClassGenerator()
-                    {
-                        ConfigurationSecretsJsonFilePath = configurationSecretsFilePath,
-                        ProjectBasePath = ProjectBasePath,
-                        SecretsClassName = SecretsClassName,
-                        SecretsJsonFilePath = SecretsJsonFilePath,
-                        BaseNamespace = RootNamespace,
-                        OutputPath = OutputPath,
-                        IntermediateOutputPath = IntermediateOutputPath,
-                        DebugOutput = debug,
-                        Log = (BuildHostLoggingHelper)Log
-                    };
-                    generator.Execute();
-                    _generatedCodeFiles = generator.GeneratedFiles;
-                }
-                else
+                var generator = new SecretsClassGenerator(config)
                 {
-                    Log.LogMessage("No Secrets Json File was found.");
-                }
+                    ConfigurationSecretsJsonFilePath = configurationSecretsFilePath,
+                    SecretsClassName = SecretsClassName,
+                    SecretsJsonFilePath = SecretsJsonFilePath,
+                    BaseNamespace = RootNamespace,
+                    OutputPath = OutputPath,
+                };
+                ((IGenerator)generator).Execute();
+                _generatedCodeFiles = generator.GeneratedFiles;
             }
-            catch (Exception ex)
+            else
             {
-                Log.LogError(ex.ToString());
-                return false;
+                Log.LogMessage("No Secrets Json File was found.");
             }
-
-            return true;
         }
 
         private bool ValidateParameters()

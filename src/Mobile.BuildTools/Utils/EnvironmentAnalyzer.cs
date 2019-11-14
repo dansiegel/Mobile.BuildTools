@@ -10,7 +10,8 @@ namespace Mobile.BuildTools.Utils
 {
     internal static class EnvironmentAnalyzer
     {
-        private const string DefaultSecretPrefix = "Secret_";
+        private const string DefaultSecretPrefix = "BuildTools_";
+        private const string LegacySecretPrefix = "Secret_";
         private const string DefaultManifestPrefix = "Manifest_";
 
         public static IDictionary<string, string> GatherEnvironmentVariables(string projectPath = null, bool includeManifest = false)
@@ -34,13 +35,13 @@ namespace Mobile.BuildTools.Utils
             return env;
         }
 
-        public static IEnumerable<string> GetManifestPrefixes(string sdkShortFrameworkIdentifier)
+        public static IEnumerable<string> GetManifestPrefixes(Platform platform)
         {
-            var prefixes = new List<string>(GetSecretPrefixes(sdkShortFrameworkIdentifier, forceIncludeDefault: true))
+            var prefixes = new List<string>(GetSecretPrefixes(platform, forceIncludeDefault: true))
             {
                 DefaultManifestPrefix
             };
-            var platformPrefix = GetPlatformManifestPrefix(sdkShortFrameworkIdentifier);
+            var platformPrefix = GetPlatformManifestPrefix(platform);
             if(!string.IsNullOrWhiteSpace(platformPrefix))
             {
                 prefixes.Add(platformPrefix);
@@ -49,9 +50,9 @@ namespace Mobile.BuildTools.Utils
             return prefixes;
         }
 
-        private static string GetPlatformManifestPrefix(string sdkShortFrameworkIdentifier)
+        private static string GetPlatformManifestPrefix(Platform platform)
         {
-            switch (sdkShortFrameworkIdentifier.GetTargetPlatform())
+            switch (platform)
             {
                 case Platform.Android:
                     return "DroidManifest_";
@@ -68,44 +69,33 @@ namespace Mobile.BuildTools.Utils
             }
         }
 
-        public static string GetSecretPrefix(string sdkShortFrameworkIdentifier)
+        public static string[] GetPlatformSecretPrefix(Platform platform)
         {
-            switch (sdkShortFrameworkIdentifier.GetTargetPlatform())
+            switch (platform)
             {
                 case Platform.Android:
-                    return "DroidSecret_";
+                    return new[] { "DroidSecret_" };
                 case Platform.iOS:
-                    return "iOSSecret_";
+                    return new[] { "iOSSecret_" };
                 case Platform.UWP:
-                    return "UWPSecret_";
+                    return new[] { "UWPSecret_" };
                 case Platform.macOS:
-                    return "MacSecret_";
+                    return new[] { "MacSecret_" };
                 case Platform.Tizen:
-                    return "TizenSecret_";
+                    return new[] { "TizenSecret_" };
                 default:
-                    return DefaultSecretPrefix;
+                    return new[] { DefaultSecretPrefix, LegacySecretPrefix };
             }
         }
 
-        private static bool IsPlatformProject(string sdkShortFrameworkIdentifier)
+        public static IEnumerable<string> GetSecretPrefixes(Platform platform, bool forceIncludeDefault = false)
         {
-            return sdkShortFrameworkIdentifier.GetTargetPlatform() != Platform.Unsupported;
-        }
-
-        public static IEnumerable<string> GetSecretPrefixes(string sdkShortFrameworkIdentifier, string runtimePrefix = null, bool forceIncludeDefault = false)
-        {
-            if(string.IsNullOrWhiteSpace(runtimePrefix))
+            var prefixes = new List<string>(GetPlatformSecretPrefix(platform))
             {
-                runtimePrefix = GetSecretPrefix(sdkShortFrameworkIdentifier);
-            }
-
-            var prefixes = new List<string>
-            {
-                runtimePrefix,
                 "SharedSecret_"
             };
 
-            if(IsPlatformProject(sdkShortFrameworkIdentifier))
+            if(platform != Platform.Unsupported)
             {
                 prefixes.Add("PlatformSecret_");
             }
@@ -125,9 +115,9 @@ namespace Mobile.BuildTools.Utils
             return variables.Keys.Where(k => prefixes.Any(p => k.StartsWith(p)));
         }
 
-        public static IDictionary<string, string> GetSecrets(string sdkShortFrameworkIdentifier, string runtimePrefix = null)
+        public static IDictionary<string, string> GetSecrets(Platform platform, string runtimePrefix = null)
         {
-            var prefixes = GetSecretPrefixes(sdkShortFrameworkIdentifier, runtimePrefix);
+            var prefixes = GetSecretPrefixes(platform);
             var keys = GetSecretKeys(prefixes);
             var variables = GatherEnvironmentVariables().Where(p => keys.Any(k => k == p.Key));
             var output = new Dictionary<string, string>();

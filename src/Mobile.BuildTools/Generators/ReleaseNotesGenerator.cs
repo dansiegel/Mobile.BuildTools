@@ -4,21 +4,23 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Mobile.BuildTools.Logging;
+using Mobile.BuildTools.Build;
 
 namespace Mobile.BuildTools.Generators
 {
-    public class ReleaseNotesGenerator : IGenerator
+    internal class ReleaseNotesGenerator : GeneratorBase
     {
-        public string OutputDirectory { get; set; }
-        public DateTime FromDate { get; set; }
-        public int MaxCommit { get; set; }
-        public int CharacterLimit { get; set; }
-        public ILog Log { get; set; }
-        public bool? DebugOutput { get; set; }
-
-        public void Execute()
+        public ReleaseNotesGenerator(IBuildConfiguration buildConfiguration)
+            : base(buildConfiguration)
         {
+        }
+
+        protected override void Execute()
+        {
+            var releaseNotesOptions = Build.Configuration.ReleaseNotes;
+
+            if (!releaseNotesOptions.Enabled) return;
+
             var branchName = GetBranchName();
             if (string.IsNullOrWhiteSpace(branchName))
             {
@@ -26,16 +28,19 @@ namespace Mobile.BuildTools.Generators
                 return;
             }
 
+            var fromDate = DateTime.Now.AddDays(releaseNotesOptions.MaxDays > 0 ? releaseNotesOptions.MaxDays * -1 : releaseNotesOptions.MaxDays);
+
             //"git log --no-merges --since="$TODAY 00:00:00" --format=" % cd" --date=short";
-            var dates = GetCommitDates();
+            var dates = GetCommitDates(fromDate);
             var notes = string.Empty;
             var characterLimitExceeded = false;
             var commits = 0;
+            
             foreach (var date in dates)
             {
                 // 2018-07-25
                 //"git log --no-merges --format=" * % s" --since="2018-07-25 00:00:00" --until="2018-07-25 24:00:00""
-                if (commits > MaxCommit || characterLimitExceeded)
+                if (commits > Build.Configuration.ReleaseNotes.MaxCommit || characterLimitExceeded)
                 {
                     Log.LogMessage("Maximimum limits reaches. Truncating Release Notes.");
                     break;
@@ -43,9 +48,9 @@ namespace Mobile.BuildTools.Generators
                     
                 foreach (var line in GetCommitMessages(date))
                 {
-                    if (MaxCommit > 0 && commits++ > MaxCommit)
+                    if (releaseNotesOptions.MaxCommit > 0 && commits++ > releaseNotesOptions.MaxCommit)
                         break;
-                    if(CharacterLimit > 0 && line.Length + notes.Length > CharacterLimit)
+                    if(releaseNotesOptions.CharacterLimit > 0 && line.Length + notes.Length > releaseNotesOptions.CharacterLimit)
                     {
                         characterLimitExceeded = true;
                         break;
@@ -54,15 +59,17 @@ namespace Mobile.BuildTools.Generators
                 }
             }
 
-            if (!Directory.Exists(OutputDirectory))
-                Directory.CreateDirectory(OutputDirectory);
+            var outputDirectory = releaseNotesOptions.CreateInRoot ? Build.SolutionDirectory : Build.ProjectDirectory;
 
-            File.WriteAllText(Path.Combine(OutputDirectory, "releasenotes.md"), notes.Trim());
+            if (!Directory.Exists(outputDirectory))
+                Directory.CreateDirectory(outputDirectory);
+
+            File.WriteAllText(Path.Combine(outputDirectory, releaseNotesOptions.FileName), notes.Trim());
         }
 
-        internal IEnumerable<string> GetCommitDates()
+        internal IEnumerable<string> GetCommitDates(DateTime fromDate)
         {
-            var args = $@"log --no-merges --since=""{FromDate.Year}-{FromDate.Month}-{FromDate.Day} 00:00:00"" --format="" % cd"" --date=short";
+            var args = $@"log --no-merges --since=""{fromDate.Year}-{fromDate.Month}-{fromDate.Day} 00:00:00"" --format="" % cd"" --date=short";
             return GetProcessOutput(args).Distinct();
         }
 

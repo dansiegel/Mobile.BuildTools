@@ -1,10 +1,16 @@
 ﻿using System.IO;
+using Mobile.BuildTools.Build;
 using Xamarin.MacDev;
 
 namespace Mobile.BuildTools.Generators.Manifests
 {
-    public class TemplatedPlistGenerator : BaseTemplatedManifestGenerator
+    internal class TemplatedPlistGenerator : BaseTemplatedManifestGenerator
     {
+        public TemplatedPlistGenerator(IBuildConfiguration configuration)
+            : base(configuration)
+        {
+        }
+
         protected override string ReadManifest() => PDictionary.FromFile(ManifestOutputPath).ToXml();
 
         protected override void SaveManifest(string manifest)

@@ -3,44 +3,39 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Utilities;
+using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Logging;
 using Xamarin.MacDev;
 
 namespace Mobile.BuildTools.Generators.Manifests
 {
-    public abstract class BaseTemplatedManifestGenerator : IGenerator
+    internal abstract class BaseTemplatedManifestGenerator : GeneratorBase
     {
         internal const string DefaultToken = @"\$\$";
 
-        public string Prefix { get; set; }
+        public BaseTemplatedManifestGenerator(IBuildConfiguration configuration)
+            : base(configuration)
+        {
+            var token = configuration.Configuration.Manifests.Token;
+            if(string.IsNullOrEmpty(token))
+            {
+                token = DefaultToken;
+            }
 
-        public string Token { get; set; }
+            Token = token;
+        }
 
-        public string SdkShortFrameworkIdentifier { get; set; }
+        public string Token { get; }
 
-        public string ProjectDirectory { get; set; }
+        public string ProjectDirectory => Build.ProjectDirectory;
 
         public string ManifestOutputPath { get; set; }
 
-        public bool? DebugOutput { get; set; }
-
-        public ILog Log { get; set; }
-
-        public void Execute()
+        protected override void Execute()
         {
-            if (string.IsNullOrWhiteSpace(Token))
-            {
-                Token = DefaultToken;
-            }
-
             if (!File.Exists(ManifestOutputPath))
             {
                 Log?.LogWarning("There is no Template Manifest at the path: '{0}'", ManifestOutputPath);
-            }
-
-            if(DebugOutput == null)
-            {
-                DebugOutput = false;
             }
 
             var template = ReadManifest();
@@ -89,12 +84,7 @@ namespace Mobile.BuildTools.Generators.Manifests
                 return matchValue;
             }
 
-            if (variables.ContainsKey($"{Prefix}{matchValue}"))
-            {
-                return $"{Prefix}{matchValue}";
-            }
-
-            foreach(var manifestPrefix in Utils.EnvironmentAnalyzer.GetManifestPrefixes(SdkShortFrameworkIdentifier))
+            foreach(var manifestPrefix in Utils.EnvironmentAnalyzer.GetManifestPrefixes(Build.Platform))
             {
                 if (variables.ContainsKey($"{manifestPrefix}{matchValue}"))
                     return $"{manifestPrefix}{matchValue}";

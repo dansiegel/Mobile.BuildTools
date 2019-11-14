@@ -4,8 +4,10 @@ namespace Mobile.BuildTools.Models
 {
     public class ImageResize
     {
-        public IList<string> Directories { get; set; }
+        public IEnumerable<string> Directories { get; set; }
 
-        public IDictionary<string, string> ConditionalDirectories { get; set; } 
+        public IDictionary<string, IEnumerable<string>> ConditionalDirectories { get; set; }
+
+        public double? WatermarkOpacity { get; set; }
     }
 }

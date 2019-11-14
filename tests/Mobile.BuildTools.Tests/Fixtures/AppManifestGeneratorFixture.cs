@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Manifests;
 using Mobile.BuildTools.Tests.Mocks;
 using Mobile.BuildTools.Utils;
@@ -13,7 +15,7 @@ using Xunit.Abstractions;
 #pragma warning disable IDE0040 // Add accessibility modifiers
 namespace Mobile.BuildTools.Tests.Fixtures
 {
-    public class AppManifestGeneratorFixture
+    public class AppManifestGeneratorFixture : FixtureBase
     {
         private const string TestPrefix = "XunitTest_";
         private static readonly string TemplateAndroidManifestPath = @"Templates/MockAndroidManifest.xml";
@@ -21,23 +23,20 @@ namespace Mobile.BuildTools.Tests.Fixtures
         private static readonly string TemplateManifestPath = @"Templates/MockManifestTemplate.json";
         private static readonly string TemplateManifestOutputPath = @"Generated/MockManifest.json";
 
-        private ITestOutputHelper _testOutputHelper { get; }
-
         public AppManifestGeneratorFixture(ITestOutputHelper testOutputHelper)
+            : base(testOutputHelper)
         {
-            _testOutputHelper = testOutputHelper;
             Environment.SetEnvironmentVariable($"{TestPrefix}TemplatedParameter", nameof(AppManifestGeneratorFixture));
             Environment.SetEnvironmentVariable($"{TestPrefix}CustomTokenParameter", nameof(AppManifestGeneratorFixture));
         }
 
         private BaseTemplatedManifestGenerator CreateGenerator() =>
-            new DefaultTemplatedManifestGenerator()
+            CreateGenerator(GetConfiguration());
+
+        private BaseTemplatedManifestGenerator CreateGenerator(IBuildConfiguration config) =>
+            new DefaultTemplatedManifestGenerator(config)
             {
-                ProjectDirectory = Directory.GetCurrentDirectory(),
-                Log = new XunitLog(_testOutputHelper),
                 ManifestOutputPath = TemplateManifestOutputPath,
-                Prefix = TestPrefix,
-                Token = BaseTemplatedManifestGenerator.DefaultToken
             };
 
         [Fact]
@@ -75,8 +74,10 @@ namespace Mobile.BuildTools.Tests.Fixtures
         [Fact]
         public void ProcessCustomTokenizedVariables()
         {
-            var generator = CreateGenerator();
-            generator.Token = @"%%";
+            var config = GetConfiguration();
+            config.Configuration.Manifests.Token = @"%%";
+            var generator = CreateGenerator(config);
+
             var template = File.ReadAllText(TemplateManifestPath);
             var match = generator.GetMatches(template).FirstOrDefault();
             var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(Directory.GetCurrentDirectory(), true);
@@ -94,7 +95,8 @@ namespace Mobile.BuildTools.Tests.Fixtures
         //[Fact]
         public void ProcessingDoesNotCorruptAndroidManifest()
         {
-            var generator = CreateGenerator();
+            var config = GetConfiguration();
+            var generator = CreateGenerator(config);
             var template = File.ReadAllText(TemplateAndroidManifestPath);
             var guid = Guid.NewGuid().ToString();
             Environment.SetEnvironmentVariable("XunitTest_AADClientId", guid);
@@ -104,9 +106,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
             Assert.Equal("$$AADClientId$$", match.Value);
 
             generator.ManifestOutputPath = TemplateAndroidManifestOutputPath;
-            generator.DebugOutput = true;
+            config.Configuration.Debug = true;
 
-            var ex = Record.Exception(() => generator.Execute());
+            var ex = Record.Exception(() => ((IGenerator)generator).Execute());
             Assert.Null(ex);
 
             var generatedTemplate = File.ReadAllText(TemplateAndroidManifestOutputPath);

@@ -1,12 +1,13 @@
-﻿using Mobile.BuildTools.Logging;
+﻿using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Logging;
 
 namespace Mobile.BuildTools.Generators
 {
     internal interface IGenerator
     {
-        ILog Log { get; set; }
+        IBuildConfiguration Build { get; }
 
-        bool? DebugOutput { get; set; }
+        ILog Log { get; }
 
         void Execute();
     }

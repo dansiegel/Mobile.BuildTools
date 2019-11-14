@@ -1,64 +1,34 @@
-using System;
 using System.IO;
+using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Secrets;
-using Mobile.BuildTools.Logging;
-using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
-    public class BuildHostSecretsTask : Microsoft.Build.Utilities.Task
+    public class BuildHostSecretsTask : BuildToolsTaskBase
     {
-        public string SecretsPrefix { get; set; }
-
         public string SecretsJsonFilePath { get; set; }
 
-        public string SdkShortFrameworkIdentifier { get; set; }
-
-        public string DebugOutput { get; set; }
-
-        public override bool Execute()
+        internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            try
+            Log.LogMessage($"Output Path: {SecretsJsonFilePath}");
+            if (string.IsNullOrWhiteSpace(SecretsJsonFilePath))
             {
-                Log.LogMessage($"Output Path: {SecretsJsonFilePath}");
-                if (string.IsNullOrWhiteSpace(SecretsJsonFilePath))
-                {
-                    Log.LogMessage($"No Secrets file specified for '{SdkShortFrameworkIdentifier}'");
-                }
-                else if (File.Exists(SecretsJsonFilePath))
-                {
-                    Log.LogMessage("A secrets file already exists. Pleaes delete the file to regenerate the secrets");
-                }
-                else
-                {
-                    ValidateSecretsPrefix();
-                    bool.TryParse(DebugOutput, out var debug);
-                    var generator = new BuildHostSecretsGenerator()
-                    {
-                        SdkShortFrameworkIdentifier = SdkShortFrameworkIdentifier,
-                        SecretsPrefix = SecretsPrefix,
-                        SecretsJsonFilePath = SecretsJsonFilePath,
-                        DebugOutput = debug,
-                        Log = (BuildHostLoggingHelper)Log
-                    };
-
-                    generator.Execute();
-                }
+                Log.LogMessage($"No Secrets file specified for '{SdkShortFrameworkIdentifier}'");
             }
-            catch (Exception e)
+            else if (File.Exists(SecretsJsonFilePath))
             {
-                Log.LogErrorFromException(e);
-                return false;
+                Log.LogMessage("A secrets file already exists. Pleaes delete the file to regenerate the secrets");
             }
+            else
+            {
+                IGenerator generator = new BuildHostSecretsGenerator(this)
+                {
+                    SecretsJsonFilePath = SecretsJsonFilePath,
+                };
 
-            return true;
-        }
-
-        private void ValidateSecretsPrefix()
-        {
-            if (!string.IsNullOrWhiteSpace(SecretsPrefix)) return;
-
-            SecretsPrefix = EnvironmentAnalyzer.GetSecretPrefix(SdkShortFrameworkIdentifier);
+                generator.Execute();
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Tests.Mocks;
 using Newtonsoft.Json;
@@ -8,24 +10,23 @@ using Xunit.Abstractions;
 
 namespace Mobile.BuildTools.Tests.Fixtures
 {
-    public class BuildHostSecretsGeneratorFixture
+    public class BuildHostSecretsGeneratorFixture : FixtureBase
     {
         private const string SecretsPrefix = "UNIT_TEST_";
         private const string SecretsJsonFilePath = "Samples/secrets.json";
 
-        private ITestOutputHelper _testOutputHelper { get; }
-
         public BuildHostSecretsGeneratorFixture(ITestOutputHelper testOutputHelper)
+            : base(testOutputHelper)
         {
-            _testOutputHelper = testOutputHelper;
         }
 
         private BuildHostSecretsGenerator GetGenerator() =>
-            new BuildHostSecretsGenerator()
+            GetGenerator(GetConfiguration());
+
+        private BuildHostSecretsGenerator GetGenerator(IBuildConfiguration config) =>
+            new BuildHostSecretsGenerator(config)
             {
-                SecretsPrefix = SecretsPrefix,
                 SecretsJsonFilePath = SecretsJsonFilePath,
-                Log = new XunitLog(_testOutputHelper)
             };
 
         private void SetTestVariable() =>
@@ -35,7 +36,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
         public void DoesNotThrowException()
         {
             SetTestVariable();
-            var generator = GetGenerator();
+            IGenerator generator = GetGenerator();
             var ex = Record.Exception(() => generator.Execute());
 
             if (ex != null)

@@ -33,6 +33,11 @@
     <PackageReference Include="SharpScss" Version="1.4.0" PrivateAssets="all" CopyToOutput="runtime,osx-x64;win-x64" />
     <PackageReference Include="NUglify" Version="1.5.13" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" CopyToOutput="runtime" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.Core" Version="1.0.0-beta0008" CopyToOutput="runtime" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" CopyToOutput="runtime" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta0009" CopyToOutput="runtime" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.Shapes" Version="1.0.0-beta0009" CopyToOutput="runtime" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="IncludeCopyToOutputFromPackage"

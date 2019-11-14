@@ -1,9 +1,15 @@
-﻿using Xamarin.Android.Tools;
+﻿using Mobile.BuildTools.Build;
+using Xamarin.Android.Tools;
 
 namespace Mobile.BuildTools.Generators.Versioning
 {
-    public class AndroidAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
+    internal class AndroidAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
     {
+        public AndroidAutomaticBuildVersionGenerator(IBuildConfiguration buildConfiguration)
+            : base(buildConfiguration)
+        {
+        }
+
         public string[] ReferenceAssemblyPaths { get; set; }
 
         protected override void ProcessManifest(string path, string buildNumber)

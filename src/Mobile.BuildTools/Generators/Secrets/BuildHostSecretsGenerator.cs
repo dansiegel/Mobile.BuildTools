@@ -2,32 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Build.Utilities;
-using Mobile.BuildTools.Logging;
+using Mobile.BuildTools.Build;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Generators.Secrets
 {
-    public class BuildHostSecretsGenerator : IGenerator
+    internal class BuildHostSecretsGenerator : GeneratorBase
     {
-        public string SdkShortFrameworkIdentifier { get; set; }
-
-        public string SecretsPrefix { get; set; }
+        public BuildHostSecretsGenerator(IBuildConfiguration buildConfiguration)
+            : base(buildConfiguration)
+        {
+        }
 
         public string SecretsJsonFilePath { get; set; }
 
-        public bool? DebugOutput { get; set; }
-
-        public ILog Log { get; set; }
-
-        public void Execute()
+        protected override void Execute()
         {
-            if (DebugOutput == null)
-            {
-                DebugOutput = false;
-            }
-
             var secrets = GetSecrets();
 
             if (!secrets.Any())
@@ -36,12 +27,12 @@ namespace Mobile.BuildTools.Generators.Secrets
                 return;
             }
 
-            Log?.LogMessage($"Generating {Path.GetFileName(SecretsJsonFilePath)} for {SecretsPrefix}");
+            Log?.LogMessage($"Generating {Path.GetFileName(SecretsJsonFilePath)}");
             var json = GetJObjectFromSecrets(secrets);
 
             WriteJsonFile(SecretsJsonFilePath, json.ToString(Formatting.Indented));
 
-            Log?.LogMessage((bool)DebugOutput ? json.ToString(Formatting.Indented) : SanitizeJObject(json));
+            Log?.LogMessage(Build.Configuration.Debug ? json.ToString(Formatting.Indented) : SanitizeJObject(json));
         }
 
         internal string SanitizeJObject(JObject jObject)
@@ -85,6 +76,6 @@ namespace Mobile.BuildTools.Generators.Secrets
         }
 
         internal IDictionary<string, string> GetSecrets() =>
-            Utils.EnvironmentAnalyzer.GetSecrets(SdkShortFrameworkIdentifier, SecretsPrefix);
+            Utils.EnvironmentAnalyzer.GetSecrets(Build.Platform);
     }
 }

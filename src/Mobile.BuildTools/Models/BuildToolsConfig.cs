@@ -13,6 +13,12 @@ namespace Mobile.BuildTools.Models
 
         public ImageResize Images { get; set; }
 
+        public TemplatedManifest Manifests { get; set; }
+
+        public ReleaseNotesOptions ReleaseNotes { get; set; }
+
         public IDictionary<string, SecretsConfig> ProjectSecrets { get; set; }
+
+        public bool Debug { get; set; }
     }
 }
