@@ -19,7 +19,8 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         protected override void Execute()
         {
-            var secrets = GetSecrets();
+            var config = Build.GetSecretsConfig();
+            var secrets = GetSecrets(config?.Prefix);
 
             if (!secrets.Any())
             {
@@ -75,7 +76,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             return json;
         }
 
-        internal IDictionary<string, string> GetSecrets() =>
-            Utils.EnvironmentAnalyzer.GetSecrets(Build.Platform);
+        internal IDictionary<string, string> GetSecrets(string knownPrefix) =>
+            Utils.EnvironmentAnalyzer.GetSecrets(Build.Platform, knownPrefix);
     }
 }

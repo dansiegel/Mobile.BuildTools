@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
+using Mobile.BuildTools.Models.Secrets;
 using Mobile.BuildTools.Tasks.Utils;
 
 namespace Mobile.BuildTools.Build
@@ -26,5 +27,7 @@ namespace Mobile.BuildTools.Build
         Platform Platform { get; }
 
         void SaveConfiguration();
+
+        SecretsConfig GetSecretsConfig();
     }
 }

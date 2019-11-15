@@ -19,7 +19,7 @@ namespace Mobile.BuildTools.Generators
         {
             var releaseNotesOptions = Build.Configuration.ReleaseNotes;
 
-            if (!releaseNotesOptions.Enabled) return;
+            if (releaseNotesOptions.Disable) return;
 
             var branchName = GetBranchName();
             if (string.IsNullOrWhiteSpace(branchName))

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Tasks.Utils;
 using Newtonsoft.Json.Linq;
 
@@ -35,12 +36,18 @@ namespace Mobile.BuildTools.Utils
             return env;
         }
 
-        public static IEnumerable<string> GetManifestPrefixes(Platform platform)
+        public static IEnumerable<string> GetManifestPrefixes(Platform platform, string knownPrefix)
         {
             var prefixes = new List<string>(GetSecretPrefixes(platform, forceIncludeDefault: true))
             {
                 DefaultManifestPrefix
             };
+
+            if(!string.IsNullOrEmpty(knownPrefix))
+            {
+                prefixes.Add(knownPrefix);
+            }
+
             var platformPrefix = GetPlatformManifestPrefix(platform);
             if(!string.IsNullOrWhiteSpace(platformPrefix))
             {
@@ -115,9 +122,16 @@ namespace Mobile.BuildTools.Utils
             return variables.Keys.Where(k => prefixes.Any(p => k.StartsWith(p)));
         }
 
-        public static IDictionary<string, string> GetSecrets(Platform platform, string runtimePrefix = null)
+        public static IDictionary<string, string> GetSecrets(Platform platform, string knownPrefix)
         {
             var prefixes = GetSecretPrefixes(platform);
+            if(!string.IsNullOrEmpty(knownPrefix))
+            {
+                prefixes = new List<string>(prefixes)
+                {
+                    knownPrefix
+                };
+            }
             var keys = GetSecretKeys(prefixes);
             var variables = GatherEnvironmentVariables().Where(p => keys.Any(k => k == p.Key));
             var output = new Dictionary<string, string>();

@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
+using Mobile.BuildTools.Models.Secrets;
 using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Utils;
+using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -59,5 +63,16 @@ namespace Mobile.BuildTools.Tasks
             ConfigHelper.SaveConfig(((IBuildConfiguration)this).Configuration, ConfigurationPath);
 
         internal abstract void ExecuteInternal(IBuildConfiguration config);
+
+        SecretsConfig IBuildConfiguration.GetSecretsConfig()
+        {
+            var configPath = Path.Combine(ProjectDirectory, "secrets.config");
+            if (File.Exists(configPath))
+            {
+                return JsonConvert.DeserializeObject<SecretsConfig>(configPath);
+            }
+            var build = (IBuildConfiguration)this;
+            return build.Configuration.ProjectSecrets.FirstOrDefault(x => x.Key == build.GlobalProperties["ProjectName"]).Value;
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
@@ -17,7 +18,7 @@ namespace Mobile.BuildTools.Generators.Manifests
             : base(configuration)
         {
             var token = configuration.Configuration.Manifests.Token;
-            if(string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token))
             {
                 token = DefaultToken;
             }
@@ -55,7 +56,8 @@ namespace Mobile.BuildTools.Generators.Manifests
 
         internal MatchCollection GetMatches(string template)
         {
-            var pattern = $@"{Token}(.*?){Token}";
+            var token = Regex.Escape(Token);
+            var pattern = $@"{token}(.*?){token}";
             return Regex.Matches(template, pattern);
         }
 
@@ -63,11 +65,13 @@ namespace Mobile.BuildTools.Generators.Manifests
         {
             var tokenId = match.Groups[1].Value;
             var key = GetKey(tokenId, variables);
+            var token = Regex.Escape(Token);
+
             if (!string.IsNullOrWhiteSpace(key))
             {
                 Log?.LogMessage($"Replacing token '{tokenId}'");
                 var value = variables[key];
-                template = Regex.Replace(template, $@"{Token}{tokenId}{Token}", value);
+                template = Regex.Replace(template, $@"{token}{tokenId}{token}", value);
             }
             else
             {
@@ -84,7 +88,9 @@ namespace Mobile.BuildTools.Generators.Manifests
                 return matchValue;
             }
 
-            foreach(var manifestPrefix in Utils.EnvironmentAnalyzer.GetManifestPrefixes(Build.Platform))
+            var prefixes = Utils.EnvironmentAnalyzer.GetManifestPrefixes(Build.Platform, Build.Configuration.Manifests.VariablePrefix);
+
+            foreach (var manifestPrefix in prefixes)
             {
                 if (variables.ContainsKey($"{manifestPrefix}{matchValue}"))
                     return $"{manifestPrefix}{matchValue}";

@@ -2,7 +2,7 @@
 {
     public class ReleaseNotesOptions
     {
-        public bool Enabled { get; set; }
+        public bool Disable { get; set; }
         public int MaxDays { get; set; }
         public int MaxCommit { get; set; }
         public int CharacterLimit { get; set; }

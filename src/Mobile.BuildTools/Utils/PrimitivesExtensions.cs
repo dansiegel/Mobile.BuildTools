@@ -6,7 +6,7 @@ namespace Mobile.BuildTools.Utils
     internal static class PrimitivesExtensions
     {
         public static string GetStandardTypeName(this Type type) =>
-            type.IsPrimitive ? _primitives[type] : type.FullName;
+            _primitives.ContainsKey(type) ? _primitives[type] : type.FullName;
 
         private static readonly IDictionary<Type, string> _primitives = new Dictionary<Type, string>
         {

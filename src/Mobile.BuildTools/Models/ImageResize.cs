@@ -4,6 +4,7 @@ namespace Mobile.BuildTools.Models
 {
     public class ImageResize
     {
+        public bool Disable { get; set; }
         public IEnumerable<string> Directories { get; set; }
 
         public IDictionary<string, IEnumerable<string>> ConditionalDirectories { get; set; }

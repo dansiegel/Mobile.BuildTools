@@ -12,6 +12,8 @@ namespace Mobile.BuildTools.Utils
 {
     public static class ConfigHelper
     {
+        private static readonly object lockObject = new object();
+
         public static bool Exists(string path) =>
             File.Exists(GetConfigFilePath(path));
 
@@ -26,7 +28,12 @@ namespace Mobile.BuildTools.Utils
                 SaveDefaultConfig(path);
             }
 
-            var json = File.ReadAllText(filePath);
+            var json = string.Empty;
+            lock(lockObject)
+            {
+                json = File.ReadAllText(filePath);
+            }
+
             return JsonConvert.DeserializeObject<BuildToolsConfig>(json, GetSerializerSettings());
         }
 
@@ -34,7 +41,10 @@ namespace Mobile.BuildTools.Utils
         {
             var filePath = GetConfigFilePath(path);
             var json = JsonConvert.SerializeObject(config, GetSerializerSettings());
-            File.WriteAllText(filePath, json);
+            lock(lockObject)
+            {
+                File.WriteAllText(filePath, json);
+            }
         }
 
         public static void SaveDefaultConfig(string path)
@@ -60,11 +70,14 @@ namespace Mobile.BuildTools.Utils
                 },
                 Manifests = new TemplatedManifest
                 {
-                    Token = "$$"
+                    Disable = false,
+                    Token = "$$",
+                    MissingTokensAsErrors = false,
+                    VariablePrefix = "Manifest_"
                 },
                 ReleaseNotes = new ReleaseNotesOptions
                 {
-                    Enabled = true,
+                    Disable = false,
                     CharacterLimit = 250,
                     CreateInRoot = true,
                     FileName = "ReleaseNotes.txt",

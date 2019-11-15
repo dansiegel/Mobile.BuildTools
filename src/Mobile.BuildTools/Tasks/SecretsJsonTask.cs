@@ -44,7 +44,6 @@ namespace Mobile.BuildTools.Tasks
                     SecretsClassName = SecretsClassName,
                     SecretsJsonFilePath = SecretsJsonFilePath,
                     BaseNamespace = RootNamespace,
-                    OutputPath = OutputPath,
                 };
                 ((IGenerator)generator).Execute();
                 _generatedCodeFiles = generator.GeneratedFiles;

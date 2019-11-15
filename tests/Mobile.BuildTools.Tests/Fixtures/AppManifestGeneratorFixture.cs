@@ -33,11 +33,14 @@ namespace Mobile.BuildTools.Tests.Fixtures
         private BaseTemplatedManifestGenerator CreateGenerator() =>
             CreateGenerator(GetConfiguration());
 
-        private BaseTemplatedManifestGenerator CreateGenerator(IBuildConfiguration config) =>
-            new DefaultTemplatedManifestGenerator(config)
+        private BaseTemplatedManifestGenerator CreateGenerator(TestBuildConfiguration config)
+        {
+            config.Configuration.Manifests.VariablePrefix = TestPrefix;
+            return new DefaultTemplatedManifestGenerator(config)
             {
                 ManifestOutputPath = TemplateManifestOutputPath,
             };
+        }
 
         [Fact]
         public void GetMatches()
@@ -60,6 +63,10 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var template = File.ReadAllText(TemplateManifestPath);
             var match = generator.GetMatches(template).FirstOrDefault();
             var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(Directory.GetCurrentDirectory(), true);
+            foreach(var variable in variables)
+            {
+                _testOutputHelper.WriteLine($"  - {variable.Key}: {variable.Value}");
+            }
             var processedTemplate = generator.ProcessMatch(template, match, variables);
             var json = JsonConvert.DeserializeAnonymousType(processedTemplate, new
             {

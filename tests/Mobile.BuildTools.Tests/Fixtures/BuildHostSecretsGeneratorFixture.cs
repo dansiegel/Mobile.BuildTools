@@ -12,7 +12,6 @@ namespace Mobile.BuildTools.Tests.Fixtures
 {
     public class BuildHostSecretsGeneratorFixture : FixtureBase
     {
-        private const string SecretsPrefix = "UNIT_TEST_";
         private const string SecretsJsonFilePath = "Samples/secrets.json";
 
         public BuildHostSecretsGeneratorFixture(ITestOutputHelper testOutputHelper)
@@ -29,8 +28,12 @@ namespace Mobile.BuildTools.Tests.Fixtures
                 SecretsJsonFilePath = SecretsJsonFilePath,
             };
 
-        private void SetTestVariable() =>
-            Environment.SetEnvironmentVariable($"{SecretsPrefix}Test1", "SomeValue");
+        private void SetTestVariable()
+        {
+            var buildConfig = GetConfiguration();
+            var prefix = buildConfig.GetSecretsConfig().Prefix;
+            Environment.SetEnvironmentVariable($"{prefix}Test1", "SomeValue");
+        }
 
         [Fact]
         public void DoesNotThrowException()
@@ -51,8 +54,10 @@ namespace Mobile.BuildTools.Tests.Fixtures
         public void CreatesJObject()
         {
             SetTestVariable();
-            var generator = GetGenerator();
-            var secrets = generator.GetSecrets();
+            var buildConfig = GetConfiguration();
+            var generator = GetGenerator(buildConfig);
+            var secretsConfig = buildConfig.GetSecretsConfig();
+            var secrets = generator.GetSecrets(secretsConfig.Prefix);
 
             var jsonObject = generator.GetJObjectFromSecrets(secrets);
 
@@ -66,8 +71,10 @@ namespace Mobile.BuildTools.Tests.Fixtures
         public void RetrievesEnvironmentVariables()
         {
             SetTestVariable();
-            var generator = GetGenerator();
-            var secrets = generator.GetSecrets();
+            var buildConfig = GetConfiguration();
+            var generator = GetGenerator(buildConfig);
+            var secretsConfig = buildConfig.GetSecretsConfig();
+            var secrets = generator.GetSecrets(secretsConfig.Prefix);
 
             Assert.NotNull(secrets);
             Assert.NotEmpty(secrets);

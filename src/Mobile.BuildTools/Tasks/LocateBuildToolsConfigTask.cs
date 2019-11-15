@@ -39,7 +39,7 @@ namespace Mobile.BuildTools.Tasks
         private void GetConfiguration()
         {
             var configPath = SolutionDir;
-            if(!ConfigHelper.Exists(configPath))
+            if(!string.IsNullOrEmpty(configPath) && !ConfigHelper.Exists(configPath))
             {
                 configPath = GetConfiguration(ProjectDir);
             }
