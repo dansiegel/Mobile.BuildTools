@@ -1,7 +1,6 @@
 ﻿namespace Mobile.BuildTools.Models
 {
-    public class ArtifactCopy
+    public class ArtifactCopy : ToolItem
     {
-        public bool Disable { get; set; }
     }
 }

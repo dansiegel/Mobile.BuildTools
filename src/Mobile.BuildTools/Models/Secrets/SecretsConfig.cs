@@ -22,7 +22,7 @@ namespace Mobile.BuildTools.Models.Secrets
         public string Namespace { get; set; }
 
         [JsonProperty("properties")]
-        public IList<ValueConfig> Properties { get; set; }
+        public List<ValueConfig> Properties { get; set; }
 
         public bool ContainsKey(string key) => Properties != null && Properties.Any(x => x.Name == key);
 
@@ -32,9 +32,6 @@ namespace Mobile.BuildTools.Models.Secrets
             return config != null;
         }
 
-        public ValueConfig this[string key]
-        {
-            get => Properties?.FirstOrDefault(x => x.Name == key);
-        }
+        public ValueConfig this[string key] => Properties?.FirstOrDefault(x => x.Name == key);
     }
 }

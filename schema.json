@@ -1,0 +1,348 @@
+{
+  "definitions": {
+    "ArtifactCopy": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "disable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "disable"
+      ]
+    },
+    "AutomaticVersioning": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "behavior": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "Off",
+            "PreferBuildNumber",
+            "Timestamp"
+          ]
+        },
+        "environment": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "All",
+            "BuildHost",
+            "Local"
+          ]
+        },
+        "versionOffset": {
+          "type": "integer"
+        },
+        "disable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "behavior",
+        "environment",
+        "versionOffset",
+        "disable"
+      ]
+    },
+    "ImageResize": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "directories": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "conditionalDirectories": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "watermarkOpacity": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "disable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "directories",
+        "conditionalDirectories",
+        "watermarkOpacity",
+        "disable"
+      ]
+    },
+    "ReleaseNotesOptions": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "maxDays": {
+          "type": "integer"
+        },
+        "maxCommit": {
+          "type": "integer"
+        },
+        "characterLimit": {
+          "type": "integer"
+        },
+        "filename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createInRoot": {
+          "type": "boolean"
+        },
+        "disable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "maxDays",
+        "maxCommit",
+        "characterLimit",
+        "filename",
+        "createInRoot",
+        "disable"
+      ]
+    },
+    "SecretsConfig": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "disable": {
+          "type": "boolean"
+        },
+        "delimiter": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prefix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "className": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "namespace": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "properties": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/ValueConfig"
+          }
+        }
+      },
+      "required": [
+        "disable",
+        "delimiter",
+        "prefix",
+        "className",
+        "namespace",
+        "properties"
+      ]
+    },
+    "TemplatedManifest": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "token": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "variablePrefix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "missingTokensAsErrors": {
+          "type": "boolean"
+        },
+        "disable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "token",
+        "variablePrefix",
+        "missingTokensAsErrors",
+        "disable"
+      ]
+    },
+    "ValueConfig": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "propertyType": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "String",
+            "Bool",
+            "Byte",
+            "SByte",
+            "Char",
+            "Decimal",
+            "Double",
+            "Float",
+            "Int",
+            "UInt",
+            "Long",
+            "ULong",
+            "Short",
+            "UShort",
+            "DateTime",
+            "DateTimeOffset",
+            "Guid",
+            "Uri",
+            "TimeSpan"
+          ]
+        },
+        "isArray": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "propertyType",
+        "isArray"
+      ]
+    },
+    "XamarinCss": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "minify": {
+          "type": "boolean"
+        },
+        "bundleScss": {
+          "type": "boolean"
+        },
+        "disable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "minify",
+        "bundleScss",
+        "disable"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "artifactCopy": {
+      "$ref": "#/definitions/ArtifactCopy"
+    },
+    "automaticVersioning": {
+      "$ref": "#/definitions/AutomaticVersioning"
+    },
+    "css": {
+      "$ref": "#/definitions/XamarinCss"
+    },
+    "images": {
+      "$ref": "#/definitions/ImageResize"
+    },
+    "manifests": {
+      "$ref": "#/definitions/TemplatedManifest"
+    },
+    "releaseNotes": {
+      "$ref": "#/definitions/ReleaseNotesOptions"
+    },
+    "projectSecrets": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "$ref": "#/definitions/SecretsConfig"
+      }
+    },
+    "debug": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "artifactCopy",
+    "automaticVersioning",
+    "css",
+    "images",
+    "manifests",
+    "releaseNotes",
+    "projectSecrets",
+    "debug"
+  ]
+}

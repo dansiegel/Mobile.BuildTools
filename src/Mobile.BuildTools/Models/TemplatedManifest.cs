@@ -1,10 +1,16 @@
-﻿namespace Mobile.BuildTools.Models
+﻿using Newtonsoft.Json;
+
+namespace Mobile.BuildTools.Models
 {
-    public class TemplatedManifest
+    public class TemplatedManifest : ToolItem
     {
-        public bool Disable { get; set; }
+        [JsonProperty("token")]
         public string Token { get; set; }
+
+        [JsonProperty("variablePrefix")]
         public string VariablePrefix { get; set; }
+
+        [JsonProperty("missingTokensAsErrors")]
         public bool MissingTokensAsErrors { get; set; }
     }
 }

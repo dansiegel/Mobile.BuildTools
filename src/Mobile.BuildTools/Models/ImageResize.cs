@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models
 {
-    public class ImageResize
+    public class ImageResize : ToolItem
     {
-        public bool Disable { get; set; }
-        public IEnumerable<string> Directories { get; set; }
+        [JsonProperty("directories")]
+        public List<string> Directories { get; set; }
 
-        public IDictionary<string, IEnumerable<string>> ConditionalDirectories { get; set; }
+        [JsonProperty("conditionalDirectories")]
+        public Dictionary<string, IEnumerable<string>> ConditionalDirectories { get; set; }
 
+        [JsonProperty("watermarkOpacity")]
         public double? WatermarkOpacity { get; set; }
     }
 }

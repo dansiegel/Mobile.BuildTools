@@ -1,17 +1,20 @@
-﻿using System;
-using System.Text;
-using Mobile.BuildTools.Tasks.Utils;
+﻿using Mobile.BuildTools.Tasks.Utils;
+using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models.AppIcons
 {
     public class ResourceDefinition : PlatformConfiguration
     {
+        [JsonIgnore]
         public string InputFilePath { get; set; }
 
+        [JsonProperty("watermarkFile")]
         public string WatermarkFile { get; set; }
 
+        [JsonProperty("android")]
         public AndroidConfiguration Android { get; set; }
 
+        [JsonProperty("apple")]
         public PlatformConfiguration Apple { get; set; }
 
         public string GetName(Platform platform)
@@ -54,6 +57,11 @@ namespace Mobile.BuildTools.Models.AppIcons
 
     public class AndroidConfiguration : PlatformConfiguration
     {
+#if NETCOREAPP
+        [System.ComponentModel.DataAnnotations.EnumDataType(typeof(AndroidResource))]
+        public string ResourceType { get; set; }
+#else
         public AndroidResource ResourceType { get; set; }
+#endif
     }
 }

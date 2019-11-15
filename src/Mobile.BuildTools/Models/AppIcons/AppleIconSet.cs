@@ -6,6 +6,6 @@ namespace Mobile.BuildTools.Models.AppIcons
     public class AppleIconSet
     {
         [JsonProperty("images")]
-        public IEnumerable<AppleIconSetImage> Images { get; set; }
+        public List<AppleIconSetImage> Images { get; set; }
     }
 }

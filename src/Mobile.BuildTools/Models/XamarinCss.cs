@@ -1,9 +1,13 @@
-﻿namespace Mobile.BuildTools.Models
+﻿using Newtonsoft.Json;
+
+namespace Mobile.BuildTools.Models
 {
-    public class XamarinCss
+    public class XamarinCss : ToolItem
     {
-        public bool Disable { get; set; }
+        [JsonProperty("minify")]
         public bool Minify { get; set; }
+
+        [JsonProperty("bundleScss")]
         public bool BundleScss { get; set; }
     }
 }

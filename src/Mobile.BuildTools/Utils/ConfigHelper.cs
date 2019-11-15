@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if !NETCOREAPP
 using Microsoft.Build.Framework;
+#endif
 using Mobile.BuildTools.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -16,10 +18,10 @@ namespace Mobile.BuildTools.Utils
 
         public static bool Exists(string path) =>
             File.Exists(GetConfigFilePath(path));
-
+#if !NETCOREAPP
         public static BuildToolsConfig GetConfig(ITaskItem item) =>
             GetConfig(item.ItemSpec);
-
+#endif
         public static BuildToolsConfig GetConfig(string path)
         {
             var filePath = GetConfigFilePath(path);
@@ -54,8 +56,10 @@ namespace Mobile.BuildTools.Utils
                 ArtifactCopy = new ArtifactCopy { Disable = false },
                 AutomaticVersioning = new AutomaticVersioning
                 {
+#if !NETCOREAPP
                     Behavior = VersionBehavior.PreferBuildNumber,
                     Environment = VersionEnvironment.All,
+#endif
                     VersionOffset = 0
                 },
                 Css = new XamarinCss
@@ -86,6 +90,7 @@ namespace Mobile.BuildTools.Utils
                 }
             };
 
+#if !NETCOREAPP
             var imagesRootDir = Path.Combine(path, "Images");
             if (Directory.Exists(imagesRootDir))
             {
@@ -93,15 +98,16 @@ namespace Mobile.BuildTools.Utils
                 {
                     var allDirectories = Directory.GetDirectories(imagesRootDir).Select(x => Path.GetDirectoryName(x));
                     config.Images.Directories = allDirectories.Where(x => !conditionalDefaults.Any(d => x.Equals(d, StringComparison.InvariantCultureIgnoreCase)))
-                        .Select(x => Path.Combine("Images", x));
+                        .Select(x => Path.Combine("Images", x)).ToList();
                     config.Images.ConditionalDirectories = allDirectories.Where(x => conditionalDefaults.Any(d => x.Equals(d, StringComparison.InvariantCultureIgnoreCase)))
                         .ToDictionary(x => x, x => (IEnumerable<string>)new[] { Path.Combine("Images", x) });
                 }
                 else
                 {
-                    config.Images.Directories = new[] { imagesRootDir };
+                    config.Images.Directories = new List<string> { imagesRootDir };
                 }
             }
+#endif
 
             SaveConfig(config, path);
 
