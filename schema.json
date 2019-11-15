@@ -7,7 +7,9 @@
       ],
       "properties": {
         "disable": {
-          "type": "boolean"
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [
@@ -25,6 +27,7 @@
             "string",
             "null"
           ],
+          "default": "PreferBuildNumber",
           "enum": [
             "Off",
             "PreferBuildNumber",
@@ -36,6 +39,7 @@
             "string",
             "null"
           ],
+          "default": "All",
           "enum": [
             "All",
             "BuildHost",
@@ -46,7 +50,9 @@
           "type": "integer"
         },
         "disable": {
-          "type": "boolean"
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [
@@ -99,7 +105,9 @@
           ]
         },
         "disable": {
-          "type": "boolean"
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [
@@ -116,25 +124,32 @@
       ],
       "properties": {
         "maxDays": {
-          "type": "integer"
+          "type": "integer",
+          "default": 10
         },
         "maxCommit": {
-          "type": "integer"
+          "type": "integer",
+          "default": 10
         },
         "characterLimit": {
-          "type": "integer"
+          "type": "integer",
+          "default": 250
         },
         "filename": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "default": "releasenotes.txt"
         },
         "createInRoot": {
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "disable": {
-          "type": "boolean"
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [
@@ -208,19 +223,24 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "default": "$$"
         },
         "variablePrefix": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "default": "Manifest_"
         },
         "missingTokensAsErrors": {
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         },
         "disable": {
-          "type": "boolean"
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [
@@ -286,13 +306,17 @@
       ],
       "properties": {
         "minify": {
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         },
         "bundleScss": {
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         },
         "disable": {
-          "type": "boolean"
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [

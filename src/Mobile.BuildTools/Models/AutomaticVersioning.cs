@@ -1,13 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models
 {
     public class AutomaticVersioning : ToolItem
     {
 #if NETCOREAPP
+        [DefaultValue("PreferBuildNumber")]
         [System.ComponentModel.DataAnnotations.EnumDataType(typeof(VersionBehavior))]
         public string Behavior { get; set; }
-
+        
+        [DefaultValue("All")]
         [System.ComponentModel.DataAnnotations.EnumDataType(typeof(VersionEnvironment))]
         public string Environment { get; set; }
 #else
