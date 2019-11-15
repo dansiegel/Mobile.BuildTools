@@ -15,7 +15,7 @@
   <Target Name="APKCopyToStagingDirectory"
           AfterTargets="_CreateBaseApk;_CollectAPK"
           DependsOnTargets="_CreateBaseApk;_CollectAPK"
-          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' "
+          Condition=" '$(BuildToolsEnableArtifactCopy)' And !'$(IsAppCenter)' "
           Inputs="@(__Generated_APK)"
           Outputs="@(__Generated_APK -> '$(BuildToolsArtifactOutputPath)%(Filename)%(Extension)')">
 

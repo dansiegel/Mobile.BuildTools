@@ -31,8 +31,9 @@ namespace Mobile.BuildTools.Tests.Mocks
         };
 
         public string ProjectDirectory { get; set; }
-        public string SolutionDirectory { get; }
-        public string IntermediateOutputPath { get; }
+        public string SolutionDirectory { get; set; }
+        public string IntermediateOutputPath { get; set; }
+        public string BuildConfiguration { get; set; }
         public ILog Logger { get; set; }
 
         private BuildToolsConfig configuration;

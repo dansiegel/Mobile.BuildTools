@@ -5,7 +5,7 @@
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Target Name="_CollectAppConfigs"
-          BeforeTargets="CoreCompile">
+          AfterTargets="CoreCompile">
     <ItemGroup>
       <MobileBuildToolsConfigs Condition=" Exists('$(MSBuildProjectDirectory)/app.config') " Include="$(MSBuildProjectDirectory)/app.config" />
       <MobileBuildToolsConfigs Condition=" Exists('$(MSBuildProjectDirectory)/app.config') " Include="$(MSBuildProjectDirectory)/app.*.config" />
@@ -13,14 +13,15 @@
   </Target>
 
   <Target Name="ConfigurationManagerTransformAndCopy"
-          DependsOn="_CollectAppConfigs"
-          AfterTargets="MobileBuildToolsInit"
+          AfterTargets="_CollectAppConfigs"
+          DependsOnTargets="MobileBuildToolsInit"
           Inputs="@(MobileBuildToolsConfigs)"
           Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
-    <ConfigurationManagerHandlerTask ProjectDirectory="$(MSBuildProjectDirectory)"
-                                     BuildConfiguration="$(Configuration)"
+    <ConfigurationManagerHandlerTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                     ProjectDirectory="$(MSBuildProjectDirectory)"
+                                     SolutionDirectory="$(SolutionDir)"
                                      IntermediateOutputPath="$(IntermediateOutputPath)"
-                                     DebugOutput="$(MobileBuildToolsDebug)">
+                                     SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)" >
       <Output ItemName="GeneratedFile"
               TaskParameter="OutputConfigs"/>
       <Output ItemName="FilesWrite"

@@ -111,6 +111,7 @@ namespace Mobile.BuildTools.Utils
 
             SaveConfig(config, path);
 
+#if !DEBUG // Do not generate .gitignore for local debug builds
             var requiredContents = @"# Mobile.BuildTools
 secrets.json
 ";
@@ -126,6 +127,7 @@ secrets.json
             {
                 File.WriteAllText(gitignoreFile, requiredContents);
             }
+#endif
         }
 
         private static string GetConfigFilePath(string path)

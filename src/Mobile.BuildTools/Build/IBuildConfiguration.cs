@@ -10,6 +10,8 @@ namespace Mobile.BuildTools.Build
     {
         //IBuildEngine4 BuildEngine4 { get; }
 
+        string BuildConfiguration { get; }
+
         bool BuildingInsideVisualStudio { get; }
 
         IDictionary<string, string> GlobalProperties { get; }

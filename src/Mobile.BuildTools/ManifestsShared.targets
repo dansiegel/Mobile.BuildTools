@@ -38,7 +38,9 @@
   </Target>
 
   <Target Name="_GatherManifestForAutomaticVersioning"
-          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist;MobileBuildToolsInit">
+          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist"
+          DependsOnTargets="MobileBuildToolsInit"
+          Condition="$(BuildToolsEnableAutomaticVersioning)">
     <PropertyGroup>
       <AutomaticVersionOffset Condition=" '$(AutomaticVersionOffset)' == '' ">0</AutomaticVersionOffset>
       <AutomaticVersionEnvironment Condition=" '$(AutomaticVersionEnvironment)' == '' ">All</AutomaticVersionEnvironment>

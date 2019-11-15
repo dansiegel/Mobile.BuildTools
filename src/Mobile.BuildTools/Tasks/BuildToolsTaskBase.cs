@@ -17,7 +17,11 @@ namespace Mobile.BuildTools.Tasks
 {
     public abstract class BuildToolsTaskBase : Task, IBuildConfiguration
     {
-        public bool BuildingInsideVisualStudio { get; set; }
+        string IBuildConfiguration.BuildConfiguration =>
+            GetProperty("Configuration");
+
+        bool IBuildConfiguration.BuildingInsideVisualStudio =>
+            bool.TryParse(GetProperty("BuildingInsideVisualStudio"), out var inVS) ? inVS : false;
 
         [Required]
         public string ConfigurationPath { get; set; }
@@ -78,6 +82,15 @@ namespace Mobile.BuildTools.Tasks
             }
             var build = (IBuildConfiguration)this;
             return build.Configuration.ProjectSecrets.FirstOrDefault(x => x.Key == build.GlobalProperties["ProjectName"]).Value;
+        }
+
+        private string GetProperty(string name)
+        {
+            var buildConfig = (IBuildConfiguration)this;
+            if(buildConfig.GlobalProperties.ContainsKey(name))
+                return buildConfig.GlobalProperties[name];
+
+            return null;
         }
     }
 }

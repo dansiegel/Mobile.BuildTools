@@ -12,10 +12,6 @@ namespace Mobile.BuildTools.Tasks.Tasks
 {
     public class ConfigurationManagerHandlerTask : BuildToolsTaskBase
     {
-        [Required]
-        public string BuildConfiguration { get; set; }
-
-
         private List<ITaskItem> _outputs = new List<ITaskItem>();
         [Output]
         public ITaskItem[] OutputConfigs => _outputs.ToArray();
@@ -30,13 +26,13 @@ namespace Mobile.BuildTools.Tasks.Tasks
                     File.Copy(file, outputFile);
                 }
 
-                // TODO: We need to set the outputs.
-                IGenerator generator = new ConfigurationManagerTransformationGenerator(config)
+                var generator = new ConfigurationManagerTransformationGenerator(config)
                 {
-                    BaseConfigPath = Path.Combine(IntermediateOutputPath, "app.config"),
-                    BuildConfiguration = BuildConfiguration
+                    BaseConfigPath = Path.Combine(IntermediateOutputPath, "app.config")
                 };
                 generator.Execute();
+
+                _outputs.AddRange(generator.Outputs);
             }
         }
     }

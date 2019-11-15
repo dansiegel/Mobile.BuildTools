@@ -15,7 +15,7 @@ using Mobile.BuildTools.Logging;
 
 namespace Mobile.BuildTools.Tasks.Generators.AppConfig
 {
-    internal class ConfigurationManagerTransformationGenerator : GeneratorBase
+    internal class ConfigurationManagerTransformationGenerator : GeneratorBase<IEnumerable<ITaskItem>>
     {
         public ConfigurationManagerTransformationGenerator(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
@@ -25,13 +25,11 @@ namespace Mobile.BuildTools.Tasks.Generators.AppConfig
         // app.config
         public string BaseConfigPath { get; set; }
 
-        public string BuildConfiguration { get; set; }
-
         protected override void ExecuteInternal()
         {
             var parentDirectory = Directory.GetParent(BaseConfigPath);
             var configFileName = Path.GetFileNameWithoutExtension(BaseConfigPath);
-            var transformationConfigPath = Path.Combine(parentDirectory.FullName, $"{configFileName}.{BuildConfiguration}{Path.GetExtension(BaseConfigPath)}");
+            var transformationConfigPath = Path.Combine(parentDirectory.FullName, $"{configFileName}.{Build.BuildConfiguration.ToLower()}{Path.GetExtension(BaseConfigPath)}");
 
 
             var updatedConfig = TransformationHelper.Transform(File.ReadAllText(BaseConfigPath),
@@ -46,6 +44,9 @@ namespace Mobile.BuildTools.Tasks.Generators.AppConfig
                 Log.LogMessage("*************** Transformed app.config ******************************");
                 Log.LogMessage(updatedConfig.ToString());
             }
+
+            // TODO: Add Outputs!!!!!
+            Outputs = new List<ITaskItem>();
         }
     }
 }

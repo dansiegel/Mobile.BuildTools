@@ -26,29 +26,41 @@
   <Import Project="ScssToCss.targets" />
   <Import Project="Secrets.targets" />
 
-  <Target Name="MobileBuildToolsInit"
-          DependsOn="_LocateBuildToolsConfig"
-          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC">
+  <PropertyGroup>
+    <MobileBuildToolsInitDependsOn>
+      _LocateBuildToolsConfig
+    </MobileBuildToolsInitDependsOn>
+  </PropertyGroup>
 
+  <Target Name="MobileBuildToolsInit"
+          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC"
+          AfterTargets="ResolveAssemblyReferences"
+          DependsOnTargets="$(MobileBuildToolsInitDependsOn)">
   </Target>
 
   <Target Name="_LocateBuildToolsConfig"
           BeforeTargets="CoreCompile">
-    <LocateBuildToolsConfigTask ProjectDir=""
-                                SolutionDir="">
-      <Output ItemName="_LocatedSolutionDirectory"
-              TaskParameter="LocatedSolutionDirectory" />
-      <Output ItemName="_Configuration"
-              TaskParameter="Configuration" />
+    <LocateBuildToolsConfigTask ProjectDir="$(MSBuildProjectDirectory)"
+                                SolutionDir="$(SolutionDir)">
+      <Output TaskParameter="BuildToolsConfigFilePath"
+              PropertyName="BuildToolsConfigFilePath" />
+      <Output TaskParameter="LocatedSolutionDirectory"
+              PropertyName="SolutionDir" />
+      <Output TaskParameter="EnableArtifactCopy"
+              PropertyName="BuildToolsEnableArtifactCopy" />
+      <Output TaskParameter="EnableAutomaticVersioning"
+              PropertyName="BuildToolsEnableAutomaticVersioning" />
+      <Output TaskParameter="EnableImageProcessing"
+              PropertyName="BuildToolsEnableImageProcessing" />
+      <Output TaskParameter="EnableReleaseNotes"
+              PropertyName="BuildToolsEnableReleaseNotes" />
+      <Output TaskParameter="EnableScssToCss"
+              PropertyName="BuildToolsEnableScssToCss" />
+      <Output TaskParameter="EnableSecrets"
+              PropertyName="BuildToolsEnableSecrets" />
+      <Output TaskParameter="EnableTemplateManifests"
+              PropertyName="BuildToolsEnableTemplateManifests" />
     </LocateBuildToolsConfigTask>
-
-    <PropertyGroup Condition=" $(SolutionDir) == '' ">
-      <SolutionDir>@(_LocatedSolutionDirectory)</SolutionDir>
-    </PropertyGroup>
-
-    <PropertyGroup>
-      <BuildToolsConfigurationPath>@(Configuration)</BuildToolsConfigurationPath>
-    </PropertyGroup>
   </Target>
 
 

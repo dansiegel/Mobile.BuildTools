@@ -2,24 +2,43 @@
 using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
     public class LocateBuildToolsConfigTask : Task
     {
-        private ITaskItem _configuration;
-        private ITaskItem _solutionDirectory;
-
         public string ProjectDir { get; set; }
 
         public string SolutionDir { get; set; }
 
         [Output]
-        public ITaskItem Configuration => _configuration;
+        public string BuildToolsConfigFilePath { get; private set; }
 
         [Output]
-        public ITaskItem LocatedSolutionDirectory => _solutionDirectory;
+        public string LocatedSolutionDirectory { get; private set; }
+
+        [Output]
+        public bool EnableArtifactCopy { get; private set; }
+
+        [Output]
+        public bool EnableAutomaticVersioning { get; private set; }
+
+        [Output]
+        public bool EnableScssToCss { get; private set; }
+
+        [Output]
+        public bool EnableImageProcessing { get; private set; }
+
+        [Output]
+        public bool EnableReleaseNotes { get; private set; }
+
+        [Output]
+        public bool EnableSecrets { get; private set; }
+
+        [Output]
+        public bool EnableTemplateManifests { get; private set; }
 
         public override bool Execute()
         {
@@ -29,16 +48,28 @@ namespace Mobile.BuildTools.Tasks
 #endif
             LocateSolution();
             GetConfiguration();
+
+            var configuration = ConfigHelper.GetConfig(BuildToolsConfigFilePath);
+            EnableArtifactCopy = !configuration.ArtifactCopy.Disable;
+            EnableAutomaticVersioning = !configuration.AutomaticVersioning.Disable;
+            EnableScssToCss = !configuration.Css.Disable;
+            EnableImageProcessing = !configuration.Images.Disable;
+            EnableSecrets = true; // TODO: We should look up some sort of config for this
+            EnableTemplateManifests = !configuration.Manifests.Disable;
+            EnableReleaseNotes = !configuration.ReleaseNotes.Disable;
+
             return true;
         }
 
         private void LocateSolution()
         {
             if (!string.IsNullOrEmpty(SolutionDir))
+            {
+                LocatedSolutionDirectory = SolutionDir;
                 return;
+            }
 
-            SolutionDir = LocateSolution(ProjectDir);
-            _solutionDirectory = new TaskItem(SolutionDir);
+            LocatedSolutionDirectory = LocateSolution(ProjectDir);
         }
 
         private void GetConfiguration()
@@ -49,7 +80,7 @@ namespace Mobile.BuildTools.Tasks
                 configPath = GetConfiguration(ProjectDir);
             }
 
-            _configuration = new TaskItem(configPath);
+            BuildToolsConfigFilePath = configPath;
         }
 
         private string GetConfiguration(string searchDirectory)
@@ -59,15 +90,16 @@ namespace Mobile.BuildTools.Tasks
             var configPath = Path.Combine(searchDirectory, "buildtools.json");
             if (File.Exists(configPath))
             {
-                return configPath;
+                return searchDirectory;
             }
             else if (Path.IsPathRooted(searchDirectory))
             {
-                GenerateDefaultConfig(searchDirectory);
-                return searchDirectory;
+                GenerateDefaultConfig(SolutionDir);
+                return SolutionDir;
             }
 
-            return GetConfiguration(Directory.GetParent(searchDirectory).FullName);
+            var parentDirectory = Directory.GetParent(searchDirectory);
+            return GetConfiguration(parentDirectory.FullName);
         }
 
         private string LocateSolution(string searchDirectory)
@@ -87,9 +119,8 @@ namespace Mobile.BuildTools.Tasks
 
         private void GenerateDefaultConfig(string path)
         {
-            var outputDir = string.IsNullOrEmpty(SolutionDir) ? path : SolutionDir;
-            Log.LogMessage($"Auto-Generating BuildTools configuration at '{outputDir}'");
-            ConfigHelper.SaveDefaultConfig(outputDir);
+            Log.LogMessage($"Auto-Generating BuildTools configuration at '{path}'");
+            ConfigHelper.SaveDefaultConfig(path);
         }
     }
 }

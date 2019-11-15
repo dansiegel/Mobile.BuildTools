@@ -4,7 +4,8 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
-  <Target Name="_GatherManifests">
+  <Target Name="_GatherManifests"
+          Condition="$(BuildToolsEnableTemplateManifests)">
     <PropertyGroup>
       <TemlateAppManifest>$(IntermediateOutputPath)android\AndroidManifest.xml</TemlateAppManifest>
     </PropertyGroup>
@@ -12,28 +13,26 @@
 
   <Target Name="HandleAndroidManifest"
           AfterTargets="_GenerateJavaStubs"
-          DependsOnTargets="_SetLatestTargetFrameworkVersion;MobileBuildToolsInit">
-    <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
-                          Prefix="$(ManifestVariablePrefix)"
-                          Token="$(ManifestToken)"
-                          ManifestTemplatePath="$(TemlateAppManifest)"
-                          ManifestOutputPath="$(TemlateAppManifest)"
+          DependsOnTargets="_SetLatestTargetFrameworkVersion;MobileBuildToolsInit"
+          Condition="$(BuildToolsEnableTemplateManifests)">
+    <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                          ProjectDirectory="$(MSBuildProjectDirectory)"
+                          SolutionDirectory="$(SolutionDir)"
+                          IntermediateOutputPath="$(IntermediateOutputPath)"
                           SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
-                          ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
-                          DebugOutput="$(MobileBuildToolsDebug)" />
+                          ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)" />
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
-          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist">
+          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist"
+          Condition="$(BuildToolsEnableAutomaticVersioning)">
 
-    <AutomaticBuildVersioningTask Behavior="$(AutomaticVersionBehavior)"
-                                  VersionEnvironment="$(AutomaticVersionEnvironment)"
-                                  VersionOffset="$(AutomaticVersionOffset)"
-                                  ManifestPath="$(TemlateAppManifest)"
-                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+    <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                  ProjectDirectory="$(MSBuildProjectDirectory)"
+                                  SolutionDirectory="$(SolutionDir)"
+                                  IntermediateOutputPath="$(IntermediateOutputPath)"
                                   SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
-                                  ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
-                                  DebugOutput="$(MobileBuildToolsDebug)" />
+                                  ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)" />
   </Target>
 
 </Project>

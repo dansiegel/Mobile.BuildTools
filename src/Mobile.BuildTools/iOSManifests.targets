@@ -5,15 +5,14 @@
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Target Name="HandleTokenizedInfoPlist"
-          AfterTargets="_CoreCompileInterfaceDefinitions;MobileBuildToolsInit"
-          Condition=" $(IsiOSProject) ">
-    <TemplateManifestTask ProjectDirectory="$(MSBuildProjectDirectory)"
-                          Prefix="$(ManifestVariablePrefix)"
-                          Token="$(ManifestToken)"
-                          ManifestTemplatePath="$(TemlateAppManifest)"
-                          ManifestOutputPath="$(TemlateAppManifest)"
-                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
-                          DebugOutput="$(MobileBuildToolsDebug)" />
+          AfterTargets="_CoreCompileInterfaceDefinitions"
+          DependsOnTargets="MobileBuildToolsInit"
+          Condition="$(BuildToolsEnableTemplateManifests)">
+    <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                          ProjectDirectory="$(MSBuildProjectDirectory)"
+                          SolutionDirectory="$(SolutionDir)"
+                          IntermediateOutputPath="$(IntermediateOutputPath)"
+                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)" />
   </Target>
 
   <Target Name="SetApsEnvironmentToProduction"
@@ -25,7 +24,7 @@
   <Target Name="IPACopyToStagingDirectory"
           AfterTargets="_ZipIpa"
           DependsOnTargets="_ZipIpa"
-          Condition=" '$(DisableBuildToolsArtifactCopy)' != 'false' And !'$(IsAppCenter)' ">
+          Condition=" '$(BuildToolsEnableArtifactCopy)' And !'$(IsAppCenter)' ">
 
     <PropertyGroup>
       <__IpaFileName>$([System.IO.Path]::GetFileNameWithoutExtension('$(IpaPackagePath)'))</__IpaFileName>

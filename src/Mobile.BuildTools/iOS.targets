@@ -8,15 +8,15 @@
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
-          AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit">
+          AfterTargets="HandleTokenizedInfoPlist"
+          DependsOnTargets="MobileBuildToolsInit"
+          Condition=" $(BuildToolsEnableAutomaticVersioning) ">
 
-    <AutomaticBuildVersioningTask Behavior="$(AutomaticVersionBehavior)"
-                                  VersionEnvironment="$(AutomaticVersionEnvironment)"
-                                  VersionOffset="$(AutomaticVersionOffset)"
-                                  ManifestPath="$(TemlateAppManifest)"
-                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                                  SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
-                                  DebugOutput="$(MobileBuildToolsDebug)" />
+    <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                  ProjectDirectory="$(MSBuildProjectDirectory)"
+                                  SolutionDirectory="$(SolutionDir)"
+                                  IntermediateOutputPath="$(IntermediateOutputPath)"
+                                  SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)" />
   </Target>
 
   <Target Name="HandlePlatformAppConfig"
