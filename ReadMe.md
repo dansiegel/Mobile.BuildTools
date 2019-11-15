@@ -19,9 +19,10 @@ As part of my frustration at how challenging it was to go from File -> New Solut
 
 ## Support
 
-If these projects have helped you reduce time to develop and made your app better, please consider donating to help me continue to support the community for free.
+If this project helped you reduce time to develop and made your app better, please be sure to star the project & help support Dan.
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/dansiegel)
+[![GitHub Sponsors](https://github.blog/wp-content/uploads/2019/05/mona-heart-featured.png?fit=600%2C315)](https://xam.dev/sponsor-buildtools)
+
 
 ## Samples
 
