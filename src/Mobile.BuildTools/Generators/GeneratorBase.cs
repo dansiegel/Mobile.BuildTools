@@ -13,8 +13,18 @@ namespace Mobile.BuildTools.Generators
         public IBuildConfiguration Build { get; }
         public ILog Log => Build.Logger;
 
-        protected abstract void Execute();
+        protected abstract void ExecuteInternal();
 
-        void IGenerator.Execute() => Execute();
+        public void Execute() => ExecuteInternal();
+    }
+
+    internal abstract class GeneratorBase<T> : GeneratorBase, IGenerator<T>
+    {
+        public GeneratorBase(IBuildConfiguration buildConfiguration)
+            : base(buildConfiguration)
+        {
+        }
+
+        public T Outputs { get; protected set; }
     }
 }

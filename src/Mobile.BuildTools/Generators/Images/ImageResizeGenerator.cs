@@ -27,7 +27,7 @@ namespace Mobile.BuildTools.Generators.Images
         public string IntermediateOutputDirectory { get; set; }
         public double? WatermarkOpacity { get; set; }
 
-        protected override void Execute()
+        protected override void ExecuteInternal()
         {
             foreach(var outputImage in OutputImages)
             {

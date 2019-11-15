@@ -11,4 +11,9 @@ namespace Mobile.BuildTools.Generators
 
         void Execute();
     }
+
+    internal interface IGenerator<T> : IGenerator
+    {
+        T Outputs { get; }
+    }
 }

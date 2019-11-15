@@ -2,33 +2,28 @@
 using System.IO;
 using System.Linq;
 using Mobile.BuildTools.Build;
-using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models.AppIcons;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Generators.Images
 {
-    internal abstract class ImageCollectionGeneratorBase : GeneratorBase
+    internal abstract class ImageCollectionGeneratorBase : GeneratorBase<IReadOnlyList<OutputImage>>
     {
         public IEnumerable<string> SearchFolders { get; set; }
 
         protected List<string> imageInputFiles;
         public IReadOnlyList<string> ImageInputFiles => imageInputFiles;
 
-        private List<OutputImage> outputImageFiles;
-
         public ImageCollectionGeneratorBase(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
         {
         }
 
-        public IReadOnlyList<OutputImage> OutputImageFiles => outputImageFiles;
-
-        protected override void Execute()
+        protected override void ExecuteInternal()
         {
             imageInputFiles = new List<string>();
-            outputImageFiles = new List<OutputImage>();
+            var outputImageFiles = new List<OutputImage>();
             var inputFileNames = new List<string>();
             foreach(var folder in SearchFolders)
             {
@@ -54,6 +49,8 @@ namespace Mobile.BuildTools.Generators.Images
                 outputImageFiles.AddRange(GetOutputImages(resource));
                 return x;
             });
+
+            Outputs = outputImageFiles;
         }
 
         private ResourceDefinition GetResourceDefinition(string filePath)

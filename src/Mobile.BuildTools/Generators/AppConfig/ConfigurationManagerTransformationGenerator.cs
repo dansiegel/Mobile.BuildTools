@@ -27,7 +27,7 @@ namespace Mobile.BuildTools.Tasks.Generators.AppConfig
 
         public string BuildConfiguration { get; set; }
 
-        protected override void Execute()
+        protected override void ExecuteInternal()
         {
             var parentDirectory = Directory.GetParent(BaseConfigPath);
             var configFileName = Path.GetFileNameWithoutExtension(BaseConfigPath);

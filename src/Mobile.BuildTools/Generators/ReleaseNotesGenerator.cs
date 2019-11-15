@@ -15,7 +15,7 @@ namespace Mobile.BuildTools.Generators
         {
         }
 
-        protected override void Execute()
+        protected override void ExecuteInternal()
         {
             var releaseNotesOptions = Build.Configuration.ReleaseNotes;
 

@@ -23,7 +23,7 @@ namespace Mobile.BuildTools.Generators.Versioning
 
         internal string BuildNumber { get; private set; }
 
-        protected override void Execute()
+        protected override void ExecuteInternal()
         {
             if(Behavior == VersionBehavior.Off)
             {

@@ -32,7 +32,7 @@ namespace Mobile.BuildTools.Generators.Manifests
 
         public string ManifestOutputPath { get; set; }
 
-        protected override void Execute()
+        protected override void ExecuteInternal()
         {
             if (!File.Exists(ManifestOutputPath))
             {

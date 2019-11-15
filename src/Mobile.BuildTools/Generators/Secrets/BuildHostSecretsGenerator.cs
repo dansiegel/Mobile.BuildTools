@@ -17,7 +17,7 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         public string SecretsJsonFilePath { get; set; }
 
-        protected override void Execute()
+        protected override void ExecuteInternal()
         {
             var config = Build.GetSecretsConfig();
             var secrets = GetSecrets(config?.Prefix);

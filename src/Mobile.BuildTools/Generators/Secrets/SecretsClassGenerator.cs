@@ -63,7 +63,7 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         public ITaskItem[] GeneratedFiles { get; private set; }
 
-        protected override void Execute()
+        protected override void ExecuteInternal()
         {
             var secrets = GetMergedSecrets();
 
