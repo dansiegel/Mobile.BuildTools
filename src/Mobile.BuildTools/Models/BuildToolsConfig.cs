@@ -7,7 +7,7 @@ namespace Mobile.BuildTools.Models
     public class BuildToolsConfig
     {
 #if !NETCOREAPP
-        private string _schema = "https://github.com/dansiegel/Mobile.BuildTools/blob/master/schema.json";
+        private string _schema = "https://raw.githubusercontent.com/dansiegel/Mobile.BuildTools/master/schema.json";
         [JsonProperty("$schema")]
         public string Schema
         {
