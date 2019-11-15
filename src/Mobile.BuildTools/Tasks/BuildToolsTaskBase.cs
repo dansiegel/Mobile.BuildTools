@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
@@ -48,6 +49,10 @@ namespace Mobile.BuildTools.Tasks
         {
             try
             {
+#if DEBUG
+                if (!Debugger.IsAttached)
+                    Debugger.Launch();
+#endif
                 ExecuteInternal(this);
             }
             catch (Exception ex)

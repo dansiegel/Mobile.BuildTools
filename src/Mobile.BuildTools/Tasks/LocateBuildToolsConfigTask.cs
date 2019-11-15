@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Utils;
@@ -22,6 +23,10 @@ namespace Mobile.BuildTools.Tasks
 
         public override bool Execute()
         {
+#if DEBUG
+            if (!Debugger.IsAttached)
+                Debugger.Launch();
+#endif
             LocateSolution();
             GetConfiguration();
             return true;
