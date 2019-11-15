@@ -36,15 +36,19 @@ namespace Mobile.BuildTools.Generators.Images
             }
 
             var resourceType = $"{resource?.Android?.ResourceType ?? AndroidResource.Drawable}".ToLower();
-
+            var platformSanitizedName = Regex.Replace(outputFileName, @"\w", "-");
             return Resolutions.Select(x =>
             {
                 return new OutputImage
                 {
                     InputFile = resource.InputFilePath,
-                    OutputFile = Path.Combine("Resources",
+                    OutputFile = Path.Combine(Build.IntermediateOutputPath,
+                                              "Resources",
                                               $"{resourceType}-{x.Key}",
-                                              Regex.Replace(outputFileName, "\\w", "-")),
+                                              platformSanitizedName),
+                    OutputLink = Path.Combine("Resources",
+                                              $"{resourceType}-{x.Key}",
+                                              platformSanitizedName),
                     Scale = scale * (x.Value / 4),
                     ShouldBeVisible = true,
                     WatermarkFilePath = GetWatermarkFilePath(resource)

@@ -1,29 +1,36 @@
-﻿using Microsoft.Build.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Build.Framework;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Images;
+using Mobile.BuildTools.Models.AppIcons;
 using Mobile.BuildTools.Tasks.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
     public class CollectImageAssetsTask : BuildToolsTaskBase
     {
-        public ITaskItem Configuration { get; set; }
-
-        public string TargetFramework { get; set; }
-
         public string SearchPaths { get; set; }
 
         [Output]
-        public ITaskItem[] GeneratedImages { get; set; }
+        public ITaskItem[] GeneratedImages { get; private set; }
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            var generator = CreateGenerator(config.Platform, config);
-            generator?.Execute();
+            var generator = CreateGenerator(config.Platform);
+            if(generator is null)
+            {
+                GeneratedImages = Array.Empty<ITaskItem>();
+                return;
+            }
+
+            generator.Execute();
+            GeneratedImages = generator.Outputs.Select(x => x.ToTaskItem()).ToArray();
         }
 
-        private IGenerator CreateGenerator(Platform platform, IBuildConfiguration config)
+        private ImageCollectionGeneratorBase CreateGenerator(Platform platform)
         {
             switch(platform)
             {

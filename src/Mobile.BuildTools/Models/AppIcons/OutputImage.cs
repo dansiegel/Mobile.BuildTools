@@ -2,11 +2,13 @@
 
 namespace Mobile.BuildTools.Models.AppIcons
 {
-    public class OutputImage : IEqualityComparer
+    public partial class OutputImage : IEqualityComparer
     {
         public string InputFile { get; set; }
 
         public string OutputFile { get; set; }
+
+        public string OutputLink { get; set; }
 
         public int Height { get; set; }
 

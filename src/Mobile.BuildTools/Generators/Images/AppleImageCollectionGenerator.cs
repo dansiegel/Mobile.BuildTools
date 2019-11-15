@@ -49,7 +49,8 @@ namespace Mobile.BuildTools.Generators.Images
                     return new OutputImage
                     {
                         InputFile = resource.InputFilePath,
-                        OutputFile = Path.Combine(basePath, x.FileName),
+                        OutputFile = Path.Combine(Build.IntermediateOutputPath, basePath, x.FileName),
+                        OutputLink = Path.Combine(basePath, x.FileName),
                         Width = (int)(int.Parse(size[0]) * scale * masterScale),
                         Height = (int)(int.Parse(size[1]) * scale * masterScale),
                         RequiresBackgroundColor = outputFileName == "AppIcon",
@@ -64,7 +65,8 @@ namespace Mobile.BuildTools.Generators.Images
                 return ResourceSizes.Select(x => new OutputImage
                 {
                     InputFile = resource.InputFilePath,
-                    OutputFile = Path.Combine("Resources", $"{outputFileName}{x.Key}.png"),
+                    OutputFile = Path.Combine(Build.IntermediateOutputPath, "Resources", $"{outputFileName}{x.Key}.png"),
+                    OutputLink = Path.Combine("Resources", $"{outputFileName}{x.Key}.png"),
                     Scale = masterScale * x.Value,
                     ShouldBeVisible = true,
                     WatermarkFilePath = GetWatermarkFilePath(resource)
