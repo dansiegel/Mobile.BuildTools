@@ -35,7 +35,7 @@ namespace Mobile.BuildTools.Generators
             var notes = string.Empty;
             var characterLimitExceeded = false;
             var commits = 0;
-            
+
             foreach (var date in dates)
             {
                 // 2018-07-25
@@ -45,9 +45,13 @@ namespace Mobile.BuildTools.Generators
                     Log.LogMessage("Maximimum limits reaches. Truncating Release Notes.");
                     break;
                 }
-                    
-                foreach (var line in GetCommitMessages(date))
+
+                var lines = GetCommitMessages(date);
+                foreach (var line in lines)
                 {
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+
                     if (releaseNotesOptions.MaxCommit > 0 && commits++ > releaseNotesOptions.MaxCommit)
                         break;
                     if(releaseNotesOptions.CharacterLimit > 0 && line.Length + notes.Length > releaseNotesOptions.CharacterLimit)
@@ -70,12 +74,21 @@ namespace Mobile.BuildTools.Generators
         internal IEnumerable<string> GetCommitDates(DateTime fromDate)
         {
             var args = $@"log --no-merges --since=""{fromDate.Year}-{fromDate.Month}-{fromDate.Day} 00:00:00"" --format="" % cd"" --date=short";
-            return GetProcessOutput(args).Distinct();
+            var output = GetProcessOutput(args);
+
+            var lines = new List<string>();
+            foreach(var line in output)
+            {
+                var sanitized = Regex.Replace(line, @"\\n", "\n");
+                lines.AddRange(sanitized.Split('\n').Select(x => x.Trim()));
+            }
+
+            return lines.Distinct();
         }
 
         internal IEnumerable<string> GetCommitMessages(string date)
         {
-            var args = $@"git log --no-merges --format="" * % s"" --since=""{date} 00:00:00"" --until=""{date} 24:00:00""";
+            var args = $@"log --no-merges --format="" * % s"" --since=""{date} 00:00:00"" --until=""{date} 24:00:00""";
             return GetProcessOutput(args);
         }
 
@@ -85,7 +98,7 @@ namespace Mobile.BuildTools.Generators
             var branch = branches.FirstOrDefault(l => l.Contains("*"));
             if(!string.IsNullOrWhiteSpace(branch))
             {
-                branch = Regex.Replace(branch, "*", "").Trim();
+                branch = Regex.Replace(branch, Regex.Escape("*"), string.Empty).Trim();
             }
             return branch;
         }
@@ -94,14 +107,17 @@ namespace Mobile.BuildTools.Generators
         {
             var pci = new ProcessStartInfo("git", args)
             {
-                CreateNoWindow = false,
+                CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute = true
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+
             };
             using (var process = Process.Start(pci))
             {
                 process.WaitForExit();
                 string output = null;
+
                 using (var reader = process.StandardOutput)
                 {
                     output = reader.ReadToEnd();
