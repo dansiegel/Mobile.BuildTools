@@ -3,5 +3,4 @@ steps:
   displayName: 'Use .NET Core sdk'
   inputs:
     packageType: sdk
-    version: 3.0.100-preview5-011568
-    includePreviewVersions: true
+    version: 3.0.100

@@ -18,11 +18,6 @@ jobs:
 
   - template: ../steps/setup-dotnetcore.yml
 
-  - powershell: |
-     Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?linkid=864422 -OutFile ./win10.0.16299sdk.exe
-     ./win10.0.16299sdk.exe /features + /quiet
-    displayName: Download Windows 10 16299 SDK
-
   - template: ../steps/nuget-restore.yml
     parameters:
       version: ${{ parameters.nugetVersion }}
@@ -54,6 +49,7 @@ jobs:
       SignClientTenantId: $(SignClientTenantId)
       SignServiceResourceId: $(SignServiceResourceId)
     condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
+    enabled: false
 
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Artifacts'

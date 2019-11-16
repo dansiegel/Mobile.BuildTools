@@ -25,17 +25,17 @@ name: $(Build.BuildId)
 
 variables:
 - name: WindowsAgent
-  value: windows-2019
+  value: windows-latest
 - name: MacAgent
-  value: macOS-10.14
+  value: macOS-latest
 - name: NuGetVersion
-  value: '4.9.4'
+  value: '5.3.1'
 - name: BuildConfiguration
   value: 'Release'
 - name: BuildPlatform
   value: 'Any CPU'
 - name: TargetSolution
-  value: 'JWForex.sln'
+  value: 'Mobile.BuildTools.sln'
 - group: 'Code Signing'
 - group: 'AppSigning'
 - group: 'GitHubRelease'
@@ -104,19 +104,19 @@ stages:
         artifactName: 'Artifacts'
       condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
 
-    - task: jakobehn.jakobehn-vsts-github-tasks.publish-github-release.PublishGitHubRelease@0
-      displayName: 'Publish GitHub Release - Preview'
-      inputs:
-        applicationName: AzureDevOps
-        token: '$(GitHubToken)'
-        repo: Mobile.BuildTools
-        owner: dansiegel
-        tagName: 'v$(VersionName)'
-        releaseName: '$(ReleaseDisplayName)'
-        prerelease: $(IsPreview)
-        assetsPattern: '$(Pipeline.Workspace)\Artifacts\*.nupkg'
-      condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
-    
+    # - task: jakobehn.jakobehn-vsts-github-tasks.publish-github-release.PublishGitHubRelease@0
+    #   displayName: 'Publish GitHub Release - Preview'
+    #   inputs:
+    #     applicationName: AzureDevOps
+    #     token: '$(GitHubToken)'
+    #     repo: Mobile.BuildTools
+    #     owner: dansiegel
+    #     tagName: 'v$(VersionName)'
+    #     releaseName: '$(ReleaseDisplayName)'
+    #     prerelease: $(IsPreview)
+    #     assetsPattern: '$(Pipeline.Workspace)\Artifacts\*.nupkg'
+    #   condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
+
   - deployment: myget
     displayName: Deploy to MyGet
     dependsOn: githubRelease

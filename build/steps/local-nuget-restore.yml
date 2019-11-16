@@ -1,6 +1,6 @@
 parameters:
   workingDirectory: ''
-  version: '4.9.4'
+  version: '5.3.1'
 
 steps:
 - task: NuGetToolInstaller@0
@@ -14,7 +14,7 @@ steps:
     downloadPath: $(Pipeline.Workspace)
 
 - powershell: |
-   nuget help | head -1 
+   nuget help | head -1
    nuget locals global-packages -clear
    nuget restore -source "$($env:PIPELINE_WORKSPACE);https://api.nuget.org/v3/index.json"
 
