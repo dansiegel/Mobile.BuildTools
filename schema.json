@@ -262,7 +262,7 @@
             "null"
           ]
         },
-        "propertyType": {
+        "type": {
           "type": [
             "string",
             "null"
