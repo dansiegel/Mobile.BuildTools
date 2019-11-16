@@ -72,7 +72,8 @@ namespace Mobile.BuildTools.Generators.Secrets
                     ClassName = "Secrets",
                     Namespace = "Helpers",
                     Delimiter = ";",
-                    Prefix = "BuildTools_"
+                    Prefix = "BuildTools_",
+                    Properties = new List<ValueConfig>()
                 };
             }
 
@@ -108,14 +109,21 @@ namespace Mobile.BuildTools.Generators.Secrets
             Log.LogMessage(Build.Configuration.Debug ? secretsClass : GenerateClass(Regex.Replace(safeReplacement, "\n\n$", ""), secretsConfig));
 
             var namespacePath = string.Join($"{Path.PathSeparator}", secretsConfig.Namespace.Split('.').Where(x => !string.IsNullOrEmpty(x)));
-            var projectFile = Path.Combine(Build.ProjectDirectory, namespacePath, $"{secretsConfig.ClassName}.cs");
-            var intermediateFile = Path.Combine(Build.IntermediateOutputPath, $"{secretsConfig.ClassName}.cs");
+            var fileName = $"{secretsConfig.ClassName}.cs";
+            var projectFile = Path.Combine(namespacePath, fileName);
+            var intermediateFile = Path.Combine(Build.IntermediateOutputPath, namespacePath, fileName);
             var outputFile = File.Exists(projectFile) ? projectFile : intermediateFile;
             Log.LogMessage($"Writing Secrets Class to: '{outputFile}'");
             var generatedFile = new TaskItem(outputFile);
             generatedFile.SetMetadata("Visible", bool.TrueString);
             generatedFile.SetMetadata("Link", projectFile);
             Outputs = generatedFile;
+
+            var parentDirectory = Directory.GetParent(outputFile);
+            if(!Directory.Exists(parentDirectory.FullName))
+            {
+                Directory.CreateDirectory(parentDirectory.FullName);
+            }
 
             File.WriteAllText(outputFile, secretsClass);
         }
@@ -167,6 +175,11 @@ namespace Mobile.BuildTools.Generators.Secrets
             if(valueConfig is null)
             {
                 valueConfig = GenerateValueConfig(secret, secretsConfig);
+                if(secretsConfig.Properties is null)
+                {
+                    // Sanity Check
+                    secretsConfig.Properties = new List<ValueConfig>();
+                }
                 secretsConfig.Properties.Add(valueConfig);
             }
 

@@ -145,7 +145,6 @@ secrets.json
             var serializer = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
             serializer.Converters.Add(new StringEnumConverter());
             return serializer;

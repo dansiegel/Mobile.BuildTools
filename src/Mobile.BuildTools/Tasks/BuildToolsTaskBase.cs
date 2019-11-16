@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -46,8 +46,9 @@ namespace Mobile.BuildTools.Tasks
         ILog IBuildConfiguration.Logger =>
             (BuildHostLoggingHelper)Log;
 
+        private BuildToolsConfig _config;
         BuildToolsConfig IBuildConfiguration.Configuration =>
-            ConfigHelper.GetConfig(ConfigurationPath);
+            _config ?? (_config = ConfigHelper.GetConfig(ConfigurationPath));
 
         Platform IBuildConfiguration.Platform =>
             TargetFrameworkIdentifier.GetTargetPlatform();
@@ -64,6 +65,9 @@ namespace Mobile.BuildTools.Tasks
             }
             catch (Exception ex)
             {
+#if DEBUG
+                Debugger.Break();
+#endif
                 Log.LogError($"Unhandled error while executing {GetType().Name}");
                 Log.LogErrorFromException(ex);
             }
