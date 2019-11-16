@@ -12,7 +12,7 @@ namespace E2E.Tests.Fixtures
     {
         public const string ExpectedCSSResourceId = "E2E.Core.theme.style.css";
         public const string SecondaryExpectedCSSResourceId = "E2E.Core.theme.anotherStyle.css";
-        public const string ExpectedCSS = @".primaryButton{background-color:#006}^button{background-color:transparent}";
+        public const string ExpectedCSS = @".primaryButton{background-color:#006;}^button{background-color:transparent;}";
 
         [Fact]
         public void CssIsEmbedded()
