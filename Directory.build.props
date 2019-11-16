@@ -16,7 +16,7 @@
     <VersionSuffix>ci</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_RELEASE)' == 'true' "></VersionSuffix>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion Condition=" '$(OS)' == 'Windows_NT' ">8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsPackable)">
