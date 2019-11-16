@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\Mobile.BuildTools\Models\**\*.cs" Link="Models\%(Filename)%(Extension)" />
+    <Compile Include="..\..\src\Mobile.BuildTools\Models\**\*.cs" Link="Models\%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="..\..\src\Mobile.BuildTools\Utils\ConfigHelper.cs" Link="Utils\%(Filename)%(Extension)" />
     <Compile Include="..\..\src\Mobile.BuildTools\Utils\Platform.cs" Link="Utils\%(Filename)%(Extension)" />
   </ItemGroup>

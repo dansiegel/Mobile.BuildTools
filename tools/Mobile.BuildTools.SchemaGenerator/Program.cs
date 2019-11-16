@@ -7,9 +7,9 @@ using Newtonsoft.Json.Schema.Generation;
 
 namespace Mobile.BuildTools.SchemaGenerator
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var serializerSettings = Utils.ConfigHelper.GetSerializerSettings();
             var generator = new JSchemaGenerator()
