@@ -13,6 +13,6 @@ steps:
   inputs:
     restoreSolution: ${{ parameters.solution }}
     noCache: true
-    # feedsToUse: config
-    # nugetConfigPath: build/pipeline.config
+    feedsToUse: config
+    nugetConfigPath: NuGet.config
 
