@@ -37,16 +37,4 @@
     <Message Text="ManifestOutputPath: '$(ManifestDestinationPath)'" />
   </Target>
 
-  <Target Name="_GatherManifestForAutomaticVersioning"
-          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist"
-          DependsOnTargets="MobileBuildToolsInit"
-          Condition="$(BuildToolsEnableAutomaticVersioning)">
-    <PropertyGroup>
-      <AutomaticVersionOffset Condition=" '$(AutomaticVersionOffset)' == '' ">0</AutomaticVersionOffset>
-      <AutomaticVersionEnvironment Condition=" '$(AutomaticVersionEnvironment)' == '' ">All</AutomaticVersionEnvironment>
-      <EnableAutomaticVersioning>false</EnableAutomaticVersioning>
-      <EnableAutomaticVersioning Condition=" '$(AutomaticVersionBehavior)' == 'PreferBuildNumber' Or '$(AutomaticVersionBehavior)' == 'Timestamp' ">true</EnableAutomaticVersioning>
-    </PropertyGroup>
-  </Target>
-
 </Project>

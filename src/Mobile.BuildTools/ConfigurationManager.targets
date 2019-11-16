@@ -18,10 +18,11 @@
           Inputs="@(MobileBuildToolsConfigs)"
           Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
     <ConfigurationManagerHandlerTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                     ProjectName="$(MSBuildProjectName)"
                                      ProjectDirectory="$(MSBuildProjectDirectory)"
                                      SolutionDirectory="$(SolutionDir)"
                                      IntermediateOutputPath="$(IntermediateOutputPath)"
-                                     SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)" >
+                                     TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)" >
       <Output ItemName="GeneratedFile"
               TaskParameter="OutputConfigs"/>
       <Output ItemName="FilesWrite"

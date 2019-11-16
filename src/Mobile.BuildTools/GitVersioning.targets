@@ -8,10 +8,11 @@
           AfterTargets="CoreCompile"
           Condition=" '$(BuildToolsEnableReleaseNotes)' ">
     <GenerateGitReleaseNotesTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                 ProjectName="$(MSBuildProjectName)"
                                  ProjectDirectory="$(MSBuildProjectDirectory)"
                                  SolutionDirectory="$(SolutionDir)"
                                  IntermediateOutputPath="$(IntermediateOutputPath)"
-                                 SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)" />
+                                 TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)" />
   </Target>
 
 </Project>

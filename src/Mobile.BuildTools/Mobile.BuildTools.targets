@@ -17,7 +17,7 @@
   <Import Project="UAP.targets"
           Condition="$(TargetFrameworkIdentifier) == 'UAP'" />
   <Import Project="NetStandard.targets"
-          Condition="$(TargetFrameworkIdentifier) == 'netstandard'" />
+          Condition="$(TargetFrameworkIdentifier) == '.NETStandard'" />
 
   <Import Project="BuildEnvironmentDump.targets" />
   <Import Project="ConfigurationManager.targets" />
@@ -41,7 +41,9 @@
   <Target Name="_LocateBuildToolsConfig"
           BeforeTargets="CoreCompile">
     <LocateBuildToolsConfigTask ProjectDir="$(MSBuildProjectDirectory)"
-                                SolutionDir="$(SolutionDir)">
+                                SolutionDir="$(SolutionDir)"
+                                TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)">
       <Output TaskParameter="BuildToolsConfigFilePath"
               PropertyName="BuildToolsConfigFilePath" />
       <Output TaskParameter="LocatedSolutionDirectory"

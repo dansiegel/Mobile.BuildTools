@@ -88,7 +88,7 @@ namespace Mobile.BuildTools.Generators.Secrets
                 {
                     Build.Configuration.ProjectSecrets = new Dictionary<string, SecretsConfig>();
                 }
-                Build.Configuration.ProjectSecrets.Add(Build.GlobalProperties["ProjectName"], secretsConfig);
+                Build.Configuration.ProjectSecrets.Add(Build.ProjectName, secretsConfig);
                 Build.SaveConfiguration();
             }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -30,13 +30,16 @@ namespace Mobile.BuildTools.Tasks
         public string ProjectDirectory { get; set; }
 
         [Required]
+        public string ProjectName { get; set; }
+
+        [Required]
         public string SolutionDirectory { get; set; }
 
         [Required]
         public string IntermediateOutputPath { get; set; }
 
         [Required]
-        public string SdkShortFrameworkIdentifier { get; set; }
+        public string TargetFrameworkIdentifier { get; set; }
 
         IDictionary<string, string> IBuildConfiguration.GlobalProperties => BuildEngine.GetGlobalProperties();
 
@@ -47,7 +50,7 @@ namespace Mobile.BuildTools.Tasks
             ConfigHelper.GetConfig(ConfigurationPath);
 
         Platform IBuildConfiguration.Platform =>
-            SdkShortFrameworkIdentifier.GetTargetPlatform();
+            TargetFrameworkIdentifier.GetTargetPlatform();
 
         public sealed override bool Execute()
         {
@@ -80,8 +83,13 @@ namespace Mobile.BuildTools.Tasks
             {
                 return JsonConvert.DeserializeObject<SecretsConfig>(configPath);
             }
+
             var build = (IBuildConfiguration)this;
-            return build.Configuration.ProjectSecrets.FirstOrDefault(x => x.Key == build.GlobalProperties["ProjectName"]).Value;
+            var config = build.Configuration;
+            if (config.ProjectSecrets != null && config.ProjectSecrets.Any(x => x.Key == ProjectName))
+                return config.ProjectSecrets.First(x => x.Key == ProjectName).Value;
+
+            return null;
         }
 
         private string GetProperty(string name)

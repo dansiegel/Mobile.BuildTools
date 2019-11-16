@@ -31,6 +31,7 @@ namespace Mobile.BuildTools.Tests.Mocks
         };
 
         public string ProjectDirectory { get; set; }
+        public string ProjectName { get; set; } = "HelloWorld";
         public string SolutionDirectory { get; set; }
         public string IntermediateOutputPath { get; set; }
         public string BuildConfiguration { get; set; }

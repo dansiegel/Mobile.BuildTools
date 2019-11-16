@@ -16,10 +16,11 @@
           DependsOnTargets="_SetLatestTargetFrameworkVersion;MobileBuildToolsInit"
           Condition="$(BuildToolsEnableTemplateManifests)">
     <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                          ProjectName="$(MSBuildProjectName)"
                           ProjectDirectory="$(MSBuildProjectDirectory)"
                           SolutionDirectory="$(SolutionDir)"
                           IntermediateOutputPath="$(IntermediateOutputPath)"
-                          SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                          TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                           ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)" />
   </Target>
 
@@ -28,10 +29,11 @@
           Condition="$(BuildToolsEnableAutomaticVersioning)">
 
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                  ProjectName="$(MSBuildProjectName)"
                                   ProjectDirectory="$(MSBuildProjectDirectory)"
                                   SolutionDirectory="$(SolutionDir)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
-                                  SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                   ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)" />
   </Target>
 

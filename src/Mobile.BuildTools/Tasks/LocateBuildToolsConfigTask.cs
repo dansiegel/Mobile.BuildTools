@@ -13,6 +13,10 @@ namespace Mobile.BuildTools.Tasks
 
         public string SolutionDir { get; set; }
 
+        public string TargetFrameworkIdentifier { get; set; }
+
+        public string SdkShortFrameworkIdentifier { get; set; }
+
         [Output]
         public string BuildToolsConfigFilePath { get; private set; }
 

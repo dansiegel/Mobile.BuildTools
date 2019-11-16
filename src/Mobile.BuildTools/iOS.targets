@@ -13,10 +13,11 @@
           Condition=" $(BuildToolsEnableAutomaticVersioning) ">
 
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                  ProjectName="$(MSBuildProjectName)"
                                   ProjectDirectory="$(MSBuildProjectDirectory)"
                                   SolutionDirectory="$(SolutionDir)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
-                                  SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)" />
+                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)" />
   </Target>
 
   <Target Name="HandlePlatformAppConfig"

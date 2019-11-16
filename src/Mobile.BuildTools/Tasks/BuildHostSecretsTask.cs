@@ -14,7 +14,7 @@ namespace Mobile.BuildTools.Tasks
             Log.LogMessage($"Output Path: {SecretsJsonFilePath}");
             if (string.IsNullOrWhiteSpace(SecretsJsonFilePath))
             {
-                Log.LogMessage($"No Secrets file specified for '{SdkShortFrameworkIdentifier}'");
+                Log.LogMessage($"No Secrets file specified for '{TargetFrameworkIdentifier}'");
             }
             else if (File.Exists(SecretsJsonFilePath))
             {

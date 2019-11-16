@@ -16,6 +16,8 @@ namespace Mobile.BuildTools.Build
 
         IDictionary<string, string> GlobalProperties { get; }
 
+        string ProjectName { get; }
+
         string ProjectDirectory { get; }
 
         string SolutionDirectory { get; }
