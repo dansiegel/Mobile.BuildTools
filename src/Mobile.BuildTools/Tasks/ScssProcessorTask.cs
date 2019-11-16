@@ -10,6 +10,8 @@ using Mobile.BuildTools.Logging;
 using SharpScss;
 using NUglify;
 using NUglify.Css;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -21,6 +23,9 @@ namespace Mobile.BuildTools.Tasks
             get => _logger ?? (BuildHostLoggingHelper)Log;
             set => _logger = value;
         }
+
+        [Required]
+        public string ExecutingDirectory { get; set; }
 
         public string DebugOutput { get; set; }
 
@@ -36,17 +41,52 @@ namespace Mobile.BuildTools.Tasks
         {
             try
             {
+#if DEBUG
+                if (!Debugger.IsAttached)
+                    Debugger.Launch();
+#endif
+
+                EnsureRuntimeExists();
                 var filesToProcess = ScssFiles.Where(scss => Path.GetFileName(scss)[0] != '_' && Path.GetExtension(scss) == ".scss" || Path.GetExtension(scss) == ".sass");
                 _generatedCssFiles = ProcessFiles(filesToProcess);
             }
             catch (Exception ex)
             {
                 Logger.LogMessage("An Error occurred while processing the Sass files");
-                Logger.LogMessage(ex.ToString());
-                return false;
+                Log.LogErrorFromException(ex);
             }
 
-            return true;
+            return !Log.HasLoggedErrors;
+        }
+
+        private void EnsureRuntimeExists()
+        {
+            var fileName = "libsass.dll";
+            var platformRuntimeFolder = "win-x86";
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                fileName = "libsass.dylib";
+                platformRuntimeFolder = "osx-x64";
+            }
+
+            var requiredFile = Path.Combine(ExecutingDirectory, fileName);
+            if(!File.Exists(requiredFile))
+            {
+                var runtimeDirectory = GetRuntimeFolder(new DirectoryInfo(ExecutingDirectory));
+                var sourceFile = Path.Combine(runtimeDirectory, platformRuntimeFolder, "native", fileName);
+                File.Copy(sourceFile, requiredFile);
+            }
+        }
+
+        private string GetRuntimeFolder(DirectoryInfo searchDirectory)
+        {
+            var path = Path.Combine(searchDirectory.FullName, "runtimes");
+            if(Directory.Exists(path))
+            {
+                return path;
+            }
+
+            return GetRuntimeFolder(searchDirectory.Parent);
         }
 
         private IEnumerable<TaskItem> ProcessFiles(IEnumerable<string> inputFiles)

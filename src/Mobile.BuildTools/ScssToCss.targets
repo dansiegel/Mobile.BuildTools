@@ -47,7 +47,7 @@
 
   <Target Name="ProcessScss"
           BeforeTargets="CssG"
-          DependsOnTargets="MobileBuildToolsInit"
+          DependsOnTargets="MobileBuildToolsInit;_EnsureScssRuntimeIsAvailable;_CollectScss"
           Inputs="@(_Scss);@(_PartialScc)"
           Outputs="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')">
 
@@ -55,7 +55,8 @@
       <ProcessScssDebug Condition=" '$(ProcessScssDebug)' == '' ">$(MobileBuildToolsDebug)</ProcessScssDebug>
     </PropertyGroup>
 
-    <ScssProcessorTask OutputDirectory="$(IntermediateOutputPath)"
+    <ScssProcessorTask ExecutingDirectory="$(MSBuildThisFileDirectory)"
+                       OutputDirectory="$(IntermediateOutputPath)"
                        ScssFiles="@(_Scss)"
                        DebugOutput="$(ProcessScssDebug)">
       <Output ItemName="GeneratedFile"
