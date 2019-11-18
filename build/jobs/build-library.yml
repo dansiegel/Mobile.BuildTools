@@ -33,7 +33,7 @@ jobs:
 
   - template: ../steps/unit-tests.yml
     parameters:
-      projects: 'tests/*.Tests.csproj'
+      projects: 'tests/**/*.Tests.csproj'
 
   - task: PowerShell@2
     displayName: 'Authenticode Sign Artifacts'
