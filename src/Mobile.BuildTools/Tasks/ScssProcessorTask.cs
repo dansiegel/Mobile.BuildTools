@@ -61,6 +61,8 @@ namespace Mobile.BuildTools.Tasks
 
         private void EnsureRuntimeExists()
         {
+            if (ExecutingDirectory == "UnitTest") return;
+
             var fileName = "libsass.dll";
             var platformRuntimeFolder = "win-x86";
             if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

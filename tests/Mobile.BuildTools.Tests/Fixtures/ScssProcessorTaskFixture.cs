@@ -39,6 +39,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
 
             var task = new ScssProcessorTask
             {
+                ExecutingDirectory = "UnitTest",
                 OutputDirectory = OutputFolder,
                 ScssFiles = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
@@ -160,6 +161,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
             _testOutputHelper.WriteLine($"Checking: {fileName} - {expectedFileName}");
             var task = new ScssProcessorTask
             {
+                ExecutingDirectory = "UnitTest",
                 OutputDirectory = OutputFolder,
                 ScssFiles = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
@@ -188,6 +190,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
         {
             var task = new ScssProcessorTask
             {
+                ExecutingDirectory = "UnitTest",
                 OutputDirectory = OutputFolder,
                 ScssFiles = Directory.GetFiles(ExpectedCssPath, "*"),
                 Logger = new XunitLog(_testOutputHelper)
