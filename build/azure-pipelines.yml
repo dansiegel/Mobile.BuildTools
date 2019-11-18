@@ -151,7 +151,7 @@ stages:
           - task: GithubRelease@0
             displayName: 'Create GitHub Release'
             inputs:
-              gitHubConnection: 'NuGet'
+              gitHubConnection: 'Mobile.BuildTools'
               title: '$(ReleaseDisplayName)'
               tagSource: manual
               tag: 'v$(VersionName)'
@@ -167,6 +167,6 @@ stages:
               command: push
               packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;!$(Pipeline.Workspace)/**/*.symbols.nupkg'
               nuGetFeedType: external
-              publishFeedCredentials: 'NuGet.org'
+              publishFeedCredentials: 'NuGet'
 
 
