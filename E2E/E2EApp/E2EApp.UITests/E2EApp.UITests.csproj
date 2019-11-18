@@ -29,7 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="Mobile.BuildTools" Version="$(MobileBuildToolsVersion)" />
     <PackageReference Include="Xamarin.UITest" Version="3.0.3 " />
   </ItemGroup>
   <ItemGroup>

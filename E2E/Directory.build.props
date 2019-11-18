@@ -1,3 +1,14 @@
 <Project>
-  <Import Project="../Directory.build.props" />
+
+  <Import Project="..\Directory.build.props" />
+
+  <PropertyGroup>
+    <MobileBuildToolsVersion>$(VersionPrefix)</MobileBuildToolsVersion>
+    <MobileBuildToolsVersion Condition=" $(VersionSuffix) != '' ">$(VersionPrefix)-$(VersionSuffix)</MobileBuildToolsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mobile.BuildTools" Version="$(MobileBuildToolsVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
 </Project>
