@@ -23,9 +23,6 @@ jobs:
       version: ${{ parameters.nugetVersion }}
       solution: Mobile.BuildTools.sln
 
-  - powershell: ls $env:LOCALAPPDATA\Temp\NuGetScratch
-    displayName: 'List Cached Packages'
-
   - task: MSBuild@1
     displayName: 'Build solution Mobile.BuildTools.sln'
     inputs:
@@ -36,7 +33,7 @@ jobs:
 
   - template: ../steps/unit-tests.yml
     parameters:
-      projects: 'Mobile.BuildTools.*/*.Tests.csproj'
+      projects: 'tests/*.Tests.csproj'
 
   - task: PowerShell@2
     displayName: 'Authenticode Sign Artifacts'

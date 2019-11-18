@@ -28,4 +28,4 @@ jobs:
 
   - template: ../steps/unit-tests.yml
     parameters:
-      projects: '**/E2E.Tests/*.Tests.csproj'
+      projects: 'E2E/E2E.Tests/E2E.Tests.csproj'
