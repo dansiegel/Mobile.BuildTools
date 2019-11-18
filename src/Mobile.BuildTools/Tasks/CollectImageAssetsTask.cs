@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Mobile.BuildTools.Build;
-using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Images;
-using Mobile.BuildTools.Models.AppIcons;
 using Mobile.BuildTools.Tasks.Utils;
 
 namespace Mobile.BuildTools.Tasks
@@ -83,7 +81,12 @@ namespace Mobile.BuildTools.Tasks
                     break;
             }
 
-            // TODO: Return Conditional Directories for current Build Configuration
+            // TODO: Make this even smarter with conditions like `Release || Store`... perhaps we also should consider evaluating the defined constants.
+            var keys = imageConfig.ConditionalDirectories.Keys.Where(k => !k.StartsWith("mono") && !k.StartsWith("xamarin") && (k.Equals(config.BuildConfiguration) || !k.Equals($"!{config.BuildConfiguration}")));
+            foreach(var validCondition in keys)
+            {
+                searchPaths.AddRange(imageConfig.ConditionalDirectories[validCondition]);
+            }
 
             return searchPaths;
         }
