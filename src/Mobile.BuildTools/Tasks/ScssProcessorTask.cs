@@ -53,7 +53,7 @@ namespace Mobile.BuildTools.Tasks
             catch (Exception ex)
             {
                 Logger.LogMessage("An Error occurred while processing the Sass files");
-                Log.LogErrorFromException(ex);
+                Logger.LogErrorFromException(ex);
             }
 
             return !Log.HasLoggedErrors;
