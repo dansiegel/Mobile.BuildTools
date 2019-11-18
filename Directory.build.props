@@ -17,9 +17,17 @@
     <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_RELEASE)' == 'true' "></VersionSuffix>
     <LangVersion Condition=" '$(OS)' == 'Windows_NT' ">8.0</LangVersion>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!-- CI Helper -->
+  <PropertyGroup>
+    <CI>false</CI>
+    <CI Condition=" '$(BUILD_BUILDNUMBER)' != '' ">true</CI>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsPackable)">
     <None Include="$(MSBuildThisFileDirectory)logo\icon.png" Pack="true" PackagePath="\icon.png" />
   </ItemGroup>
+
 </Project>

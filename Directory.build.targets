@@ -1,38 +1,14 @@
 <Project>
-  <UsingTask TaskName="_RecursiveDeleteTask"
-             TaskFactory="CodeTaskFactory"
-             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
-    <ParameterGroup>
-      <_DeleteDirectory ParameterType="System.String" Required="true" />
-    </ParameterGroup>
-    <Task>  
-      <Using Namespace="System"/>
-      <Using Namespace="System.IO"/>
-      <Code Type="Fragment" Language="cs">
-<![CDATA[  
-Log.LogMessage(string.Format("Directory to Delete '{0}'.", _DeleteDirectory));
-if(Directory.Exists(_DeleteDirectory))
-{
-  Directory.Delete(_DeleteDirectory, true);
-}
-]]>
-      </Code>
-    </Task>
-  </UsingTask>
 
-  <!--<Target Name="LocalPublish" 
-          BeforeTargets="Pack;GenerateNuspec" 
-          Condition=" '$(IsPackable)' ">
+  <Target Name="DeleteCachedPackage" Condition="'$(CI)' != 'true'" BeforeTargets="Pack">
+    <ItemGroup>
+      <ToDelete Include="$(PackageOutputPath)\$(PackageId).$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)*.*" />
+    </ItemGroup>
+    <Delete Files="@(ToDelete)" />
+    <Exec Command='rd "$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())" /q /s'
+          Condition="Exists('$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())') And '$(OS)' == 'Windows_NT'" />
+    <Exec Command='rm -rf "$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())"'
+          Condition="Exists('$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())') And '$(OS)' != 'Windows_NT'" />
+  </Target>
 
-    <_RecursiveDeleteTask _DeleteDirectory="$(NuGetPackageRoot)/$(PackageId.ToLower())"
-                          Condition="Exists('$(NuGetPackageRoot)/$(PackageId.ToLower())')" />
-    <_RecursiveDeleteTask _DeleteDirectory="$(LocalArtifactStagingDirectory)"
-                          Condition=" '$(PackageOutputPath)' == '$(LocalArtifactStagingDirectory)' " />
-
-    <MakeDir Directories="$(LocalArtifactStagingDirectory)" 
-             Condition="!Exists('$(LocalArtifactStagingDirectory)')" />
-    <Copy SourceFiles="$(PackageTargetPath)" 
-          DestinationFolder="$(LocalArtifactStagingDirectory)"
-          Condition=" '$(PackageOutputPath)' != '$(LocalArtifactStagingDirectory)' " />
-  </Target>-->
 </Project>
