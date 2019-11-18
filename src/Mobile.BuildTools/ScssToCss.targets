@@ -67,7 +67,8 @@
 
     <ItemGroup>
       <EmbeddedResource Include="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')"
-                        Link="%(RecursiveDir)%(Filename).css" />
+                        Link="%(RecursiveDir)%(Filename).css"
+                        Visible="true" />
     </ItemGroup>
 
   </Target>
