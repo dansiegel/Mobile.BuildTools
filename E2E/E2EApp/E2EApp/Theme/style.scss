@@ -1,0 +1,15 @@
+@import "colors";
+
+.primaryButton {
+    background-color: $primary
+}
+
+button:any {
+    background-color: $accent;
+    color: $textColor;
+}
+
+tabbedpage {
+    -xf-bar-background-color: $primaryDark;
+    -xf-bar-text-color: $textColor
+}

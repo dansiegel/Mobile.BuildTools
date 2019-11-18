@@ -1,4 +1,6 @@
-using System;
+using System.IO;
+using System.Text.RegularExpressions;
+using E2EApp.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,7 +12,10 @@ namespace E2EApp
         public App()
         {
             InitializeComponent();
-            MainPage = new MainPage();
+            var tabbedPage = new TabbedPage();
+            tabbedPage.Children.Add(new SecretsPage());
+            tabbedPage.Children.Add(new AppConfig());
+            MainPage = tabbedPage;
         }
     }
 }

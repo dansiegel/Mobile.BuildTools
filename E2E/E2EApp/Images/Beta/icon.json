@@ -1,0 +1,9 @@
+{
+  "apple": {
+    "name": "AppIcon"
+  },
+  "android": {
+    "name": "Icon"
+  },
+  "watermarkFile": "beta-version"
+}

@@ -4,7 +4,7 @@ namespace E2EApp.Views
 {
     public partial class SecretsPage
     {
-        public MainPage()
+        public SecretsPage()
         {
             InitializeComponent();
         }

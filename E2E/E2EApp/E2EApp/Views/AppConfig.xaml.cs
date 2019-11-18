@@ -2,9 +2,9 @@
 
 namespace E2EApp.Views
 {
-    public partial class AppConfigPage
+    public partial class AppConfig
     {
-        public MainPage()
+        public AppConfig()
         {
             InitializeComponent();
         }
