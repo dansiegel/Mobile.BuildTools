@@ -88,72 +88,85 @@ stages:
 - stage: Release
   displayName: Deploy NuGet Artifacts
   dependsOn: Test
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
-  - job: githubRelease
-    displayName: Process GitHub Release
-    pool:
-      vmImage: $(WindowsAgent)
-    steps:
-    - task: PowerShell@2
-      displayName: 'Process Release'
-      inputs:
-        filePath: 'build\Process-Release.ps1'
-
-    - task: DownloadPipelineArtifact@1
-      inputs:
-        artifactName: 'Artifacts'
-      condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
-
-    # - task: jakobehn.jakobehn-vsts-github-tasks.publish-github-release.PublishGitHubRelease@0
-    #   displayName: 'Publish GitHub Release - Preview'
-    #   inputs:
-    #     applicationName: AzureDevOps
-    #     token: '$(GitHubToken)'
-    #     repo: Mobile.BuildTools
-    #     owner: dansiegel
-    #     tagName: 'v$(VersionName)'
-    #     releaseName: '$(ReleaseDisplayName)'
-    #     prerelease: $(IsPreview)
-    #     assetsPattern: '$(Pipeline.Workspace)\Artifacts\*.nupkg'
-    #   condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
-
-  - deployment: myget
-    displayName: Deploy to MyGet
-    dependsOn: githubRelease
-    environment: 'MyGet'
+  - deployment: MyGet
+    displayName: MyGet.org
+    environment: MyGet
     strategy:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@1
-            inputs:
-              artifactName: 'Artifacts'
-
           - task: NuGetCommand@2
-            displayName: 'NuGet push'
+            displayName: NuGet Push
             inputs:
               command: push
-              packagesToPush: '$(Pipeline.Workspace)/Artifacts/*.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg'
               nuGetFeedType: external
               publishFeedCredentials: 'MyGet-DanSiegel'
-  - deployment: nuget
-    displayName: Deploy to NuGet
-    dependsOn: githubRelease
-    environment: 'NuGet'
+  - deployment: NuGet
+    displayName: NuGet.org
+    environment: NuGet
+    condition: and(succeeded(),or(eq(variables['IS_PREVIEW'], true), eq(variables['IS_RELEASE'], true)))
     strategy:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@1
+          - powershell: |
+             try {
+                 $artifactDirectory = Join-Path -Path $env:PIPELINE_WORKSPACE -ChildPath 'NuGet'
+                 Write-Host "Currect working directory - $artifactDirectory"
+                 $nupkg = Get-ChildItem -Path $artifactDirectory -Filter *.nupkg -Recurse | Select-Object -First 1
+                 if($null -eq $nupkg)
+                 {
+                     Throw "No NuGet Package could be found in the current directory"
+                 }
+                 Write-Host "Package Name $($nupkg.Name)"
+                 $nupkg.Name -match '^(.*?)\.((?:\.?[0-9]+){3,}(?:[-a-z]+)?)\.nupkg$'
+                 $VersionName = $Matches[2]
+                 $IsPreview = $VersionName -match '-pre$'
+                 $ReleaseDisplayName = $VersionName
+
+                 if($null -eq $env:IS_PREVIEW)
+                 {
+                     Write-Output ("##vso[task.setvariable variable=IS_PREVIEW;]$IsPreview")
+                 }
+                 if($true -eq $IsPreview)
+                 {
+                     $baseVersion = $VersionName.Split('-')[0]
+                     $ReleaseDisplayName = "$baseVersion - Preview"
+                 }
+                 Write-Host "Version Name - $VersionName"
+                 Write-Host "Release Display Name - $ReleaseDisplayName"
+
+                 Write-Output ("##vso[task.setvariable variable=VersionName;]$VersionName")
+                 Write-Output ("##vso[task.setvariable variable=ReleaseDisplayName;]$ReleaseDisplayName")
+             }
+             catch {
+                 Write-Error $_
+                 exit 1
+             }
+            displayName: Process Artifacts for Release
+
+          - task: GithubRelease@0
+            displayName: 'Create GitHub Release'
             inputs:
-              artifactName: 'Artifacts'
+              gitHubConnection: 'NuGet'
+              title: '$(ReleaseDisplayName)'
+              tagSource: manual
+              tag: 'v$(VersionName)'
+              isPreRelease: $(IS_PREVIEW)
+              assets: |
+               $(Pipeline.Workspace)/**/*.nupkg
+              isDraft: true
+              addChangeLog: true
 
           - task: NuGetCommand@2
-            displayName: 'NuGet push'
+            displayName: NuGet Push
             inputs:
               command: push
-              packagesToPush: '$(Pipeline.Workspace)/Artifacts/*.nupkg;!$(Pipeline.Workspace)/Artifacts/*-ci.nupkg!$(Pipeline.Workspace)/Artifacts/*.symbols.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;!$(Pipeline.Workspace)/**/*.symbols.nupkg'
               nuGetFeedType: external
-              publishFeedCredentials: 'NuGet'
-    condition: and(succeeded(), eq(variables['DeployToNuGet'], 'true'))
+              publishFeedCredentials: 'NuGet.org'
+
 
