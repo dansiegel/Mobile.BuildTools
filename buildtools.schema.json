@@ -1,4 +1,8 @@
 {
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "id": "https://xam.dev/buildtools.schema.json",
+  "title": "Mobile.BuildTools Project Configuration",
+  "description": "Configures the Mobile.BuildTools. This file should generally be located next to the Solution file and be a central configuration for the entire solution.",
   "definitions": {
     "ArtifactCopy": {
       "type": [
@@ -11,10 +15,7 @@
           "type": "boolean",
           "default": false
         }
-      },
-      "required": [
-        "disable"
-      ]
+      }
     },
     "AutomaticVersioning": {
       "type": [
@@ -23,22 +24,15 @@
       ],
       "properties": {
         "behavior": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "description": "Configures whether the Versioning should prefer to use a Build Number or a Timestamp.",
           "default": "PreferBuildNumber",
           "enum": [
-            "Off",
             "PreferBuildNumber",
             "Timestamp"
           ]
         },
         "environment": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "description": "Configures whether Versioning should occur only on a CI Host, Local Builds or anywhere.",
           "default": "All",
           "enum": [
             "All",
@@ -54,13 +48,7 @@
           "type": "boolean",
           "default": false
         }
-      },
-      "required": [
-        "behavior",
-        "environment",
-        "versionOffset",
-        "disable"
-      ]
+      }
     },
     "ImageResize": {
       "type": [
@@ -69,6 +57,7 @@
       ],
       "properties": {
         "directories": {
+          "description": "A list of search directories relative to this file",
           "type": [
             "array",
             "null"
@@ -81,6 +70,7 @@
           }
         },
         "conditionalDirectories": {
+          "description": "A list of conditional search directories relative to this file. Supports build Configuration, monoandroid, or xamarin.ios",
           "type": [
             "object",
             "null"
@@ -99,6 +89,7 @@
           }
         },
         "watermarkOpacity": {
+          "description": "Configures the opacity to use for any watermark files",
           "type": [
             "number",
             "null"
@@ -111,10 +102,7 @@
         }
       },
       "required": [
-        "directories",
-        "conditionalDirectories",
-        "watermarkOpacity",
-        "disable"
+        "directories"
       ]
     },
     "ReleaseNotesOptions": {
@@ -124,18 +112,22 @@
       ],
       "properties": {
         "maxDays": {
+          "description": "The number of days back to look when generating the Release Notes",
           "type": "integer",
           "default": 10
         },
         "maxCommit": {
+          "description": "The maximum number of commits to lookup",
           "type": "integer",
           "default": 10
         },
         "characterLimit": {
+          "description": "The maximum character limit for generated Release Notes",
           "type": "integer",
           "default": 250
         },
         "filename": {
+          "description": "The output filename such as `ReleaseNotes.md` or `ReleaseNotes.txt`",
           "type": [
             "string",
             "null"
@@ -151,15 +143,7 @@
           "type": "boolean",
           "default": false
         }
-      },
-      "required": [
-        "maxDays",
-        "maxCommit",
-        "characterLimit",
-        "filename",
-        "createInRoot",
-        "disable"
-      ]
+      }
     },
     "SecretsConfig": {
       "type": [
@@ -171,6 +155,7 @@
           "type": "boolean"
         },
         "delimiter": {
+          "description": "The delimiter used to separate values into an array. (i.e. ';' value1;value2)",
           "type": [
             "string",
             "null"
@@ -205,11 +190,7 @@
         }
       },
       "required": [
-        "disable",
         "delimiter",
-        "prefix",
-        "className",
-        "namespace",
         "properties"
       ]
     },
@@ -242,13 +223,7 @@
           "type": "boolean",
           "default": false
         }
-      },
-      "required": [
-        "token",
-        "variablePrefix",
-        "missingTokensAsErrors",
-        "disable"
-      ]
+      }
     },
     "ValueConfig": {
       "type": [
@@ -257,16 +232,14 @@
       ],
       "properties": {
         "name": {
+          "description": "The name of the Property that will be generated",
           "type": [
             "string",
             "null"
           ]
         },
         "type": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "description": "The property type (i.e. string, int, DateTime)",
           "enum": [
             "String",
             "Bool",
@@ -290,13 +263,13 @@
           ]
         },
         "isArray": {
+          "description": "Flag to indicate whether to generate the property as an Array",
           "type": "boolean"
         }
       },
       "required": [
         "name",
-        "propertyType",
-        "isArray"
+        "propertyType"
       ]
     },
     "XamarinCss": {
@@ -305,14 +278,6 @@
         "null"
       ],
       "properties": {
-        "minify": {
-          "type": "boolean",
-          "default": false
-        },
-        "bundleScss": {
-          "type": "boolean",
-          "default": false
-        },
         "disable": {
           "description": "Disables this Mobile.Build.Tools Task",
           "type": "boolean",
@@ -320,8 +285,6 @@
         }
       },
       "required": [
-        "minify",
-        "bundleScss",
         "disable"
       ]
     }
@@ -358,15 +321,5 @@
     "debug": {
       "type": "boolean"
     }
-  },
-  "required": [
-    "artifactCopy",
-    "automaticVersioning",
-    "css",
-    "images",
-    "manifests",
-    "releaseNotes",
-    "projectSecrets",
-    "debug"
-  ]
+  }
 }
