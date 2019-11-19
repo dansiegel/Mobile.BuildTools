@@ -82,7 +82,7 @@ namespace Mobile.BuildTools.Tasks
 
         SecretsConfig IBuildConfiguration.GetSecretsConfig()
         {
-            var configPath = Path.Combine(ProjectDirectory, "secrets.config");
+            var configPath = Path.Combine(ProjectDirectory, Constants.SecretsConfigFileName);
             if (File.Exists(configPath))
             {
                 return JsonConvert.DeserializeObject<SecretsConfig>(configPath);

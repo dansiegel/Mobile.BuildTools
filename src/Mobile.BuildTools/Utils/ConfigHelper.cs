@@ -114,11 +114,12 @@ namespace Mobile.BuildTools.Utils
 #if !DEBUG // Do not generate .gitignore for local debug builds
             var requiredContents = @"# Mobile.BuildTools
 secrets.json
+secrets.*.json
 ";
             var gitignoreFile = Path.Combine(path, ".gitignore");
             if (File.Exists(gitignoreFile))
             {
-                if(!File.ReadAllText(gitignoreFile).Contains("secrets.json"))
+                if(!File.ReadAllText(gitignoreFile).Contains(Constants.SecretsJsonFileName))
                 {
                     File.AppendAllText(gitignoreFile, $"\n\n{requiredContents}");
                 }
@@ -132,12 +133,12 @@ secrets.json
 
         private static string GetConfigFilePath(string path)
         {
-            if(Path.GetFileName(path) == "buildtools.json")
+            if(Path.GetFileName(path) == Constants.BuildToolsConfigFileName)
             {
                 return path;
             }
 
-            return Path.Combine(path, "buildtools.json");
+            return Path.Combine(path, Constants.BuildToolsConfigFileName);
         }
 
         public static JsonSerializerSettings GetSerializerSettings()
@@ -155,6 +156,7 @@ secrets.json
             "Debug",
             "Release",
             "Store",
+            "Ad-Hoc",
             "MonoAndroid",
             "Xamarin.iOS"
         };

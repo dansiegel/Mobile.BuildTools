@@ -19,8 +19,8 @@ namespace Mobile.BuildTools.Tasks
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            var standardSecrets = Path.Combine(ProjectDirectory, "secrets.json");
-            var configSecrets = Path.Combine(ProjectDirectory, $"secrets.{config.BuildConfiguration.ToLower()}.json");
+            var standardSecrets = Path.Combine(ProjectDirectory, Constants.SecretsJsonFileName);
+            var configSecrets = Path.Combine(ProjectDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, config.BuildConfiguration.ToLower()));
             if (File.Exists(standardSecrets) || File.Exists(configSecrets))
             {
                 var generator = new SecretsClassGenerator(config)

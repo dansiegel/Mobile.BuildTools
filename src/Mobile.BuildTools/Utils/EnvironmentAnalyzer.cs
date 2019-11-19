@@ -25,12 +25,12 @@ namespace Mobile.BuildTools.Utils
 
             if(!string.IsNullOrWhiteSpace(projectPath))
             {
-                LoadSecrets(Path.Combine(projectPath, "secrets.json"), ref env);
+                LoadSecrets(Path.Combine(projectPath, Constants.SecretsJsonFileName), ref env);
             }
 
             if (includeManifest)
             {
-                LoadSecrets(Path.Combine(projectPath, "manifest.json"), ref env);
+                LoadSecrets(Path.Combine(projectPath, Constants.ManifestJsonFileName), ref env);
             }
 
             return env;
