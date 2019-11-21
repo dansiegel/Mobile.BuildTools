@@ -70,6 +70,13 @@ namespace Mobile.BuildTools.Tasks
 #endif
                 Log.LogError($"Unhandled error while executing {GetType().Name}");
                 Log.LogErrorFromException(ex);
+
+                if(ConfigHelper.Exists(ConfigurationPath) 
+                    && ConfigHelper.GetConfig(ConfigurationPath).Debug)
+                {
+                    Log.LogWarning("******** DEBUG OUTPUT ****************");
+                    Log.LogWarning(ex.ToString());
+                }
             }
 
             return !Log.HasLoggedErrors;
