@@ -4,6 +4,10 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
+  <PropertyGroup>
+    <BuildToolsEnableTemplateManifests Condition=" '$(BuildToolsEnableTemplateManifests)' == '' ">true</BuildToolsEnableTemplateManifests>
+  </PropertyGroup>
+
   <Target Name="HandleTokenizedInfoPlist"
           AfterTargets="_CoreCompileInterfaceDefinitions"
           DependsOnTargets="MobileBuildToolsInit"
