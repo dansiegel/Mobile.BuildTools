@@ -5,7 +5,7 @@
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Target Name="GenerateGitReleaseNotes"
-          AfterTargets="CoreCompile"
+          AfterTargets="CoreCompile;MobileBuildToolsInit"
           Condition=" '$(BuildToolsEnableReleaseNotes)' ">
     <GenerateGitReleaseNotesTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                                  ProjectName="$(MSBuildProjectName)"

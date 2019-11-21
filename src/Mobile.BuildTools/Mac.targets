@@ -8,7 +8,7 @@
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
-          AfterTargets="HandleTokenizedInfoPlist"
+          AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit"
           Condition="$(BuildToolsEnableAutomaticVersioning)">
 
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"

@@ -12,8 +12,7 @@
   </Target>
 
   <Target Name="HandleAndroidManifest"
-          AfterTargets="_GenerateJavaStubs"
-          DependsOnTargets="_SetLatestTargetFrameworkVersion;MobileBuildToolsInit"
+          AfterTargets="_GenerateJavaStubs;_SetLatestTargetFrameworkVersion;MobileBuildToolsInit"
           Condition="$(BuildToolsEnableTemplateManifests)">
     <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                           ProjectName="$(MSBuildProjectName)"
