@@ -1,18 +1,27 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Models;
+using Mobile.BuildTools.Models.Secrets;
 using Mobile.BuildTools.Utils;
+using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Tasks
 {
     public class LocateBuildToolsConfigTask : Task
     {
+        [Required]
+        public string ProjectName { get; set; }
+
+        [Required]
         public string ProjectDir { get; set; }
 
         public string SolutionDir { get; set; }
 
+        [Required]
         public string TargetFrameworkIdentifier { get; set; }
 
         public string SdkShortFrameworkIdentifier { get; set; }
@@ -53,16 +62,44 @@ namespace Mobile.BuildTools.Tasks
             LocateSolution();
             GetConfiguration();
 
+            var isPlatformHead = (TargetFrameworkIdentifier == "Xamarin.iOS" || TargetFrameworkIdentifier == "MonoAndroid");
             var configuration = ConfigHelper.GetConfig(BuildToolsConfigFilePath);
-            EnableArtifactCopy = !configuration.ArtifactCopy.Disable;
-            EnableAutomaticVersioning = !configuration.AutomaticVersioning.Disable;
-            EnableScssToCss = !configuration.Css.Disable;
-            EnableImageProcessing = !configuration.Images.Disable;
-            EnableSecrets = true; // TODO: We should look up some sort of config for this
-            EnableTemplateManifests = !configuration.Manifests.Disable;
-            EnableReleaseNotes = !configuration.ReleaseNotes.Disable;
+
+            // Only run these tasks for Android and iOS projects if they're not explicitly disabled
+            EnableArtifactCopy = IsEnabled(configuration?.ArtifactCopy) && isPlatformHead;
+            EnableAutomaticVersioning = IsEnabled(configuration?.AutomaticVersioning) && isPlatformHead;
+            EnableImageProcessing = IsEnabled(configuration?.Images) && isPlatformHead;
+            EnableTemplateManifests = IsEnabled(configuration?.Manifests) && isPlatformHead;
+            EnableReleaseNotes = IsEnabled(configuration?.ReleaseNotes) && isPlatformHead;
+
+            // Only run this if it's not disabled and there are SCSS files
+            EnableScssToCss = IsEnabled(configuration?.Css) && Directory.EnumerateFiles(ProjectDir, "*.scss", SearchOption.AllDirectories).Any();
+
+            // Only run this if it is there is a configuration that enables it... or there is are secrets with no config
+            EnableSecrets = ShouldEnableSecrets(configuration);
 
             return true;
+        }
+
+        public static bool IsEnabled(ToolItem item)
+        {
+            if (item is null) return true;
+
+            return !item.Disable;
+        }
+
+        private bool ShouldEnableSecrets(BuildToolsConfig config)
+        {
+            var secretsFileExists = File.Exists(Path.Combine(ProjectDir, Constants.SecretsJsonFileName));
+            var secretsConfig = ConfigHelper.GetSecretsConfig(ProjectName, ProjectDir, config);
+
+            if(secretsConfig is null)
+            {
+                // Intentionally disable this condition in CI incase somebody checked in the secrets.json
+                return secretsFileExists && !CIBuildEnvironmentUtils.IsBuildHost;
+            }
+
+            return !secretsConfig.Disable;
         }
 
         private void LocateSolution()

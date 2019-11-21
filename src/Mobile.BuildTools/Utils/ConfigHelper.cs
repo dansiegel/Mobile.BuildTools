@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 #if !NETCOREAPP
 using Microsoft.Build.Framework;
+using Mobile.BuildTools.Build;
 #endif
 using Mobile.BuildTools.Models;
+using Mobile.BuildTools.Models.Secrets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -129,6 +131,24 @@ secrets.*.json
                 File.WriteAllText(gitignoreFile, requiredContents);
             }
 #endif
+        }
+
+#if !NETCOREAPP
+        internal static SecretsConfig GetSecretsConfig(IBuildConfiguration buildConfiguration) =>
+            GetSecretsConfig(buildConfiguration.ProjectName, buildConfiguration.ProjectDirectory, buildConfiguration.Configuration);
+#endif
+        public static SecretsConfig GetSecretsConfig(string projectName, string projectDir, BuildToolsConfig config)
+        {
+            var configPath = Path.Combine(projectDir, Constants.SecretsConfigFileName);
+            if (File.Exists(configPath))
+            {
+                return JsonConvert.DeserializeObject<SecretsConfig>(configPath);
+            }
+
+            if (config.ProjectSecrets != null && config.ProjectSecrets.Any(x => x.Key == projectName))
+                return config.ProjectSecrets.First(x => x.Key == projectName).Value;
+
+            return null;
         }
 
         private static string GetConfigFilePath(string path)

@@ -27,9 +27,7 @@
   <Import Project="Secrets.targets" />
 
   <PropertyGroup>
-    <MobileBuildToolsInitDependsOn>
-      _LocateBuildToolsConfig
-    </MobileBuildToolsInitDependsOn>
+    <MobileBuildToolsInitDependsOn>_LocateBuildToolsConfig</MobileBuildToolsInitDependsOn>
   </PropertyGroup>
 
   <Target Name="MobileBuildToolsInit"
@@ -41,6 +39,7 @@
   <Target Name="_LocateBuildToolsConfig"
           BeforeTargets="CoreCompile">
     <LocateBuildToolsConfigTask ProjectDir="$(MSBuildProjectDirectory)"
+                                ProjectName="$(MSBuildProjectName)"
                                 SolutionDir="$(SolutionDir)"
                                 TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                 SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)">

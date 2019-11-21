@@ -80,21 +80,8 @@ namespace Mobile.BuildTools.Tasks
 
         internal abstract void ExecuteInternal(IBuildConfiguration config);
 
-        SecretsConfig IBuildConfiguration.GetSecretsConfig()
-        {
-            var configPath = Path.Combine(ProjectDirectory, Constants.SecretsConfigFileName);
-            if (File.Exists(configPath))
-            {
-                return JsonConvert.DeserializeObject<SecretsConfig>(configPath);
-            }
-
-            var build = (IBuildConfiguration)this;
-            var config = build.Configuration;
-            if (config.ProjectSecrets != null && config.ProjectSecrets.Any(x => x.Key == ProjectName))
-                return config.ProjectSecrets.First(x => x.Key == ProjectName).Value;
-
-            return null;
-        }
+        SecretsConfig IBuildConfiguration.GetSecretsConfig() =>
+            ConfigHelper.GetSecretsConfig(this);
 
         private string GetProperty(string name)
         {
