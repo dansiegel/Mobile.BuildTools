@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Mobile.BuildTools" Version="$(MobileBuildToolsVersion)" PrivateAssets="all" />
+    <PackageReference Include="Mobile.BuildTools.Configuration" Version="$(MobileBuildToolsVersion)" />
   </ItemGroup>
 
 </Project>
