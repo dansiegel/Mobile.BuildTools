@@ -31,7 +31,7 @@
   </PropertyGroup>
 
   <Target Name="MobileBuildToolsInit"
-          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC"
+          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build;_CompileInterfaceDefinitions"
           AfterTargets="ResolveAssemblyReferences"
           DependsOnTargets="$(MobileBuildToolsInitDependsOn)">
   </Target>
