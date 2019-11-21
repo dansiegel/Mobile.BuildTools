@@ -13,7 +13,8 @@
   </Target>
 
   <Target Name="ConfigurationManagerTransformAndCopy"
-          AfterTargets="_CollectAppConfigs;MobileBuildToolsInit"
+          AfterTargets="_CollectAppConfigs"
+          DependsOnTargets="MobileBuildToolsInit"
           Inputs="@(MobileBuildToolsConfigs)"
           Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
     <ConfigurationManagerHandlerTask ConfigurationPath="$(BuildToolsConfigFilePath)"

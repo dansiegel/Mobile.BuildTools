@@ -12,20 +12,21 @@
   </Target>
 
   <Target Name="HandleAndroidManifest"
-          AfterTargets="_GenerateJavaStubs;_SetLatestTargetFrameworkVersion;MobileBuildToolsInit"
-          Condition="$(BuildToolsEnableTemplateManifests)">
+          AfterTargets="_GenerateJavaStubs;_SetLatestTargetFrameworkVersion"
+          DependsOnTargets="MobileBuildToolsInit">
     <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                           ProjectName="$(MSBuildProjectName)"
                           ProjectDirectory="$(MSBuildProjectDirectory)"
                           SolutionDirectory="$(SolutionDir)"
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                          ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)" />
+                          ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
+                          Condition="$(BuildToolsEnableTemplateManifests)" />
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
           AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist"
-          Condition="$(BuildToolsEnableAutomaticVersioning)">
+          DependsOnTargets="MobileBuildToolsInit">
 
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                                   ProjectName="$(MSBuildProjectName)"
@@ -33,7 +34,8 @@
                                   SolutionDirectory="$(SolutionDir)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                                  ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)" />
+                                  ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
+                                  Condition="$(BuildToolsEnableAutomaticVersioning)" />
   </Target>
 
 </Project>

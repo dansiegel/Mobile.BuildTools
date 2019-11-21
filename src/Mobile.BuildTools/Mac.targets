@@ -8,15 +8,16 @@
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
-          AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit"
-          Condition="$(BuildToolsEnableAutomaticVersioning)">
+          AfterTargets="HandleTokenizedInfoPlist"
+          DependsOnTargets="MobileBuildToolsInit">
 
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                                   ProjectName="$(MSBuildProjectName)"
                                   ProjectDirectory="$(MSBuildProjectDirectory)"
                                   SolutionDirectory="$(SolutionDir)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
-                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)" />
+                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                  Condition="$(BuildToolsEnableAutomaticVersioning)" />
   </Target>
 
   <Target Name="HandlePlatformAppConfig"
