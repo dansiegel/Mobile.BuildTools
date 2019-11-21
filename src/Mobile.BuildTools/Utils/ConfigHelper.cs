@@ -20,14 +20,20 @@ namespace Mobile.BuildTools.Utils
 
         public static bool Exists(string path) =>
             File.Exists(GetConfigFilePath(path));
+
+        public static bool Exists(string path, out string filePath)
+        {
+            filePath = GetConfigFilePath(path);
+            return File.Exists(filePath);
+        }
+
 #if !NETCOREAPP
         public static BuildToolsConfig GetConfig(ITaskItem item) =>
             GetConfig(item.ItemSpec);
 #endif
         public static BuildToolsConfig GetConfig(string path)
         {
-            var filePath = GetConfigFilePath(path);
-            if(File.Exists(filePath))
+            if(!Exists(path, out var filePath))
             {
                 SaveDefaultConfig(path);
             }
