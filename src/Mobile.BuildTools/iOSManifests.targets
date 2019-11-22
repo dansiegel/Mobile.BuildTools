@@ -6,13 +6,16 @@
 
   <Target Name="HandleTokenizedInfoPlist"
           AfterTargets="_CoreCompileInterfaceDefinitions"
-          DependsOnTargets="MobileBuildToolsInit">
+          DependsOnTargets="MobileBuildToolsInit"
+          Inputs="$(_AppBundlePath)Info.plist"
+          Outputs="$(_AppBundlePath)Info.plist">
     <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                           ProjectName="$(MSBuildProjectName)"
                           ProjectDirectory="$(MSBuildProjectDirectory)"
                           SolutionDirectory="$(SolutionDir)"
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                          ManifestPath="$(_AppBundlePath)Info.plist"
                           Condition="$(BuildToolsEnableTemplateManifests)" />
   </Target>
 

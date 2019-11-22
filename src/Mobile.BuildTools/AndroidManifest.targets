@@ -21,6 +21,7 @@
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                           ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
+                          ManifestPath="$(TemplateAppManifest)"
                           Condition="$(BuildToolsEnableTemplateManifests)" />
   </Target>
 
