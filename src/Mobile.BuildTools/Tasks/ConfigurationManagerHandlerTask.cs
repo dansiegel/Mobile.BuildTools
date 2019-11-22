@@ -8,7 +8,7 @@ using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Tasks.Generators.AppConfig;
 
-namespace Mobile.BuildTools.Tasks.Tasks
+namespace Mobile.BuildTools.Tasks
 {
     public class ConfigurationManagerHandlerTask : BuildToolsTaskBase
     {
