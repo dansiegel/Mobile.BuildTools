@@ -10,7 +10,6 @@ using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Secrets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 
 namespace Mobile.BuildTools.Utils
 {
@@ -104,15 +103,15 @@ namespace Mobile.BuildTools.Utils
             {
                 if (Directory.GetDirectories(imagesRootDir).Length > 0)
                 {
-                    var allDirectories = Directory.GetDirectories(imagesRootDir).Select(x => Path.GetDirectoryName(x));
-                    config.Images.Directories = allDirectories.Where(x => !conditionalDefaults.Any(d => x.Equals(d, StringComparison.InvariantCultureIgnoreCase)))
+                    var allDirectories = Directory.GetDirectories(imagesRootDir).Select(x => GetRelativePath(x, path));
+                    config.Images.Directories = allDirectories.Where(x => !conditionalDefaults.Any(d => x.Equals(d.Key, StringComparison.InvariantCultureIgnoreCase)))
                         .Select(x => Path.Combine("Images", x)).ToList();
-                    config.Images.ConditionalDirectories = allDirectories.Where(x => conditionalDefaults.Any(d => x.Equals(d, StringComparison.InvariantCultureIgnoreCase)))
-                        .ToDictionary(x => x, x => (IEnumerable<string>)new[] { Path.Combine("Images", x) });
+                    config.Images.ConditionalDirectories = allDirectories.Where(x => conditionalDefaults.Any(d => x.Equals(d.Key, StringComparison.InvariantCultureIgnoreCase)))
+                        .ToDictionary(x => conditionalDefaults[x], x => (IEnumerable<string>)new[] { Path.Combine("Images", x) });
                 }
                 else
                 {
-                    config.Images.Directories = new List<string> { imagesRootDir };
+                    config.Images.Directories = new List<string> { GetRelativePath(imagesRootDir, path) };
                 }
             }
 #endif
@@ -139,6 +138,18 @@ secrets.*.json
 #endif
         }
 
+        private static string GetRelativePath(string filespec, string folder)
+        {
+            var pathUri = new Uri(filespec);
+            // Folders must end in a slash
+            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                folder += Path.DirectorySeparatorChar;
+            }
+            var folderUri = new Uri(folder);
+            return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
+        }
+
 #if !NETCOREAPP
         internal static SecretsConfig GetSecretsConfig(IBuildConfiguration buildConfiguration) =>
             GetSecretsConfig(buildConfiguration.ProjectName, buildConfiguration.ProjectDirectory, buildConfiguration.Configuration);
@@ -148,7 +159,8 @@ secrets.*.json
             var configPath = Path.Combine(projectDir, Constants.SecretsConfigFileName);
             if (File.Exists(configPath))
             {
-                return JsonConvert.DeserializeObject<SecretsConfig>(configPath);
+                var json = File.ReadAllText(configPath);
+                return JsonConvert.DeserializeObject<SecretsConfig>(json);
             }
 
             if (config.ProjectSecrets != null && config.ProjectSecrets.Any(x => x.Key == projectName))
@@ -177,14 +189,16 @@ secrets.*.json
             return serializer;
         }
 
-        private static readonly string[] conditionalDefaults = new[]
+        private static readonly Dictionary<string, string> conditionalDefaults = new Dictionary<string, string>
         {
-            "Debug",
-            "Release",
-            "Store",
-            "Ad-Hoc",
-            "MonoAndroid",
-            "Xamarin.iOS"
+            { "Debug", "Debug" },
+            { "Release", "Release" },
+            { "Store", "Store" },
+            { "Ad-Hoc", "Ad-Hoc" },
+            { "MonoAndroid", "MonoAndroid" },
+            { "Xamarin.iOS", "Xamarin.iOS" },
+            { "Android", "MonoAndroid" },
+            { "iOS", "Xamarin.iOS" }
         };
     }
 }
