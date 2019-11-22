@@ -19,11 +19,13 @@ namespace Mobile.BuildTools.Tasks
             if(string.IsNullOrEmpty(ManifestPath))
             {
                 Log.LogWarning("No value was provided for the Manifest. Unable to process Manifest Tokens");
+                return;
             }
 
             if(!File.Exists(ManifestPath))
             {
                 Log.LogWarning($"Unable to process Manifest Tokens, no manifest was found at the path '{ManifestPath}'");
+                return;
             }
 
             IGenerator generator = null;
