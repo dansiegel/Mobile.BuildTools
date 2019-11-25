@@ -1,0 +1,325 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "id": "https://xam.dev/buildtools.schema.json",
+  "title": "Mobile.BuildTools Project Configuration",
+  "description": "Configures the Mobile.BuildTools. This file should generally be located next to the Solution file and be a central configuration for the entire solution.",
+  "definitions": {
+    "ArtifactCopy": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "disable": {
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "AutomaticVersioning": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "behavior": {
+          "description": "Configures whether the Versioning should prefer to use a Build Number or a Timestamp.",
+          "default": "PreferBuildNumber",
+          "enum": [
+            "PreferBuildNumber",
+            "Timestamp"
+          ]
+        },
+        "environment": {
+          "description": "Configures whether Versioning should occur only on a CI Host, Local Builds or anywhere.",
+          "default": "All",
+          "enum": [
+            "All",
+            "BuildHost",
+            "Local"
+          ]
+        },
+        "versionOffset": {
+          "type": "integer"
+        },
+        "disable": {
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "ImageResize": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "directories": {
+          "description": "A list of search directories relative to this file",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "conditionalDirectories": {
+          "description": "A list of conditional search directories relative to this file. Supports build Configuration, monoandroid, or xamarin.ios",
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "watermarkOpacity": {
+          "description": "Configures the opacity to use for any watermark files",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "disable": {
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "directories"
+      ]
+    },
+    "ReleaseNotesOptions": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "maxDays": {
+          "description": "The number of days back to look when generating the Release Notes",
+          "type": "integer",
+          "default": 10
+        },
+        "maxCommit": {
+          "description": "The maximum number of commits to lookup",
+          "type": "integer",
+          "default": 10
+        },
+        "characterLimit": {
+          "description": "The maximum character limit for generated Release Notes",
+          "type": "integer",
+          "default": 250
+        },
+        "filename": {
+          "description": "The output filename such as `ReleaseNotes.md` or `ReleaseNotes.txt`",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "releasenotes.txt"
+        },
+        "createInRoot": {
+          "type": "boolean",
+          "default": true
+        },
+        "disable": {
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "SecretsConfig": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "disable": {
+          "type": "boolean"
+        },
+        "delimiter": {
+          "description": "The delimiter used to separate values into an array. (i.e. ';' value1;value2)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prefix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "className": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "namespace": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "properties": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/ValueConfig"
+          }
+        }
+      },
+      "required": [
+        "delimiter",
+        "properties"
+      ]
+    },
+    "TemplatedManifest": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "token": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "$$"
+        },
+        "variablePrefix": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "Manifest_"
+        },
+        "missingTokensAsErrors": {
+          "type": "boolean",
+          "default": false
+        },
+        "disable": {
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "ValueConfig": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "name": {
+          "description": "The name of the Property that will be generated",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "description": "The property type (i.e. string, int, DateTime)",
+          "enum": [
+            "String",
+            "Bool",
+            "Byte",
+            "SByte",
+            "Char",
+            "Decimal",
+            "Double",
+            "Float",
+            "Int",
+            "UInt",
+            "Long",
+            "ULong",
+            "Short",
+            "UShort",
+            "DateTime",
+            "DateTimeOffset",
+            "Guid",
+            "Uri",
+            "TimeSpan"
+          ]
+        },
+        "isArray": {
+          "description": "Flag to indicate whether to generate the property as an Array",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "propertyType"
+      ]
+    },
+    "XamarinCss": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "disable": {
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "disable"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "artifactCopy": {
+      "$ref": "#/definitions/ArtifactCopy"
+    },
+    "automaticVersioning": {
+      "$ref": "#/definitions/AutomaticVersioning"
+    },
+    "css": {
+      "$ref": "#/definitions/XamarinCss"
+    },
+    "images": {
+      "$ref": "#/definitions/ImageResize"
+    },
+    "manifests": {
+      "$ref": "#/definitions/TemplatedManifest"
+    },
+    "releaseNotes": {
+      "$ref": "#/definitions/ReleaseNotesOptions"
+    },
+    "projectSecrets": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "$ref": "#/definitions/SecretsConfig"
+      }
+    },
+    "debug": {
+      "type": "boolean"
+    }
+  }
+}
