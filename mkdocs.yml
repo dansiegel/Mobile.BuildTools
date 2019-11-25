@@ -1,0 +1,73 @@
+# Project information
+site_name: Mobile.BuildTools
+site_description: Project docs for the Mobile.BuildTools
+site_author: Dan Siegel
+site_url: https://mobile.buildtools.github.io/
+
+# Repository
+repo_name: dansiegel/Mobile.BuildTools
+repo_url: https://github.com/dansiegel/Mobile.BuildTools
+edit_uri: ""
+
+# Copyright
+copyright: 'Copyright &copy; 2017 - 2019 Dan Siegel'
+
+# Configuration
+theme:
+  name: 'material'
+  custom_dir: 'theme'
+  logo: assets/icon.svg
+  favicon: assets/favicon.ico
+  language: en
+  feature:
+    tabs: false
+  palette:
+    primary: white
+    accent: deep-orange
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/icon.svg
+
+extra:
+  social:
+    - type: globe
+      link: http://dansiegel.net
+    - type: github
+      link: https://github.com/dansiegel
+    - type: twitch
+      link: https://twitch.tv/dansiegel
+    - type: twitter
+      link: https://twitter.com/DanJSiegel
+    - type: linkedin
+      link: https://linkedin.com/in/DanSiegel
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+
+nav:
+  - Getting Started: index.md
+  - App Configuration:
+    - Intro: config/index.md
+    - Secrets:
+      - Basics: config/secrets/basics.md
+      - Configuration: config/secrets/configuration.md
+    - App.config:
+      - Intro: config/app.config/index.md
+      - Transformations: config/app.config/transformations.md
+  - App Manifests: manifests.md
+  - Build Versioning: build-versioning.md
+  - Image Assets: images.md
+  - Release Note Generation: release-notes.md
+  - Continuous Integration:
+    - Platforms: continuous-integration/platforms.md
+    - Setup: continuous-integration/setup.md
+  - Xamarin.Forms CSS: xamarin-scss-to-css.md
+  - F.A.Q.: faq.md
+  - Appendix:
+    - Upgrading from 1.X: appendix/upgrade.md
