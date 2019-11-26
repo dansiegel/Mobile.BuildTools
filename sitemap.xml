@@ -2,77 +2,92 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://mobile.buildtools.github.io/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/config/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/config/secrets/basics/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/config/secrets/configuration/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/config/app.config/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/config/app.config/transformations/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/manifests/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/build-versioning/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/images/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/release-notes/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/continuous-integration/platforms/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/continuous-integration/setup/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/xamarin-scss-to-css/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/faq/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://mobile.buildtools.github.io/appendix/upgrade/</loc>
-     <lastmod>2019-11-25</lastmod>
+     <lastmod>2019-11-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc></loc>
+     
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc></loc>
+     
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc></loc>
+     
      <changefreq>daily</changefreq>
     </url>
 </urlset>
