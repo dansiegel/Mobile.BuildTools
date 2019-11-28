@@ -2,7 +2,7 @@
 site_name: Mobile.BuildTools
 site_description: Project docs for the Mobile.BuildTools
 site_author: Dan Siegel
-site_url: https://mobile.buildtools.github.io/
+site_url: http://mobilebuildtools.com/
 
 # Repository
 repo_name: dansiegel/Mobile.BuildTools
@@ -20,7 +20,7 @@ theme:
   favicon: assets/favicon.ico
   language: en
   feature:
-    tabs: false
+    tabs: true
   palette:
     primary: white
     accent: deep-orange
@@ -39,6 +39,8 @@ extra:
       link: https://twitch.tv/dansiegel
     - type: twitter
       link: https://twitter.com/DanJSiegel
+    - type: youtube
+      link: https://www.youtube.com/channel/UC0kcuQoK6odp-4UAlI8FeqA
     - type: linkedin
       link: https://linkedin.com/in/DanSiegel
 
@@ -51,23 +53,39 @@ markdown_extensions:
       permalink: true
 
 nav:
-  - Getting Started: index.md
-  - App Configuration:
-    - Intro: config/index.md
-    - Secrets:
-      - Basics: config/secrets/basics.md
-      - Configuration: config/secrets/configuration.md
-    - App.config:
-      - Intro: config/app.config/index.md
-      - Transformations: config/app.config/transformations.md
-  - App Manifests: manifests.md
-  - Build Versioning: build-versioning.md
-  - Image Assets: images.md
-  - Release Note Generation: release-notes.md
-  - Continuous Integration:
-    - Platforms: continuous-integration/platforms.md
-    - Setup: continuous-integration/setup.md
-  - Xamarin.Forms CSS: xamarin-scss-to-css.md
-  - F.A.Q.: faq.md
-  - Appendix:
-    - Upgrading from 1.X: appendix/upgrade.md
+  - Prism:
+    - Prism: http://prismlibrary.github.io/docs
+  - Logging:
+    - Logging: http://logging.prismplugins.com
+  - Popups:
+    - Popups: http://popups.prismplugins.com
+  - Container Extensions:
+    - Container Extensions: http://prismplugins.com
+  - Mobile.BuildTools:
+    - Getting Started: index.md
+    - App Configuration:
+      - Intro: config/index.md
+      - Secrets:
+        - Basics: config/secrets/basics.md
+        - Configuration: config/secrets/configuration.md
+      - App.config:
+        - Intro: config/app.config/index.md
+        - Transformations: config/app.config/transformations.md
+        - In Code: config/app.config/in-code.md
+    - App Manifests: manifests.md
+    - Build Versioning: build-versioning.md
+    - Image Assets: images.md
+    - Release Note Generation: release-notes.md
+    - Continuous Integration:
+      - Platforms: continuous-integration/platforms.md
+      - Setup: continuous-integration/setup.md
+    - Xamarin.Forms CSS:
+      - General Info: scss-to-css/index.md
+      - Usage Notes: scss-to-css/css-notes.md
+      - Supported Properties: scss-to-css/properties.md
+      - In Code: scss-to-css/in-code.md
+    - F.A.Q.: faq.md
+    - Appendix:
+      - Upgrading from 1.X: appendix/upgrade.md
+
+google_analytics: ['UA-153405647-4', 'Mobile.BuildTools']

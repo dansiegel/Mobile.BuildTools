@@ -31,4 +31,9 @@ button:any {
 }
 ```
 
+## Getting Started
+
 To get started, simply add any scss format stylesheets you want to your project and make sure that the build action is set to `None`. The Mobile.BuildTools will automatically detect them and generate a CSS file for each non-partial (anything not starting with an underscore). For more information on how to get started with SCSS see the [Getting Started Guide](https://sass-lang.com/guide) from LibSass.
+
+!!! note "Note"
+    Xamarin.Forms does not support minimized files

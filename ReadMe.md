@@ -1,4 +1,4 @@
-<p align="center"><img src="logo/horizontal.svg" alt="Mobile.BuildTools" height="200px"></p>
+<p align="center"><img src="logo/horizontal.svg" alt="Mobile.BuildTools" height="150px"></p>
 
 # Build Tools
 
