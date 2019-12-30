@@ -4,7 +4,7 @@ using McMaster.Extensions.CommandLineUtils;
 
 namespace Mobile.BuildTools.Commands
 {
-    public abstract class CliBase : IRegisterable
+    public abstract class CliBase //: IRegisterable
     {
 
         //--- Class Fields ---
@@ -16,7 +16,7 @@ namespace Mobile.BuildTools.Commands
             _version = VersionInfo.Parse(typeof(CliBase).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
         }
 
-        public abstract void Register(CommandLineApplication app);
+        //public abstract void Register(CommandLineApplication app);
 
         //--- Class Properties ---
         protected static VersionInfo Version => _version;
