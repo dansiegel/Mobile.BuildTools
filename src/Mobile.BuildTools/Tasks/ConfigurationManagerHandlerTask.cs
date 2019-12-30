@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 using Microsoft.Build.Framework;
 using Mobile.BuildTools.Build;
-using Mobile.BuildTools.Generators;
-using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Tasks.Generators.AppConfig;
 
 namespace Mobile.BuildTools.Tasks
@@ -20,11 +17,19 @@ namespace Mobile.BuildTools.Tasks
         {
             if (File.Exists(Path.Combine(ProjectDirectory, "app.config")))
             {
-                foreach (var file in Directory.EnumerateFiles(ProjectDirectory, "app*.config", SearchOption.TopDirectoryOnly))
+                var configsOutputDir = Path.Combine(IntermediateOutputPath, "configs");
+                if(!Directory.Exists(configsOutputDir))
                 {
-                    var outputFile = Path.Combine(IntermediateOutputPath, "configs", Path.GetFileName(file));
-                    File.Copy(file, outputFile);
+                    Directory.CreateDirectory(configsOutputDir);
                 }
+
+                Directory.EnumerateFiles(ProjectDirectory, "app*.config", SearchOption.TopDirectoryOnly)
+                    .Select(file =>
+                    {
+                        var outputFile = Path.Combine(configsOutputDir, Path.GetFileName(file));
+                        File.Copy(file, outputFile);
+                        return file;
+                    });
 
                 var generator = new ConfigurationManagerTransformationGenerator(config)
                 {

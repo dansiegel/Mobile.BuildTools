@@ -7,16 +7,16 @@
   <Target Name="_CollectAppConfigs"
           AfterTargets="CoreCompile">
     <ItemGroup>
-      <MobileBuildToolsConfigs Condition=" Exists('$(MSBuildProjectDirectory)/app.config') " Include="$(MSBuildProjectDirectory)/app.config" />
-      <MobileBuildToolsConfigs Condition=" Exists('$(MSBuildProjectDirectory)/app.config') " Include="$(MSBuildProjectDirectory)/app.*.config" />
+      <MobileBuildToolsConfig Condition=" Exists('app.config') " Include="app.config" Visible="true" />
+      <MobileBuildToolsConfig Condition=" Exists('app.config') " Include="app.*.config" DependentUpon="app.config" Visible="true" />
     </ItemGroup>
   </Target>
 
   <Target Name="ConfigurationManagerTransformAndCopy"
           AfterTargets="_CollectAppConfigs"
           DependsOnTargets="MobileBuildToolsInit"
-          Inputs="@(MobileBuildToolsConfigs)"
-          Outputs="@(MobileBuildToolsConfigs -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
+          Inputs="@(MobileBuildToolsConfig)"
+          Outputs="@(MobileBuildToolsConfig -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
     <ConfigurationManagerHandlerTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                                      ProjectName="$(MSBuildProjectName)"
                                      ProjectDirectory="$(MSBuildProjectDirectory)"
