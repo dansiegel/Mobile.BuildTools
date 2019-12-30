@@ -66,6 +66,8 @@ namespace Mobile.BuildTools.Configuration
             }
         }
 
+        public static void TransformDefault() => Update();
+
         public static void Update(string config = DEFAULT_CONFIG_FILENAME)
         {
             _currentConfigName = config;
