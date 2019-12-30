@@ -7,17 +7,17 @@
              x:Class="E2EApp.Views.AppConfig">
   <StackLayout>
     <!-- Place new controls here -->
-    <Label AutomationId="ClientSecret" 
-           Text="{x:Static helpers:Secrets.ClientSecret}" 
-           HorizontalOptions="Center" 
+    <Label AutomationId="SampleString"
+           Text="{x:Static helpers:Secrets.SampleString}"
+           HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
-    <Label AutomationId="BuildString" 
+    <Label AutomationId="BuildString"
            Text="{x:Static essentials:AppInfo.BuildString}"
-           HorizontalOptions="Center" 
+           HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
-    <Label AutomationId="VersionString" 
+    <Label AutomationId="VersionString"
            Text="{x:Static essentials:AppInfo.VersionString}"
-           HorizontalOptions="Center" 
+           HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
   </StackLayout>
 </ContentPage>

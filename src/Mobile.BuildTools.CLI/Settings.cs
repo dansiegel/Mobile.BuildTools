@@ -3,14 +3,6 @@ using System.Collections.Generic;
 
 namespace Mobile.BuildTools
 {
-    public enum VerboseLevel
-    {
-        Quiet,
-        Normal,
-        Detailed,
-        Exceptions
-    }
-
     internal static class Settings
     {
         public const string CommandName = "buildtools";
