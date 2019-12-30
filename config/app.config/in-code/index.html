@@ -661,9 +661,45 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        In Code
+      </label>
+    
     <a href="./" title="In Code" class="md-nav__link md-nav__link--active">
       In Code
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initialization" class="md-nav__link">
+    Initialization
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transformations" class="md-nav__link">
+    Transformations
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -916,6 +952,29 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initialization" class="md-nav__link">
+    Initialization
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transformations" class="md-nav__link">
+    Transformations
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -928,7 +987,53 @@
                 
                 
                 <h1 id="using-it-in-code">Using It In Code<a class="headerlink" href="#using-it-in-code" title="Permanent link">&para;</a></h1>
-<p>TODO</p>
+<p>Note that all values from the AppSettings are strings by default. Any conversions will need to be handled in your code.</p>
+<div class="codehilite"><pre><span></span>var foo = ConfigurationManager.AppSettings[&quot;Foo&quot;];
+</pre></div>
+
+
+<h2 id="initialization">Initialization<a class="headerlink" href="#initialization" title="Permanent link">&para;</a></h2>
+<p>Before using the ConfigurationManager you must initialize it.</p>
+<p>AppDelegate.cs</p>
+<div class="codehilite"><pre><span></span>public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+{
+    ConfigurationManager.Init();
+    global::Xamarin.Forms.Forms.Init();
+    LoadApplication(new App());
+
+    return base.FinishedLaunching(app, options);
+}
+</pre></div>
+
+
+<p>MainActivity.cs</p>
+<div class="codehilite"><pre><span></span>protected override void OnCreate(Bundle bundle)
+{
+    TabLayoutResource = Resource.Layout.Tabbar;
+    ToolbarResource = Resource.Layout.Toolbar;
+
+    base.OnCreate(bundle);
+
+    ConfigurationManager.Init(this);
+
+    global::Xamarin.Forms.Forms.Init(this, bundle);
+    LoadApplication(new App());
+}
+</pre></div>
+
+
+<h2 id="transformations">Transformations<a class="headerlink" href="#transformations" title="Permanent link">&para;</a></h2>
+<p>While the Mobile.BuildTools will automatically perform transformations at Build, runtime transformations are also supported for those scenarios where you may need to change environments for whatever business reason.</p>
+<p>For this let's consider that we have <code>app.config</code> and <code>app.foo.config</code>. We can transform to the Foo environment as follows:</p>
+<div class="codehilite"><pre><span></span>var foo = ConfigurationManager.AppSettings[&quot;foo&quot;]; // My Foo
+ConfigurationManager.TransformForEnvironment(&quot;foo&quot;);
+foo = ConfigurationManager.AppSettings[&quot;foo&quot;]; // Transformed Value
+</pre></div>
+
+
+<p>To convert back you can simply call:</p>
+<div class="codehilite"><pre><span></span>ConfigurationManager.TransformDefault();
+</pre></div>
                 
                   
                 
