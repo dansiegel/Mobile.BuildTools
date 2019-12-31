@@ -2,7 +2,7 @@
 
 Note that all values from the AppSettings are strings by default. Any conversions will need to be handled in your code.
 
-```cs
+```csharp
 var foo = ConfigurationManager.AppSettings["Foo"];
 ```
 
@@ -12,7 +12,7 @@ Before using the ConfigurationManager you must initialize it.
 
 AppDelegate.cs
 
-```cs
+```csharp
 public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 {
     ConfigurationManager.Init();
@@ -25,7 +25,7 @@ public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 
 MainActivity.cs
 
-```cs
+```csharp
 protected override void OnCreate(Bundle bundle)
 {
     TabLayoutResource = Resource.Layout.Tabbar;
@@ -46,7 +46,7 @@ While the Mobile.BuildTools will automatically perform transformations at Build,
 
 For this let's consider that we have `app.config` and `app.foo.config`. We can transform to the Foo environment as follows:
 
-```cs
+```csharp
 var foo = ConfigurationManager.AppSettings["foo"]; // My Foo
 ConfigurationManager.TransformForEnvironment("foo");
 foo = ConfigurationManager.AppSettings["foo"]; // Transformed Value
@@ -54,6 +54,6 @@ foo = ConfigurationManager.AppSettings["foo"]; // Transformed Value
 
 To convert back you can simply call:
 
-```cs
+```csharp
 ConfigurationManager.TransformDefault();
 ```
