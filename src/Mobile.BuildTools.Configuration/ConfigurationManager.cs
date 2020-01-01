@@ -42,6 +42,18 @@ namespace Mobile.BuildTools.Configuration
 
         public static ReadOnlyDictionary<string, ConnectionStringSettings> ConnectionStrings => Current.ConnectionStrings;
 
+#if NETSTANDARD
+        public static IReadOnlyList<string> Environments
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
+#else
+        public static IReadOnlyList<string> Environments { get; private set; }
+#endif
+
+        public static bool EnvironmentExists(string name) => Environments.Any(x => x == name);
+
 
         private NameValueCollection _appSettings { get; }
         private ReadOnlyDictionary<string, ConnectionStringSettings> _connectionStrings { get; }
@@ -54,6 +66,8 @@ namespace Mobile.BuildTools.Configuration
 
         NameValueCollection IConfigurationManager.AppSettings => _appSettings;
         ReadOnlyDictionary<string, ConnectionStringSettings> IConfigurationManager.ConnectionStrings => _connectionStrings;
+        IReadOnlyList<string> IConfigurationManager.Environments => Environments;
+        bool IConfigurationManager.EnvironmentExists(string name) => EnvironmentExists(name);
 
         public static void TransformForEnvironment(string environmentName)
         {

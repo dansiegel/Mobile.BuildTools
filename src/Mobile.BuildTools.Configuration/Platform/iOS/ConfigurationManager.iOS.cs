@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Foundation;
 
 [assembly: LinkerSafe]
@@ -20,6 +21,9 @@ namespace Mobile.BuildTools.Configuration
                 var xDocument = TransformationHelper.Transform(configStream.ReadToEnd(), environmentStream.ReadToEnd());
                 InitInternal(xDocument);
             }
+
+            var files = Directory.EnumerateFiles("Assets", "app.*.config");
+            Environments = files.Select(x => x.Split('.')[1]).ToList();
         }
 
         private static StreamReader GetStreamReader(string config) =>

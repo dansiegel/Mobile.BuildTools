@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Android;
 using Android.App;
 using Android.Content;
@@ -32,6 +33,9 @@ namespace Mobile.BuildTools.Configuration
                 var xDocument = TransformationHelper.Transform(configStream.ReadToEnd(), environmentStream.ReadToEnd());
                 InitInternal(xDocument);
             }
+
+            var assets = CurrentContext.Assets.List("app.*.config");
+            Environments = assets.Select(x => x.Split('.')[1]).ToList();
         }
 
         private static StreamReader GetStreamReader(string config) =>
