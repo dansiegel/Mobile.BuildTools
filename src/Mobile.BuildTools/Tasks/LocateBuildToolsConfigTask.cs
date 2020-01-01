@@ -55,10 +55,10 @@ namespace Mobile.BuildTools.Tasks
 
         public override bool Execute()
         {
-#if DEBUG
-            if (!Debugger.IsAttached)
-                Debugger.Launch();
-#endif
+//#if DEBUG
+//            if (!Debugger.IsAttached)
+//                Debugger.Launch();
+//#endif
             LocateSolution();
             GetConfiguration();
 

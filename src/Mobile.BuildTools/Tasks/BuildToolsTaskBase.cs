@@ -57,16 +57,19 @@ namespace Mobile.BuildTools.Tasks
         {
             try
             {
-#if DEBUG
-                if (!Debugger.IsAttached)
-                    Debugger.Launch();
-#endif
+//#if DEBUG
+//                if (!Debugger.IsAttached)
+//                    Debugger.Launch();
+//#endif
                 ExecuteInternal(this);
             }
             catch (Exception ex)
             {
 #if DEBUG
-                Debugger.Break();
+                if (!Debugger.IsAttached)
+                    Debugger.Launch();
+
+                    Debugger.Break();
 #endif
                 Log.LogError($"Unhandled error while executing {GetType().Name}");
                 Log.LogErrorFromException(ex);
