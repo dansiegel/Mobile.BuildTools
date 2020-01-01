@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using Mobile.BuildTools.Configuration;
+using Xamarin.Forms;
 
 namespace E2EApp.Views
 {
@@ -7,6 +8,8 @@ namespace E2EApp.Views
         public AppConfig()
         {
             InitializeComponent();
+            fooLabel.Text = ConfigurationManager.AppSettings["foo"];
+            barLabel.Text = ConfigurationManager.AppSettings["bar"];
         }
     }
 }

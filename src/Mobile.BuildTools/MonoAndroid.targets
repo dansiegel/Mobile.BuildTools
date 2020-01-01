@@ -27,11 +27,11 @@
 
   <Target Name="HandlePlatformAppConfig"
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
-          Inputs="@(MobileBuildToolsConfig)"
-          Outputs="@(MobileBuildToolsConfig -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
+          Inputs="@(GeneratedAppConfig)"
+          Outputs="@(GeneratedAppConfig)">
     <ItemGroup>
-      <AndroidResource Include="$(IntermediateOutputPath)configs\**')"
-                       Link="%(Filename)%(Extension)"/>
+      <AndroidResource Include="@(GeneratedAppConfig)"
+                       Link="Assets\%(Filename)%(Extension)"/>
     </ItemGroup>
   </Target>
 

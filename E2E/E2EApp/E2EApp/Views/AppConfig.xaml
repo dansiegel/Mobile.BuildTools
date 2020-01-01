@@ -2,13 +2,18 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:helpers="clr-namespace:E2EApp.Helpers"
+             xmlns:buildTools="clr-namespace:Mobile.BuildTools.Configuration;assembly=Mobile.BuildTools.Configuration"
              xmlns:essentials="clr-namespace:Xamarin.Essentials;assembly=Xamarin.Essentials"
              Title="App Config"
              x:Class="E2EApp.Views.AppConfig">
   <StackLayout>
     <!-- Place new controls here -->
-    <Label AutomationId="SampleString"
-           Text="{x:Static helpers:Secrets.SampleString}"
+    <Label AutomationId="foo"
+           x:Name="fooLabel"
+           HorizontalOptions="Center"
+           VerticalOptions="CenterAndExpand" />
+    <Label AutomationId="bar"
+           x:Name="barLabel"
            HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
     <Label AutomationId="BuildString"

@@ -7,7 +7,7 @@ namespace Mobile.BuildTools.Configuration
 {
     public partial class ConfigurationManager
     {
-        private const string DEFAULT_CONFIG_FILENAME = "Assets/app.config";
+        private const string DEFAULT_CONFIG_FILENAME = "app.config";
         private static string _currentConfigName = DEFAULT_CONFIG_FILENAME;
 
         public static void Init(string config = DEFAULT_CONFIG_FILENAME) => Update(config);

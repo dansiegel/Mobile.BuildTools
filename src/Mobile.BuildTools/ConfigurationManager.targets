@@ -7,7 +7,7 @@
   <Target Name="_CollectAppConfigs"
           AfterTargets="CoreCompile">
     <ItemGroup>
-      <MobileBuildToolsConfig Condition=" Exists('app.config') " Include="app.config" Visible="true" />
+      <MobileBuildToolsConfig Condition=" Exists('app.config') " Include="app.config" Visible="true" IsRootConfig="true" />
       <MobileBuildToolsConfig Condition=" Exists('app.config') " Include="app.*.config" DependentUpon="app.config" Visible="true" />
     </ItemGroup>
   </Target>
@@ -17,15 +17,22 @@
           DependsOnTargets="MobileBuildToolsInit"
           Inputs="@(MobileBuildToolsConfig)"
           Outputs="@(MobileBuildToolsConfig -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
+    <PropertyGroup>
+      <AppConfigEnvironment Condition=" $(AppConfigEnvironment) == '' ">$(Configuration)</AppConfigEnvironment>
+    </PropertyGroup>
     <ConfigurationManagerHandlerTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                                      ProjectName="$(MSBuildProjectName)"
                                      ProjectDirectory="$(MSBuildProjectDirectory)"
                                      SolutionDirectory="$(SolutionDir)"
                                      IntermediateOutputPath="$(IntermediateOutputPath)"
-                                     TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)" >
+                                     TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                     AppConfigEnvironment="$(AppConfigEnvironment)"
+                                     InputConfigFiles="@(MobileBuildToolsConfig)">
       <Output ItemName="GeneratedFile"
               TaskParameter="OutputConfigs"/>
       <Output ItemName="FilesWrite"
+              TaskParameter="OutputConfigs"/>
+      <Output ItemName="GeneratedAppConfig"
               TaskParameter="OutputConfigs"/>
     </ConfigurationManagerHandlerTask>
   </Target>

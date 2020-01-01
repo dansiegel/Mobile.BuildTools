@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -22,31 +23,40 @@ namespace Mobile.BuildTools.Tasks.Generators.AppConfig
         {
         }
 
-        // app.config
+        // C:/repos/MyProject/MyProject.iOS/app.config
         public string BaseConfigPath { get; set; }
+
+        // C:/repos/MyProject/MyProject.iOS/app.config
+        public string TransformFilePath { get; set; }
 
         protected override void ExecuteInternal()
         {
             var parentDirectory = Directory.GetParent(BaseConfigPath);
             var configFileName = Path.GetFileNameWithoutExtension(BaseConfigPath);
-            var transformationConfigPath = Path.Combine(parentDirectory.FullName, $"{configFileName}.{Build.BuildConfiguration.ToLower()}{Path.GetExtension(BaseConfigPath)}");
 
-
-            var updatedConfig = TransformationHelper.Transform(File.ReadAllText(BaseConfigPath),
-                                                               File.ReadAllText(transformationConfigPath));
-            if (updatedConfig is null) return;
-
-            var outputFile = Path.Combine(BaseConfigPath, Path.GetFileName(BaseConfigPath));
-            updatedConfig.Save(outputFile);
-
-            if(Build.Configuration.Debug)
+            if (!string.IsNullOrEmpty(TransformFilePath) && File.Exists(TransformFilePath))
             {
-                Log.LogMessage("*************** Transformed app.config ******************************");
-                Log.LogMessage(updatedConfig.ToString());
+                var updatedConfig = TransformationHelper.Transform(File.ReadAllText(BaseConfigPath),
+                                                               File.ReadAllText(TransformFilePath));
+                if (updatedConfig is null) return;
+
+                updatedConfig.Save(BaseConfigPath);
+
+                if (Build.Configuration.Debug)
+                {
+                    Log.LogMessage("*************** Transformed app.config ******************************");
+                    Log.LogMessage(updatedConfig.ToString());
+                }
             }
 
-            // TODO: Add Outputs!!!!!
-            Outputs = new List<ITaskItem>();
+            if(Build.Configuration.AppConfig.IncludeAllConfigs)
+            {
+                Outputs = parentDirectory.EnumerateFiles().Select(x => new TaskItem(x.FullName));
+            }
+            else
+            {
+                Outputs = new[] { new TaskItem(BaseConfigPath) };
+            }
         }
     }
 }
