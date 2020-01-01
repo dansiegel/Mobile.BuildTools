@@ -1,0 +1,4 @@
+{
+  "$schema": "https://xam.dev/buildtools.schema.json",
+  "debug": true
+}

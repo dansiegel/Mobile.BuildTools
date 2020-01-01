@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 #if !NETCOREAPP
 using Microsoft.Build.Framework;
 using Mobile.BuildTools.Build;
@@ -43,7 +44,21 @@ namespace Mobile.BuildTools.Utils
                 json = File.ReadAllText(filePath);
             }
 
-            return JsonConvert.DeserializeObject<BuildToolsConfig>(json, GetSerializerSettings());
+            var config = JsonConvert.DeserializeObject<BuildToolsConfig>(json, GetSerializerSettings());
+
+            var props = typeof(BuildToolsConfig).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(x => x.PropertyType != typeof(bool) && x.PropertyType != typeof(string));
+
+            foreach(var prop in props)
+            {
+                if(prop.GetValue(config) is null)
+                {
+                    var newInstance = Activator.CreateInstance(prop.PropertyType);
+                    prop.SetValue(config, newInstance);
+                }
+            }
+
+            return config;
         }
 
         public static void SaveConfig(BuildToolsConfig config, string path)
@@ -61,6 +76,10 @@ namespace Mobile.BuildTools.Utils
             var config = new BuildToolsConfig
             {
                 ArtifactCopy = new ArtifactCopy { Disable = false },
+                AppConfig = new AppConfig
+                {
+                    IncludeAllConfigs = true
+                },
                 AutomaticVersioning = new AutomaticVersioning
                 {
 #if !NETCOREAPP
@@ -174,6 +193,15 @@ secrets.*.json
             if(Path.GetFileName(path) == Constants.BuildToolsConfigFileName)
             {
                 return path;
+            }
+
+            // Should only ever be used for tests.
+            if(Path.HasExtension(path))
+            {
+                if (Path.GetExtension(path) == ".json")
+                    return path;
+
+                path = new FileInfo(path).DirectoryName;
             }
 
             return Path.Combine(path, Constants.BuildToolsConfigFileName);

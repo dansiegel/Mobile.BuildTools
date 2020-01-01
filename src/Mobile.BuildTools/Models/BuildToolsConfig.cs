@@ -16,6 +16,9 @@ namespace Mobile.BuildTools.Models
         }
 #endif
 
+        [JsonProperty("appConfig")]
+        public AppConfig AppConfig { get; set; }
+
         [JsonProperty("artifactCopy")]
         public ArtifactCopy ArtifactCopy { get; set; }
 
