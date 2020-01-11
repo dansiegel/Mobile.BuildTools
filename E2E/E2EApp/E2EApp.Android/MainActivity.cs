@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Mobile.BuildTools.Configuration;
 
 namespace E2EApp.Droid
 {
@@ -19,6 +20,7 @@ namespace E2EApp.Droid
 
             base.OnCreate(bundle);
 
+            ConfigurationManager.Init(this);
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
         }
