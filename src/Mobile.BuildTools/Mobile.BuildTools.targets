@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.LocateBuildToolsConfigTask"
@@ -42,7 +42,8 @@
                                 ProjectName="$(MSBuildProjectName)"
                                 SolutionDir="$(SolutionDir)"
                                 TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                                SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)">
+                                SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                                IsCrossTargetingBuild="$(IsCrossTargetingBuild)">
       <Output TaskParameter="BuildToolsConfigFilePath"
               PropertyName="BuildToolsConfigFilePath" />
       <Output TaskParameter="LocatedSolutionDirectory"

@@ -6,6 +6,7 @@ using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 
@@ -13,6 +14,8 @@ namespace Mobile.BuildTools.Tasks
 {
     public class LocateBuildToolsConfigTask : Task
     {
+        public string IsCrossTargetingBuild { get; set; }
+
         [Required]
         public string ProjectName { get; set; }
 
@@ -62,14 +65,16 @@ namespace Mobile.BuildTools.Tasks
             LocateSolution();
             GetConfiguration();
 
-            var isPlatformHead = (TargetFrameworkIdentifier == "Xamarin.iOS" || TargetFrameworkIdentifier == "MonoAndroid");
+            var crossTargetingProject = IsCrossTargeting();
+            var platform = TargetFrameworkIdentifier.GetTargetPlatform();
+            var isPlatformHead = platform != Platform.Unsupported;
             var configuration = ConfigHelper.GetConfig(BuildToolsConfigFilePath);
 
             // Only run these tasks for Android and iOS projects if they're not explicitly disabled
-            EnableArtifactCopy = IsEnabled(configuration?.ArtifactCopy) && isPlatformHead;
-            EnableAutomaticVersioning = IsEnabled(configuration?.AutomaticVersioning) && isPlatformHead;
-            EnableImageProcessing = IsEnabled(configuration?.Images) && isPlatformHead;
-            EnableTemplateManifests = IsEnabled(configuration?.Manifests) && isPlatformHead;
+            EnableArtifactCopy = !crossTargetingProject && IsEnabled(configuration?.ArtifactCopy) && isPlatformHead;
+            EnableAutomaticVersioning = !crossTargetingProject && IsEnabled(configuration?.AutomaticVersioning) && isPlatformHead;
+            EnableImageProcessing = !crossTargetingProject && IsEnabled(configuration?.Images) && (platform == Platform.iOS || platform == Platform.Android);
+            EnableTemplateManifests = !crossTargetingProject && IsEnabled(configuration?.Manifests) && isPlatformHead;
             EnableReleaseNotes = IsEnabled(configuration?.ReleaseNotes) && isPlatformHead;
 
             // Only run this if it's not disabled and there are SCSS files
@@ -86,6 +91,17 @@ namespace Mobile.BuildTools.Tasks
             if (item is null) return true;
 
             return !item.Disable;
+        }
+
+        private bool IsCrossTargeting()
+        {
+            if (string.IsNullOrEmpty(IsCrossTargetingBuild))
+                return false;
+
+            if (bool.TryParse(IsCrossTargetingBuild, out var result))
+                return result;
+
+            return false;
         }
 
         private bool ShouldEnableSecrets(BuildToolsConfig config)
