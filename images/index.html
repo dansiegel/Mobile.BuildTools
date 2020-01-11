@@ -937,6 +937,37 @@
                 
                 <h1 id="image-asset-generation">Image Asset Generation<a class="headerlink" href="#image-asset-generation" title="Permanent link">&para;</a></h1>
 <p>TODO</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;images&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;directories&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;Images\\Beta&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Images\\Shared&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;conditionalDirectories&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;MonoAndroid&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images\\Android&quot;</span> <span class="p">],</span>
+      <span class="nt">&quot;Xamarin.iOS&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images\\iOS&quot;</span> <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;watermarkOpacity&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;disable&quot;</span><span class="p">:</span> <span class="kc">false</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<div class="admonition info info">
+<p class="admonition-title">Info</p>
+<p>While you should generally configure directories in the <code>buildtools.json</code>, there may be times which you need to conditionally add additonal search directories for your images. For these times you can use the build property <code>BuildToolsImageSearchPath</code> to set any additional directories in a semi-colon separated list as shown here:</p>
+</div>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;PropertyGroup&gt;</span>
+  <span class="nt">&lt;BuildToolsImageSearchPath&gt;</span>$(SolutionDir)\Images\MoreImages;$(SolutionDir)\Images\AwesomeImages<span class="nt">&lt;/BuildToolsImageSearchPath&gt;</span>
+<span class="nt">&lt;/PropertyGroup&gt;</span>
+</pre></div>
+
+
+<div class="admonition note note">
+<p class="admonition-title">Note</p>
+<p>If you have an image name that contains white space such as <code>foo bar.png</code>, the Mobile.BuildTools will sanitize the file name replace any contiguous white space characters with a single <code>-</code>. This normalization is required by Android and will mean that you will need to reference the image as <code>foo-bar.png</code>.</p>
+</div>
                 
                   
                 
@@ -965,7 +996,7 @@
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright &copy; 2017 - 2019 Dan Siegel
+            Copyright &copy; 2017 - 2020 Dan Siegel
           </div>
         
       </div>

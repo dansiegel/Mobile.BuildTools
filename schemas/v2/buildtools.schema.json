@@ -4,6 +4,24 @@
   "title": "Mobile.BuildTools Project Configuration",
   "description": "Configures the Mobile.BuildTools. This file should generally be located next to the Solution file and be a central configuration for the entire solution.",
   "definitions": {
+    "AppConfig": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "disable": {
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": [ "boolean", "null" ],
+          "default": false
+        },
+        "includeAllConfigs": {
+          "description": "If true will bundle all app.config's in the app instead of only the transformed app.config",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
     "ArtifactCopy": {
       "type": [
         "object",
@@ -12,7 +30,7 @@
       "properties": {
         "disable": {
           "description": "Disables this Mobile.Build.Tools Task",
-          "type": "boolean",
+          "type": [ "boolean", "null" ],
           "default": false
         }
       }
@@ -41,11 +59,12 @@
           ]
         },
         "versionOffset": {
-          "type": "integer"
+          "type": "integer",
+          "default": 0
         },
         "disable": {
           "description": "Disables this Mobile.Build.Tools Task",
-          "type": "boolean",
+          "type": [ "boolean", "null" ],
           "default": false
         }
       }
@@ -97,7 +116,7 @@
         },
         "disable": {
           "description": "Disables this Mobile.Build.Tools Task",
-          "type": "boolean",
+          "type": [ "boolean", "null" ],
           "default": false
         }
       },
@@ -136,11 +155,12 @@
         },
         "createInRoot": {
           "type": "boolean",
+          "description": "If true it will create the Release Notes in the Solution Directory. Otherwise it will be created in the Project Directory.",
           "default": true
         },
         "disable": {
           "description": "Disables this Mobile.Build.Tools Task",
-          "type": "boolean",
+          "type": [ "boolean", "null" ],
           "default": false
         }
       }
@@ -215,12 +235,12 @@
           "default": "Manifest_"
         },
         "missingTokensAsErrors": {
-          "type": "boolean",
+          "type": [ "boolean", "null" ],
           "default": false
         },
         "disable": {
           "description": "Disables this Mobile.Build.Tools Task",
-          "type": "boolean",
+          "type": [ "boolean", "null" ],
           "default": false
         }
       }
@@ -280,7 +300,7 @@
       "properties": {
         "disable": {
           "description": "Disables this Mobile.Build.Tools Task",
-          "type": "boolean",
+          "type": [ "boolean", "null" ],
           "default": false
         }
       },
@@ -291,6 +311,9 @@
   },
   "type": "object",
   "properties": {
+    "appConfig": {
+      "$ref": "#/definitions/AppConfig"
+    },
     "artifactCopy": {
       "$ref": "#/definitions/ArtifactCopy"
     },
