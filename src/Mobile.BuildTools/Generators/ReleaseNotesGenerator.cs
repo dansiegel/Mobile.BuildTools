@@ -21,6 +21,21 @@ namespace Mobile.BuildTools.Generators
 
             if (releaseNotesOptions.Disable) return;
 
+            var currentHash = GetGitHash();
+            var generatedMarkerFilePath = Path.Combine(Build.SolutionDirectory, ".vs", $"generated-releasenotes.{currentHash}");
+            var outputDirectory = releaseNotesOptions.CreateInRoot ? Build.SolutionDirectory : Build.ProjectDirectory;
+
+            if (!Directory.Exists(outputDirectory))
+                Directory.CreateDirectory(outputDirectory);
+
+            var releaseNotesFilePath = Path.Combine(outputDirectory, releaseNotesOptions.FileName);
+
+            if (File.Exists(releaseNotesFilePath) && File.Exists(generatedMarkerFilePath))
+            {
+                Log.LogMessage("Current Release Notes file has already been generated.");
+                return;
+            }
+
             var branchName = GetBranchName();
             if (string.IsNullOrWhiteSpace(branchName))
             {
@@ -63,12 +78,11 @@ namespace Mobile.BuildTools.Generators
                 }
             }
 
-            var outputDirectory = releaseNotesOptions.CreateInRoot ? Build.SolutionDirectory : Build.ProjectDirectory;
-
-            if (!Directory.Exists(outputDirectory))
-                Directory.CreateDirectory(outputDirectory);
-
-            File.WriteAllText(Path.Combine(outputDirectory, releaseNotesOptions.FileName), notes.Trim());
+            File.WriteAllText(releaseNotesFilePath, notes.Trim());
+            File.WriteAllText(generatedMarkerFilePath, @"99 little bugs in the code,
+99 bugs in the code,
+1 bug fixed... compile again,
+100 little bugs in the code.");
         }
 
         internal IEnumerable<string> GetCommitDates(DateTime fromDate)
@@ -101,6 +115,12 @@ namespace Mobile.BuildTools.Generators
                 branch = Regex.Replace(branch, Regex.Escape("*"), string.Empty).Trim();
             }
             return branch;
+        }
+
+        private string GetGitHash()
+        {
+            var outputs = GetProcessOutput("log -1 --format=\"%H\"");
+            return outputs.FirstOrDefault()?.Trim();
         }
 
         private string[] GetProcessOutput(string args)
