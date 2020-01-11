@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models.AppIcons;
+using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 
@@ -10,6 +11,8 @@ namespace Mobile.BuildTools.Generators.Images
 {
     internal abstract class ImageCollectionGeneratorBase : GeneratorBase<IReadOnlyList<OutputImage>>
     {
+        private static object executeLock = new object();
+
         public IEnumerable<string> SearchFolders { get; set; }
 
         protected List<string> imageInputFiles;
@@ -25,9 +28,9 @@ namespace Mobile.BuildTools.Generators.Images
             imageInputFiles = new List<string>();
             var outputImageFiles = new List<OutputImage>();
             var inputFileNames = new List<string>();
-            foreach(var folder in SearchFolders)
+            foreach (var folder in SearchFolders)
             {
-                foreach(var file in Directory.GetFiles(folder, "*.png", SearchOption.TopDirectoryOnly))
+                foreach (var file in Directory.GetFiles(folder, "*.png", SearchOption.TopDirectoryOnly))
                 {
                     var fileName = Path.GetFileNameWithoutExtension(file);
                     if (inputFileNames.Any(x => x == fileName))
@@ -42,13 +45,19 @@ namespace Mobile.BuildTools.Generators.Images
                 }
             }
 
-            ImageInputFiles.Select(x =>
+            // HACK: Error thrown that source is modified while iterating.
+            //var input = imageInputFiles.Select(x => x.Clone() as string);
+            //foreach (var file in input)
+            for(int i = 0; i < imageInputFiles.Count; i++)
             {
-                // We need to iterate a second time so we can be sure we are tracking all of the image files
-                var resource = GetResourceDefinition(x);
-                outputImageFiles.AddRange(GetOutputImages(resource));
-                return x;
-            });
+                // We need to iterate a second time so we can be sure we are
+                // tracking all of the image files
+                var resource = GetResourceDefinition(imageInputFiles.ElementAt(i));
+                if (resource.ShouldIgnore(Build.Platform))
+                    continue;
+                var output = GetOutputImages(resource);
+                outputImageFiles.AddRange(output);
+            }
 
             Outputs = outputImageFiles;
         }
@@ -56,14 +65,19 @@ namespace Mobile.BuildTools.Generators.Images
         private ResourceDefinition GetResourceDefinition(string filePath)
         {
             ResourceDefinition definition = null;
-            var configJsonFilePath = Path.Combine((filePath), Path.GetFileNameWithoutExtension(filePath), ".json");
-            if (File.Exists(configJsonFilePath))
+            var fileName = Path.GetFileNameWithoutExtension(filePath) + ".json";
+
+            foreach(var searchFilePath in SearchFolders.Select(x => Path.Combine(x, fileName)))
             {
-                Log.LogMessage($"Found JSON config for '{Path.GetFileName(filePath)}'");
-                imageInputFiles.Add(configJsonFilePath);
-                definition = JsonConvert.DeserializeObject<ResourceDefinition>(File.ReadAllText(configJsonFilePath), ConfigHelper.GetSerializerSettings());
+                if(File.Exists(searchFilePath))
+                {
+                    Log.LogMessage($"Found JSON config for '{Path.GetFileName(filePath)}'");
+                    imageInputFiles.Add(searchFilePath);
+                    definition = JsonConvert.DeserializeObject<ResourceDefinition>(File.ReadAllText(searchFilePath), ConfigHelper.GetSerializerSettings());
+                    break;
+                }
             }
-            else
+            if (definition is null)
             {
                 definition = new ResourceDefinition
                 {
@@ -76,6 +90,13 @@ namespace Mobile.BuildTools.Generators.Images
             if (definition.Scale == 0)
             {
                 definition.Scale = 1;
+            }
+            else if(definition.Scale > 1)
+            {
+                do
+                {
+                    definition.Scale /= 100;
+                } while (definition.Scale > 1);
             }
 
             return definition;

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
+  <Import Project="PlatformHead.targets" />
+  <Import Project="iOSManifests.targets" />
+
   <Target Name="_GatherManifests">
     <PropertyGroup>
       <TemlateAppManifest>$(_AppBundlePath)Info.plist</TemlateAppManifest>
@@ -27,6 +30,22 @@
     <ItemGroup>
       <BundleResource Include="@(GeneratedAppConfig)"
                       Link="Assets/%(Filename)%(Extension)"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="IncludeUnifiedImageAsset"
+          AfterTargets="UnifiedImageAssetProcessing"
+          Condition="$(BuildToolsBundleUnifiedImages)">
+    <ItemGroup>
+      <BundleResource Include="@(UnifiedImageAsset -> %(OutputFile))"
+                      Link="%(OutputLink)"
+                      Visible="%(ShouldBeVisible)"
+                      Condition="%(OutputLink.Contains('xcassets') == 'false' " />
+
+      <ImageAsset Include="@(UnifiedImageAsset -> %(OutputFile))"
+                  Link="%(OutputLink)"
+                  Visible="%(ShouldBeVisible)"
+                  Condition="%(OutputLink.Contains('xcassets') == 'true' " />
     </ItemGroup>
   </Target>
 

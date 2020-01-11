@@ -32,28 +32,35 @@ namespace Mobile.BuildTools.Generators.Images
             (var outputFileName, var ignore, var scale) = resource.GetConfiguration(Platform.Android);
             if(ignore)
             {
-                return Array.Empty<OutputImage>();
+                yield return default;
             }
 
             var resourceType = $"{resource?.Android?.ResourceType ?? AndroidResource.Drawable}".ToLower();
-            var platformSanitizedName = Regex.Replace(outputFileName, @"\w", "-");
-            return Resolutions.Select(x =>
+            var platformSanitizedName = Regex.Replace(outputFileName, @"\s+", "-");
+
+            if(!Path.HasExtension(platformSanitizedName))
             {
-                return new OutputImage
+                platformSanitizedName += ".png";
+            }
+
+            foreach(var resolution in Resolutions)
+            {
+                Log.LogMessage($"Found image: {resource.InputFilePath} -> {resourceType}-{resolution.Key}/{platformSanitizedName}");
+                yield return new OutputImage
                 {
                     InputFile = resource.InputFilePath,
                     OutputFile = Path.Combine(Build.IntermediateOutputPath,
                                               "Resources",
-                                              $"{resourceType}-{x.Key}",
+                                              $"{resourceType}-{resolution.Key}",
                                               platformSanitizedName),
                     OutputLink = Path.Combine("Resources",
-                                              $"{resourceType}-{x.Key}",
+                                              $"{resourceType}-{resolution.Key}",
                                               platformSanitizedName),
-                    Scale = scale * (x.Value / 4),
+                    Scale = scale * (resolution.Value / 4),
                     ShouldBeVisible = true,
                     WatermarkFilePath = GetWatermarkFilePath(resource)
                 };
-            });
+            }
         }
     }
 }

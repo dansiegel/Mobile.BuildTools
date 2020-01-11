@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
+  <Import Project="PlatformHead.targets" />
+
   <Target Name="_GatherManifests">
     <PropertyGroup>
       <TemlateAppManifest>$(_AppBundlePath)Info.plist</TemlateAppManifest>

@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Drawing;
-using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models.AppIcons;
-using SixLabors.Fonts;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 
@@ -29,6 +22,10 @@ namespace Mobile.BuildTools.Generators.Images
 
         protected override void ExecuteInternal()
         {
+#if DEBUG
+            if (!System.Diagnostics.Debugger.IsAttached)
+                System.Diagnostics.Debugger.Launch();
+#endif
             foreach(var outputImage in OutputImages)
             {
                 Log.LogMessage($"Generating file '{outputImage.OutputFile}");
@@ -43,16 +40,13 @@ namespace Mobile.BuildTools.Generators.Images
                         {
                             x.ApplyWatermark(outputImage.WatermarkFilePath, WatermarkOpacity);
                         }
-
-                        if (outputImage.RequiresBackgroundColor)
-                        {
-                            //image.Frames[0].
-                            //image.Mutate(x => x.)
-                            // Ensure that there is no transparency
-                        }
                     });
 
-
+                    if (outputImage.RequiresBackgroundColor && image.HasTransparentBackground())
+                    {
+                        // TODO: Make this a configuration.
+                        image.ApplyBackground("#FFFFFF");
+                    }
                 }
 
                 using var outputStream = new FileStream(outputImage.OutputFile, FileMode.OpenOrCreate);

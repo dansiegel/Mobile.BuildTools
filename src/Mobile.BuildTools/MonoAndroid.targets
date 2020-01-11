@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
+  <Import Project="PlatformHead.targets" />
+  <Import Project="AndroidManifest.targets" />
+
   <Target Name="_CollectAPK"
           BeforeTargets="APKCopyToStagingDirectory">
 
@@ -32,6 +35,17 @@
     <ItemGroup>
       <AndroidResource Include="@(GeneratedAppConfig)"
                        Link="Assets\%(Filename)%(Extension)"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="IncludeUnifiedImageAsset"
+          AfterTargets="UnifiedImageAssetProcessing"
+          BeforeTargets="UpdateAndroidResources"
+          Condition=" $(BuildToolsBundleUnifiedImages) == 'true' ">
+    <ItemGroup>
+      <AndroidResource Include="@(UnifiedImageAsset -> %(OutputFile))"
+                       Link="%(OutputLink)"
+                       Visible="%(ShouldBeVisible)" />
     </ItemGroup>
   </Target>
 

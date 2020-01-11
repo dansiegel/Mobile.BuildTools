@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Images;
 using Mobile.BuildTools.Tasks.Utils;
@@ -10,21 +12,36 @@ namespace Mobile.BuildTools.Tasks
 {
     public class CollectImageAssetsTask : BuildToolsTaskBase
     {
-        public string SearchPaths { get; set; }
+        public string AdditionalSearchPaths { get; set; }
 
         [Output]
         public ITaskItem[] GeneratedImages { get; private set; }
 
+        [Output]
+        public ITaskItem[] SourceImages { get; private set; }
+
+        [Output]
+        public bool HasImages => GeneratedImages.Length > 0;
+
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
+#if DEBUG
+            if (!System.Diagnostics.Debugger.IsAttached)
+                System.Diagnostics.Debugger.Launch();
+            else
+                System.Diagnostics.Debugger.Break();
+#endif
+
+            GeneratedImages = Array.Empty<ITaskItem>();
             var generator = CreateGenerator(config.Platform, config);
             if(generator is null)
             {
-                GeneratedImages = Array.Empty<ITaskItem>();
+                Log.LogWarning($"Cannot collect image assets for {TargetFrameworkIdentifier}, target framework is not supported.");
                 return;
             }
 
             generator.Execute();
+            SourceImages = generator.ImageInputFiles.Select(x => new TaskItem(x)).ToArray();
             GeneratedImages = generator.Outputs.Select(x => x.ToTaskItem()).ToArray();
         }
 
@@ -53,12 +70,12 @@ namespace Mobile.BuildTools.Tasks
             var imageConfig = config.Configuration.Images;
             if(imageConfig.Directories?.Any() ?? false)
             {
-                searchPaths.AddRange(imageConfig.Directories);
+                searchPaths.AddRange(imageConfig.Directories.Select(GetSearchPath));
             }
 
-            if(SearchPaths?.Split(';')?.Any() ?? false)
+            if(AdditionalSearchPaths?.Split(';')?.Any() ?? false)
             {
-                searchPaths.AddRange(SearchPaths.Split(';'));
+                searchPaths.AddRange(AdditionalSearchPaths.Split(';').Select(GetSearchPath));
             }
 
             var monoandroidKey = imageConfig.ConditionalDirectories.Keys.FirstOrDefault(x => x.Equals("monoandroid", StringComparison.InvariantCultureIgnoreCase));
@@ -69,15 +86,15 @@ namespace Mobile.BuildTools.Tasks
             {
                 case Platform.Android:
                     if (!string.IsNullOrEmpty(monoandroidKey))
-                        searchPaths.AddRange(imageConfig.ConditionalDirectories[monoandroidKey]);
+                        searchPaths.AddRange(imageConfig.ConditionalDirectories[monoandroidKey].Select(GetSearchPath));
                     break;
                 case Platform.iOS:
                     if (!string.IsNullOrEmpty(xamariniOSKey))
-                        searchPaths.AddRange(imageConfig.ConditionalDirectories[xamariniOSKey]);
+                        searchPaths.AddRange(imageConfig.ConditionalDirectories[xamariniOSKey].Select(GetSearchPath));
                     break;
                 case Platform.macOS:
                     if (!string.IsNullOrEmpty(xamarinMacKey))
-                        searchPaths.AddRange(imageConfig.ConditionalDirectories[xamarinMacKey]);
+                        searchPaths.AddRange(imageConfig.ConditionalDirectories[xamarinMacKey].Select(GetSearchPath));
                     break;
             }
 
@@ -85,10 +102,18 @@ namespace Mobile.BuildTools.Tasks
             var keys = imageConfig.ConditionalDirectories.Keys.Where(k => !k.StartsWith("mono") && !k.StartsWith("xamarin") && (k.Equals(config.BuildConfiguration) || !k.Equals($"!{config.BuildConfiguration}")));
             foreach(var validCondition in keys)
             {
-                searchPaths.AddRange(imageConfig.ConditionalDirectories[validCondition]);
+                searchPaths.AddRange(imageConfig.ConditionalDirectories[validCondition].Select(GetSearchPath));
             }
 
-            return searchPaths;
+            return searchPaths.Distinct();
+        }
+
+        private string GetSearchPath(string directory)
+        {
+            if (Uri.TryCreate(directory, UriKind.RelativeOrAbsolute, out var result) && result.IsAbsoluteUri)
+                return directory;
+
+            return Path.Combine(ConfigurationPath, directory);
         }
     }
 }
