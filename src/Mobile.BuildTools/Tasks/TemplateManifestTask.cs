@@ -38,7 +38,7 @@ namespace Mobile.BuildTools.Tasks
                     };
                     break;
                 case Platform.Android:
-                    new TemplatedAndroidAppManifestGenerator(config, ReferenceAssemblyPaths)
+                    generator = new TemplatedAndroidAppManifestGenerator(config, ReferenceAssemblyPaths)
                     {
                         ManifestOutputPath = ManifestPath
                     };
