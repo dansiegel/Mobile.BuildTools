@@ -25,7 +25,7 @@ jobs:
       solution: E2E/E2E.sln
       platform: '$(BuildPlatform)'
       configuration: '$(BuildConfiguration)'
-    environment:
+    env:
       Test_AString: 'Some String'
       Test_AnInt: '1'
       Test_ADouble: '1.0'
