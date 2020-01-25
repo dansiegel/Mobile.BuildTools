@@ -119,10 +119,7 @@
           "type": [ "boolean", "null" ],
           "default": false
         }
-      },
-      "required": [
-        "directories"
-      ]
+      }
     },
     "ReleaseNotesOptions": {
       "type": [
@@ -179,7 +176,8 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "default": ";"
         },
         "prefix": {
           "type": [
@@ -210,7 +208,6 @@
         }
       },
       "required": [
-        "delimiter",
         "properties"
       ]
     },
