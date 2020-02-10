@@ -40,7 +40,7 @@ extra:
     - type: twitter
       link: https://twitter.com/DanJSiegel
     - type: youtube
-      link: https://www.youtube.com/channel/UC0kcuQoK6odp-4UAlI8FeqA
+      link: https://www.youtube.com/DanSiegel
     - type: linkedin
       link: https://linkedin.com/in/DanSiegel
 
@@ -89,4 +89,4 @@ nav:
       - Upgrading from 1.X: appendix/upgrade.md
       - Apple Push Notifications: appendix/aps.md
 
-google_analytics: ['UA-153405647-4', 'Mobile.BuildTools']
+google_analytics: 'UA-153405647-4'
