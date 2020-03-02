@@ -37,6 +37,13 @@ namespace AppConfigSample.ViewModels
             set => SetProperty(ref _test, value);
         }
 
+        private string _environment;
+        public string Environment
+        {
+            get => _environment;
+            set => SetProperty(ref _environment, value);
+        }
+
         public IEnumerable<string> Environments => new[]
         {
             "Default",
@@ -63,9 +70,18 @@ namespace AppConfigSample.ViewModels
 
         private void Update()
         {
-            Foo = _configurationManager.AppSettings["foo"];
-            Bar = _configurationManager.AppSettings["bar"];
-            Test = _configurationManager.ConnectionStrings["test"].ConnectionString;
+            try
+            {
+                Foo = _configurationManager.AppSettings["foo"];
+                Bar = _configurationManager.AppSettings["bar"];
+                Test = _configurationManager.ConnectionStrings["test"].ConnectionString;
+                Environment = _configurationManager.AppSettings["Environment"];
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine(ex);
+                System.Diagnostics.Debugger.Break();
+            }
         }
     }
 }

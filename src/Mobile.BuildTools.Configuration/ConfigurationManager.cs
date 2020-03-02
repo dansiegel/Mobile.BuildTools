@@ -10,7 +10,7 @@ namespace Mobile.BuildTools.Configuration
 {
     public partial class ConfigurationManager : IConfigurationManager
     {
-        private static IConfigurationManager _current;
+        private static ConfigurationManager _current;
         public static IConfigurationManager Current
         {
             get
@@ -39,8 +39,14 @@ namespace Mobile.BuildTools.Configuration
             return environmentName != null;
         }
 
-        private NameValueCollection _appSettings { get; }
-        private ConnectionStringCollection _connectionStrings { get; }
+        private NameValueCollection _appSettings;
+        private ConnectionStringCollection _connectionStrings;
+
+        private ConfigurationManager()
+        {
+            _appSettings = new NameValueCollection(new List<KeyValuePair<string, string>>());
+            _connectionStrings = new ConnectionStringCollection(Array.Empty<ConnectionStringSettings>());
+        }
 
         private ConfigurationManager(NameValueCollection appSettings, ConnectionStringCollection connectionStrings)
         {
@@ -97,7 +103,8 @@ namespace Mobile.BuildTools.Configuration
                     .ToList()
                     .Select(GenerateKeyValueFromItem)
                     .Where(i => !string.IsNullOrWhiteSpace(i.Key))
-                    .ToList();
+                    .ToList()
+                    .ToNameValueCollection();
 
                 var decendents = xDocument.Descendants().Where(t => t.Name == AppConfigElement.ConnectionStrings);
                 var elements = decendents.Elements();
@@ -106,11 +113,13 @@ namespace Mobile.BuildTools.Configuration
                 var connectionStrings = xDocument.Descendants()
                         .Where(t => t.Name == AppConfigElement.ConnectionStrings)
                         .Elements()
-                        .Select(x => GenerateConnectionStringSettingsFromItem(x));
+                        .Select(x => GenerateConnectionStringSettingsFromItem(x))
+                        .ToConnectionStringCollection();
 
-                _current = new ConfigurationManager(
-                    new NameValueCollection(appSettings),
-                    new ConnectionStringCollection(connectionStrings));
+                var configManager = _current ?? (_current = new ConfigurationManager());
+
+                configManager._appSettings = appSettings;
+                configManager._connectionStrings = connectionStrings;
             }
             catch(Exception ex)
             {
@@ -132,6 +141,17 @@ namespace Mobile.BuildTools.Configuration
             var connectionStrings = new ConnectionStringCollection(conStr);
 
             _current = new ConfigurationManager(appSettings, connectionStrings);
+        }
+    }
+
+    internal static class ConfigurationManagerExtensions
+    {
+        public static ConnectionStringCollection ToConnectionStringCollection(this IEnumerable<ConnectionStringSettings> settings) =>
+            new ConnectionStringCollection(settings);
+
+        public static NameValueCollection ToNameValueCollection(this IList<KeyValuePair<string, string>> keyPairs)
+        {
+            return new NameValueCollection(keyPairs);
         }
     }
 }

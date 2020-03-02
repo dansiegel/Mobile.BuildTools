@@ -19,6 +19,7 @@
         <Label Text="{Binding Foo, StringFormat='Foo: {0}'}" />
         <Label Text="{Binding Bar, StringFormat='Bar: {0}'}" />
         <Label Text="{Binding Test, StringFormat='Test: {0}'}" />
+        <Label Text="{Binding Environment, StringFormat='Environment: {0}'}" />
         <Picker ItemsSource="{Binding Environments}"
                 x:Name="environmentsSelector" />
         <Button Text="Update"
