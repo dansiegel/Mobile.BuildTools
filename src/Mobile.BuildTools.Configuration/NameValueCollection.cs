@@ -5,13 +5,18 @@ using System.Linq;
 #pragma warning disable IDE0040 // Add accessibility modifiers
 namespace Mobile.BuildTools.Configuration
 {
-    public class NameValueCollection : IReadOnlyList<KeyValuePair<string, string>>
+    public sealed class NameValueCollection : INameValueCollection
     {
         private IList<KeyValuePair<string, string>> _source { get; }
 
-        internal NameValueCollection(IList<KeyValuePair<string, string>> source)
+        public NameValueCollection(IList<KeyValuePair<string, string>> source)
         {
-            _source = source;
+            _source = new List<KeyValuePair<string, string>>();
+            foreach(var pair in source)
+            {
+                if (!HasKey(pair.Key))
+                    _source.Add(pair);
+            }
         }
 
         public bool HasKey(string name) => _source.Any(p => p.Key == name);

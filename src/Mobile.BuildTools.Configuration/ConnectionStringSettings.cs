@@ -1,9 +1,8 @@
-﻿#pragma warning disable IDE0040 // Add accessibility modifiers
-namespace Mobile.BuildTools.Configuration
+﻿namespace Mobile.BuildTools.Configuration
 {
     public struct ConnectionStringSettings
     {
-        internal ConnectionStringSettings(string name, string providerName, string connectionString)
+        public ConnectionStringSettings(string name, string providerName, string connectionString)
         {
             Name = name;
             ProviderName = providerName;
@@ -13,6 +12,23 @@ namespace Mobile.BuildTools.Configuration
         public string Name { get; }
         public string ProviderName { get; }
         public string ConnectionString { get; }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is ConnectionStringSettings settings)
+            {
+                return settings.Name == Name && settings.ConnectionString == ConnectionString;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode() => $"{Name}-{ConnectionString}".GetHashCode();
+
+        public static bool operator ==(ConnectionStringSettings left, ConnectionStringSettings right) =>
+            left.Equals(right);
+
+        public static bool operator !=(ConnectionStringSettings left, ConnectionStringSettings right) =>
+            !(left == right);
     }
 }
-#pragma warning restore IDE0040 // Add accessibility modifiers

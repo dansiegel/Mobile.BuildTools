@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
+using System.IO;
 
 namespace Mobile.BuildTools.Configuration
 {
@@ -7,17 +8,17 @@ namespace Mobile.BuildTools.Configuration
         private const string DEFAULT_CONFIG_FILENAME = "app.config";
         private static string _currentConfigName = DEFAULT_CONFIG_FILENAME;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static void Init(string config = DEFAULT_CONFIG_FILENAME) => Update(config);
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static void Init(string environmentConfig, string config = DEFAULT_CONFIG_FILENAME)
         {
             _currentConfigName = config;
-            using (var configStream = GetStreamReader(config))
-            using (var environmentStream = GetStreamReader(environmentConfig))
-            {
-                var xDocument = TransformationHelper.Transform(configStream.ReadToEnd(), environmentStream.ReadToEnd());
-                InitInternal(xDocument);
-            }
+            using var configStream = GetStreamReader(config);
+            using var environmentStream = GetStreamReader(environmentConfig);
+            var xDocument = TransformationHelper.Transform(configStream.ReadToEnd(), environmentStream.ReadToEnd());
+            InitInternal(xDocument);
         }
 
         private static StreamReader GetStreamReader(string config) =>

@@ -1,92 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-#pragma warning disable IDE0040 // Add accessibility modifiers
-#pragma warning disable IDE1006 // Naming Styles
 namespace Mobile.BuildTools.Configuration
 {
     public partial class ConfigurationManager : IConfigurationManager
     {
-        // ReSharper disable InconsistentNaming
-        private const string APP_SETTINGS = "appSettings";
-        private const string CONNECTION_STRING = "connectionString";
-        private const string CONNECTION_STRINGS = "connectionStrings";
-        private const string KEY = "key";
-        private const string NAME = "name";
-        private const string PROVIDER_NAME = "providerName";
-
-        private const string VALUE = "value";
-        // ReSharper enable InconsistentNaming
-
         private static IConfigurationManager _current;
-        internal static IConfigurationManager Current
+        public static IConfigurationManager Current
         {
             get
             {
-                if(_current is null)
-                {
+                if (_current is null)
                     Init();
-                }
 
                 return _current;
             }
         }
 
-        public static NameValueCollection AppSettings => Current.AppSettings;
+        public static INameValueCollection AppSettings => Current.AppSettings;
 
-        public static ReadOnlyDictionary<string, ConnectionStringSettings> ConnectionStrings => Current.ConnectionStrings;
+        public static ConnectionStringCollection ConnectionStrings => Current.ConnectionStrings;
 
 #if NETSTANDARD
-        public static IReadOnlyList<string> Environments
-        {
-            get => throw new NotSupportedException();
-            set => throw new NotSupportedException();
-        }
+        public static IReadOnlyList<string> Environments => throw new NotSupportedException();
 #else
         public static IReadOnlyList<string> Environments { get; private set; }
 #endif
 
-        public static bool EnvironmentExists(string name) => Environments.Any(x => x == name);
-
+        public static bool EnvironmentExists(string name) => EnvironmentExists(name, out var _);
+        public static bool EnvironmentExists(string name, out string environmentName)
+        {
+            environmentName = Environments.FirstOrDefault(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            return environmentName != null;
+        }
 
         private NameValueCollection _appSettings { get; }
-        private ReadOnlyDictionary<string, ConnectionStringSettings> _connectionStrings { get; }
+        private ConnectionStringCollection _connectionStrings { get; }
 
-        private ConfigurationManager(NameValueCollection appSettings, ReadOnlyDictionary<string, ConnectionStringSettings> connectionStrings)
+        private ConfigurationManager(NameValueCollection appSettings, ConnectionStringCollection connectionStrings)
         {
             _appSettings = appSettings;
             _connectionStrings = connectionStrings;
         }
 
-        NameValueCollection IConfigurationManager.AppSettings => _appSettings;
-        ReadOnlyDictionary<string, ConnectionStringSettings> IConfigurationManager.ConnectionStrings => _connectionStrings;
+        INameValueCollection IConfigurationManager.AppSettings => _appSettings;
+        ConnectionStringCollection IConfigurationManager.ConnectionStrings => _connectionStrings;
         IReadOnlyList<string> IConfigurationManager.Environments => Environments;
         bool IConfigurationManager.EnvironmentExists(string name) => EnvironmentExists(name);
+        void IConfigurationManager.Reset() => TransformDefault();
+        void IConfigurationManager.Transform(string name) => TransformForEnvironment(name);
 
         public static void TransformForEnvironment(string environmentName)
         {
+            if (!EnvironmentExists(environmentName, out var actualEnvironmentName))
+                throw new FileNotFoundException();
+
             var fileName = Path.GetFileNameWithoutExtension(_currentConfigName);
-            using (var configStream = GetStreamReader(_currentConfigName))
-            using (var environmentStream = GetStreamReader($"{fileName}.{environmentName}.config"))
-            {
-                var xDocument = TransformationHelper.Transform(configStream.ReadToEnd(), environmentStream.ReadToEnd());
-                InitInternal(xDocument);
-            }
+            using var configStream = GetStreamReader(_currentConfigName);
+            using var environmentStream = GetStreamReader($"{fileName}.{actualEnvironmentName}.config");
+            var xDocument = TransformationHelper.Transform(configStream.ReadToEnd(), environmentStream.ReadToEnd());
+            InitInternal(xDocument);
         }
 
-        public static void TransformDefault() => Update();
+        public static void TransformDefault() => Update(DEFAULT_CONFIG_FILENAME);
 
-        public static void Update(string config = DEFAULT_CONFIG_FILENAME)
+        public static void Update(string config)
         {
             _currentConfigName = config;
-            using (var stream = GetStreamReader(config))
-                Init(stream);
+            using var stream = GetStreamReader(config);
+            Init(stream);
         }
 
         protected static void Init(StreamReader streamReader)
@@ -105,23 +92,25 @@ namespace Mobile.BuildTools.Configuration
                 if (!xDocument.Nodes().Any()) return;
 
                 var appSettings = xDocument.Descendants()
-                    .Where(t => t.Name == APP_SETTINGS)
+                    .Where(t => t.Name == AppConfigElement.AppSettings)
                     .Elements()
                     .ToList()
                     .Select(GenerateKeyValueFromItem)
                     .Where(i => !string.IsNullOrWhiteSpace(i.Key))
                     .ToList();
 
-                var decendents = xDocument.Descendants().Where(t => t.Name == CONNECTION_STRINGS);
+                var decendents = xDocument.Descendants().Where(t => t.Name == AppConfigElement.ConnectionStrings);
                 var elements = decendents.Elements();
 
 
                 var connectionStrings = xDocument.Descendants()
-                        .Where(t => t.Name == CONNECTION_STRINGS)
+                        .Where(t => t.Name == AppConfigElement.ConnectionStrings)
                         .Elements()
-                        .ToDictionary(xElement => xElement.Attribute(NAME)?.Value.ToString(), GenerateConnectionStringSettingsFromItem);
+                        .Select(x => GenerateConnectionStringSettingsFromItem(x));
 
-                _current = new ConfigurationManager(new NameValueCollection(appSettings), new ReadOnlyDictionary<string, ConnectionStringSettings>(connectionStrings));
+                _current = new ConfigurationManager(
+                    new NameValueCollection(appSettings),
+                    new ConnectionStringCollection(connectionStrings));
             }
             catch(Exception ex)
             {
@@ -129,24 +118,20 @@ namespace Mobile.BuildTools.Configuration
             }
         }
 
-        private static ConnectionStringSettings GenerateConnectionStringSettingsFromItem(XElement xElement) => new ConnectionStringSettings(xElement.Attribute(NAME)?.Value,
-            xElement.Attribute(PROVIDER_NAME)?.Value,
-            xElement.Attribute(CONNECTION_STRING)?.Value);
+        private static ConnectionStringSettings GenerateConnectionStringSettingsFromItem(XElement xElement) => new ConnectionStringSettings(xElement.Attribute(AppConfigElement.Name)?.Value,
+            xElement.Attribute(AppConfigElement.ProviderName)?.Value,
+            xElement.Attribute(AppConfigElement.ConnectionString)?.Value);
 
         private static KeyValuePair<string, string> GenerateKeyValueFromItem(XElement item) => new KeyValuePair<string, string>(
-            item?.Attribute(KEY)?.Value,
-            item?.Attribute(VALUE)?.Value);
+            item?.Attribute(AppConfigElement.Key)?.Value,
+            item?.Attribute(AppConfigElement.Value)?.Value);
 
-        protected static void InitInternal(List<KeyValuePair<string, string>> keys, Dictionary<string, ConnectionStringSettings> conStr)
+        protected static void InitInternal(List<KeyValuePair<string, string>> keys, IEnumerable<ConnectionStringSettings> conStr)
         {
             var appSettings = new NameValueCollection(keys);
-            var connectionStrings = conStr != null
-                ? new ReadOnlyDictionary<string, ConnectionStringSettings>(conStr)
-                : new ReadOnlyDictionary<string, ConnectionStringSettings>(new Dictionary<string, ConnectionStringSettings>());
+            var connectionStrings = new ConnectionStringCollection(conStr);
 
             _current = new ConfigurationManager(appSettings, connectionStrings);
         }
     }
 }
-#pragma warning restore IDE1006 // Naming Styles
-#pragma warning restore IDE0040 // Add accessibility modifiers

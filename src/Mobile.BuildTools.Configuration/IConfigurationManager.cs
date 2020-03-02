@@ -5,13 +5,15 @@ using System.Collections.ObjectModel;
 #pragma warning disable IDE1006 // Naming Styles
 namespace Mobile.BuildTools.Configuration
 {
-    internal interface IConfigurationManager
+    public interface IConfigurationManager
     {
-        NameValueCollection AppSettings { get; }
-        ReadOnlyDictionary<string, ConnectionStringSettings> ConnectionStrings { get; }
+        INameValueCollection AppSettings { get; }
+        ConnectionStringCollection ConnectionStrings { get; }
 
         bool EnvironmentExists(string name);
         IReadOnlyList<string> Environments { get; }
+        void Reset();
+        void Transform(string name);
     }
 }
 #pragma warning restore IDE1006 // Naming Styles
