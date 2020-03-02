@@ -20,14 +20,14 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <Reference Include="System.Xml.Linq" />
-    <None Remove="**/Platform/Droid/**/*.cs" />
-    <Compile Include="**/Platform/Droid/**/*.cs" />
+    <None Remove="**/*.android.cs" />
+    <Compile Include="**/*.android.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) Or $(TargetFramework.StartsWith('Xamarin.Mac')) Or $(TargetFramework.StartsWith('Xamarin.TVOS')) ">
     <Reference Include="System.Xml.Linq" />
-    <None Remove="**/*.iOS.cs" />
-    <Compile Include="**/*.iOS.cs" />
+    <None Remove="**/*.apple.cs" />
+    <Compile Include="**/*.apple.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac')) ">
@@ -35,13 +35,13 @@
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
-    <None Remove="**/Platform/UWP/**/*.cs" />
-    <Compile Include="**/Platform/UWP/**/*.cs" />
+    <None Remove="**/*.uwp.cs" />
+    <Compile Include="**/*.uwp.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('tizen')) ">
-    <None Remove="**/Platform/Tizen/**/*.cs" />
-    <Compile Include="**/Platform/Tizen/**/*.cs" />
+    <None Remove="**/*.tizen.cs" />
+    <Compile Include="**/*.tizen.cs" />
   </ItemGroup>
 
   <ItemGroup>
