@@ -23,7 +23,7 @@ namespace AppConfigSample.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            ConfigurationManager.Init();
+            ConfigurationManager.Init(true);
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 

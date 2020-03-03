@@ -50,7 +50,8 @@
           AfterTargets="_CollectScss"
           DependsOnTargets="MobileBuildToolsInit;_EnsureScssRuntimeIsAvailable"
           Inputs="@(_Scss);@(_PartialScc)"
-          Outputs="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')">
+          Outputs="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')"
+          Condition=" '@(ReferencePath->WithMetadataValue('NuGetPackageId', 'Xamarin.Forms'))' != '' ">
 
     <PropertyGroup>
       <ProcessScssDebug Condition=" '$(ProcessScssDebug)' == '' ">$(MobileBuildToolsDebug)</ProcessScssDebug>

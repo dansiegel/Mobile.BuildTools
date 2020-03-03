@@ -23,13 +23,15 @@
                                   Condition=" $(BuildToolsEnableAutomaticVersioning) " />
   </Target>
 
+  <PropertyGroup>
+    <HandlePlatformAppConfigBeforeTargets>_CollectBundleResources</HandlePlatformAppConfigBeforeTargets>
+  </PropertyGroup>
+
   <Target Name="HandlePlatformAppConfig"
-          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
-          Inputs="@(GeneratedAppConfig)"
-          Outputs="@(GeneratedAppConfig)">
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy">
     <ItemGroup>
       <BundleResource Include="@(GeneratedAppConfig)"
-                      Link="Assets/%(Filename)%(Extension)"/>
+                      Link="Resources\%(Filename)%(Extension)"/>
     </ItemGroup>
   </Target>
 

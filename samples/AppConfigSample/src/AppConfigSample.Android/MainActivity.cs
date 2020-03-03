@@ -17,7 +17,7 @@ namespace AppConfigSample.Droid
 
             base.OnCreate(savedInstanceState);
 
-            ConfigurationManager.Init(this);
+            ConfigurationManager.Init(true, this);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
         }

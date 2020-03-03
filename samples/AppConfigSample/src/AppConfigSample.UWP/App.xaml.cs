@@ -49,7 +49,7 @@ namespace AppConfigSample.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                ConfigurationManager.Init();
+                ConfigurationManager.Init(true);
                 Xamarin.Forms.Forms.Init(e);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)

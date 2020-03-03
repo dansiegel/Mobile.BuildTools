@@ -14,6 +14,8 @@ namespace Mobile.BuildTools.Tasks
     {
         public ITaskItem[] InputConfigFiles { get; set; }
 
+        public ITaskItem[] ExpectedAppConfig { get; set; }
+
         [Required]
         public string AppConfigEnvironment { get; set; }
 
@@ -21,113 +23,112 @@ namespace Mobile.BuildTools.Tasks
         [Output]
         public ITaskItem[] OutputConfigs => _outputs.ToArray();
 
+        public ITaskItem[] GeneratedAppConfig => ExpectedAppConfig;
+
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
+            //if (!Debugger.IsAttached)
+            //    Debugger.Launch();
+
             if (!InputConfigFiles.Any())
             {
                 Log.LogMessage("No input config files were found");
                 return;
             }
 
-            var badInputs = InputConfigFiles.Where(x => !x.ItemSpec.EndsWith(".config"));
-            if(badInputs.Any())
+            //var configsOutputDirPath = Path.Combine(IntermediateOutputPath, "configs");
+            //var configsOutputDir = new DirectoryInfo(configsOutputDirPath);
+
+            var rootConfigFile = InputConfigFiles.FirstOrDefault(x => x.ItemSpec.Equals("app.config", StringComparison.InvariantCultureIgnoreCase));
+            var transformFile = InputConfigFiles.FirstOrDefault(x => x.ItemSpec.Equals($"app.{AppConfigEnvironment}.config", StringComparison.InvariantCultureIgnoreCase));
+
+            if(transformFile is null)
             {
-                foreach (var item in badInputs)
-                    Log.LogError("Found invalid Config File input. Config files must end with the extension '.config': {0}", item.ItemSpec);
+                Log.LogMessage($"No transform config 'app.{AppConfigEnvironment.ToLower()}.config' could be found in the output directory.");
                 return;
             }
 
-            var primaryItemPath = PrimaryTaskItemPath();
-
-            if(string.IsNullOrEmpty(primaryItemPath))
+            if(rootConfigFile is null)
             {
-                Log.LogError("Unable to determine which config is the root configuration. You must either mark one with the property IsRootConfig=\"true\" or have one named 'app.config'");
-                return;
-            }
-
-            if(!File.Exists(primaryItemPath))
-            {
-                Log.LogError($"Unable to locate the specified app.config at '{primaryItemPath}'");
-            }
-
-            var primaryConfigFileName = Path.GetFileName(primaryItemPath);
-            var configsOutputDir = Path.Combine(IntermediateOutputPath, "configs");
-            if (!Directory.Exists(configsOutputDir))
-            {
-                Directory.CreateDirectory(configsOutputDir);
-            }
-
-            var transformFileName = $"{Path.GetFileNameWithoutExtension(primaryConfigFileName)}.{AppConfigEnvironment}.config";
-            var outputFiles = InputConfigFiles.Select(item => CopyFile(item.ItemSpec, configsOutputDir));
-            var transformFilePath = outputFiles
-                    .FirstOrDefault(x => Path.GetFileName(x)
-                                            .Equals(transformFileName, 
-                                                    StringComparison.InvariantCultureIgnoreCase));
-
-            if(Log.HasLoggedErrors)
-            {
+                // this should never happen...
+                Log.LogError("We could not locate an 'app.config' in the output directory. Please file a bug.");
                 return;
             }
 
             var generator = new ConfigurationManagerTransformationGenerator(config)
             {
-                BaseConfigPath = Path.Combine(configsOutputDir, primaryConfigFileName),
-                TransformFilePath = transformFilePath
+                BaseConfigPath = rootConfigFile.ItemSpec,
+                TransformFilePath = transformFile.ItemSpec
             };
             generator.Execute();
 
             _outputs.AddRange(generator.Outputs);
         }
 
-        private string PrimaryTaskItemPath(bool isSanityCheck = false)
-        {
-            var item = InputConfigFiles.FirstOrDefault(x => x.GetMetadata("IsRootConfig").Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase));
+        //private string PrimaryTaskItemPath(bool isSanityCheck = false)
+        //{
+        //    var item = InputConfigFiles.FirstOrDefault(x => x.GetMetadata("IsRootConfig").Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase));
 
-            if(item is null)
-            {
-                item = InputConfigFiles.FirstOrDefault(x => Path.GetFileName(x.ItemSpec).Equals("app.config", StringComparison.InvariantCultureIgnoreCase));
-            }
+        //    if(item is null)
+        //    {
+        //        item = InputConfigFiles.FirstOrDefault(x => Path.GetFileName(x.ItemSpec).Equals("app.config", StringComparison.InvariantCultureIgnoreCase));
+        //    }
 
-            if(item is null && !isSanityCheck)
-            {
-                var searchDirectories = InputConfigFiles.Select(x => new FileInfo(x.ItemSpec).Directory).Distinct();
+        //    if(item is null && !isSanityCheck)
+        //    {
+        //        var searchDirectories = InputConfigFiles.Select(x => new FileInfo(x.ItemSpec).Directory).Distinct();
 
-                var inputFiles = new List<ITaskItem>();
-                foreach(var directory in searchDirectories)
-                {
-                    inputFiles.AddRange(directory.EnumerateFiles("*.config").Select(x => new TaskItem(x.FullName)));
-                }
-                InputConfigFiles = inputFiles.ToArray();
-                return PrimaryTaskItemPath(true);
-            }
+        //        var inputFiles = new List<ITaskItem>();
+        //        foreach(var directory in searchDirectories)
+        //        {
+        //            inputFiles.AddRange(directory.EnumerateFiles("*.config").Select(x => new TaskItem(x.FullName)));
+        //        }
+        //        InputConfigFiles = inputFiles.ToArray();
+        //        return PrimaryTaskItemPath(true);
+        //    }
 
-            return item?.ItemSpec;
-        }
+        //    return item?.ItemSpec;
+        //}
 
-        private string CopyFile(string inputFile, string outputFileDirectory)
-        {
-            var inputFileInfo = new FileInfo(inputFile);
-            var fileName = Path.GetFileName(inputFile);
-            var outputFile = Path.Combine(outputFileDirectory, fileName);
+        //private IEnumerable<string> GetOutputFiles(string outputFileDirectory)
+        //{
+        //    //int files = InputConfigFiles.Length;
+        //    var files = InputConfigFiles.Select(x => x.ItemSpec);
+        //    foreach (var file in files)
+        //    {
+        //        var fi = new FileInfo(file);
+        //        var outputPath = Path.Combine(outputFileDirectory, Path.GetFileName(file));
+        //        fi.CopyTo(outputPath);
+        //        yield return outputPath;
+        //        //yield return CopyFile(file, outputFileDirectory);
+        //    }
+        //}
 
-            if(!File.Exists(outputFile) || File.GetLastWriteTime(outputFile) < inputFileInfo.LastWriteTime)
-            {
-                var contents = File.ReadAllText(inputFile);
+        //private string CopyFile(string inputFile, string outputFileDirectory)
+        //{
+        //    var inputFileInfo = new FileInfo(inputFile);
+        //    var fileName = Path.GetFileName(inputFile);
+        //    var outputFile = Path.Combine(outputFileDirectory, fileName);
 
-                Log.LogMessage($"Copying File {inputFile} to {outputFile}");
-                File.WriteAllText(outputFile, contents);
-            }
+        //    if(!File.Exists(outputFile) || File.GetLastWriteTime(outputFile) < inputFileInfo.LastWriteTime)
+        //    {
+        //        var contents = File.ReadAllText(inputFile);
 
-            if(File.Exists(outputFile))
-            {
-                Log.LogMessage(MessageImportance.Low, $"No update necessary for {outputFile}");
-            }
-            else
-            {
-                Log.LogError($"An expected error occurrected while attempting to copy the file {inputFile} to {outputFile}");
-            }
+        //        Log.LogMessage($"Copying File {inputFile} to {outputFile}");
+        //        File.WriteAllText(outputFile, contents);
+        //        return outputFile;
+        //    }
 
-            return outputFile;
-        }
+        //    if(File.Exists(outputFile))
+        //    {
+        //        Log.LogMessage(MessageImportance.Low, $"No update necessary for {outputFile}");
+        //    }
+        //    else
+        //    {
+        //        Log.LogError($"An expected error occurrected while attempting to copy the file {inputFile} to {outputFile}");
+        //    }
+
+        //    return outputFile;
+        //}
     }
 }

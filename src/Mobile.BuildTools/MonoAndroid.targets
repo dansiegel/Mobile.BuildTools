@@ -28,6 +28,10 @@
 
   </Target>
 
+  <PropertyGroup>
+    <HandlePlatformAppConfigBeforeTargets>Compile</HandlePlatformAppConfigBeforeTargets>
+  </PropertyGroup>
+
   <Target Name="HandlePlatformAppConfig"
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
           Inputs="@(GeneratedAppConfig)"

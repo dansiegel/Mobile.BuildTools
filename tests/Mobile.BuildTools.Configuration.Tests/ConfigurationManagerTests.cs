@@ -40,9 +40,10 @@ namespace Mobile.BuildTools.Configuration.Tests
         [Fact]
         public void AppConfigTransformsForEnvironment()
         {
+            ConfigurationManager.Init(true);
             Assert.Equal("my foo", ConfigurationManager.AppSettings["foo"]);
             Assert.DoesNotContain("Environment", ConfigurationManager.AppSettings.AllKeys);
-            ConfigurationManager.TransformForEnvironment("foo");
+            ConfigurationManager.Transform("foo");
 
             Assert.Equal(3, ConfigurationManager.AppSettings.Count);
             Assert.Contains("Environment", ConfigurationManager.AppSettings.AllKeys);
