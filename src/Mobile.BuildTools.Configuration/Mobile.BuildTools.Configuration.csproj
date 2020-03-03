@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;MonoAndroid80;MonoAndroid81;MonoAndroid90;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;MonoAndroid80;MonoAndroid81;MonoAndroid90;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40;netcoreapp3.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.16299</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -14,8 +14,13 @@
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-    <None Remove="**/Platform/NetStandard/**/*.cs" />
-    <Compile Include="**/Platform/NetStandard/**/*.cs" />
+    <None Remove="**/*.netstandard.cs" />
+    <Compile Include="**/*.netstandard.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
+    <None Remove="**/*.netstandard.cs" />
+    <Compile Include="**/*.netstandard.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
