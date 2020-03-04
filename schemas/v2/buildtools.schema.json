@@ -18,7 +18,7 @@
         "includeAllConfigs": {
           "description": "If true will bundle all app.config's in the app instead of only the transformed app.config",
           "type": "boolean",
-          "default": true
+          "default": false
         }
       }
     },

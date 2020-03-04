@@ -1,0 +1,100 @@
+{
+  "definitions": {
+    "AndroidConfiguration": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "ResourceType": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "Drawable",
+            "Mipmap"
+          ]
+        },
+        "ignore": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scale": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "ResourceType",
+        "ignore",
+        "name",
+        "scale"
+      ]
+    },
+    "PlatformConfiguration": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "ignore": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scale": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "ignore",
+        "name",
+        "scale"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "watermarkFile": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "android": {
+      "$ref": "#/definitions/AndroidConfiguration"
+    },
+    "apple": {
+      "$ref": "#/definitions/PlatformConfiguration"
+    },
+    "ignore": {
+      "type": "boolean"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scale": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "watermarkFile",
+    "android",
+    "apple",
+    "ignore",
+    "name",
+    "scale"
+  ]
+}
