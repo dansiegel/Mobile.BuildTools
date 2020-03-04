@@ -75,8 +75,8 @@ nav:
     - App Manifests: manifests.md
     - Build Versioning: build-versioning.md
     - Image Assets:
-      - Getting Started: index.md
-      - Configuring Images: configuring-images.md
+      - Getting Started: images/index.md
+      - Configuring Images: imagesconfiguring-images.md
     - Release Note Generation: release-notes.md
     - Continuous Integration:
       - Platforms: continuous-integration/platforms.md
