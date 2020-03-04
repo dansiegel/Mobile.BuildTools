@@ -3,26 +3,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:helpers="clr-namespace:E2EApp.Helpers"
              xmlns:buildTools="clr-namespace:Mobile.BuildTools.Configuration;assembly=Mobile.BuildTools.Configuration"
-             xmlns:essentials="clr-namespace:Xamarin.Essentials;assembly=Xamarin.Essentials"
+             xmlns:controls="clr-namespace:E2EApp.Controls"
              Title="App Config"
              x:Class="E2EApp.Views.AppConfig">
-  <StackLayout>
-    <!-- Place new controls here -->
-    <Label AutomationId="foo"
-           x:Name="fooLabel"
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    <Label AutomationId="bar"
-           x:Name="barLabel"
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    <Label AutomationId="BuildString"
-           Text="{x:Static essentials:AppInfo.BuildString}"
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    <Label AutomationId="VersionString"
-           Text="{x:Static essentials:AppInfo.VersionString}"
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-  </StackLayout>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <StackLayout HorizontalOptions="Center"
+                 VerticalOptions="Center">
+      <!-- Place new controls here -->
+      <Label AutomationId="foo"
+           x:Name="fooLabel" />
+      <Label AutomationId="bar"
+           x:Name="barLabel" />
+      <Label AutomationId="environment"
+           x:Name="environmentLabel" />
+      <Label AutomationId="connectionString"
+           x:Name="connectionString" />
+      <Picker x:Name="environmentsPicker"
+              AutomationId="enviornmentsPicker" />
+      <Button Text="Reset"
+              Clicked="Button_Clicked" />
+    </StackLayout>
+
+    <controls:VersionBar Grid.Row="1" />
+  </Grid>
 </ContentPage>

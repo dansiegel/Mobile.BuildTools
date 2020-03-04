@@ -1,11 +1,8 @@
 {
   // This is a sample of a secrets.json file that should be placed here.
-  "SampleString": "this is a string",
-  "SampleInt": 1,
-  "SampleIntFromString": "1",
-  "SampleDouble": 2.1,
-  "SampleDoubleFromString": "2.1",
-  "SampleBool": true,
-  "SampleBoolFromString": "true",
-  "SampleArray": "Foo,Bar"
+  "SampleString": "SuperSecureSecret",
+  "SampleBool": "true",
+  "SampleInt": "1",
+  "SampleDouble": "2.1",
+  "SampleUri": "https://xamarindevelopersummit.com/wp-content/uploads/2019/04/Isotype.png"
 }

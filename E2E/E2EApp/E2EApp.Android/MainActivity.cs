@@ -20,7 +20,7 @@ namespace E2EApp.Droid
 
             base.OnCreate(bundle);
 
-            ConfigurationManager.Init(this);
+            ConfigurationManager.Init(true, this);
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
         }

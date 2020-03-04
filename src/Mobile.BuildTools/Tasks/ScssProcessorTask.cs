@@ -41,10 +41,10 @@ namespace Mobile.BuildTools.Tasks
         {
             try
             {
-#if DEBUG
-                if (!Debugger.IsAttached)
-                    Debugger.Launch();
-#endif
+//#if DEBUG
+//                if (!Debugger.IsAttached)
+//                    Debugger.Launch();
+//#endif
 
                 EnsureRuntimeExists();
                 var filesToProcess = ScssFiles.Where(scss => Path.GetFileName(scss)[0] != '_' && Path.GetExtension(scss) == ".scss" || Path.GetExtension(scss) == ".sass");
