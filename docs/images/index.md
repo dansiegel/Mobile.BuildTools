@@ -1,6 +1,7 @@
 # Image Asset Generation
 
-TODO
+!!!! critical Critical
+    It is extremely important to note that the Image Processing features listed here are largely WIP guidance on how these features are intended to work. As Image Processing is still very much WIP, not everything listed here may currently be functioning as expected.
 
 ```json
 {

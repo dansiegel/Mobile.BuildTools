@@ -15,3 +15,27 @@ By default Mobile.BuildTools will look for any file in the root of the head proj
 
 !!! note Note
     To limit the bundled configs to only include the transformed app.config you can set `includeAllConfigs` to false. By default we will include all app.config's to allow you to run runtime transformations
+
+## Supported Platforms
+
+| Platform | Supported |
+|:--------:|:---------:|
+| NetStandard | Yes |
+| NetCoreApp | 3.1 |
+| Xamarin.iOS | Yes |
+| MonoAndroid | 8.0+ |
+| UWP* | 16299+ |
+| Xamarin.Mac* | Yes |
+| Xamarin.TVOS* | Yes |
+| Tizen* | Yes |
+
+!!!! note Note
+    Platform's with an asterik have not been tested explicitly.
+
+## F.A.Q.
+
+Q. Can I use the ConfigurationManager without using the Mobile.BuildTools?
+A. Yes you absolutely can. The [AppConfigSample](https://github.com/dansiegel/Mobile.BuildTools/tree/master/samples) project in the samples folder does exactly that!
+
+Q. How do I use the Enviornments?
+A. By default Environments are disabled. This means that we will only copy the transformed app.config into your project and the ConfigurationManager will only read the primary app.config.

@@ -3,6 +3,9 @@
   "artifactCopy": {
     "disable": false
   },
+  "appConfig": {
+    "includeAllConfigs": true
+  },
   "automaticVersioning": {
     "behavior": "PreferBuildNumber",
     "environment": "All",
@@ -70,7 +73,7 @@
         },
         {
           "name": "SampleUri",
-          "type": "String",
+          "type": "Uri",
           "isArray": false
         }
       ]

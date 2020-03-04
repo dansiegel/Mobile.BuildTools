@@ -1,4 +1,5 @@
-﻿using Mobile.BuildTools.Tasks.Utils;
+﻿using System.IO;
+using Mobile.BuildTools.Tasks.Utils;
 using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models.AppIcons
@@ -50,6 +51,11 @@ namespace Mobile.BuildTools.Models.AppIcons
                     break;
             }
 
+            if(string.IsNullOrEmpty(name))
+            {
+                name = Path.GetFileName(InputFilePath);
+            }
+
             return (name, ignore, scale);
         }
 
@@ -74,6 +80,7 @@ namespace Mobile.BuildTools.Models.AppIcons
         [System.ComponentModel.DataAnnotations.EnumDataType(typeof(AndroidResource))]
         public string ResourceType { get; set; }
 #else
+        [JsonProperty("resourceType")]
         public AndroidResource ResourceType { get; set; }
 #endif
     }

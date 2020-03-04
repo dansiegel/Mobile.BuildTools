@@ -38,6 +38,80 @@ namespace Mobile.BuildTools.Configuration.Tests
         }
 
         [Fact]
+        public void CannotTransformIfNotEnabled()
+        {
+            ConfigurationManager.Init();
+            Assert.Equal("my foo", ConfigurationManager.AppSettings["foo"]);
+
+            var ex = Record.Exception(() => ConfigurationManager.Transform("foo"));
+            Assert.Null(ex);
+
+            Assert.Equal("my foo", ConfigurationManager.AppSettings["foo"]);
+        }
+
+        [Fact]
+        public void TransformMaintainsCurrentInstance()
+        {
+            ConfigurationManager.Init(true);
+            var current = ConfigurationManager.Current;
+
+            Assert.Equal("my foo", current.AppSettings["foo"]);
+            ConfigurationManager.Transform("foo");
+            Assert.Equal("transformed", current.AppSettings["foo"]);
+        }
+
+        [Fact]
+        public void ResetTransformsBackToDefault()
+        {
+            ConfigurationManager.Init(true);
+
+            Assert.Equal("my foo", ConfigurationManager.AppSettings["foo"]);
+            ConfigurationManager.Transform("foo");
+            Assert.Equal("transformed", ConfigurationManager.AppSettings["foo"]);
+            ConfigurationManager.Reset();
+            Assert.Equal("my foo", ConfigurationManager.AppSettings["foo"]);
+        }
+
+        [Fact]
+        public void SingleEnvironmentListed()
+        {
+            ConfigurationManager.Init(true);
+            Assert.Single(ConfigurationManager.Environments);
+        }
+
+        [Fact]
+        public void NoEnvironmentListedIfNotEnabled()
+        {
+            ConfigurationManager.Init();
+            Assert.Empty(ConfigurationManager.Environments);
+        }
+
+        [Theory]
+        [InlineData("foo")]
+        [InlineData("Foo")]
+        [InlineData("app.foo.config")]
+        [InlineData("app.Foo.config")]
+        public void EnvironmentExists(string environment)
+        {
+            ConfigurationManager.Init(true);
+            Assert.True(ConfigurationManager.EnvironmentExists(environment));
+        }
+
+        [Fact]
+        public void EnvironmentDoesNotExist()
+        {
+            ConfigurationManager.Init(true);
+            Assert.False(ConfigurationManager.EnvironmentExists("notValid"));
+        }
+
+        [Fact]
+        public void EnvironmentDoesNotExistWhenEnvironmentsNotEnabled()
+        {
+            ConfigurationManager.Init();
+            Assert.False(ConfigurationManager.EnvironmentExists("foo"));
+        }
+
+        [Fact]
         public void AppConfigTransformsForEnvironment()
         {
             ConfigurationManager.Init(true);

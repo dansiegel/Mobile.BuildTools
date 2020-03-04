@@ -18,13 +18,13 @@ namespace Mobile.BuildTools.Configuration
         {
             _environmentsEnabled = enableEnvironments;
             _platformConfig = platformConfig;
-            Environments = new List<string>(_platformConfig.GetEnvironments());
+            Environments = enableEnvironments ? new List<string>(_platformConfig.GetEnvironments()) : new List<string>(); ;
             Reset();
         }
 
         public INameValueCollection AppSettings { get; private set; }
         public ConnectionStringCollection ConnectionStrings { get; private set; }
-        public IReadOnlyList<string> Environments { get; internal set; }
+        public IReadOnlyList<string> Environments { get; }
 
         public bool EnvironmentExists(string name) =>
             EnvironmentExists(name, out var _);
@@ -35,6 +35,11 @@ namespace Mobile.BuildTools.Configuration
             {
                 environmentName = null;
                 return false;
+            }
+
+            if(name.Split('.').Length > 1)
+            {
+                name = name.Split('.')[1];
             }
 
             environmentName = Environments.FirstOrDefault(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));

@@ -35,6 +35,11 @@ namespace Mobile.BuildTools.Generators.Images
                 yield return default;
             }
 
+#if DEBUG
+            if (outputFileName is null)
+                System.Diagnostics.Debugger.Break();
+#endif
+
             var resourceType = $"{resource?.Android?.ResourceType ?? AndroidResource.Drawable}".ToLower();
             var platformSanitizedName = Regex.Replace(outputFileName, @"\s+", "-");
 

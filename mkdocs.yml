@@ -74,7 +74,9 @@ nav:
         - In Code: config/app.config/in-code.md
     - App Manifests: manifests.md
     - Build Versioning: build-versioning.md
-    - Image Assets: images.md
+    - Image Assets:
+      - Getting Started: index.md
+      - Configuring Images: configuring-images.md
     - Release Note Generation: release-notes.md
     - Continuous Integration:
       - Platforms: continuous-integration/platforms.md
@@ -89,4 +91,4 @@ nav:
       - Upgrading from 1.X: appendix/upgrade.md
       - Apple Push Notifications: appendix/aps.md
 
-google_analytics: 'UA-153405647-4'
+#google_analytics: 'UA-153405647-4'

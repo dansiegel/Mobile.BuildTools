@@ -48,12 +48,22 @@ For this let's consider that we have `app.config` and `app.foo.config`. We can t
 
 ```csharp
 var foo = ConfigurationManager.AppSettings["foo"]; // My Foo
-ConfigurationManager.TransformForEnvironment("foo");
+ConfigurationManager.Transform("foo"); // This is not case sensitive
 foo = ConfigurationManager.AppSettings["foo"]; // Transformed Value
 ```
 
 To convert back you can simply call:
 
 ```csharp
-ConfigurationManager.TransformDefault();
+ConfigurationManager.Reset();
 ```
+
+!!! note Note
+    In order to Transform the values in the ConfigurationManager at Runtime the ConfigurationManager must be initialized with the `enableRuntimeEnvironments` parameter set to true. `ConfigurationManager.Init(true)`
+
+!!! note Note
+    Calling Transform for an Environment that does not exist will not throw an error, it will however call Reset to restore the ConfigurationManager to it's original state.
+
+## Testability
+
+The ConfigurationManager is Interface based and utilizes a Singleton. The singleton remains constant as long as ConfigurationManager.Init() is not called. You can Reset or Transform as often as you need. As a best practice it is recommended that you register the ConfigurationManager.Current instance with a Dependency Injection container and inject the IConfigurationManager into your code. This will allow you to mock the ConfigurationManager and better test your code.

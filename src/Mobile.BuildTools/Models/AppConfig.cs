@@ -5,8 +5,8 @@ namespace Mobile.BuildTools.Models
 {
     public class AppConfig : ToolItem
     {
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         [JsonProperty("includeAllConfigs")]
-        public bool IncludeAllConfigs { get; set; } = true;
+        public bool IncludeAllConfigs { get; set; }
     }
 }

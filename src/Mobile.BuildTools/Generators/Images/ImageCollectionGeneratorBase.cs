@@ -42,13 +42,25 @@ namespace Mobile.BuildTools.Generators.Images
 
                     imageInputFiles.Add(file);
                     inputFileNames.Add(fileName);
+
+                    var jsonConfig = Path.Combine(Path.GetDirectoryName(file), $"{fileName}.json");
+
+                    if(!File.Exists(jsonConfig))
+                    {
+                        var assembly = GetType().Assembly;
+                        using var stream = assembly.GetManifestResourceStream("Mobile.BuildTools.Resources.resourceDefinition.json");
+                        using var reader = new StreamReader(stream);
+                        File.WriteAllText(jsonConfig, reader.ReadToEnd());
+                    }
+
+                    inputFileNames.Add(jsonConfig);
                 }
             }
 
             // HACK: Error thrown that source is modified while iterating.
             //var input = imageInputFiles.Select(x => x.Clone() as string);
             //foreach (var file in input)
-            for(int i = 0; i < imageInputFiles.Count; i++)
+            for(var i = 0; i < imageInputFiles.Count; i++)
             {
                 // We need to iterate a second time so we can be sure we are
                 // tracking all of the image files
