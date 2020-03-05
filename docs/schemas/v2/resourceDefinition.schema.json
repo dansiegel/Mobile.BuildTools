@@ -14,10 +14,12 @@
           "enum": [
             "Drawable",
             "Mipmap"
-          ]
+          ],
+          "default": "Drawable"
         },
         "ignore": {
-          "type": "boolean"
+          "type": "boolean",
+          "default": "false"
         },
         "name": {
           "type": [
@@ -26,15 +28,10 @@
           ]
         },
         "scale": {
-          "type": "number"
+          "type": "number",
+          "default": "1"
         }
-      },
-      "required": [
-        "ResourceType",
-        "ignore",
-        "name",
-        "scale"
-      ]
+      }
     },
     "PlatformConfiguration": {
       "type": [
@@ -43,7 +40,8 @@
       ],
       "properties": {
         "ignore": {
-          "type": "boolean"
+          "type": "boolean",
+          "default": "false"
         },
         "name": {
           "type": [
@@ -52,14 +50,10 @@
           ]
         },
         "scale": {
-          "type": "number"
+          "type": "number",
+          "default": "1"
         }
-      },
-      "required": [
-        "ignore",
-        "name",
-        "scale"
-      ]
+      }
     }
   },
   "type": "object",
@@ -77,7 +71,8 @@
       "$ref": "#/definitions/PlatformConfiguration"
     },
     "ignore": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": "false"
     },
     "name": {
       "type": [
@@ -86,15 +81,8 @@
       ]
     },
     "scale": {
-      "type": "number"
+      "type": "number",
+      "default": "1"
     }
-  },
-  "required": [
-    "watermarkFile",
-    "android",
-    "apple",
-    "ignore",
-    "name",
-    "scale"
-  ]
+  }
 }
