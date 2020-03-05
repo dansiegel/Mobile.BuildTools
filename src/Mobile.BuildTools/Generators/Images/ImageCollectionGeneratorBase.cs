@@ -16,8 +16,17 @@ namespace Mobile.BuildTools.Generators.Images
 
         public IEnumerable<string> SearchFolders { get; set; }
 
-        protected List<string> imageInputFiles;
-        public IReadOnlyList<string> ImageInputFiles => imageInputFiles;
+        protected List<string> imageResourcePaths;
+        private List<string> imageConfigurationPaths = new List<string>();
+        public IReadOnlyList<string> ImageInputFiles
+        {
+            get
+            {
+                var imageInputs = new List<string>(imageResourcePaths);
+                imageInputs.AddRange(imageConfigurationPaths);
+                return imageInputs;
+            }
+        }
 
         public ImageCollectionGeneratorBase(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
@@ -26,7 +35,7 @@ namespace Mobile.BuildTools.Generators.Images
 
         protected override void ExecuteInternal()
         {
-            imageInputFiles = new List<string>();
+            imageResourcePaths = new List<string>();
             var outputImageFiles = new List<OutputImage>();
             var inputFileNames = new List<string>();
             foreach (var folder in SearchFolders)
@@ -36,12 +45,12 @@ namespace Mobile.BuildTools.Generators.Images
                     var fileName = Path.GetFileNameWithoutExtension(file);
                     if (inputFileNames.Any(x => x == fileName))
                     {
-                        var originalFile = imageInputFiles.First(x => Path.GetFileNameWithoutExtension(x) == fileName);
+                        var originalFile = imageResourcePaths.First(x => Path.GetFileNameWithoutExtension(x) == fileName);
                         Log.LogWarning($"Found duplicate input image '{fileName}'. Originial input path '{originalFile}', and duplicate file path '{file}'.");
                         continue;
                     }
 
-                    imageInputFiles.Add(file);
+                    imageResourcePaths.Add(file);
                     inputFileNames.Add(fileName);
 
                     var jsonConfig = Path.Combine(Path.GetDirectoryName(file), $"{fileName}.json");
@@ -61,12 +70,12 @@ namespace Mobile.BuildTools.Generators.Images
             // HACK: Error thrown that source is modified while iterating.
             //var input = imageInputFiles.Select(x => x.Clone() as string);
             //foreach (var file in input)
-            for(var i = 0; i < imageInputFiles.Count; i++)
+            for(var i = 0; i < imageResourcePaths.Count; i++)
             {
                 // We need to iterate a second time so we can be sure we are
                 // tracking all of the image files
                 // TODO: Add json config to File Inputs
-                var resource = GetResourceDefinition(imageInputFiles.ElementAt(i));
+                var resource = GetResourceDefinition(imageResourcePaths.ElementAt(i));
                 if (resource.ShouldIgnore(Build.Platform))
                     continue;
 
@@ -92,13 +101,18 @@ namespace Mobile.BuildTools.Generators.Images
             switch (locatedConfigs.Count)
             {
                 case 1:
+                    imageConfigurationPaths.AddRange(locatedConfigs);
                     return locatedConfigs.First();
                 case 2:
+                    imageConfigurationPaths.AddRange(locatedConfigs);
                     var filtered = locatedConfigs.Where(x => Path.GetDirectoryName(x) != Path.GetDirectoryName(filePath));
                     if (filtered.Count() == 1)
                         return filtered.First();
-                    break;
+                    throw new Exception($"Unable to determine which configuration to use for the image '{filePath}'. {string.Join(", ", locatedConfigs)}");
             }
+
+            if (locatedConfigs.Count > 2)
+                throw new Exception($"Unable to determine which configuration to use. More than 2 configuration files were found for the image '{filePath}', {string.Join(", ", locatedConfigs)}");
 
             throw new FileNotFoundException(configFileName);
         }

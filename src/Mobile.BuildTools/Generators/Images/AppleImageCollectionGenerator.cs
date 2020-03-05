@@ -78,7 +78,7 @@ namespace Mobile.BuildTools.Generators.Images
         private IEnumerable<OutputImage> GetAppIconSet(ResourceDefinition resource, string basePath, string outputFileName, double masterScale)
         {
             var contentsJson = Path.Combine(basePath, "Contents.json");
-            imageInputFiles.Add(contentsJson);
+            imageResourcePaths.Add(contentsJson);
             var iconset = JsonConvert.DeserializeObject<AppleIconSet>(
                 File.ReadAllText(contentsJson));
 
