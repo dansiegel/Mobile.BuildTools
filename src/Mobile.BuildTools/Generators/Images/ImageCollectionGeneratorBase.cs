@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Mobile.BuildTools.Build;
@@ -64,31 +65,50 @@ namespace Mobile.BuildTools.Generators.Images
             {
                 // We need to iterate a second time so we can be sure we are
                 // tracking all of the image files
+                // TODO: Add json config to File Inputs
                 var resource = GetResourceDefinition(imageInputFiles.ElementAt(i));
                 if (resource.ShouldIgnore(Build.Platform))
                     continue;
+
                 var output = GetOutputImages(resource);
-                outputImageFiles.AddRange(output);
+                if(output != null && output.Any())
+                    outputImageFiles.AddRange(output);
             }
 
             Outputs = outputImageFiles;
         }
 
+        private string GetImageConfigurationPath(string filePath)
+        {
+            var configFileName = $"{Path.GetFileNameWithoutExtension(filePath)}.json";
+            var locatedConfigs = new List<string>();
+            foreach (var searchDir in SearchFolders)
+            {
+                var path = Path.Combine(searchDir, configFileName);
+                if (File.Exists(path))
+                    locatedConfigs.Add(path);
+            }
+
+            switch (locatedConfigs.Count)
+            {
+                case 1:
+                    return locatedConfigs.First();
+                case 2:
+                    var filtered = locatedConfigs.Where(x => Path.GetDirectoryName(x) != Path.GetDirectoryName(filePath));
+                    if (filtered.Count() == 1)
+                        return filtered.First();
+                    break;
+            }
+
+            throw new FileNotFoundException(configFileName);
+        }
+
         private ResourceDefinition GetResourceDefinition(string filePath)
         {
-            ResourceDefinition definition = null;
-            var fileName = Path.GetFileNameWithoutExtension(filePath) + ".json";
+            var fileName = GetImageConfigurationPath(filePath);
+            var json = File.ReadAllText(fileName);
+            var definition = JsonConvert.DeserializeObject<ResourceDefinition>(json, ConfigHelper.GetSerializerSettings());
 
-            foreach(var searchFilePath in SearchFolders.Select(x => Path.Combine(x, fileName)))
-            {
-                if(File.Exists(searchFilePath))
-                {
-                    Log.LogMessage($"Found JSON config for '{Path.GetFileName(filePath)}'");
-                    imageInputFiles.Add(searchFilePath);
-                    definition = JsonConvert.DeserializeObject<ResourceDefinition>(File.ReadAllText(searchFilePath), ConfigHelper.GetSerializerSettings());
-                    break;
-                }
-            }
             if (definition is null)
             {
                 definition = new ResourceDefinition

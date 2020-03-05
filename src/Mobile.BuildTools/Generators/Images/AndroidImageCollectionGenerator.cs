@@ -48,19 +48,19 @@ namespace Mobile.BuildTools.Generators.Images
                 platformSanitizedName += ".png";
             }
 
-            foreach(var resolution in Resolutions)
+            foreach (var resolution in Resolutions)
             {
                 Log.LogMessage($"Found image: {resource.InputFilePath} -> {resourceType}-{resolution.Key}/{platformSanitizedName}");
                 yield return new OutputImage
                 {
                     InputFile = resource.InputFilePath,
                     OutputFile = Path.Combine(Build.IntermediateOutputPath,
-                                              "Resources",
-                                              $"{resourceType}-{resolution.Key}",
-                                              platformSanitizedName),
+                                                "Resources",
+                                                $"{resourceType}-{resolution.Key}",
+                                                platformSanitizedName),
                     OutputLink = Path.Combine("Resources",
-                                              $"{resourceType}-{resolution.Key}",
-                                              platformSanitizedName),
+                                                $"{resourceType}-{resolution.Key}",
+                                                platformSanitizedName),
                     Scale = scale * (resolution.Value / 4),
                     ShouldBeVisible = true,
                     WatermarkFilePath = GetWatermarkFilePath(resource)

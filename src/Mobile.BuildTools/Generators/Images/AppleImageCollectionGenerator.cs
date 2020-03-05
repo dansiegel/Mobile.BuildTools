@@ -25,49 +25,54 @@ namespace Mobile.BuildTools.Generators.Images
 
         protected override IEnumerable<OutputImage> GetOutputImages(ResourceDefinition resource)
         {
-            (var outputFileName, var ignore, var masterScale) = resource.GetConfiguration(Platform.iOS);
-            if (ignore)
-            {
-                return Array.Empty<OutputImage>();
-            }
+           (var outputFileName, var ignore, var masterScale) = resource.GetConfiguration(Platform.iOS);
+           if (ignore)
+           {
+               return Array.Empty<OutputImage>();
+           }
 
-            // Check for appiconset
-            var assetsIconSetBasePath = Path.Combine(
-                "Assets.xcassets",
-                $"{outputFileName}.appiconset");
-            var mediaRootIconSetBasePath = Path.Combine(
-                "Media.xcassets",
-                $"{outputFileName}.appiconset");
-            var mediaIconSetBasePath = Path.Combine(
-                "Resources",
-                "Assets.xcassets",
-                $"{outputFileName}.appiconset");
-            if (Directory.Exists(Path.Combine(Build.ProjectDirectory, assetsIconSetBasePath)))
-            {
-                return GetAppIconSet(resource, assetsIconSetBasePath, outputFileName, masterScale);
-            }
-            else if (Directory.Exists(Path.Combine(Build.ProjectDirectory, mediaRootIconSetBasePath)))
-            {
-                return GetAppIconSet(resource, mediaRootIconSetBasePath, outputFileName, masterScale);
-            }
-            else if (Directory.Exists(Path.Combine(Build.ProjectDirectory, mediaIconSetBasePath)))
-            {
-                return GetAppIconSet(resource, mediaIconSetBasePath, outputFileName, masterScale);
-            }
-            else
-            {
-                Log.LogMessage($"Found image {resource.InputFilePath} -> Resources/{outputFileName}.png");
-                // Generate App Resources
-                return ResourceSizes.Select(x => new OutputImage
-                {
-                    InputFile = resource.InputFilePath,
-                    OutputFile = Path.Combine(Build.IntermediateOutputPath, "Resources", $"{outputFileName}{x.Key}.png"),
-                    OutputLink = Path.Combine("Resources", $"{outputFileName}{x.Key}.png"),
-                    Scale = masterScale * x.Value,
-                    ShouldBeVisible = true,
-                    WatermarkFilePath = GetWatermarkFilePath(resource)
-                });
-            }
+#if DEBUG
+            if (outputFileName is null)
+                System.Diagnostics.Debugger.Break();
+#endif
+
+           // Check for appiconset
+           var assetsIconSetBasePath = Path.Combine(
+               "Assets.xcassets",
+               $"{outputFileName}.appiconset");
+           var mediaRootIconSetBasePath = Path.Combine(
+               "Media.xcassets",
+               $"{outputFileName}.appiconset");
+           var mediaIconSetBasePath = Path.Combine(
+               "Resources",
+               "Assets.xcassets",
+               $"{outputFileName}.appiconset");
+           if (Directory.Exists(Path.Combine(Build.ProjectDirectory, assetsIconSetBasePath)))
+           {
+               return GetAppIconSet(resource, assetsIconSetBasePath, outputFileName, masterScale);
+           }
+           else if (Directory.Exists(Path.Combine(Build.ProjectDirectory, mediaRootIconSetBasePath)))
+           {
+               return GetAppIconSet(resource, mediaRootIconSetBasePath, outputFileName, masterScale);
+           }
+           else if (Directory.Exists(Path.Combine(Build.ProjectDirectory, mediaIconSetBasePath)))
+           {
+               return GetAppIconSet(resource, mediaIconSetBasePath, outputFileName, masterScale);
+           }
+           else
+           {
+               Log.LogMessage($"Found image {resource.InputFilePath} -> Resources/{outputFileName}.png");
+               // Generate App Resources
+               return ResourceSizes.Select(x => new OutputImage
+               {
+                   InputFile = resource.InputFilePath,
+                   OutputFile = Path.Combine(Build.IntermediateOutputPath, "Resources", $"{outputFileName}{x.Key}.png"),
+                   OutputLink = Path.Combine("Resources", $"{outputFileName}{x.Key}.png"),
+                   Scale = masterScale * x.Value,
+                   ShouldBeVisible = true,
+                   WatermarkFilePath = GetWatermarkFilePath(resource)
+               });
+           }
         }
 
         private IEnumerable<OutputImage> GetAppIconSet(ResourceDefinition resource, string basePath, string outputFileName, double masterScale)
