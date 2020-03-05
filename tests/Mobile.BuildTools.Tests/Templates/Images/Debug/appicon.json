@@ -1,0 +1,8 @@
+{
+  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "watermarkFile": "example",
+  "name": "icon",
+  "android": {
+    "resourceType": "Mipmap"
+  }
+}

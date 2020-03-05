@@ -7,6 +7,7 @@
         UWP,
         macOS,
         Tizen,
+        TVOS,
         Unsupported
     }
 }

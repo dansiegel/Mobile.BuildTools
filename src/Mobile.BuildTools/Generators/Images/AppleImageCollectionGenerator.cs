@@ -75,9 +75,28 @@ namespace Mobile.BuildTools.Generators.Images
            }
         }
 
+        protected override ResourceDefinition GetPlatformResourceDefinition(string filePath)
+        {
+            var fi = new FileInfo(filePath);
+            if (fi.Name != "Contents.json")
+                throw new Exception($"File not supported. {filePath}");
+
+            var parentDirectory = fi.Directory.Name;
+            if (Path.GetExtension(parentDirectory) != ".appiconset")
+                throw new Exception($"The Contents.json must be located within an appiconset. '{filePath}");
+
+            return new ResourceDefinition
+            {
+                InputFilePath = filePath,
+                Ignore = false,
+                Name = Path.GetFileNameWithoutExtension(parentDirectory),
+                Scale = 1
+            };
+        }
+
         private IEnumerable<OutputImage> GetAppIconSet(ResourceDefinition resource, string basePath, string outputFileName, double masterScale)
         {
-            var contentsJson = Path.Combine(basePath, "Contents.json");
+            var contentsJson = Path.Combine(Build.ProjectDirectory, basePath, "Contents.json");
             imageResourcePaths.Add(contentsJson);
             var iconset = JsonConvert.DeserializeObject<AppleIconSet>(
                 File.ReadAllText(contentsJson));
@@ -90,16 +109,21 @@ namespace Mobile.BuildTools.Generators.Images
                 var scale = int.Parse(x.Scale[0].ToString());
                 var size = x.Size.Split('x');
                 Log.LogMessage($"Found App Icon Set image {resource.InputFilePath} -> {basePath}/{x.FileName}");
+                var outputFile = Path.Combine(Build.IntermediateOutputPath, basePath, x.FileName);
+                var outputLink = Path.Combine(basePath, x.FileName);
+                var watermarkFilePath = GetWatermarkFilePath(resource);
+                var width = (int)(double.Parse(size[0]) * scale * masterScale);
+                var height = (int)(double.Parse(size[1]) * scale * masterScale);
                 return new OutputImage
                 {
                     InputFile = resource.InputFilePath,
-                    OutputFile = Path.Combine(Build.IntermediateOutputPath, basePath, x.FileName),
-                    OutputLink = Path.Combine(basePath, x.FileName),
-                    Width = (int)(int.Parse(size[0]) * scale * masterScale),
-                    Height = (int)(int.Parse(size[1]) * scale * masterScale),
+                    OutputFile = outputFile,
+                    OutputLink = outputLink,
+                    Width = width,
+                    Height = height,
                     RequiresBackgroundColor = outputFileName == "AppIcon",
                     ShouldBeVisible = false,
-                    WatermarkFilePath = GetWatermarkFilePath(resource)
+                    WatermarkFilePath = watermarkFilePath
                 };
             });
         }

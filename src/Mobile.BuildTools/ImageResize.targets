@@ -15,7 +15,8 @@
                             SolutionDirectory="$(SolutionDir)"
                             IntermediateOutputPath="$(IntermediateOutputPath)"
                             TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                            AdditionalSearchPaths="$(BuildToolsImageSearchPath)">
+                            AdditionalSearchPaths="$(BuildToolsImageSearchPath)"
+                            IgnoreDefaultSearchPaths="$(BuildToolsIgnoreDefaultSearchPath)">
       <Output ItemName="UnifiedImageAsset"
               TaskParameter="GeneratedImages" />
       <Output ItemName="UnifiedImageAssetSource"

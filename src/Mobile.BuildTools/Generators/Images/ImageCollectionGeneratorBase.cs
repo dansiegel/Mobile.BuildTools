@@ -67,15 +67,18 @@ namespace Mobile.BuildTools.Generators.Images
                 }
             }
 
-            // HACK: Error thrown that source is modified while iterating.
-            //var input = imageInputFiles.Select(x => x.Clone() as string);
-            //foreach (var file in input)
-            for(var i = 0; i < imageResourcePaths.Count; i++)
+            var inputList = imageResourcePaths.ToArray();
+            foreach(var path in inputList)
             {
                 // We need to iterate a second time so we can be sure we are
                 // tracking all of the image files
-                // TODO: Add json config to File Inputs
-                var resource = GetResourceDefinition(imageResourcePaths.ElementAt(i));
+                ResourceDefinition resource = null;
+                var ext = Path.GetExtension(path);
+                if(ext != ".png" && ext != ".jpg")
+                    resource = GetPlatformResourceDefinition(path);
+                else
+                    resource = GetResourceDefinition(path);
+
                 if (resource.ShouldIgnore(Build.Platform))
                     continue;
 
@@ -116,6 +119,8 @@ namespace Mobile.BuildTools.Generators.Images
 
             throw new FileNotFoundException(configFileName);
         }
+
+        protected virtual ResourceDefinition GetPlatformResourceDefinition(string filePath) => throw new NotImplementedException();
 
         private ResourceDefinition GetResourceDefinition(string filePath)
         {

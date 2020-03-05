@@ -14,6 +14,8 @@ namespace Mobile.BuildTools.Tasks
     {
         public string AdditionalSearchPaths { get; set; }
 
+        public bool? IgnoreDefaultSearchPaths { get; set; }
+
         [Output]
         public ITaskItem[] GeneratedImages { get; private set; }
 
@@ -68,21 +70,31 @@ namespace Mobile.BuildTools.Tasks
         {
             var searchPaths = new List<string>();
             var imageConfig = config.Configuration.Images;
-            if(imageConfig.Directories?.Any() ?? false)
-            {
-                searchPaths.AddRange(imageConfig.Directories.Select(GetSearchPath));
-            }
-
-            if(AdditionalSearchPaths?.Split(';')?.Any() ?? false)
+            var cliSearchPaths = !string.IsNullOrEmpty(AdditionalSearchPaths) ? AdditionalSearchPaths.Split(';') : Array.Empty<string>();
+            if (cliSearchPaths.Any())
             {
                 searchPaths.AddRange(AdditionalSearchPaths.Split(';').Select(GetSearchPath));
             }
 
-            var monoandroidKey = imageConfig.ConditionalDirectories.Keys.FirstOrDefault(x => x.Equals("monoandroid", StringComparison.InvariantCultureIgnoreCase));
-            var xamariniOSKey = imageConfig.ConditionalDirectories.Keys.FirstOrDefault(x => x.Equals("xamarin.ios", StringComparison.InvariantCultureIgnoreCase) || x.Equals("xamarinios", StringComparison.InvariantCultureIgnoreCase));
-            var xamarinMacKey = imageConfig.ConditionalDirectories.Keys.FirstOrDefault(x => x.Equals("xamarin.mac", StringComparison.InvariantCultureIgnoreCase) || x.Equals("xamarinmac", StringComparison.InvariantCultureIgnoreCase));
+            if(cliSearchPaths.Any() && IgnoreDefaultSearchPaths.HasValue && IgnoreDefaultSearchPaths.Value)
+            {
+                return searchPaths.Distinct();
+            }
 
-            switch(config.Platform)
+
+            if (imageConfig.Directories?.Any() ?? false)
+            {
+                searchPaths.AddRange(imageConfig.Directories.Select(GetSearchPath));
+            }
+
+            var monoandroidKey = GetKey(imageConfig.ConditionalDirectories.Keys, "monoandroid", "android", "droid");
+            var xamariniOSKey = GetKey(imageConfig.ConditionalDirectories.Keys, "xamarin.ios", "xamarinios", "ios", "apple");
+            var xamarinMacKey = GetKey(imageConfig.ConditionalDirectories.Keys, "xamarin.mac", "xamarinmac", "mac", "apple");
+            var xamarinTVOSKey = GetKey(imageConfig.ConditionalDirectories.Keys, "xamarin.tvos", "xamarintvos", "tvos", "apple");
+
+            var platformKeys = new[] { monoandroidKey, xamariniOSKey, xamarinMacKey, xamarinTVOSKey }.Where(x => x != null);
+
+            switch (config.Platform)
             {
                 case Platform.Android:
                     if (!string.IsNullOrEmpty(monoandroidKey))
@@ -96,16 +108,31 @@ namespace Mobile.BuildTools.Tasks
                     if (!string.IsNullOrEmpty(xamarinMacKey))
                         searchPaths.AddRange(imageConfig.ConditionalDirectories[xamarinMacKey].Select(GetSearchPath));
                     break;
+                case Platform.TVOS:
+                    if (!string.IsNullOrEmpty(xamarinTVOSKey))
+                        searchPaths.AddRange(imageConfig.ConditionalDirectories[xamarinTVOSKey].Select(GetSearchPath));
+                    break;
             }
 
             // TODO: Make this even smarter with conditions like `Release || Store`... perhaps we also should consider evaluating the defined constants.
-            var keys = imageConfig.ConditionalDirectories.Keys.Where(k => !k.StartsWith("mono") && !k.StartsWith("xamarin") && (k.Equals(config.BuildConfiguration) || !k.Equals($"!{config.BuildConfiguration}")));
+            var keys = imageConfig.ConditionalDirectories.Keys.Where(k => !platformKeys.Any(x => x == k) && (k.Equals(config.BuildConfiguration) || !k.Equals($"!{config.BuildConfiguration}")));
             foreach(var validCondition in keys)
             {
                 searchPaths.AddRange(imageConfig.ConditionalDirectories[validCondition].Select(GetSearchPath));
             }
 
             return searchPaths.Distinct();
+        }
+
+        private string GetKey(IEnumerable<string> conditionalKeys, params string[] possibleNames)
+        {
+            foreach(var name in possibleNames)
+            {
+                if (conditionalKeys.Any(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                    return name;
+            }
+
+            return null;
         }
 
         private string GetSearchPath(string directory)
