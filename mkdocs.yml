@@ -90,5 +90,6 @@ nav:
     - Appendix:
       - Upgrading from 1.X: appendix/upgrade.md
       - Apple Push Notifications: appendix/aps.md
+    - Credits: credits.md
 
 #google_analytics: 'UA-153405647-4'
