@@ -6,7 +6,7 @@
         "null"
       ],
       "properties": {
-        "ResourceType": {
+        "resourceType": {
           "type": [
             "string",
             "null"
