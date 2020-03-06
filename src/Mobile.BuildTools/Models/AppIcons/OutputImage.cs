@@ -22,6 +22,8 @@ namespace Mobile.BuildTools.Models.AppIcons
 
         public string WatermarkFilePath { get; set; }
 
+        public string BackgroundColor { get; set; }
+
         public new bool Equals(object x, object y)
         {
             if (x is OutputImage image1 && y is OutputImage image2)

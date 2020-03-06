@@ -6,8 +6,6 @@ using Mobile.BuildTools.Models;
 using Xunit;
 using Xunit.Abstractions;
 
-#pragma warning disable IDE1006 // Naming Styles
-#pragma warning disable IDE0040 // Add accessibility modifiers
 namespace Mobile.BuildTools.Tests.Fixtures
 {
     public class AndroidAutomaticBuildVersionGeneratorFixture : FixtureBase
@@ -70,5 +68,3 @@ namespace Mobile.BuildTools.Tests.Fixtures
         
     }
 }
-#pragma warning restore IDE0040 // Add accessibility modifiers
-#pragma warning restore IDE1006 // Naming Styles

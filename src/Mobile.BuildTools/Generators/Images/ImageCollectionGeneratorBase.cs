@@ -72,12 +72,7 @@ namespace Mobile.BuildTools.Generators.Images
             {
                 // We need to iterate a second time so we can be sure we are
                 // tracking all of the image files
-                ResourceDefinition resource = null;
-                var ext = Path.GetExtension(path);
-                if(ext != ".png" && ext != ".jpg")
-                    resource = GetPlatformResourceDefinition(path);
-                else
-                    resource = GetResourceDefinition(path);
+                var resource = GetResourceDefinition(path);
 
                 if (resource.ShouldIgnore(Build.Platform))
                     continue;
@@ -122,8 +117,12 @@ namespace Mobile.BuildTools.Generators.Images
 
         protected virtual ResourceDefinition GetPlatformResourceDefinition(string filePath) => throw new NotImplementedException();
 
-        private ResourceDefinition GetResourceDefinition(string filePath)
+        protected internal ResourceDefinition GetResourceDefinition(string filePath)
         {
+            var ext = Path.GetExtension(filePath);
+            if (ext != ".png" && ext != ".jpg")
+                return GetPlatformResourceDefinition(filePath);
+
             var fileName = GetImageConfigurationPath(filePath);
             var json = File.ReadAllText(fileName);
             var definition = JsonConvert.DeserializeObject<ResourceDefinition>(json, ConfigHelper.GetSerializerSettings());
@@ -153,7 +152,7 @@ namespace Mobile.BuildTools.Generators.Images
             return definition;
         }
 
-        protected abstract IEnumerable<OutputImage> GetOutputImages(ResourceDefinition resource);
+        protected internal abstract IEnumerable<OutputImage> GetOutputImages(ResourceDefinition resource);
 
         protected string GetWatermarkFilePath(ResourceDefinition resource)
         {

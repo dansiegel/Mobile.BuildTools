@@ -1,8 +1,9 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+﻿using System;
+using System.Linq;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 
 namespace Mobile.BuildTools.Drawing
 {
@@ -30,6 +31,17 @@ namespace Mobile.BuildTools.Drawing
 
         public static void ApplyBackground(this Image image, string hexColor)
         {
+            if (string.IsNullOrWhiteSpace(hexColor))
+                hexColor = Constants.DefaultBackgroundColor;
+
+            if (hexColor[0] != '#')
+                hexColor = $"#{hexColor}";
+
+            hexColor = hexColor.ToUpper();
+
+            if (hexColor.Length != 7 || hexColor.Any(x => !char.IsLetterOrDigit(x)))
+                throw new Exception($"An invalid hex color has been provided for the image. {hexColor}");
+
             image.Mutate(c =>
             {
                 c.BackgroundColor(Color.FromHex(hexColor));

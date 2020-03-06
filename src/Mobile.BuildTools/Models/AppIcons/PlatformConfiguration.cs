@@ -12,5 +12,8 @@ namespace Mobile.BuildTools.Models.AppIcons
 
         [JsonProperty("scale")]
         public double Scale { get; set; }
+
+        [JsonProperty("backgroundColor")]
+        public string BackgroundColor { get; set; }
     }
 }

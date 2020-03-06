@@ -11,5 +11,7 @@
         public const string BuildToolsConfigFileName = "buildtools.json";
 
         public const string ManifestJsonFileName = "manifest.json";
+
+        public const string DefaultBackgroundColor = "#FFFFFF";
     }
 }

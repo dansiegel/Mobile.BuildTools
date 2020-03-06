@@ -1,4 +1,4 @@
-﻿#if !NETCOREAPP
+#if !NETCOREAPP
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -18,6 +18,7 @@ namespace Mobile.BuildTools.Models.AppIcons
             item.SetMetadata("Scale", Scale.ToString());
             item.SetMetadata("ShouldBeVisible", ShouldBeVisible.ToString());
             item.SetMetadata("WatermarkFilePath", WatermarkFilePath);
+            item.SetMetadata("BackgroundColor", BackgroundColor);
 
             return item;
         }
@@ -29,7 +30,8 @@ namespace Mobile.BuildTools.Models.AppIcons
                 InputFile = item.GetMetadata("InputFile"),
                 OutputFile = item.ItemSpec,
                 OutputLink = item.GetMetadata("OutputLink"),
-                WatermarkFilePath = item.GetMetadata("WatermarkFilePath")
+                WatermarkFilePath = item.GetMetadata("WatermarkFilePath"),
+                BackgroundColor = item.GetMetadata("BackgroundColor")
             };
 
             int.TryParse(item.GetMetadata("Height"), out var height);

@@ -25,13 +25,11 @@ namespace Mobile.BuildTools.Tasks
 
             var generator = new ImageResizeGenerator(this)
             {
-                IntermediateOutputDirectory = IntermediateOutputPath,
                 OutputImages = images,
-                WatermarkOpacity = config.Configuration.Images.WatermarkOpacity
             };
 
             generator.Execute();
-            GeneratedImages = Images;
+            GeneratedImages = generator.Outputs.Select(x => x.ToTaskItem()).ToArray();
         }
     }
 }

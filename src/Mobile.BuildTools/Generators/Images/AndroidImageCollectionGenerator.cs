@@ -27,7 +27,7 @@ namespace Mobile.BuildTools.Generators.Images
         {
         }
 
-        protected override IEnumerable<OutputImage> GetOutputImages(ResourceDefinition resource)
+        protected internal override IEnumerable<OutputImage> GetOutputImages(ResourceDefinition resource)
         {
             (var outputFileName, var ignore, var scale) = resource.GetConfiguration(Platform.Android);
             if(ignore)
@@ -63,7 +63,8 @@ namespace Mobile.BuildTools.Generators.Images
                                                 platformSanitizedName),
                     Scale = scale * (resolution.Value / 4),
                     ShouldBeVisible = true,
-                    WatermarkFilePath = GetWatermarkFilePath(resource)
+                    WatermarkFilePath = GetWatermarkFilePath(resource),
+                    BackgroundColor = resource.GetBackgroundColor(Platform.Android)
                 };
             }
         }

@@ -9,7 +9,7 @@ using SixLabors.Primitives;
 
 namespace Mobile.BuildTools.Generators.Images
 {
-    internal class ImageResizeGenerator : GeneratorBase
+    internal class ImageResizeGenerator : GeneratorBase<IList<OutputImage>>
     {
         public ImageResizeGenerator(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
@@ -17,41 +17,42 @@ namespace Mobile.BuildTools.Generators.Images
         }
 
         public IEnumerable<OutputImage> OutputImages { get; set; }
-        public string IntermediateOutputDirectory { get; set; }
-        public double? WatermarkOpacity { get; set; }
+        public double? WatermarkOpacity => Build.Configuration.Images.WatermarkOpacity;
 
         protected override void ExecuteInternal()
         {
-#if DEBUG
-            if (!System.Diagnostics.Debugger.IsAttached)
-                System.Diagnostics.Debugger.Launch();
-#endif
+            Outputs = new List<OutputImage>();
             foreach(var outputImage in OutputImages)
             {
-                Log.LogMessage($"Generating file '{outputImage.OutputFile}");
-                Directory.CreateDirectory(Path.Combine(IntermediateOutputDirectory, Directory.GetParent(outputImage.OutputFile).FullName));
-                using var image = Image.Load(outputImage.InputFile);
-                if (outputImage.Scale != 1)
-                {
-                    image.Mutate(x =>
-                    {
-                        x.Resize(GetUpdatedSize(outputImage, image));
-                        if (!string.IsNullOrEmpty(outputImage.WatermarkFilePath))
-                        {
-                            x.ApplyWatermark(outputImage.WatermarkFilePath, WatermarkOpacity);
-                        }
-                    });
-
-                    if (outputImage.RequiresBackgroundColor && image.HasTransparentBackground())
-                    {
-                        // TODO: Make this a configuration.
-                        image.ApplyBackground("#FFFFFF");
-                    }
-                }
-
-                using var outputStream = new FileStream(outputImage.OutputFile, FileMode.OpenOrCreate);
-                image.SaveAsPng(outputStream);
+                ProcessImage(outputImage);
+                Outputs.Add(outputImage);
             }
+        }
+
+        internal void ProcessImage(OutputImage outputImage)
+        {
+            Log.LogMessage($"Generating file '{outputImage.OutputFile}");
+            Directory.CreateDirectory(Path.Combine(Build.IntermediateOutputPath, Directory.GetParent(outputImage.OutputFile).FullName));
+            using var image = Image.Load(outputImage.InputFile);
+            if (outputImage.Scale != 1)
+            {
+                image.Mutate(x =>
+                {
+                    x.Resize(GetUpdatedSize(outputImage, image));
+                    if (!string.IsNullOrEmpty(outputImage.WatermarkFilePath))
+                    {
+                        x.ApplyWatermark(outputImage.WatermarkFilePath, WatermarkOpacity);
+                    }
+                });
+
+                if (!string.IsNullOrWhiteSpace(outputImage.BackgroundColor) || (outputImage.RequiresBackgroundColor && image.HasTransparentBackground()))
+                {
+                    image.ApplyBackground(outputImage.BackgroundColor);
+                }
+            }
+
+            using var outputStream = new FileStream(outputImage.OutputFile, FileMode.OpenOrCreate);
+            image.SaveAsPng(outputStream);
         }
 
         private static Size GetUpdatedSize(OutputImage output, Image image)

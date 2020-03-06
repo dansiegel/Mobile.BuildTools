@@ -23,7 +23,7 @@ namespace Mobile.BuildTools.Generators.Images
         {
         }
 
-        protected override IEnumerable<OutputImage> GetOutputImages(ResourceDefinition resource)
+        protected internal override IEnumerable<OutputImage> GetOutputImages(ResourceDefinition resource)
         {
            (var outputFileName, var ignore, var masterScale) = resource.GetConfiguration(Platform.iOS);
            if (ignore)
@@ -70,7 +70,8 @@ namespace Mobile.BuildTools.Generators.Images
                    OutputLink = Path.Combine("Resources", $"{outputFileName}{x.Key}.png"),
                    Scale = masterScale * x.Value,
                    ShouldBeVisible = true,
-                   WatermarkFilePath = GetWatermarkFilePath(resource)
+                   WatermarkFilePath = GetWatermarkFilePath(resource),
+                   BackgroundColor = resource.GetBackgroundColor(Platform.iOS)
                });
            }
         }
@@ -97,35 +98,49 @@ namespace Mobile.BuildTools.Generators.Images
         private IEnumerable<OutputImage> GetAppIconSet(ResourceDefinition resource, string basePath, string outputFileName, double masterScale)
         {
             var contentsJson = Path.Combine(Build.ProjectDirectory, basePath, "Contents.json");
-            imageResourcePaths.Add(contentsJson);
+            if (!imageResourcePaths.Any(x => x == contentsJson))
+                imageResourcePaths.Add(contentsJson);
             var iconset = JsonConvert.DeserializeObject<AppleIconSet>(
                 File.ReadAllText(contentsJson));
 
-            return iconset.Images
-                .Where(x => !string.IsNullOrEmpty(x.FileName) &&
-                            x.FileName.EndsWith(".png", StringComparison.InvariantCultureIgnoreCase))
-                .Select(x =>
+            var iconsetImages = new List<AppleIconSetImage>();
+            foreach(var image in iconset.Images)
             {
-                var scale = int.Parse(x.Scale[0].ToString());
-                var size = x.Size.Split('x');
-                Log.LogMessage($"Found App Icon Set image {resource.InputFilePath} -> {basePath}/{x.FileName}");
-                var outputFile = Path.Combine(Build.IntermediateOutputPath, basePath, x.FileName);
-                var outputLink = Path.Combine(basePath, x.FileName);
-                var watermarkFilePath = GetWatermarkFilePath(resource);
-                var width = (int)(double.Parse(size[0]) * scale * masterScale);
-                var height = (int)(double.Parse(size[1]) * scale * masterScale);
-                return new OutputImage
-                {
-                    InputFile = resource.InputFilePath,
-                    OutputFile = outputFile,
-                    OutputLink = outputLink,
-                    Width = width,
-                    Height = height,
-                    RequiresBackgroundColor = outputFileName == "AppIcon",
-                    ShouldBeVisible = false,
-                    WatermarkFilePath = watermarkFilePath
-                };
-            });
+                // Require png file name
+                if (string.IsNullOrEmpty(image.FileName) || Path.GetExtension(image.FileName) != ".png")
+                    continue;
+
+                // Skip duplicate resources
+                if (iconsetImages.Any(x => x.FileName == image.FileName))
+                    continue;
+
+                iconsetImages.Add(image);
+                yield return GetOutputImage(image, resource, basePath, outputFileName);
+            }
+        }
+
+        private OutputImage GetOutputImage(AppleIconSetImage x, ResourceDefinition resource, string basePath, string outputFileName)
+        {
+            var scale = int.Parse(x.Scale[0].ToString());
+            var size = x.Size.Split('x');
+            Log.LogMessage($"Found App Icon Set image {resource.InputFilePath} -> {basePath}/{x.FileName}");
+            var outputFile = Path.Combine(Build.IntermediateOutputPath, basePath, x.FileName);
+            var outputLink = Path.Combine(basePath, x.FileName);
+            var watermarkFilePath = GetWatermarkFilePath(resource);
+            var width = (int)(double.Parse(size[0]) * scale);
+            var height = (int)(double.Parse(size[1]) * scale);
+            return new OutputImage
+            {
+                InputFile = resource.InputFilePath,
+                OutputFile = outputFile,
+                OutputLink = outputLink,
+                Width = width,
+                Height = height,
+                RequiresBackgroundColor = outputFileName == "AppIcon",
+                ShouldBeVisible = false,
+                WatermarkFilePath = watermarkFilePath,
+                BackgroundColor = resource.GetBackgroundColor(Platform.iOS)
+            };
         }
     }
 }
