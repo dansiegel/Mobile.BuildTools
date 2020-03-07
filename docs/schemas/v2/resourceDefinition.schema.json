@@ -18,18 +18,30 @@
           "default": "Drawable"
         },
         "ignore": {
-          "type": "boolean",
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": "false"
         },
         "name": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The file name without the file extension"
         },
         "scale": {
           "type": "number",
-          "default": "1"
+          "default": "1",
+          "description": "A real number between 0-1"
+        },
+        "backgroundColor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A Hex String such as #FFFFFF"
         }
       }
     },
@@ -40,18 +52,30 @@
       ],
       "properties": {
         "ignore": {
-          "type": "boolean",
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": "false"
         },
         "name": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The file name without the file extension"
         },
         "scale": {
           "type": "number",
-          "default": "1"
+          "default": "1",
+          "description": "A real number between 0-1"
+        },
+        "backgroundColor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A Hex String such as #FFFFFF"
         }
       }
     }
@@ -71,18 +95,30 @@
       "$ref": "#/definitions/PlatformConfiguration"
     },
     "ignore": {
-      "type": "boolean",
+      "type": [
+        "boolean",
+        "null"
+      ],
       "default": "false"
     },
     "name": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "description": "The file name without the file extension"
     },
     "scale": {
       "type": "number",
-      "default": "1"
+      "default": "1",
+      "description": "A real number between 0-1"
+    },
+    "backgroundColor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "A Hex String such as #FFFFFF"
     }
   }
 }
