@@ -63,6 +63,7 @@ namespace Mobile.BuildTools.Tasks
         {
             if (ExecutingDirectory == "UnitTest") return;
 
+            var assemblyDirectory = new FileInfo(GetType().Assembly.Location).Directory;
             var fileName = "libsass.dll";
             var platformRuntimeFolder = "win-x86";
             if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -71,24 +72,12 @@ namespace Mobile.BuildTools.Tasks
                 platformRuntimeFolder = "osx-x64";
             }
 
-            var requiredFile = Path.Combine(ExecutingDirectory, fileName);
+            var requiredFile = Path.Combine(assemblyDirectory.FullName, fileName);
             if(!File.Exists(requiredFile))
             {
-                var runtimeDirectory = GetRuntimeFolder(new DirectoryInfo(ExecutingDirectory));
-                var sourceFile = Path.Combine(runtimeDirectory, platformRuntimeFolder, "native", fileName);
+                var sourceFile = Path.Combine(assemblyDirectory.FullName, "runtimes", platformRuntimeFolder, "native", fileName);
                 File.Copy(sourceFile, requiredFile);
             }
-        }
-
-        private string GetRuntimeFolder(DirectoryInfo searchDirectory)
-        {
-            var path = Path.Combine(searchDirectory.FullName, "runtimes");
-            if(Directory.Exists(path))
-            {
-                return path;
-            }
-
-            return GetRuntimeFolder(searchDirectory.Parent);
         }
 
         private IEnumerable<TaskItem> ProcessFiles(IEnumerable<string> inputFiles)

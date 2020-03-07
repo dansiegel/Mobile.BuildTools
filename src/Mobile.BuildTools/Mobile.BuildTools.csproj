@@ -64,7 +64,7 @@
       <CopyLocalPackageFile Include="@(PackageItems)"
                             Condition="'%(PackageItems.NuGetPackageId)' == '$(CopyToOutputPackageId)' And
                             ('$(CopyToOutputAssetType.Contains(%(PackageItems.AssetType)))' == 'true' Or '$(CopyToOutputAssetType.Contains(%(PackageItems.RuntimeIdentifier)))' == 'true')" />
-      <PackageFile Include="@(CopyLocalPackageFile)" PackagePath="%(CopyLocalPackageFile.PathInPackage)" />
+      <PackageFile Include="@(CopyLocalPackageFile)" PackagePath="$(PrimaryOutputKind)/%(CopyLocalPackageFile.PathInPackage)" />
     </ItemGroup>
     <ItemGroup>
       <RuntimeCopyLocalPackageFiles Include="@(RuntimeCopyLocalItems)"
