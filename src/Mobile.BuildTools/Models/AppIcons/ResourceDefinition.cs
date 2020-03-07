@@ -93,7 +93,7 @@ namespace Mobile.BuildTools.Models.AppIcons
     {
         [DefaultValue(AndroidResource.Drawable)]
         [JsonProperty("resourceType")]
-#if NETCOREAPP
+#if SCHEMAGENERATOR
         [System.ComponentModel.DataAnnotations.EnumDataType(typeof(AndroidResource))]
         public string ResourceType { get; set; }
 #else

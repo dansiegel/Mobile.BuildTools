@@ -8,7 +8,7 @@ namespace Mobile.BuildTools.Models.Secrets
         [JsonProperty("name")]
         public string Name { get; set; }
 
-#if NETCOREAPP
+#if SCHEMAGENERATOR
         [System.ComponentModel.DataAnnotations.EnumDataType(typeof(PropertyType))]
         public string PropertyType { get; set; }
 #else

@@ -5,7 +5,7 @@ namespace Mobile.BuildTools.Models
 {
     public class AutomaticVersioning : ToolItem
     {
-#if NETCOREAPP
+#if SCHEMAGENERATOR
         [DefaultValue("PreferBuildNumber")]
         [System.ComponentModel.DataAnnotations.EnumDataType(typeof(VersionBehavior))]
         public string Behavior { get; set; }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-#if !NETCOREAPP
+#if !SCHEMAGENERATOR
 using Microsoft.Build.Framework;
 using Mobile.BuildTools.Build;
 #endif
@@ -27,7 +27,7 @@ namespace Mobile.BuildTools.Utils
             return File.Exists(filePath);
         }
 
-#if !NETCOREAPP
+#if !SCHEMAGENERATOR
         public static BuildToolsConfig GetConfig(ITaskItem item) =>
             GetConfig(item.ItemSpec);
 #endif
@@ -82,7 +82,7 @@ namespace Mobile.BuildTools.Utils
                 },
                 AutomaticVersioning = new AutomaticVersioning
                 {
-#if !NETCOREAPP
+#if !SCHEMAGENERATOR
                     Behavior = VersionBehavior.PreferBuildNumber,
                     Environment = VersionEnvironment.All,
 #endif
@@ -116,7 +116,7 @@ namespace Mobile.BuildTools.Utils
                 }
             };
 
-#if !NETCOREAPP
+#if !SCHEMAGENERATOR
             var imagesRootDir = Path.Combine(path, "Images");
             if (Directory.Exists(imagesRootDir))
             {
@@ -169,7 +169,7 @@ secrets.*.json
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
 
-#if !NETCOREAPP
+#if !SCHEMAGENERATOR
         internal static SecretsConfig GetSecretsConfig(IBuildConfiguration buildConfiguration) =>
             GetSecretsConfig(buildConfiguration.ProjectName, buildConfiguration.ProjectDirectory, buildConfiguration.Configuration);
 #endif

@@ -1,4 +1,4 @@
-#if !NETCOREAPP
+#if !(SCHEMAGENERATOR || CLI_TOOL)
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 

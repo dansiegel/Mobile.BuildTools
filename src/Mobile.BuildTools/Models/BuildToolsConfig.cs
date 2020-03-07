@@ -6,7 +6,7 @@ namespace Mobile.BuildTools.Models
 {
     public class BuildToolsConfig
     {
-#if !NETCOREAPP
+#if !SCHEMAGENERATOR
         private string _schema = "https://xam.dev/buildtools.schema.json";
         [JsonProperty("$schema")]
         public string Schema
