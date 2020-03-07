@@ -32,23 +32,21 @@ namespace Mobile.BuildTools.Generators.Images
         internal void ProcessImage(OutputImage outputImage)
         {
             Log.LogMessage($"Generating file '{outputImage.OutputFile}");
-            Directory.CreateDirectory(Path.Combine(Build.IntermediateOutputPath, Directory.GetParent(outputImage.OutputFile).FullName));
+            var fi = new FileInfo(outputImage.OutputFile);
+            Directory.CreateDirectory(Path.Combine(Build.IntermediateOutputPath, fi.DirectoryName));
             using var image = Image.Load(outputImage.InputFile);
-            if (outputImage.Scale != 1)
+            image.Mutate(x =>
             {
-                image.Mutate(x =>
+                x.Resize(GetUpdatedSize(outputImage, image));
+                if (!string.IsNullOrEmpty(outputImage.WatermarkFilePath))
                 {
-                    x.Resize(GetUpdatedSize(outputImage, image));
-                    if (!string.IsNullOrEmpty(outputImage.WatermarkFilePath))
-                    {
-                        x.ApplyWatermark(outputImage.WatermarkFilePath, WatermarkOpacity);
-                    }
-                });
-
-                if (!string.IsNullOrWhiteSpace(outputImage.BackgroundColor) || (outputImage.RequiresBackgroundColor && image.HasTransparentBackground()))
-                {
-                    image.ApplyBackground(outputImage.BackgroundColor);
+                    x.ApplyWatermark(outputImage.WatermarkFilePath, WatermarkOpacity);
                 }
+            });
+
+            if (!string.IsNullOrWhiteSpace(outputImage.BackgroundColor) || (outputImage.RequiresBackgroundColor && image.HasTransparentBackground()))
+            {
+                image.ApplyBackground(outputImage.BackgroundColor);
             }
 
             using var outputStream = new FileStream(outputImage.OutputFile, FileMode.OpenOrCreate);

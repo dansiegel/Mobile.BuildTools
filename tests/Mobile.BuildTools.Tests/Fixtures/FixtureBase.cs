@@ -24,20 +24,31 @@ namespace Mobile.BuildTools.Tests.Fixtures
         protected TestBuildConfiguration GetConfiguration()
         {
             var stackTrace = new StackTrace();
-            var testOutput = Path.Combine("Tests", stackTrace.GetFrame(1).GetMethod().Name);
-            if(Directory.Exists(testOutput))
-            {
-                Directory.Delete(testOutput, true);
-            }
+            var testOutput = Path.Combine("Tests", GetType().Name, stackTrace.GetFrame(1).GetMethod().Name);
+            ResetTestOutputDirectory(testOutput);
 
-            Directory.CreateDirectory(testOutput);
             return new TestBuildConfiguration
             {
                 Logger = new XunitLog(_testOutputHelper),
                 Platform = Tasks.Utils.Platform.Unsupported,
                 IntermediateOutputPath = testOutput,
-                ProjectDirectory = ProjectDirectory
+                ProjectDirectory = ProjectDirectory,
+                BuildConfiguration = "Debug",
+                ProjectName = "AwesomeApp",
             };
+        }
+
+        private void ResetTestOutputDirectory(string path)
+        {
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch { }
+            finally
+            {
+                Directory.CreateDirectory(path);
+            }
         }
 
         protected static void DirectoryCopy(string sourceDirName, string destDirName)
