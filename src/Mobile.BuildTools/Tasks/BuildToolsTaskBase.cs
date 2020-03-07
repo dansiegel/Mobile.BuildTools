@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
@@ -58,7 +59,7 @@ namespace Mobile.BuildTools.Tasks
             try
             {
 //#if DEBUG
-//                if (!Debugger.IsAttached)
+//                if (!Debugger.IsAttached && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 //                    Debugger.Launch();
 //#endif
                 ExecuteInternal(this);
@@ -66,15 +67,13 @@ namespace Mobile.BuildTools.Tasks
             catch (Exception ex)
             {
 #if DEBUG
-                if (!Debugger.IsAttached)
+                if (!Debugger.IsAttached && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     Debugger.Launch();
-
-                    Debugger.Break();
 #endif
                 Log.LogError($"Unhandled error while executing {GetType().Name}");
                 Log.LogErrorFromException(ex);
 
-                if(ConfigHelper.Exists(ConfigurationPath) 
+                if(ConfigHelper.Exists(ConfigurationPath)
                     && ConfigHelper.GetConfig(ConfigurationPath).Debug)
                 {
                     Log.LogWarning("******** DEBUG OUTPUT ****************");

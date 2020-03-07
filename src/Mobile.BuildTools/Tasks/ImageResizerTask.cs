@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Images;
 using Mobile.BuildTools.Models.AppIcons;

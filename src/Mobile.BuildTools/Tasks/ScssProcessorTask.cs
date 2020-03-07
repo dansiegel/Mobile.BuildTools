@@ -42,7 +42,7 @@ namespace Mobile.BuildTools.Tasks
             try
             {
 //#if DEBUG
-//                if (!Debugger.IsAttached)
+//                if (!Debugger.IsAttached && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 //                    Debugger.Launch();
 //#endif
 
