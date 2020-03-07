@@ -31,8 +31,8 @@ namespace Mobile.BuildTools.Tasks
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            if (!System.Diagnostics.Debugger.IsAttached)
-                System.Diagnostics.Debugger.Launch();
+            // if (!System.Diagnostics.Debugger.IsAttached)
+            //     System.Diagnostics.Debugger.Launch();
 
             if (!InputConfigFiles.Any())
             {

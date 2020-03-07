@@ -27,12 +27,12 @@ namespace Mobile.BuildTools.Tasks
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
-#if DEBUG
-            if (!System.Diagnostics.Debugger.IsAttached)
-                System.Diagnostics.Debugger.Launch();
-            else
-                System.Diagnostics.Debugger.Break();
-#endif
+// #if DEBUG
+//             if (!System.Diagnostics.Debugger.IsAttached)
+//                 System.Diagnostics.Debugger.Launch();
+//             else
+//                 System.Diagnostics.Debugger.Break();
+// #endif
 
             GeneratedImages = Array.Empty<ITaskItem>();
             var generator = CreateGenerator(config.Platform, config);
