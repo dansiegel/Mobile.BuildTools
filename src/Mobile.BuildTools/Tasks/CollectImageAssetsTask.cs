@@ -128,8 +128,9 @@ namespace Mobile.BuildTools.Tasks
         {
             foreach(var name in possibleNames)
             {
-                if (conditionalKeys.Any(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                    return name;
+                var key = conditionalKeys.FirstOrDefault(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                if (!string.IsNullOrEmpty(key))
+                    return key;
             }
 
             return null;
