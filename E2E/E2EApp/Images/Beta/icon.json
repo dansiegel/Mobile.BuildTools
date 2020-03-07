@@ -1,9 +1,11 @@
 {
+  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
   "apple": {
     "name": "AppIcon"
   },
   "android": {
-    "name": "Icon"
+    "resourceType": "Mipmap",
+    "scale": 0.375
   },
   "watermarkFile": "beta-version"
 }
