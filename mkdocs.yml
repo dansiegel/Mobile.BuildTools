@@ -76,7 +76,8 @@ nav:
     - Build Versioning: build-versioning.md
     - Image Assets:
       - Getting Started: images/index.md
-      - Configuring Images: imagesconfiguring-images.md
+      - Configuring Images: images/configuring-images.md
+      - Build Customization: images/build-customization.md
     - Release Note Generation: release-notes.md
     - Continuous Integration:
       - Platforms: continuous-integration/platforms.md
