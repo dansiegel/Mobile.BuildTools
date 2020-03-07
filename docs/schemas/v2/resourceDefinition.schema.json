@@ -22,7 +22,7 @@
             "boolean",
             "null"
           ],
-          "default": "false"
+          "default": false
         },
         "name": {
           "type": [
@@ -33,7 +33,7 @@
         },
         "scale": {
           "type": "number",
-          "default": "1",
+          "default": 1,
           "description": "A real number between 0-1"
         },
         "backgroundColor": {
@@ -56,7 +56,7 @@
             "boolean",
             "null"
           ],
-          "default": "false"
+          "default": false
         },
         "name": {
           "type": [
@@ -67,7 +67,7 @@
         },
         "scale": {
           "type": "number",
-          "default": "1",
+          "default": 1,
           "description": "A real number between 0-1"
         },
         "backgroundColor": {
@@ -99,7 +99,7 @@
         "boolean",
         "null"
       ],
-      "default": "false"
+      "default": false
     },
     "name": {
       "type": [
@@ -110,7 +110,7 @@
     },
     "scale": {
       "type": "number",
-      "default": "1",
+      "default": 1,
       "description": "A real number between 0-1"
     },
     "backgroundColor": {
