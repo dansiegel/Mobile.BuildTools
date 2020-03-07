@@ -123,7 +123,7 @@ namespace Mobile.BuildTools.Generators.Images
         {
             var scale = int.Parse(x.Scale[0].ToString());
             var size = x.Size.Split('x');
-            Log.LogMessage($"Found App Icon Set image {resource.InputFilePath} -> {basePath}/{x.FileName}");
+            Log.LogMessage($"Found App Icon Set image {resource.InputFilePath} -> {basePath}{Path.DirectorySeparatorChar}{x.FileName}");
             var outputFile = Path.Combine(Build.IntermediateOutputPath, basePath, x.FileName);
             var outputLink = Path.Combine(basePath, x.FileName);
             var watermarkFilePath = GetWatermarkFilePath(resource);
