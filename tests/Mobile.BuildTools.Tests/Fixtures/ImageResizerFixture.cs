@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -16,7 +16,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
     public class ImageResizerFixture : FixtureBase
     {
         public ImageResizerFixture(ITestOutputHelper testOutputHelper) 
-            : base(Path.Join("Templates", "Apple"), testOutputHelper)
+            : base(Path.Combine("Templates", "Apple"), testOutputHelper)
         {
         }
 
@@ -34,9 +34,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
             {
                 Height = 0,
                 Width = 0,
-                InputFile = Path.Join(TestConstants.ImageDirectory, "dotnetbot.png"),
-                OutputFile = Path.Join(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Join("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
                 RequiresBackgroundColor = false,
                 Scale = scale,
                 ShouldBeVisible = true,
@@ -66,9 +66,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
             {
                 Height = expectedOutput,
                 Width = expectedOutput,
-                InputFile = Path.Join(TestConstants.ImageDirectory, "dotnetbot.png"),
-                OutputFile = Path.Join(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Join("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
                 RequiresBackgroundColor = false,
                 Scale = 0,
                 ShouldBeVisible = true,
@@ -94,13 +94,13 @@ namespace Mobile.BuildTools.Tests.Fixtures
             {
                 Height = 0,
                 Width = 0,
-                InputFile = Path.Join(TestConstants.ImageDirectory, "dotnetbot.png"),
-                OutputFile = Path.Join(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Join("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
                 RequiresBackgroundColor = false,
                 Scale = 1,
                 ShouldBeVisible = true,
-                WatermarkFilePath = Path.Join(TestConstants.DebugImageDirectory, "example.png")
+                WatermarkFilePath = Path.Combine(TestConstants.DebugImageDirectory, "example.png")
             };
 
             generator.ProcessImage(image);
@@ -137,9 +137,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
             {
                 Height = 0,
                 Width = 0,
-                InputFile = Path.Join(TestConstants.ImageDirectory, "dotnetbot.png"),
-                OutputFile = Path.Join(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Join("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
                 RequiresBackgroundColor = true,
                 Scale = 1,
                 ShouldBeVisible = true,
@@ -186,9 +186,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
             {
                 Height = 0,
                 Width = 0,
-                InputFile = Path.Join(TestConstants.ImageDirectory, "dotnetbot.png"),
-                OutputFile = Path.Join(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Join("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
                 RequiresBackgroundColor = true,
                 Scale = 1,
                 ShouldBeVisible = true,

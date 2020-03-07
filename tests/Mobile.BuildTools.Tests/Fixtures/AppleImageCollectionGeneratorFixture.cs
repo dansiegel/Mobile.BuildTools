@@ -12,7 +12,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
     public class AppleImageCollectionGeneratorFixture : ImageCollectionGeneratorFixture
     {
         public AppleImageCollectionGeneratorFixture(ITestOutputHelper testOutputHelper)
-            : base(Path.Join("Templates", "Apple"), testOutputHelper)
+            : base(Path.Combine("Templates", "Apple"), testOutputHelper)
         {
             PlatformOffset = 1;
         }
@@ -26,9 +26,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 0,
-                                    InputFile = Path.Join(ImageDirectory, "dotnetbot.png"),
-                                    OutputFile = Path.Join("Resources", "dotnetbot@1x.png"),
-                                    OutputLink = Path.Join("Resources", "dotnetbot@1x.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "dotnetbot.png"),
+                                    OutputFile = Path.Combine("Resources", "dotnetbot@1x.png"),
+                                    OutputLink = Path.Combine("Resources", "dotnetbot@1x.png"),
                                     RequiresBackgroundColor = false,
                                     Scale = 1.0 / 3.0,
                                     ShouldBeVisible = true,
@@ -38,9 +38,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 0,
-                                    InputFile = Path.Join(ImageDirectory, "dotnetbot.png"),
-                                    OutputFile = Path.Join("Resources", "dotnetbot@2x.png"),
-                                    OutputLink = Path.Join("Resources", "dotnetbot@2x.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "dotnetbot.png"),
+                                    OutputFile = Path.Combine("Resources", "dotnetbot@2x.png"),
+                                    OutputLink = Path.Combine("Resources", "dotnetbot@2x.png"),
                                     RequiresBackgroundColor = false,
                                     Scale = 2.0 / 3.0,
                                     ShouldBeVisible = true,
@@ -50,9 +50,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 0,
-                                    InputFile = Path.Join(ImageDirectory, "dotnetbot.png"),
-                                    OutputFile = Path.Join("Resources", "dotnetbot@3x.png"),
-                                    OutputLink = Path.Join("Resources", "dotnetbot@3x.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "dotnetbot.png"),
+                                    OutputFile = Path.Combine("Resources", "dotnetbot@3x.png"),
+                                    OutputLink = Path.Combine("Resources", "dotnetbot@3x.png"),
                                     RequiresBackgroundColor = false,
                                     Scale = 1,
                                     ShouldBeVisible = true,
@@ -66,9 +66,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 20,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon20.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon20.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon20.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon20.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -78,9 +78,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 29,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon29.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon29.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon29.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon29.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -90,9 +90,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 40,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon40.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon40.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon40.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon40.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -102,9 +102,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 58,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon58.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon58.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon58.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon58.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -114,9 +114,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 60,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon60.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon60.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon60.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon60.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -126,9 +126,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 76,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon76.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon76.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon76.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon76.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -138,9 +138,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 80,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon80.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon80.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon80.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon80.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -150,9 +150,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 87,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon87.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon87.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon87.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon87.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -162,9 +162,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 120,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon120.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon120.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon120.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon120.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -174,9 +174,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 152,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon152.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon152.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon152.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon152.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -186,9 +186,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 167,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon167.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon167.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon167.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon167.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -198,9 +198,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 180,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon180.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon180.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon180.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon180.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
@@ -210,9 +210,9 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                 new OutputImage
                                 {
                                     Height = 1024,
-                                    InputFile = Path.Join(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
-                                    OutputFile = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon1024.png"),
-                                    OutputLink = Path.Join("Assets.xcassets", "AppIcon.appiconset", "Icon1024.png"),
+                                    InputFile = Path.Combine(ImageDirectory, "Xamarin.iOS", "ios-icon.png"),
+                                    OutputFile = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon1024.png"),
+                                    OutputLink = Path.Combine("Assets.xcassets", "AppIcon.appiconset", "Icon1024.png"),
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
