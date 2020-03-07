@@ -712,8 +712,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../imagesconfiguring-images.md" title="Configuring Images" class="md-nav__link">
+    <a href="configuring-images/" title="Configuring Images" class="md-nav__link">
       Configuring Images
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="build-customization/" title="Build Customization" class="md-nav__link">
+      Build Customization
     </a>
   </li>
 
@@ -971,7 +983,10 @@
     <span class="p">],</span>
     <span class="nt">&quot;conditionalDirectories&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="nt">&quot;MonoAndroid&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images\\Android&quot;</span> <span class="p">],</span>
-      <span class="nt">&quot;Xamarin.iOS&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images\\iOS&quot;</span> <span class="p">]</span>
+      <span class="nt">&quot;Xamarin.iOS&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images\\iOS&quot;</span> <span class="p">],</span>
+      <span class="nt">&quot;Debug&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images\\Debug&quot;</span> <span class="p">],</span>
+      <span class="nt">&quot;!Store&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images\\NotProduction&quot;</span> <span class="p">],</span>
+      <span class="nt">&quot;Store&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images\\Production&quot;</span> <span class="p">]</span>
     <span class="p">},</span>
     <span class="nt">&quot;watermarkOpacity&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="nt">&quot;disable&quot;</span><span class="p">:</span> <span class="kc">false</span>
@@ -984,12 +999,6 @@
 <p class="admonition-title">Info</p>
 <p>While you should generally configure directories in the <code>buildtools.json</code>, there may be times which you need to conditionally add additonal search directories for your images. For these times you can use the build property <code>BuildToolsImageSearchPath</code> to set any additional directories in a semi-colon separated list as shown here:</p>
 </div>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;PropertyGroup&gt;</span>
-  <span class="nt">&lt;BuildToolsImageSearchPath&gt;</span>$(SolutionDir)\Images\MoreImages;$(SolutionDir)\Images\AwesomeImages<span class="nt">&lt;/BuildToolsImageSearchPath&gt;</span>
-<span class="nt">&lt;/PropertyGroup&gt;</span>
-</code></pre></div>
-
-
 <div class="admonition note note">
 <p class="admonition-title">Note</p>
 <p>If you have an image name that contains white space such as <code>foo bar.png</code>, the Mobile.BuildTools will sanitize the file name replace any contiguous white space characters with a single <code>-</code>. This normalization is required by Android and will mean that you will need to reference the image as <code>foo-bar.png</code>.</p>

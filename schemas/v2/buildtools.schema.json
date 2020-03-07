@@ -59,7 +59,7 @@
           ]
         },
         "versionOffset": {
-          "type": "integer",
+          "type": [ "integer", "null" ],
           "default": 0
         },
         "disable": {

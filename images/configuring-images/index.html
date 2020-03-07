@@ -42,7 +42,7 @@
     
     
       
-        <title>Configuring images - Mobile.BuildTools</title>
+        <title>Configuring Images - Mobile.BuildTools</title>
       
     
     
@@ -130,7 +130,7 @@
             </span>
             <span class="md-header-nav__topic">
             
-                Configuring images
+                Configuring Images
             
             </span>
         
@@ -205,7 +205,9 @@
       
         
 
-<nav class="md-tabs" data-md-component="tabs">
+  
+
+<nav class="md-tabs md-tabs--active" data-md-component="tabs">
   <div class="md-tabs__inner md-grid">
     <ul class="md-tabs__list">
       
@@ -266,7 +268,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="../.." class="md-tabs__link">
+        <a href="../.." class="md-tabs__link md-tabs__link--active">
           Mobile.BuildTools
         </a>
       
@@ -465,10 +467,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
     
     <label class="md-nav__link" for="nav-5">
       Mobile.BuildTools
@@ -664,10 +668,12 @@
           
           
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-5" type="checkbox" id="nav-5-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-5" type="checkbox" id="nav-5-5" checked>
     
     <label class="md-nav__link" for="nav-5-5">
       Image Assets
@@ -695,10 +701,63 @@
           
           
 
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Configuring Images
+      </label>
+    
+    <a href="./" title="Configuring Images" class="md-nav__link md-nav__link--active">
+      Configuring Images
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-images" class="md-nav__link">
+    Configuring Images
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#watermarking-images" class="md-nav__link">
+    Watermarking Images
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
 
   <li class="md-nav__item">
-    <a href="../../imagesconfiguring-images.md" title="Configuring Images" class="md-nav__link">
-      Configuring Images
+    <a href="../build-customization/" title="Build Customization" class="md-nav__link">
+      Build Customization
     </a>
   </li>
 
@@ -966,7 +1025,7 @@
               
                 
                 
-                  <h1>Configuring images</h1>
+                  <h1>Configuring Images</h1>
                 
                 <p>The first time the Mobile.BuildTools encounters an image it will automatically generate a default image configuration file along side of the image. This file is what allows you to customize and further refine the image that you want. A configuration file may reside a conditional search directory. The Mobile.BuildTools will opt to use a configuration that is not in the same file directory as the image resource any time that a duplication is found.</p>
 <p>!!!! warning Warning
