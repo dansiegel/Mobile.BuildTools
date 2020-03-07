@@ -4,6 +4,10 @@ on:
   push:
     branches:
     - master
+    paths:
+    - "docs/**"
+    - "theme/**"
+    - mkdocs.yml
 
 jobs:
   build-deploy:
