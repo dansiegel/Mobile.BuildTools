@@ -5,7 +5,6 @@
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
     <_NativeRuntime>win-x86</_NativeRuntime>
-    <_NativeRuntime Condition="$([System.Environment]::Is64BitProcess)">win-x64</_NativeRuntime>
     <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
   </PropertyGroup>
 

@@ -34,7 +34,7 @@
   <Target Name="_EnsureScssRuntimeIsAvailable">
     <PropertyGroup>
       <_NativeRuntime>win-x86</_NativeRuntime>
-      <_NativeRuntime Condition="$([System.Environment]::Is64BitProcess)">win-x64</_NativeRuntime>
+      <!-- <_NativeRuntime Condition="$([System.Environment]::Is64BitProcess)">win-x64</_NativeRuntime> -->
       <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' ">win-x86</ScssRuntime>
       <ScssRuntimeDir>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'runtimes', $(ScssRuntime)))</ScssRuntimeDir>
