@@ -84,8 +84,12 @@ namespace Mobile.BuildTools.Tests.Fixtures
             Assert.Equal(expectedOutput, imageResource.Width);
         }
 
-        [Fact]
-        public void AppliesWatermark()
+        [Theory]
+        [InlineData("dotnetbot", "example")]
+        [InlineData("dotnetbot", "beta-version")]
+        [InlineData("icon", "example")]
+        [InlineData("icon", "beta-version")]
+        public void AppliesWatermark(string inputImageName, string watermarkImage)
         {
             var config = GetConfiguration();
             var generator = new ImageResizeGenerator(config);
@@ -94,13 +98,13 @@ namespace Mobile.BuildTools.Tests.Fixtures
             {
                 Height = 0,
                 Width = 0,
-                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
-                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                InputFile = Path.Combine(TestConstants.WatermarkImageDirectory, $"{inputImageName}.png"),
+                OutputFile = Path.Combine($"{config.IntermediateOutputPath}-{inputImageName}-{watermarkImage}", $"{inputImageName}.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", $"{inputImageName}.png"),
                 RequiresBackgroundColor = false,
                 Scale = 1,
                 ShouldBeVisible = true,
-                WatermarkFilePath = Path.Combine(TestConstants.DebugImageDirectory, "example.png")
+                WatermarkFilePath = Path.Combine(TestConstants.WatermarkImageDirectory, $"{watermarkImage}.png")
             };
 
             generator.ProcessImage(image);

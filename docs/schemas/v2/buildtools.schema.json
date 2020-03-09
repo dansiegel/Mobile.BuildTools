@@ -121,7 +121,7 @@
             "number",
             "null"
           ],
-          "default": 1
+          "default": 0.95
         },
         "disable": {
           "description": "Disables this Mobile.Build.Tools Task",

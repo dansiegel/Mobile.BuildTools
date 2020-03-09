@@ -10,6 +10,7 @@ namespace Mobile.BuildTools.Tests
         public static readonly string AndroidImageDirectory = Path.Combine(ImageDirectory, "MonoAndroid");
         public static readonly string AppleImageDirectory = Path.Combine(ImageDirectory, "Xamarin.iOS");
         public static readonly string DebugImageDirectory = Path.Combine(ImageDirectory, "Debug");
+        public static readonly string WatermarkImageDirectory = Path.Combine(ImageDirectory, "Watermarks");
 
         private const string androidIconFileName = "appicon.png";
         private const string appleIconFileName = "ios-icon.png";

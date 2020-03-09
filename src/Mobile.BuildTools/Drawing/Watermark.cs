@@ -14,7 +14,7 @@ namespace Mobile.BuildTools.Drawing
                 using var watermarkImage = Image.Load(watermarkFile);
                 var size = processingContext.GetCurrentSize();
                 watermarkImage.Mutate(x => x.Resize(size));
-                processingContext.DrawImage(watermarkImage, PixelColorBlendingMode.Overlay, (float)(opacity ?? 0.95));
+                processingContext.DrawImage(watermarkImage, PixelColorBlendingMode.Normal, (float)(opacity ?? 0.95));
             }
 
             return processingContext;
