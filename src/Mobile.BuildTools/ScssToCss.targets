@@ -35,18 +35,18 @@
           BeforeTargets="ProcessScss">
     <PropertyGroup>
       <_NativeRuntime>win-x86</_NativeRuntime>
+      <_NativeRuntimeFile>libsass.dll</_NativeRuntimeFile>
       <!-- <_NativeRuntime Condition="$([System.Environment]::Is64BitProcess)">win-x64</_NativeRuntime> -->
       <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
-      <ScssRuntime Condition=" '$(ScssRuntime)' == '' ">win-x86</ScssRuntime>
-      <ScssRuntimeDir>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'runtimes', $(ScssRuntime)))</ScssRuntimeDir>
+      <_NativeRuntimeFile Condition=" '$(OS)' != 'Windows_NT'">libsass.dylib</_NativeRuntimeFile>
+      <ScssRuntimeInput>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'runtimes', $(_NativeRuntime), $(_NativeRuntimeFile)))</ScssRuntimeInput>
+      <ScssRuntimeOutput>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), $(_NativeRuntimeFile)))</ScssRuntimeOutput>
     </PropertyGroup>
-    <ItemGroup>
-      <LibSass Include="$(ScssRuntimeDir)libsass.*" />
-    </ItemGroup>
-    <Message Text="Looking for ScssRuntime in $(ScssRuntimeDir) -> @(LibSass)" />
-    <Copy SourceFiles="@(LibSass)"
-          DestinationFiles="$(MSBuildThisFileDirectory)%(Filename)%(Extension)"
-          Condition="!Exists('$(MSBuildThisFileDirectory)%(Filename)%(Extension)')" />
+
+    <Message Text="Looking for ScssRuntime in $(ScssRuntimeInput)" />
+    <Copy SourceFiles="$(ScssRuntimeInput)"
+          DestinationFolder="$(MSBuildThisFileDirectory)"
+          Condition="!Exists($(ScssRuntimeOutput))" />
   </Target>
 
   <Target Name="ProcessScss"
