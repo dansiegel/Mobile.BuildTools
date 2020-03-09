@@ -49,13 +49,27 @@ namespace Mobile.BuildTools.Tasks.Generators.AppConfig
                 }
             }
 
-            if(Build.Configuration.AppConfig.IncludeAllConfigs)
+            switch(Build.Configuration.AppConfig.Strategy)
             {
-                Outputs = parentDirectory.EnumerateFiles().Select(x => new TaskItem(x.FullName));
-            }
-            else
-            {
-                Outputs = new[] { new TaskItem(BaseConfigPath) };
+                case Models.AppConfigStrategy.BundleAll:
+                    Outputs = parentDirectory.EnumerateFiles()
+                                             .Select(x => new TaskItem(x.FullName));
+                    break;
+                case Models.AppConfigStrategy.BundleNonStandard:
+                    var standardConfigs = new[]
+                    {
+                        "app.debug.config",
+                        "app.release.config",
+                        "app.store.config",
+                        "app.adhoc.config"
+                    };
+                    Outputs = parentDirectory.EnumerateFiles()
+                                             .Where(x => !standardConfigs.Any(s => s.Equals(x.Name, StringComparison.InvariantCultureIgnoreCase)))
+                                             .Select(x => new TaskItem(x.FullName));
+                    break;
+                default:
+                    Outputs = new[] { new TaskItem(BaseConfigPath) };
+                    break;
             }
         }
     }

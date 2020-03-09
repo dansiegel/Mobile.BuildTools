@@ -84,10 +84,31 @@ namespace Mobile.BuildTools.Tasks
             }
 
             _copiedConfigs.Add(new TaskItem(outputFilePath));
-            var includeAllConfigs = config.Configuration.AppConfig.IncludeAllConfigs;
-            if (includeAllConfigs || Path.GetFileName(file).Equals("app.config", StringComparison.InvariantCultureIgnoreCase))
+
+            switch (config.Configuration.AppConfig.Strategy)
             {
-                _outputs.Add(new TaskItem(outputFilePath));
+                case Models.AppConfigStrategy.BundleAll:
+                    _outputs.Add(new TaskItem(outputFilePath));
+                    break;
+                case Models.AppConfigStrategy.BundleNonStandard:
+                    var standardConfigs = new[]
+                    {
+                        "app.debug.config",
+                        "app.release.config",
+                        "app.store.config",
+                        "app.adhoc.config"
+                    };
+                    if(!standardConfigs.Any(x => x.Equals(Path.GetFileName(file), StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        _outputs.Add(new TaskItem(outputFilePath));
+                    }
+                    break;
+                default:
+                    if (Path.GetFileName(file).Equals("app.config", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        _outputs.Add(new TaskItem(outputFilePath));
+                    }
+                    break;
             }
         }
     }

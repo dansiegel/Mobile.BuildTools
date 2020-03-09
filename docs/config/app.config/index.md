@@ -8,13 +8,24 @@ By default Mobile.BuildTools will look for any file in the root of the head proj
 {
   "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
   "appConfig": {
-    "includeAllConfigs": true
+    "strategy": "TransformOnly"
   }
 }
 ```
 
 !!! note Note
-    To limit the bundled configs to only include the transformed app.config you can set `includeAllConfigs` to false. By default we will include all app.config's to allow you to run runtime transformations
+    By default the Mobile.BuildTools will only bundle the transformed app.config into your project. You can optionally set the strategy to `BundleAll` or `BundleNonStandard` if you require runtime transformations.
+
+### App Config Strategy
+
+| Strategy | Description |
+|:--------:|-------------|
+| TransformOnly | This the default strategy which will perform the transformation and only bundle a single transformed app.config into your project. |
+| BundleAll | When set as the app config strategy this will bundle any app.config that you may have such as `app.debug.config` or `app.release.config` |
+| BundleNonStandard | When set as the app config strategy this will limit bundled app config's to any that are not for standard Xamarin build configurations which include Debug, Release, Store, & AdHoc. |
+
+!!! note
+    All file names are compared ignoring case.
 
 ## Supported Platforms
 

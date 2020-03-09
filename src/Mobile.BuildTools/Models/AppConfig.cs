@@ -5,8 +5,15 @@ namespace Mobile.BuildTools.Models
 {
     public class AppConfig : ToolItem
     {
-        [DefaultValue(false)]
-        [JsonProperty("includeAllConfigs")]
-        public bool IncludeAllConfigs { get; set; }
+        [DefaultValue(AppConfigStrategy.TransformOnly)]
+        [JsonProperty("strategy")]
+        public AppConfigStrategy Strategy { get; set; }
+    }
+
+    public enum AppConfigStrategy
+    {
+        TransformOnly,
+        BundleAll,
+        BundleNonStandard
     }
 }

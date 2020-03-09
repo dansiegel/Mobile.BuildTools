@@ -78,7 +78,7 @@ namespace Mobile.BuildTools.Utils
                 ArtifactCopy = new ArtifactCopy { Disable = false },
                 AppConfig = new AppConfig
                 {
-                    IncludeAllConfigs = true
+                    Strategy = AppConfigStrategy.TransformOnly
                 },
                 AutomaticVersioning = new AutomaticVersioning
                 {
