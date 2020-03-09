@@ -21,8 +21,8 @@
     <BuildToolsArtifactOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$([System.IO.Path]::Combine('$(BUILD_ARTIFACTSTAGINGDIRECTORY)', 'App'))</BuildToolsArtifactOutputPath>
     <IsAppCenter Condition=" '$(IsAppCenter)' == '' ">false</IsAppCenter>
     <IsAppCenter Condition=" '$(APPCENTER_BUILD_ID)' != '' ">true</IsAppCenter>
-    <IsVSTS Condition=" '$(IsVSTS)' == '' ">false</IsVSTS>
-    <IsVSTS Condition=" '$(BUILD_BUILDNUMBER)' != '' ">true</IsVSTS>
+    <IsAzureDevOps Condition=" '$(IsAzureDevOps)' == '' ">false</IsAzureDevOps>
+    <IsAzureDevOps Condition=" '$(BUILD_BUILDNUMBER)' != '' ">true</IsAzureDevOps>
     <IsAppVeyor Condition=" '$(IsAppVeyor)' == '' ">false</IsAppVeyor>
     <IsAppVeyor Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">true</IsAppVeyor>
     <IsJenkins Condition=" '$(IsJenkins)' == '' ">false</IsJenkins>
@@ -30,7 +30,7 @@
     <IsTeamCity Condition=" '$(IsTeamCity)' == '' ">false</IsTeamCity>
     <IsTeamCity Condition=" '$(BUILD_NUMBER)' != '' And '$(TEAMCITY_VERSION)' != '' ">true</IsTeamCity>
     <IsBuildHost Condition=" '$(IsBuildHost)' == '' ">false</IsBuildHost>
-    <IsBuildHost Condition=" '$(IsAppCenter)' Or '$(IsVSTS)' Or '$(IsAppVeyor)' Or '$(IsJenkins)' Or '$(IsTeamCity)' ">true</IsBuildHost>
+    <IsBuildHost Condition=" '$(IsAppCenter)' Or '$(IsAzureDevOps)' Or '$(IsAppVeyor)' Or '$(IsJenkins)' Or '$(IsTeamCity)' ">true</IsBuildHost>
   </PropertyGroup>
 
   <Choose>
@@ -96,7 +96,7 @@
     </When>
     <Otherwise>
       <PropertyGroup>
-        <BuildHostSecretPrefix>Secret_</BuildHostSecretPrefix>
+        <BuildHostSecretPrefix>MBTSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </Otherwise>
   </Choose>
