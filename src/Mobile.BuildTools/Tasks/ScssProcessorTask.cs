@@ -6,12 +6,8 @@ using System.Text.RegularExpressions;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Mobile.BuildTools.LibSass;
 using Mobile.BuildTools.Logging;
-using SharpScss;
-using NUglify;
-using NUglify.Css;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -23,9 +19,6 @@ namespace Mobile.BuildTools.Tasks
             get => _logger ?? (BuildHostLoggingHelper)Log;
             set => _logger = value;
         }
-
-        [Required]
-        public string ExecutingDirectory { get; set; }
 
         public string DebugOutput { get; set; }
 
@@ -46,7 +39,6 @@ namespace Mobile.BuildTools.Tasks
 //                    Debugger.Launch();
 //#endif
 
-                EnsureRuntimeExists();
                 var filesToProcess = ScssFiles.Where(scss => Path.GetFileName(scss)[0] != '_' && Path.GetExtension(scss) == ".scss" || Path.GetExtension(scss) == ".sass");
                 _generatedCssFiles = ProcessFiles(filesToProcess);
             }
@@ -57,27 +49,6 @@ namespace Mobile.BuildTools.Tasks
             }
 
             return !Log.HasLoggedErrors;
-        }
-
-        private void EnsureRuntimeExists()
-        {
-            if (ExecutingDirectory == "UnitTest") return;
-
-            var assemblyDirectory = new FileInfo(GetType().Assembly.Location).Directory;
-            var fileName = "libsass.dll";
-            var platformRuntimeFolder = "win-x86";
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                fileName = "libsass.dylib";
-                platformRuntimeFolder = "osx-x64";
-            }
-
-            var requiredFile = Path.Combine(assemblyDirectory.FullName, fileName);
-            if(!File.Exists(requiredFile))
-            {
-                var sourceFile = Path.Combine(assemblyDirectory.FullName, "runtimes", platformRuntimeFolder, "native", fileName);
-                File.Copy(sourceFile, requiredFile);
-            }
         }
 
         private IEnumerable<TaskItem> ProcessFiles(IEnumerable<string> inputFiles)
@@ -93,8 +64,14 @@ namespace Mobile.BuildTools.Tasks
                 Logger.LogMessage($"Processing {file}");
                 var outputFile = GetFilePath(file);
 
-                var options = new ScssOptions { InputFile = file };
-                var result = Scss.ConvertToCss(File.ReadAllText(file), options);
+                var options = new ScssOptions
+                {
+                    InputFile = file,
+                    OutputStyle = ScssOutputStyle.Compressed,
+                    GenerateSourceMap = false,
+                };
+                var scssContents = File.ReadAllText(file);
+                var result = Scss.ConvertToCss(scssContents, options);
 
                 Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
 
@@ -102,22 +79,16 @@ namespace Mobile.BuildTools.Tasks
                 var css = result.Css;
                 Logger.LogMessage(css);
 
-                if (string.IsNullOrWhiteSpace(DebugOutput) || (bool.TryParse(DebugOutput, out bool b) && !b))
+                if (string.IsNullOrWhiteSpace(DebugOutput) || (bool.TryParse(DebugOutput, out var b) && !b))
                 {
-                    Logger.LogMessage($"minifying output to '{outputFile}'");
-                    CssSettings settings = new CssSettings
+                    var debugOptions = new ScssOptions
                     {
-                        CommentMode = CssComment.None,
-                        TermSemicolons = true,
+                        InputFile = file,
+                        Linefeed = Environment.NewLine,
+                        SourceComments = true,
+                        OutputStyle = ScssOutputStyle.Expanded
                     };
-
-                    UglifyResult uglifyResult = Uglify.Css(result.Css, settings);
-
-                    css = uglifyResult.Code;
-
-                    Logger.LogMessage(css);
-
-                    ThrowUglifyErrors(uglifyResult, outputFile);
+                    Logger.LogMessage(Scss.ConvertToCss(scssContents, debugOptions).Css);
                 }
 
                 // HACK: ^ selector is not valid CSS/Sass. This replaces alternate valid syntax with the ^ selector for Xamarin Forms
@@ -133,20 +104,6 @@ namespace Mobile.BuildTools.Tasks
         {
             var file = Regex.Replace(scssFile, @"sass|scss", "css");
             return Path.Combine(OutputDirectory, file);
-        }
-
-        private void ThrowUglifyErrors(UglifyResult result, string outputFilePath)
-        {
-            if (!result.HasErrors) return;
-
-            var errorMessage = $"Encountered an unexpected error while minifying {outputFilePath}";
-
-            foreach (var error in result.Errors)
-            {
-                errorMessage += $"\n{error}";
-            }
-
-            throw new Exception(errorMessage);
         }
     }
 }

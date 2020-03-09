@@ -39,7 +39,6 @@ namespace Mobile.BuildTools.Tests.Fixtures
 
             var task = new ScssProcessorTask
             {
-                ExecutingDirectory = "UnitTest",
                 OutputDirectory = OutputFolder,
                 ScssFiles = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
@@ -152,16 +151,13 @@ namespace Mobile.BuildTools.Tests.Fixtures
         //}
 
         [Theory]
-        // [InlineData("style.css", "style.css")]
         [InlineData("style.css", "style.min.css")]
-        // [InlineData("style2.css", "style2.css")]
         [InlineData("style2.css", "style2.min.css")]
         public void GeneratedExpectedCss_FromScss(string fileName, string expectedFileName)
         {
             _testOutputHelper.WriteLine($"Checking: {fileName} - {expectedFileName}");
             var task = new ScssProcessorTask
             {
-                ExecutingDirectory = "UnitTest",
                 OutputDirectory = OutputFolder,
                 ScssFiles = Directory.GetFiles(Scss, "*"),
                 Logger = new XunitLog(_testOutputHelper)
@@ -181,8 +177,8 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var files = Directory.GetFiles(OutputFolder, fileName, SearchOption.AllDirectories);
             Assert.Single(files);
             var generatedFile = files.First(f => f.EndsWith(fileName, StringComparison.CurrentCultureIgnoreCase));
-            Assert.Equal(File.ReadAllText(Path.Combine(ExpectedCssPath, expectedFileName)),
-                         File.ReadAllText(generatedFile));
+            Assert.Equal(File.ReadLines(Path.Combine(ExpectedCssPath, expectedFileName)).First(),
+                         File.ReadLines(generatedFile).First());
         }
 
         [Fact]
@@ -190,7 +186,6 @@ namespace Mobile.BuildTools.Tests.Fixtures
         {
             var task = new ScssProcessorTask
             {
-                ExecutingDirectory = "UnitTest",
                 OutputDirectory = OutputFolder,
                 ScssFiles = Directory.GetFiles(ExpectedCssPath, "*"),
                 Logger = new XunitLog(_testOutputHelper)

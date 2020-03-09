@@ -4,6 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
+    <_NativeRuntime>win-x86</_NativeRuntime>
+    <_NativeRuntime Condition="$([System.Environment]::Is64BitProcess)">win-x64</_NativeRuntime>
+    <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,8 +20,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Microsoft.Build" Version="15.9.20" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" />
-    <PackageReference Include="SharpScss" Version="1.4.0" />
-    <PackageReference Include="NUglify" Version="1.5.13" />
+    <None Include="..\..\src\assets\runtimes\$(_NativeRuntime)\libsass.*"
+          CopyToOutputDirectory="PreserveNewest"
+          Visible="false" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
   </ItemGroup>
 

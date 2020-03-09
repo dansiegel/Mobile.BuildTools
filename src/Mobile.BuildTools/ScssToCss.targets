@@ -33,9 +33,11 @@
 
   <Target Name="_EnsureScssRuntimeIsAvailable">
     <PropertyGroup>
-      <ScssRuntime Condition=" '$(ScssRuntime)' == '' AND '$(OS)' == 'Unix'">osx-x64</ScssRuntime>
+      <_NativeRuntime>win-x86</_NativeRuntime>
+      <_NativeRuntime Condition="$([System.Environment]::Is64BitProcess)">win-x64</_NativeRuntime>
+      <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
       <ScssRuntime Condition=" '$(ScssRuntime)' == '' ">win-x86</ScssRuntime>
-      <ScssRuntimeDir>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'runtimes', $(ScssRuntime), 'native'))</ScssRuntimeDir>
+      <ScssRuntimeDir>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'runtimes', $(ScssRuntime)))</ScssRuntimeDir>
     </PropertyGroup>
     <ItemGroup>
       <LibSass Include="$(ScssRuntimeDir)libsass.*" />
@@ -57,8 +59,7 @@
       <ProcessScssDebug Condition=" '$(ProcessScssDebug)' == '' ">$(MobileBuildToolsDebug)</ProcessScssDebug>
     </PropertyGroup>
 
-    <ScssProcessorTask ExecutingDirectory="$(MSBuildThisFileDirectory)"
-                       OutputDirectory="$(IntermediateOutputPath)"
+    <ScssProcessorTask OutputDirectory="$(IntermediateOutputPath)"
                        ScssFiles="@(_Scss)"
                        DebugOutput="$(ProcessScssDebug)">
       <Output ItemName="GeneratedFile"
