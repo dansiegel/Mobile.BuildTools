@@ -34,8 +34,8 @@ Automatic Build Versioning supports the following `Behavior`'s:
 
   - AppCenter
   - AppVeyor
+  - Azure DevOps
   - Jenkins
-  - VSTS
 
 !!! info Info
     You might use the `versionOffset` when your CI Build Number and Build Number in the App Store or Google Play are not in sync. As an example, when shipping multiple APKs with the same build number Google Play may take build 123 and make it 100123, 200123, 300123, & 400123 respectively for each of the 4 APK's you have provided. This would mean when switching to AAB that you might need to offset by 400000 in order to get your new AAB build to show up in Google Play.
