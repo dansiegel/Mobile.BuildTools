@@ -733,6 +733,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#platform-specific-configurations" class="md-nav__link">
+    Platform Specific Configurations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#watermarking-images" class="md-nav__link">
     Watermarking Images
   </a>
@@ -954,6 +961,30 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../appendix/json-schemas/" title="JSON Schemas" class="md-nav__link">
+      JSON Schemas
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../appendix/msbuild-props/" title="MSBuild Properties" class="md-nav__link">
+      MSBuild Properties
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -1002,6 +1033,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#platform-specific-configurations" class="md-nav__link">
+    Platform Specific Configurations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#watermarking-images" class="md-nav__link">
     Watermarking Images
   </a>
@@ -1028,19 +1066,135 @@
                   <h1>Configuring Images</h1>
                 
                 <p>The first time the Mobile.BuildTools encounters an image it will automatically generate a default image configuration file along side of the image. This file is what allows you to customize and further refine the image that you want. A configuration file may reside a conditional search directory. The Mobile.BuildTools will opt to use a configuration that is not in the same file directory as the image resource any time that a duplication is found.</p>
-<p>!!!! warning Warning
-    Keep in mind that we only ever support a scenario where you have a single configuration in a directory other than the original image. In the event that two or more configurations are found for the same image in directories other than the directory where the image is located the Mobile.BuildTools will throw an exception causing a Build Error.</p>
+<div class="admonition warning warning">
+<p class="admonition-title">Warning</p>
+<p>Keep in mind that we only ever support a scenario where you have a single configuration in a directory other than the original image. In the event that two or more configurations are found for the same image in directories other than the directory where the image is located the Mobile.BuildTools will throw an exception causing a Build Error.</p>
+</div>
+<div class="admonition note note">
+<p class="admonition-title">Note</p>
+<p>If you have an image name that contains white space such as <code>foo bar.png</code>, the Mobile.BuildTools will sanitize the file name replace any contiguous white space characters with a single <code>-</code>. This normalization is required by Android and will mean that you will need to reference the image as <code>foo-bar.png</code>.</p>
+</div>
 <h2 id="configuring-images">Configuring Images<a class="headerlink" href="#configuring-images" title="Permanent link">&para;</a></h2>
 <p>The Schema for configuring images is rather simple by design. We allow you to specify a watermark file name, a name, a scale and an optional ignore. To start let's consider that we have an image named <code>Mobile-BuildTools.png</code>. We know that we cannot get away with this file name on all platforms so we want to rename the generated image.</p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;mobile_buildtools&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
 
 <p>The above sample would allow us to have a resource named <code>mobile_buildtools</code> when we refer to this from our Xamarin code.</p>
+<h2 id="platform-specific-configurations">Platform Specific Configurations<a class="headerlink" href="#platform-specific-configurations" title="Permanent link">&para;</a></h2>
+<p>There is a common schema for image configuration which includes the following properties:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;someName&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;scale&quot;</span><span class="p">:</span> <span class="mf">0.875</span><span class="p">,</span>
+  <span class="nt">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#ffffff&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;ignore&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>This schema is available generally for each image and can be used to further tweak or customize for the platform. As an example let's consider that we want the <code>Mobile-BuildTools.png</code> to be used as the app icon. We will want to use the App Icon Set on iOS named <code>AppIcon</code> and we'll want to use the image name <code>icon</code> on Android. To accomplish this our configuration would look like:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;android&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;icon&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;apple&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AppIcon&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>Let's now consider a few facts about our icon that would be quite common, particularly when sharing the same resource between iOS and Android for the App Icon.</p>
+<ul>
+<li>We want the Android resource to be in the mipmap folder rather the drawable folders</li>
+<li>Our full size image is much larger than the full size icon should be for Android</li>
+<li>Our image has a transparent background which will need to be adjusted on iOS</li>
+</ul>
+<p>Given these additional criteria we would want to update our configuration as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;android&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;icon&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;resourceType&quot;</span><span class="p">:</span> <span class="s2">&quot;Mipmap&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;scale&quot;</span><span class="p">:</span> <span class="mf">0.375</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;apple&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AppIcon&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#fc7e00&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Android specific configuration defines an additional property for the Resource Type. By default this is set to Drawable. You can however change this in your image configuration for <code>mipmap</code> resources.</p>
+</div>
 <h2 id="watermarking-images">Watermarking Images<a class="headerlink" href="#watermarking-images" title="Permanent link">&para;</a></h2>
-<p>One of the great things that the Mobile.BuildTools supports is watermarking.</p>
+<p>One of the great things that the Mobile.BuildTools supports is watermarking images at build. This is a very powerful feature as shown below. To configure images for Watermarking there are a few simple steps that you will need to take.</p>
+<p>Let's first make a couple of assumptions.</p>
+<ul>
+<li>You have your base resources in the path <code>Images</code></li>
+<li>This includes an image asset called <code>icon.png</code></li>
+<li>You have a subfolder called <code>Images\Debug</code></li>
+<li>Inside of this directory you have a watermark file called <code>beta-version.png</code></li>
+</ul>
+<p>In order to set this up our <code>buildtools.json</code> might look like this:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;images&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;directories&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images&quot;</span> <span class="p">],</span>
+    <span class="nt">&quot;conditionalDirectories&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;Debug&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Images\\Debug&quot;</span> <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<table>
+<thead>
+<tr>
+<th align="center">icon.png</th>
+<th align="center">beta-version.png</th>
+<th align="center">output: icon.png</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><img alt="Mobile.BuildTools" src="/assets/samples/icon.png" title="Mobile.BuildTools" /></td>
+<td align="center"><img alt="Dev Badge" src="/assets/samples/beta-version.png" title="beta version" /></td>
+<td align="center"><img alt="Mobile.BuildTools - Dev" src="/assets/samples/icon-beta.png" title="Mobile.BuildTools - Dev" /></td>
+</tr>
+</tbody>
+</table>
+<p>When the Mobile.BuildTools runs and the Image collector locates an image, it will automatically generate a default JSON configuration file. The configuration file must have the same name as the image without the file extension. As a result after the first run our output image will look exactly the same as our input image only resized, and we would also have an asset added for the <code>beta-version.png</code> although this was not what we had wanted. The file system will also now contain the new files <code>Images\icon.json</code> &amp; <code>Images\Debug\beta-version.json</code>.</p>
+<p>You will not need to do anything to the <code>Images\icon.json</code> file, however you will want to copy this to <code>Images\Debug</code> directory. Next you'll want to open a text editor such as Visual Studio Code which will automatically pick up the schema referenced in the generated file and give you intellisense as you work on the file. We'll update the following two files as follows:</p>
+<p><strong>Images\Debug\beta-version.json</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;ignore&quot;</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p><strong>Images\Debug\icon.json</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;watermarkFile&quot;</span><span class="p">:</span> <span class="s2">&quot;beta-version&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When using Conditional Directories to modify images with watermarks be sure that there is never more than one conditional configuration included. Doing so will result in a build error as the Mobile.BuildTools has no way of know which conditional configuration to use.</p>
+</div>
+<p>With our updated configurations we can now rebuild and the Mobile.BuildTools will generally ignore the <code>beta-version.png</code> as an asset of it's own while it will</p>
                 
                   
                 

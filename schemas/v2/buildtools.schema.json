@@ -86,7 +86,10 @@
               "string",
               "null"
             ]
-          }
+          },
+          "default": [
+            "Images"
+          ]
         },
         "conditionalDirectories": {
           "description": "A list of conditional search directories relative to this file. Supports build Configuration, monoandroid, or xamarin.ios",
@@ -105,14 +108,20 @@
                 "null"
               ]
             }
+          },
+          "default": {
+            "Xamarin.iOS": [ "Images/iOS" ],
+            "MonoAndroid": [ "Images/Android" ],
+            "Debug": [ "Images/Dev" ]
           }
         },
         "watermarkOpacity": {
-          "description": "Configures the opacity to use for any watermark files",
+          "description": "Configures the opacity to use for any watermark files (0 - 1)",
           "type": [
             "number",
             "null"
-          ]
+          ],
+          "default": 0.95
         },
         "disable": {
           "description": "Disables this Mobile.Build.Tools Task",
@@ -189,13 +198,15 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "default": "Secrets"
         },
         "namespace": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "default": "Helpers"
         },
         "properties": {
           "type": [
@@ -277,11 +288,13 @@
             "Guid",
             "Uri",
             "TimeSpan"
-          ]
+          ],
+          "default": "String"
         },
         "isArray": {
           "description": "Flag to indicate whether to generate the property as an Array",
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [

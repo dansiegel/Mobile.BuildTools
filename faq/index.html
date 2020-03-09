@@ -909,6 +909,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#i-installed-the-mobilebuildtools-why-cant-i-access-the-configurationmanager" class="md-nav__link">
+    I installed the Mobile.BuildTools why can't I access the ConfigurationManager?
+  </a>
+  
+</li>
+      
       
       
       
@@ -959,6 +966,30 @@
   <li class="md-nav__item">
     <a href="../appendix/aps/" title="Apple Push Notifications" class="md-nav__link">
       Apple Push Notifications
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/json-schemas/" title="JSON Schemas" class="md-nav__link">
+      JSON Schemas
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/msbuild-props/" title="MSBuild Properties" class="md-nav__link">
+      MSBuild Properties
     </a>
   </li>
 
@@ -1026,6 +1057,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#i-installed-the-mobilebuildtools-why-cant-i-access-the-configurationmanager" class="md-nav__link">
+    I installed the Mobile.BuildTools why can't I access the ConfigurationManager?
+  </a>
+  
+</li>
+      
       
       
       
@@ -1047,9 +1085,11 @@
 <h4 id="should-every-value-in-my-secrets-be-secret">Should every value in my Secrets be "Secret"?<a class="headerlink" href="#should-every-value-in-my-secrets-be-secret" title="Permanent link">&para;</a></h4>
 <p>The Secrets Class is a great way to prevent security vulnerbilities created from checking into source control things like Client Id's, Consumer Secrets, or Connection Strings. But it really doesn't have to stop there. In fact the Secrets class is a great way of setting the configuration environment for your application at build. Should your build point to the Dev, Stage, or Production API? This is also a great way of being very intentional about it.</p>
 <h4 id="does-the-secrets-class-have-to-be-in-the-helpers-namespace-or-named-secrets">Does the Secrets class have to be in the Helpers namespace or named Secrets?<a class="headerlink" href="#does-the-secrets-class-have-to-be-in-the-helpers-namespace-or-named-secrets" title="Permanent link">&para;</a></h4>
-<p>In short no it does not. This has always been configurable though it is much easier with version 2.0 as you can just update the Configuration for the project.</p>
+<p>In short no it does not. This has always been configurable though it is much easier with version 2.0 as you can just update the Configuration for the project. See the <a href="/config/secrets/configuration.md">Secrets Configuration</a> topic for more information on how to configure this for version 2.</p>
 <h4 id="do-all-of-the-things-that-the-mobilebuildtools-is-capable-of-execute-every-time-i-run-a-build">Do all of the things that the Mobile.BuildTools is capable of execute every time I run a build?<a class="headerlink" href="#do-all-of-the-things-that-the-mobilebuildtools-is-capable-of-execute-every-time-i-run-a-build" title="Permanent link">&para;</a></h4>
 <p>We try to be smart about what we will and will not do. There is an initialization task that will run on each build which evaluates your project to determine if certain things should or should not occur. For instance if there are no SCSS files in your project that Target will not fire, similarly if you have disabled a target explicitly it should be skipped during the build.</p>
+<h4 id="i-installed-the-mobilebuildtools-why-cant-i-access-the-configurationmanager">I installed the Mobile.BuildTools why can't I access the ConfigurationManager?<a class="headerlink" href="#i-installed-the-mobilebuildtools-why-cant-i-access-the-configurationmanager" title="Permanent link">&para;</a></h4>
+<p>We explicitly seperated the ConfigurationManager from the Mobile.BuildTools as we recognize that not everyone will want to use this feature. In order to get the build time transformations you will need to have the Mobile.BuildTools installed in your platform projects, however you will need the Mobile.BuildTools.Configuration package installed in any project where you want to use the ConfigurationManager.</p>
                 
                   
                 
