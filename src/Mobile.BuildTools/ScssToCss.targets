@@ -31,7 +31,8 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="_EnsureScssRuntimeIsAvailable">
+  <Target Name="_EnsureScssRuntimeIsAvailable"
+          BeforeTargets="ProcessScss">
     <PropertyGroup>
       <_NativeRuntime>win-x86</_NativeRuntime>
       <!-- <_NativeRuntime Condition="$([System.Environment]::Is64BitProcess)">win-x64</_NativeRuntime> -->
@@ -42,6 +43,7 @@
     <ItemGroup>
       <LibSass Include="$(ScssRuntimeDir)libsass.*" />
     </ItemGroup>
+    <Message Text="Looking for ScssRuntime in $(ScssRuntimeDir) -> @(LibSass)" />
     <Copy SourceFiles="@(LibSass)"
           DestinationFiles="$(MSBuildThisFileDirectory)%(Filename)%(Extension)"
           Condition="!Exists('$(MSBuildThisFileDirectory)%(Filename)%(Extension)')" />
@@ -50,7 +52,7 @@
   <Target Name="ProcessScss"
           BeforeTargets="CssG"
           AfterTargets="_CollectScss"
-          DependsOnTargets="MobileBuildToolsInit;_EnsureScssRuntimeIsAvailable"
+          DependsOnTargets="MobileBuildToolsInit"
           Inputs="@(_Scss);@(_PartialScc)"
           Outputs="@(_Scss -> '$(IntermediateOutputPath)%(RecursiveDir)%(Filename).css')"
           Condition=" '@(ReferencePath->WithMetadataValue('NuGetPackageId', 'Xamarin.Forms'))' != '' ">
