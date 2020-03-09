@@ -25,12 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\assets\runtimes\osx-x64\libsass.dylib" Pack="true" PackagePath="$(PrimaryOutputKind)/runtimes/osx-x64" />
-    <None Include="..\assets\runtimes\win-x86\libsass.dll" Pack="true" PackagePath="$(PrimaryOutputKind)/runtimes/win-x86" />
-    <None Include="..\assets\runtimes\win-x64\libsass.dll" Pack="true" PackagePath="$(PrimaryOutputKind)/runtimes/win-x64" />
+    <None Include="..\assets\runtimes\**\libsass.*" Pack="true" PackagePath="$(PrimaryOutputKind)/runtimes/%(RecursiveDir)%(Filename)%(Extension)" />
     <None Include="*.targets;*.props" Pack="true" Kind="$(PrimaryOutputKind)" />
     <None Remove="Resources\resourceDefinition.json" />
     <EmbeddedResource Include="Resources\resourceDefinition.json" />
+    <None Include="Resources\*" Pack="true" PackagePath="$(PrimaryOutputKind)/resources/%(Filename)%(Extension)" />
     <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
   </ItemGroup>
 
