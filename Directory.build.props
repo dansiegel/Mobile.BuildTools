@@ -26,6 +26,10 @@
     <CI Condition=" '$(BUILD_BUILDNUMBER)' != '' ">true</CI>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <MicrosoftBuildNuGetVersion>16.0.461</MicrosoftBuildNuGetVersion>
+  </PropertyGroup>
+
   <ItemGroup Condition="$(IsPackable)">
     <None Include="$(MSBuildThisFileDirectory)logo\icon.png" Pack="true" PackagePath="\icon.png" />
   </ItemGroup>

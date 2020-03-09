@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
@@ -11,8 +12,6 @@ using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
-#pragma warning disable IDE1006 // Naming Styles
-#pragma warning disable IDE0040 // Add accessibility modifiers
 namespace Mobile.BuildTools.Tests.Fixtures
 {
     public class AppManifestGeneratorFixture : FixtureBase
@@ -52,7 +51,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
             Assert.NotNull(matches);
             Assert.NotEmpty(matches);
             Assert.Single(matches);
-            var match = matches.FirstOrDefault();
+            var match = matches.Cast<Match>().FirstOrDefault();
             Assert.Equal("$$TemplatedParameter$$", match.Value);
         }
 
@@ -61,7 +60,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
         {
             var generator = CreateGenerator();
             var template = File.ReadAllText(TemplateManifestPath);
-            var match = generator.GetMatches(template).FirstOrDefault();
+            var match = generator.GetMatches(template).Cast<Match>().FirstOrDefault();
             var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(Directory.GetCurrentDirectory(), true);
             foreach(var variable in variables)
             {
@@ -86,7 +85,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var generator = CreateGenerator(config);
 
             var template = File.ReadAllText(TemplateManifestPath);
-            var match = generator.GetMatches(template).FirstOrDefault();
+            var match = generator.GetMatches(template).Cast<Match>().FirstOrDefault();
             var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(Directory.GetCurrentDirectory(), true);
             var processedTemplate = generator.ProcessMatch(template, match, variables);
             var json = JsonConvert.DeserializeAnonymousType(processedTemplate, new
@@ -109,7 +108,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
             Environment.SetEnvironmentVariable("XunitTest_AADClientId", guid);
 
             var matches = generator.GetMatches(template);
-            var match = matches.First();
+            var match = matches.Cast<Match>().First();
             Assert.Equal("$$AADClientId$$", match.Value);
 
             generator.ManifestOutputPath = TemplateAndroidManifestOutputPath;
@@ -132,5 +131,3 @@ namespace Mobile.BuildTools.Tests.Fixtures
         }
     }
 }
-#pragma warning restore IDE0040 // Add accessibility modifiers
-#pragma warning restore IDE1006 // Naming Styles

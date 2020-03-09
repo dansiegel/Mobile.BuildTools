@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageId>$(AssemblyName)</PackageId>
     <Description>Additional MSBuild targets and properties for .NET projects. Especially enhances Xamarin targets. Enables better development practices with CI/CD pipelines. See the Wiki on GitHub for more information in how to Get Started or customize your experience.</Description>
@@ -35,8 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build" Version="15.9.20" Pack="false" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" Pack="false" />
+    <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildNuGetVersion)" Pack="false" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildNuGetVersion)" Pack="false" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
     <PackageReference Include="NuGet.Build.Packaging" Version="0.2.5-dev.10" PrivateAssets="all" />
     <!-- Add `native` to the CopyToOutput to capture all runtimes -->
