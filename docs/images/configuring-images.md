@@ -12,11 +12,66 @@ The Schema for configuring images is rather simple by design. We allow you to sp
 
 ```json
 {
+  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
   "name": "mobile_buildtools"
 }
 ```
 
 The above sample would allow us to have a resource named `mobile_buildtools` when we refer to this from our Xamarin code.
+
+## Platform Specific Configurations
+
+There is a common schema for image configuration which includes the following properties:
+
+```json
+{
+  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "name": "someName",
+  "scale": 0.875,
+  "backgroundColor": "#ffffff",
+  "ignore": false,
+}
+```
+
+This schema is available generally for each image and can be used to further tweak or customize for the platform. As an example let's consider that we want the `Mobile-BuildTools.png` to be used as the app icon. We will want to use the App Icon Set on iOS named `AppIcon` and we'll want to use the image name `icon` on Android. To accomplish this our configuration would look like:
+
+```json
+{
+  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "android": {
+    "name": "icon"
+  },
+  "apple": {
+    "name": "AppIcon"
+  }
+}
+```
+
+Let's now consider a few facts about our icon that would be quite common, particularly when sharing the same resource between iOS and Android for the App Icon.
+
+- We want the Android resource to be in the mipmap folder rather the drawable folders
+- Our full size image is much larger than the full size icon should be for Android
+- Our image has a transparent background which will need to be adjusted on iOS
+
+Given these additional criteria we would want to update our configuration as follows:
+
+```json
+{
+  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "android": {
+    "name": "icon",
+    "resourceType": "Mipmap",
+    "scale": 0.375
+  },
+  "apple": {
+    "name": "AppIcon",
+    "backgroundColor": "#fc7e00"
+  }
+}
+```
+
+!!! note
+    Android specific configuration defines an additional property for the Resource Type. By default this is set to Drawable. You can however change this in your image configuration for `mipmap` resources.
 
 ## Watermarking Images
 
@@ -71,5 +126,5 @@ You will not need to do anything to the `Images\icon.json` file, however you wil
 !!! warning
     When using Conditional Directories to modify images with watermarks be sure that there is never more than one conditional configuration included. Doing so will result in a build error as the Mobile.BuildTools has no way of know which conditional configuration to use.
 
-With our updated configurations we can now rebuild and the Mobile.BuildTools will generally ignore the `beta-version.png` as an asset of it's own while it will 
+With our updated configurations we can now rebuild and the Mobile.BuildTools will generally ignore the `beta-version.png` as an asset of it's own while it will
 

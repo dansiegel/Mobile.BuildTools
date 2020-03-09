@@ -96,3 +96,20 @@ Let's next say that we have two images we want to test this on like the followin
 
 !!! important
     You may have noticed from looking at these images that all of the images are different resolutions. The Mobile.BuildTools is smart enough to understand that we want to scale your watermark and your input image to share the same canvas size. We will then generate the appropriate output size based on what your needs are.
+
+## Supported Platforms
+
+Not all platforms are supported. For more information see the grid below:
+
+| Platform | Status |
+|:--------:|:------:|
+| Android | Supported |
+| iOS | Supported |
+| macOS | Supported * |
+| tvOS | Supported * |
+| Tizen | Not Supported - See [issue #101](https://github.com/dansiegel/Mobile.BuildTools/issues/101) |
+| UWP | Not Supported - See [issue #100](https://github.com/dansiegel/Mobile.BuildTools/issues/100) |
+| Blazor | Not Planned |
+| Web Assembly | Not Planned |
+
+\* Platform is theoretically supported as there should be no difference from iOS, however this has not been directly tested.
