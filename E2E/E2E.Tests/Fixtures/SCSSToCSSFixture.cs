@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using Xunit;
 using System.Linq;
+using System.Reflection;
 using E2E.Core;
+using Xunit;
 
 namespace E2E.Tests.Fixtures
 {
@@ -12,7 +12,7 @@ namespace E2E.Tests.Fixtures
     {
         public const string ExpectedCSSResourceId = "E2E.Core.theme.style.css";
         public const string SecondaryExpectedCSSResourceId = "E2E.Core.theme.anotherStyle.css";
-        public const string ExpectedCSS = @".primaryButton{background-color:#006;}^button{background-color:transparent;}";
+        public const string ExpectedCSS = @".primaryButton{background-color:#006}^button{background-color:transparent}";
 
         [Fact]
         public void CssIsEmbedded()
@@ -34,7 +34,7 @@ namespace E2E.Tests.Fixtures
             using (var reader = new StreamReader(stream))
             {
                 Assert.NotNull(stream);
-                var css = reader.ReadToEnd();
+                var css = reader.ReadLines().First();
                 Assert.Equal(ExpectedCSS, css);
             }
         }
