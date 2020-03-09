@@ -25,6 +25,23 @@
         {
           "name": "ABool",
           "type": "Bool"
+        },
+        {
+          "name": "AFloat",
+          "type": "Float"
+        },
+        {
+          "name": "ADate",
+          "type": "DateTime"
+        },
+        {
+          "name": "AStringArray",
+          "type": "String",
+          "isArray": true
+        },
+        {
+          "name": "AUri",
+          "type": "Uri"
         }
       ]
     }

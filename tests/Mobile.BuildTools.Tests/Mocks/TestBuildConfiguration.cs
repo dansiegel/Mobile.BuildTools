@@ -20,7 +20,8 @@ namespace Mobile.BuildTools.Tests.Mocks
                 ClassName = "Secrets",
                 Delimiter = ";",
                 Namespace = "Helpers",
-                Prefix = "UNIT_TEST_"
+                Prefix = "UNIT_TEST_",
+                Properties = new List<ValueConfig>()
             };
         }
 

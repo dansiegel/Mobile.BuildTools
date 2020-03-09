@@ -30,6 +30,10 @@ jobs:
       Test_AnInt: '1'
       Test_ADouble: '1.0'
       Test_ABool: 'true'
+      Test_AFloat: '2.3'
+      Test_ADate: '7/4/1776'
+      Test_AStringArray: 'Foo;Bar;Baz'
+      Test_AUri: 'https://mobilebuildtools.com'
 
   - template: ../steps/unit-tests.yml
     parameters:

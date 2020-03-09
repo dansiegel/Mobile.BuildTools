@@ -7,6 +7,7 @@ using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Handlers;
 using Mobile.BuildTools.Models.Secrets;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
@@ -184,7 +185,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             }
 
             var mapping = valueConfig.PropertyType.GetPropertyTypeMapping();
-            return PropertyBuilder(secret, mapping.Type, mapping.Format, valueConfig.IsArray, safeOutput);
+            return PropertyBuilder(secret, mapping.Type, mapping.Handler, valueConfig.IsArray, safeOutput);
         }
 
         internal ValueConfig GenerateValueConfig(KeyValuePair<string, JToken> secret, SecretsConfig config)
@@ -239,20 +240,20 @@ namespace Mobile.BuildTools.Generators.Secrets
             return $"{BaseNamespace}.{relativeNamespace}";
         }
 
-        internal string PropertyBuilder(KeyValuePair<string, JToken> secret, Type type, string propertyFormat, bool isArray, bool safeOutput)
+        internal string PropertyBuilder(KeyValuePair<string, JToken> secret, Type type, IValueHandler valueHandler, bool isArray, bool safeOutput)
         {
             var output = string.Empty;
             var typeDeclaration = type.GetStandardTypeName();
-            var accessModifier = type.FullName == typeDeclaration ? "static readonly" : "const";
+            var accessModifier = type.FullName == typeDeclaration || isArray ? "static readonly" : "const";
             if (isArray)
             {
                 typeDeclaration += "[]";
-                var valueArray = GetValueArray(secret.Value).Select(x => string.Format(propertyFormat, GetOutputValue(x, safeOutput)));
-                output = "new[] { " + string.Join(", ", valueArray) + " }";
+                var valueArray = GetValueArray(secret.Value).Select(x => valueHandler.Format(GetOutputValue(x, safeOutput)));
+                output = "new " + typeDeclaration + " { " + string.Join(", ", valueArray) + " }";
             }
             else
             {
-                output = string.Format(propertyFormat, GetOutputValue(secret.Value, safeOutput));
+                output = valueHandler.Format(GetOutputValue(secret.Value, safeOutput));
             }
 
             if(type == typeof(bool))

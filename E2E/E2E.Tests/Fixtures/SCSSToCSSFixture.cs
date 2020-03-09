@@ -34,7 +34,7 @@ namespace E2E.Tests.Fixtures
             using (var reader = new StreamReader(stream))
             {
                 Assert.NotNull(stream);
-                var css = reader.ReadLines().First();
+                var css = reader.ReadLine();
                 Assert.Equal(ExpectedCSS, css);
             }
         }

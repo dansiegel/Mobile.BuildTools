@@ -1,4 +1,5 @@
 ﻿using System;
+using Mobile.BuildTools.Handlers;
 
 namespace Mobile.BuildTools.Models.Secrets
 {
@@ -19,13 +20,13 @@ namespace Mobile.BuildTools.Models.Secrets
         [PropertyTypeMapping(typeof(char), "'{0}'")]
         Char,
 
-        [PropertyTypeMapping(typeof(decimal))]
+        [PropertyTypeMapping(typeof(decimal), typeof(DecimalValueHandler))]
         Decimal,
 
         [PropertyTypeMapping(typeof(double))]
         Double,
 
-        [PropertyTypeMapping(typeof(float))]
+        [PropertyTypeMapping(typeof(float), typeof(FloatValueHandler))]
         Float,
 
         [PropertyTypeMapping(typeof(int))]
@@ -55,7 +56,7 @@ namespace Mobile.BuildTools.Models.Secrets
         [PropertyTypeMapping(typeof(Guid), "new System.Guid(\"{0}\")")]
         Guid,
 
-        [PropertyTypeMapping(typeof(Uri), "new System.Uri(\"{0}\")")]
+        [PropertyTypeMapping(typeof(Uri), typeof(UriValueHandler))]
         Uri,
 
         [PropertyTypeMapping(typeof(TimeSpan), "System.TimeSpan.Parse(\"{0}\")")]

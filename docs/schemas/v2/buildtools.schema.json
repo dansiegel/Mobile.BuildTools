@@ -299,7 +299,7 @@
       },
       "required": [
         "name",
-        "propertyType"
+        "type"
       ]
     },
     "XamarinCss": {

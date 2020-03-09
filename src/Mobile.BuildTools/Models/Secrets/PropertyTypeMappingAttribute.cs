@@ -1,4 +1,5 @@
 ﻿using System;
+using Mobile.BuildTools.Handlers;
 
 namespace Mobile.BuildTools.Models.Secrets
 {
@@ -6,18 +7,26 @@ namespace Mobile.BuildTools.Models.Secrets
     internal sealed class PropertyTypeMappingAttribute : Attribute
     {
         public PropertyTypeMappingAttribute(Type type)
-            : this(type, "{0}")
+            : this(type, typeof(DefaultValueHandler))
         {
         }
 
         public PropertyTypeMappingAttribute(Type type, string format)
         {
             Type = type;
-            Format = format;
+            Handler = new DefaultValueHandler(format);
+        }
+
+        public PropertyTypeMappingAttribute(Type type, Type handlerType)
+        {
+            Type = type;
+            Handler = Activator.CreateInstance(handlerType) as IValueHandler;
         }
 
         public Type Type { get; }
 
-        public string Format { get; }
+        //public string Format { get; }
+
+        public IValueHandler Handler { get; }
     }
 }
