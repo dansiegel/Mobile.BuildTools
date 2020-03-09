@@ -126,5 +126,4 @@ You will not need to do anything to the `Images\icon.json` file, however you wil
 !!! warning
     When using Conditional Directories to modify images with watermarks be sure that there is never more than one conditional configuration included. Doing so will result in a build error as the Mobile.BuildTools has no way of know which conditional configuration to use.
 
-With our updated configurations we can now rebuild and the Mobile.BuildTools will generally ignore the `beta-version.png` as an asset of it's own while it will
-
+With our updated configurations we can now rebuild and the Mobile.BuildTools will generally ignore the `beta-version.png` as an asset of it's own while it will apply the beta-version.png as an overlay to our icon during our debug builds.

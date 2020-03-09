@@ -97,6 +97,15 @@ Let's next say that we have two images we want to test this on like the followin
 !!! important
     You may have noticed from looking at these images that all of the images are different resolutions. The Mobile.BuildTools is smart enough to understand that we want to scale your watermark and your input image to share the same canvas size. We will then generate the appropriate output size based on what your needs are.
 
+### Limitations
+
+Keep in mind that we do require that each image have a sibling json configuration file. This means that if your image is at the path: `Images\foo.png`, then we would expect a configuration at `Images\foo.json`, even if that file is an empty JSON file.
+
+When using Conditional Directories it is very much possible that you would have more than one json configuration file for a single image. The Mobile.BuildTools will ignore the sibling configuration any time a second json configuration file is found in another directory.
+
+!!! warning
+    While the Mobile.BuildTools can handle locating 2 json configurations during a build where one of them is a sibling of the image, the Mobile.BuildTools cannot handle scenarios where you it locates more than one json configuration that is not a sibling of the image as we would not know which one is the proper one to use.
+
 ## Supported Platforms
 
 Not all platforms are supported. For more information see the grid below:
