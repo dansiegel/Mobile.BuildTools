@@ -46,9 +46,9 @@
           BeforeTargets="UpdateAndroidResources"
           Condition=" $(BuildToolsBundleUnifiedImages) == 'true' ">
     <ItemGroup>
-      <AndroidResource Include="@(UnifiedImageAsset -> %(OutputFile))"
-                       Link="%(OutputLink)"
-                       Visible="%(ShouldBeVisible)" />
+      <AndroidResource Include="@(UnifiedImageAsset)"
+                       Link="%(UnifiedImageAsset.OutputLink)"
+                       Visible="%(UnifiedImageAsset.ShouldBeVisible)" />
     </ItemGroup>
   </Target>
 
