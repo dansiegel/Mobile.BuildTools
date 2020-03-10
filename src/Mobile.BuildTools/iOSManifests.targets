@@ -31,22 +31,28 @@
           Condition=" '$(BuildToolsEnableArtifactCopy)' And !'$(IsAppCenter)' ">
 
     <PropertyGroup>
-      <__IpaFileName>$([System.IO.Path]::GetFileNameWithoutExtension('$(IpaPackagePath)'))</__IpaFileName>
+      <__IpaFileName Condition=" '$(IpaPackagePath)' != '' ">$([System.IO.Path]::GetFileNameWithoutExtension('$(IpaPackagePath)'))</__IpaFileName>
     </PropertyGroup>
 
     <ItemGroup>
-      <__Generated_dSYM Include="$([System.IO.Path]::GetDirectoryName('$(IpaPackagePath)'))\**" />
+      <__Generated_dSYM Include="$([System.IO.Path]::GetDirectoryName('$(IpaPackagePath)'))\**"
+                        Condition=" '$(IpaPackagePath)' != '' "/>
     </ItemGroup>
+
+    <Message Text="Could not copy the IPA. The IpaPackagePath was undefined"
+             Condition=" '$(IpaPackagePath)' == '' " />
 
     <Copy SourceFiles="@(__Generated_dSYM)"
           DestinationFolder="$(BuildToolsArtifactOutputPath)\$(__IpaFileName).app.dSYM\%(RecursiveDir)"
           SkipUnchangedFiles="false"
           OverwriteReadOnlyFiles="true"
           Retries="3"
-          RetryDelayMilliseconds="300" />
+          RetryDelayMilliseconds="300"
+          Condition=" '$(IpaPackagePath)' != '' " />
 
     <Copy SourceFiles="$(IpaPackagePath)"
-          DestinationFiles="$(BuildToolsArtifactOutputPath)\$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))" />
+          DestinationFiles="$(BuildToolsArtifactOutputPath)\$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))"
+          Condition=" '$(IpaPackagePath)' != '' " />
 
   </Target>
 
