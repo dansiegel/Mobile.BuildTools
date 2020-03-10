@@ -29,16 +29,15 @@
   </Target>
 
   <PropertyGroup>
-    <HandlePlatformAppConfigBeforeTargets>Compile</HandlePlatformAppConfigBeforeTargets>
+    <HandlePlatformAppConfigBeforeTargets>_CreateDex;Compile</HandlePlatformAppConfigBeforeTargets>
   </PropertyGroup>
 
   <Target Name="HandlePlatformAppConfig"
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
-          Inputs="@(GeneratedAppConfig)"
-          Outputs="@(GeneratedAppConfig)">
+          BeforeTargets="_CreateDex;Compile">
     <ItemGroup>
-      <AndroidResource Include="@(GeneratedAppConfig)"
-                       Link="Assets\%(Filename)%(Extension)"/>
+      <AndroidAsset Include="@(GeneratedAppConfig)"
+                    Link="Assets\%(Filename)%(Extension)"/>
     </ItemGroup>
   </Target>
 
