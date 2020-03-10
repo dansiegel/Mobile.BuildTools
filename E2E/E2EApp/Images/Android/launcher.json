@@ -3,5 +3,6 @@
   "android": {
     "resourceType": "Mipmap",
     "name": "launcher_foreground"
-  }
+  },
+  "watermarkFile": "beta-version"
 }
