@@ -24,7 +24,7 @@ namespace E2EApp.Controls
             Padding = 20;
             BackgroundColor = Color.Black;
             Orientation = StackOrientation.Horizontal;
-            HorizontalOptions = LayoutOptions.Center;
+            HorizontalOptions = LayoutOptions.CenterAndExpand;
         }
     }
 }

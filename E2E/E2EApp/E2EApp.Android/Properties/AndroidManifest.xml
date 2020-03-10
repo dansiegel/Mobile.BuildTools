@@ -4,6 +4,6 @@
           android:versionName="1.0"
           package="com.avantipoint.e2eapp">
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
-    <application android:label="E2E App">
+    <application android:label="E2E App" android:icon="@mipmap/icon">
     </application>
 </manifest>

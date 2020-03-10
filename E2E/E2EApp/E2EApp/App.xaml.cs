@@ -15,6 +15,7 @@ namespace E2EApp
             var tabbedPage = new TabbedPage();
             tabbedPage.Children.Add(new SecretsPage());
             tabbedPage.Children.Add(new AppConfig());
+            tabbedPage.Children.Add(new ImagesPage());
             MainPage = tabbedPage;
         }
     }

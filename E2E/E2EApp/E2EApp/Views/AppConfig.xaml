@@ -12,7 +12,8 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <StackLayout HorizontalOptions="Center"
-                 VerticalOptions="Center">
+                 VerticalOptions="Center"
+                 Padding="20">
       <!-- Place new controls here -->
       <Label AutomationId="foo"
            x:Name="fooLabel" />
@@ -28,6 +29,7 @@
               Clicked="Button_Clicked" />
     </StackLayout>
 
-    <controls:VersionBar Grid.Row="1" />
+    <controls:VersionBar Grid.Row="1"
+                         HorizontalOptions="Fill" />
   </Grid>
 </ContentPage>
