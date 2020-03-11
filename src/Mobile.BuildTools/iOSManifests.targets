@@ -28,7 +28,7 @@
   <Target Name="IPACopyToStagingDirectory"
           AfterTargets="_ZipIpa"
           DependsOnTargets="_ZipIpa"
-          Condition=" '$(BuildToolsEnableArtifactCopy)' And !'$(IsAppCenter)' ">
+          Condition=" $(Platform) == 'iPhone' And '$(BuildToolsEnableArtifactCopy)' And !'$(IsAppCenter)' ">
 
     <PropertyGroup>
       <__IpaFileName Condition=" '$(IpaPackagePath)' != '' ">$([System.IO.Path]::GetFileNameWithoutExtension('$(IpaPackagePath)'))</__IpaFileName>
