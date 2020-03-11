@@ -54,6 +54,7 @@ namespace Mobile.BuildTools.Tasks.Generators.AppConfig
                 case Models.AppConfigStrategy.BundleAll:
                     Outputs = parentDirectory.EnumerateFiles()
                                              .Select(x => new TaskItem(x.FullName));
+                    Log.LogMessage($"All app.config's will be bundled. {string.Join(", ", parentDirectory.EnumerateFiles().Select(x => x.Name))}");
                     break;
                 case Models.AppConfigStrategy.BundleNonStandard:
                     var standardConfigs = new[]
@@ -66,6 +67,10 @@ namespace Mobile.BuildTools.Tasks.Generators.AppConfig
                     Outputs = parentDirectory.EnumerateFiles()
                                              .Where(x => !standardConfigs.Any(s => s.Equals(x.Name, StringComparison.InvariantCultureIgnoreCase)))
                                              .Select(x => new TaskItem(x.FullName));
+                    if(Outputs.Count() > 1)
+                    {
+                        Log.LogMessage($"The app.config will be bundled with the following configurations. {string.Join(", ", Outputs.Select(x => Path.GetFileName(x.ItemSpec)))}");
+                    }
                     break;
                 default:
                     Outputs = new[] { new TaskItem(BaseConfigPath) };
