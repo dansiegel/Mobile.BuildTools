@@ -24,7 +24,7 @@
   </Target>
 
   <PropertyGroup>
-    <HandlePlatformAppConfigBeforeTargets>_CollectBundleResources</HandlePlatformAppConfigBeforeTargets>
+    <HandlePlatformAppConfigBeforeTargets>_CollectBundleResources;PrepareForBuild</HandlePlatformAppConfigBeforeTargets>
   </PropertyGroup>
 
   <Target Name="HandlePlatformAppConfig"
@@ -36,18 +36,18 @@
   </Target>
 
   <Target Name="IncludeUnifiedImageAsset"
-          AfterTargets="UnifiedImageAssetProcessing"
-          Condition="$(BuildToolsBundleUnifiedImages)">
+          BeforeTargets="_CollectBundleResources"
+          AfterTargets="UnifiedImageAssetProcessing;_CollectImageAssets">
     <ItemGroup>
-      <BundleResource Include="@(UnifiedImageAsset -> %(OutputFile))"
-                      Link="%(OutputLink)"
-                      Visible="%(ShouldBeVisible)"
-                      Condition="%(OutputLink.Contains('xcassets') == 'false' " />
+      <BundleResource Include="@(UnifiedImageAsset)"
+                      Link="%(UnifiedImageAsset.OutputLink)"
+                      Visible="true"
+                      Condition="%(UnifiedImageAsset.ShouldBeVisible) == 'true' " />
 
-      <ImageAsset Include="@(UnifiedImageAsset -> %(OutputFile))"
-                  Link="%(OutputLink)"
-                  Visible="%(ShouldBeVisible)"
-                  Condition="%(OutputLink.Contains('xcassets') == 'true' " />
+      <ImageAsset Include="@(UnifiedImageAsset)"
+                  Link="%(UnifiedImageAsset.OutputLink)"
+                  Visible="false"
+                  Condition="%(UnifiedImageAsset.ShouldBeVisible) != 'true' " />
     </ItemGroup>
   </Target>
 
