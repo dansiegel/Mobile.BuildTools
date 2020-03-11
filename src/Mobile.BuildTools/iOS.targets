@@ -12,7 +12,7 @@
 
   <Target Name="AutomaticBuildVersioning"
           AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit"
-          DependsOnTargets="MobileBuildToolsInit">
+          Condition="$(Platform) == 'iPhone' And $(BuildToolsEnableAutomaticVersioning) == 'True'">
 
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                                   ProjectName="$(MSBuildProjectName)"
