@@ -1,5 +1,6 @@
 <Project>
 
+  <Import Project="..\Dependencies.props" />
   <Import Project="..\Directory.build.props" />
 
   <PropertyGroup>
