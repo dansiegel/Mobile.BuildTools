@@ -13,7 +13,7 @@ namespace Mobile.BuildTools.Tasks
 
         internal override void ExecuteInternal(IBuildConfiguration buildConfiguration)
         {
-            if (buildConfiguration.Platform != Platform.Android && buildConfiguration.Platform != Platform.iOS && buildConfiguration.Platform != Platform.macOS)
+            if (!IsSupported(buildConfiguration.Platform))
             {
                 Log.LogMessage($"The current Platform '{buildConfiguration.Platform}' is not supported for Automatic Versioning");
             }
@@ -28,7 +28,12 @@ namespace Mobile.BuildTools.Tasks
             else
             {
                 Log.LogMessage("Executing Automatic Version Generator");
-                GetGenerator(buildConfiguration.Platform)?.Execute();
+                var generator = GetGenerator(buildConfiguration.Platform);
+
+                if (generator is null)
+                    Log.LogWarning($"We seem to be on a supported platform {buildConfiguration.Platform}, but we did not get a generator...");
+                else
+                    generator.Execute();
             }
         }
 
@@ -47,6 +52,19 @@ namespace Mobile.BuildTools.Tasks
                 default:
                     return null;
 
+            }
+        }
+
+        private bool IsSupported(Platform platform)
+        {
+            switch(platform)
+            {
+                case Platform.Android:
+                case Platform.iOS:
+                case Platform.macOS:
+                    return true;
+                default:
+                    return false;
             }
         }
     }
