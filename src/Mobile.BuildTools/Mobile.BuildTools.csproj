@@ -39,39 +39,18 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
     <PackageReference Include="NuGet.Build.Packaging" Version="0.2.5-dev.10" PrivateAssets="all" />
     <!-- Add `native` to the CopyToOutput to capture all runtimes -->
-    <PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" PrivateAssets="all" CopyToOutput="runtime" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" CopyToOutput="runtime" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.Core" Version="1.0.0-beta0008" CopyToOutput="runtime" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" CopyToOutput="runtime" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta0009" CopyToOutput="runtime" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.Shapes" Version="1.0.0-beta0009" CopyToOutput="runtime" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.Core" Version="1.0.0-beta0008" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta0009" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.Shapes" Version="1.0.0-beta0009" PrivateAssets="all" />
+    <PackageReference Include="System.Buffers" Version="4.4.0" PrivateAssets="all" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" PrivateAssets="all" />
+    <PackageReference Include="System.Memory" Version="4.5.1" PrivateAssets="all" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" PrivateAssets="all" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" PrivateAssets="all" />
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.5.24" PrivateAssets="all" />
   </ItemGroup>
-
-  <Target Name="IncludeCopyToOutputFromPackage"
-          Inputs="@(PackageReference -> HasMetadata('CopyToOutput'))"
-          Outputs="%(PackageReference.Identity)"
-          DependsOnTargets="ResolvePackageAssets"
-          AfterTargets="ResolveReferences">
-    <PropertyGroup>
-      <CopyToOutputPackageId>%(PackageReference.Identity)</CopyToOutputPackageId>
-      <CopyToOutputAssetType>%(PackageReference.CopyToOutput)</CopyToOutputAssetType>
-    </PropertyGroup>
-    <ItemGroup>
-      <!-- We could want to include other stuff transitively, like content or tools -->
-      <PackageItems Include="@(RuntimeTargetsCopyLocalItems)" />
-    </ItemGroup>
-    <ItemGroup>
-      <CopyLocalPackageFile Include="@(PackageItems)"
-                            Condition="'%(PackageItems.NuGetPackageId)' == '$(CopyToOutputPackageId)' And
-                            ('$(CopyToOutputAssetType.Contains(%(PackageItems.AssetType)))' == 'true' Or '$(CopyToOutputAssetType.Contains(%(PackageItems.RuntimeIdentifier)))' == 'true')" />
-      <PackageFile Include="@(CopyLocalPackageFile)" PackagePath="$(PrimaryOutputKind)/%(CopyLocalPackageFile.PathInPackage)" />
-    </ItemGroup>
-    <ItemGroup>
-      <RuntimeCopyLocalPackageFiles Include="@(RuntimeCopyLocalItems)"
-                                    Condition="'%(RuntimeCopyLocalItems.NuGetPackageId)' == '$(CopyToOutputPackageId)' And $(CopyToOutputAssetType.Contains('%(RuntimeCopyLocalItems.AssetType)'))" />
-      <ReferenceCopyLocalPaths Include="@(RuntimeCopyLocalPackageFiles)" />
-      <PackageFile Include="@(RuntimeCopyLocalPackageFiles)" Kind="$(PrimaryOutputKind)" />
-    </ItemGroup>
-  </Target>
 
 </Project>
