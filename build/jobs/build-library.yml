@@ -46,7 +46,6 @@ jobs:
       SignClientTenantId: $(SignClientTenantId)
       SignServiceResourceId: $(SignServiceResourceId)
     condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
-    enabled: false
 
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Artifacts'
