@@ -27,11 +27,25 @@ namespace Mobile.BuildTools.Tests.Fixtures
         public ImageCollectionGeneratorFixture(ITestOutputHelper testOutputHelper)
             : base(testOutputHelper)
         {
+            Initialize();
         }
 
         protected ImageCollectionGeneratorFixture(string projectDirectory, ITestOutputHelper testOutputHelper)
             : base(projectDirectory, testOutputHelper)
         {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            var resourceDefinitionPath = Path.Combine("resources", "resourceDefinition.json");
+            if (!File.Exists(resourceDefinitionPath))
+            {
+                var assembly = GetType().Assembly;
+                using var stream = assembly.GetManifestResourceStream("Mobile.BuildTools.Tests.resources.resourceDefinition.json");
+                using var fs = File.Create(resourceDefinitionPath);
+                stream.CopyTo(fs);
+            }
         }
 
         [Fact]
