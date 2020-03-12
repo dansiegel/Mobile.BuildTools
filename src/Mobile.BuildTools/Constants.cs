@@ -13,5 +13,7 @@
         public const string ManifestJsonFileName = "manifest.json";
 
         public const string DefaultBackgroundColor = "#FFFFFF";
+
+        public static readonly string ResourceDefinitionTemplateFile = System.IO.Path.Combine("resources", "resourceDefinition.json");
     }
 }

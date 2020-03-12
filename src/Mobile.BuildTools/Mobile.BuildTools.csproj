@@ -27,9 +27,7 @@
   <ItemGroup>
     <None Include="..\assets\runtimes\**\libsass.*" Pack="true" PackagePath="$(PrimaryOutputKind)/runtimes/%(RecursiveDir)%(Filename)%(Extension)" />
     <None Include="*.targets;*.props" Pack="true" Kind="$(PrimaryOutputKind)" />
-    <None Remove="Resources\resourceDefinition.json" />
-    <EmbeddedResource Include="Resources\resourceDefinition.json" />
-    <None Include="Resources\*" Pack="true" PackagePath="$(PrimaryOutputKind)/resources/%(Filename)%(Extension)" />
+    <None Update="Resources\*" Pack="true" PackagePath="$(PrimaryOutputKind)/resources/%(Filename)%(Extension)" />
     <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
   </ItemGroup>
 
@@ -38,7 +36,6 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildNuGetVersion)" Pack="false" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
     <PackageReference Include="NuGet.Build.Packaging" Version="0.2.5-dev.10" PrivateAssets="all" />
-    <!-- Add `native` to the CopyToOutput to capture all runtimes -->
     <PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" PrivateAssets="all" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" PrivateAssets="all" />
     <PackageReference Include="SixLabors.Core" Version="1.0.0-beta0008" PrivateAssets="all" />

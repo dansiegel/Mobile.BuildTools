@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,10 +57,8 @@ namespace Mobile.BuildTools.Generators.Images
 
                     if(!File.Exists(jsonConfig))
                     {
-                        var assembly = GetType().Assembly;
-                        using var stream = assembly.GetManifestResourceStream("Mobile.BuildTools.Resources.resourceDefinition.json");
-                        using var reader = new StreamReader(stream);
-                        File.WriteAllText(jsonConfig, reader.ReadToEnd());
+                        var fi = new FileInfo(GetType().Assembly.Location);
+                        File.Copy(Path.Combine(fi.DirectoryName, Constants.ResourceDefinitionTemplateFile), jsonConfig);
                     }
 
                     inputFileNames.Add(jsonConfig);
