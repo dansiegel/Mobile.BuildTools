@@ -46,7 +46,7 @@
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" PrivateAssets="all" />
     <PackageReference Include="System.Memory" Version="4.5.1" PrivateAssets="all" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" PrivateAssets="all" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" PrivateAssets="all" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.0" PrivateAssets="all" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.5.24" PrivateAssets="all" />
   </ItemGroup>
 
