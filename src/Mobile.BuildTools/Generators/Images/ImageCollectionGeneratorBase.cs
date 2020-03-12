@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace Mobile.BuildTools.Generators.Images
     internal abstract class ImageCollectionGeneratorBase : GeneratorBase<IReadOnlyList<OutputImage>>
     {
         private static object executeLock = new object();
+        private static readonly string[] supportedExtensions = new[] { ".png", ".jpg" };
 
         public IEnumerable<string> SearchFolders { get; set; }
 
@@ -40,7 +41,9 @@ namespace Mobile.BuildTools.Generators.Images
             var inputFileNames = new List<string>();
             foreach (var folder in SearchFolders)
             {
-                foreach (var file in Directory.GetFiles(folder, "*.png", SearchOption.TopDirectoryOnly))
+                var filesInFolder = Directory.GetFiles(folder, "*", SearchOption.TopDirectoryOnly)
+                    .Where(x => supportedExtensions.Any(e => e.Equals(Path.GetExtension(x), StringComparison.InvariantCultureIgnoreCase)));
+                foreach (var file in filesInFolder)
                 {
                     var fileName = Path.GetFileNameWithoutExtension(file);
                     if (inputFileNames.Any(x => x == fileName))
@@ -117,8 +120,7 @@ namespace Mobile.BuildTools.Generators.Images
 
         protected internal ResourceDefinition GetResourceDefinition(string filePath)
         {
-            var ext = Path.GetExtension(filePath);
-            if (ext != ".png" && ext != ".jpg")
+            if (!IsSupportedExtension(filePath))
                 return GetPlatformResourceDefinition(filePath);
 
             var fileName = GetImageConfigurationPath(filePath);
@@ -159,5 +161,8 @@ namespace Mobile.BuildTools.Generators.Images
 
             return ImageInputFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == resource.WatermarkFile || Path.GetFileName(x) == resource.WatermarkFile);
         }
+
+        protected static bool IsSupportedExtension(string path) =>
+            supportedExtensions.Any(e => e.Equals(Path.GetExtension(path), StringComparison.InvariantCultureIgnoreCase));
     }
 }

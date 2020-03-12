@@ -47,6 +47,10 @@ namespace Mobile.BuildTools.Generators.Images
             {
                 platformSanitizedName += ".png";
             }
+            else if(Path.GetExtension(platformSanitizedName).Equals(".jpg", StringComparison.InvariantCultureIgnoreCase))
+            {
+                platformSanitizedName = Regex.Replace(platformSanitizedName, ".jpg", ".png", RegexOptions.IgnoreCase);
+            }
 
             foreach (var resolution in Resolutions)
             {
