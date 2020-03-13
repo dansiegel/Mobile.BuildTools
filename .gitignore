@@ -16,5 +16,6 @@ binaries/
 site/
 
 .DS_Store
+Thumbs.db
 
 **/Images/**/Thumbs.db
