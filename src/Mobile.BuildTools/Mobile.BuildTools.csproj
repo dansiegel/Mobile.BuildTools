@@ -29,6 +29,10 @@
     <None Include="*.targets;*.props" Pack="true" Kind="$(PrimaryOutputKind)" />
     <None Update="Resources\*" Pack="true" PackagePath="$(PrimaryOutputKind)/resources/%(Filename)%(Extension)" />
     <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
+    <ImageAsset Include="../../assets/*.png"
+                IgnoreIntermediateOutputFile="$(IntermediateOutputPath)\assets\%(Filename).json"
+                ImageName="%(Filename)%(Extension)"
+                IgnoreFileName="%(Filename).json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,5 +53,23 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" PrivateAssets="all" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.5.24" PrivateAssets="all" />
   </ItemGroup>
+
+  <Target Name="AddDefaultOverlays"
+          AfterTargets="ResolveReferences"
+          Inputs="@(ImageAsset)"
+          Outputs="%(ImageAsset.ImageName)">
+    <PropertyGroup>
+      <ImageAssetFile>%(ImageAsset.ImageName)</ImageAssetFile>
+      <ImageAssetJsonFile>%(ImageAsset.IgnoreFileName)</ImageAssetJsonFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackageFile Include="../../assets/$(ImageAssetFile)"
+                   Pack="true"
+                   PackagePath="$(PrimaryOutputKind)/assets/$(ImageAssetFile)" />
+      <PackageFile Include="../../assets/ignore.json"
+                   Pack="true"
+                   PackagePath="$(PrimaryOutputKind)/assets/$(ImageAssetJsonFile)" />
+    </ItemGroup>
+  </Target>
 
 </Project>
