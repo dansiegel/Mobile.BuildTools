@@ -31,7 +31,7 @@
 
   <Target Name="ConfigurationManagerTransformAndCopy"
           AfterTargets="_CollectAppConfigs"
-          Inputs="@(BuildToolsTempConfigs)"
+          Inputs="@(MobileBuildToolsConfig)"
           Outputs="@(GeneratedAppConfig)">
     <PropertyGroup>
       <AppConfigEnvironment Condition=" $(AppConfigEnvironment) == '' ">$(Configuration)</AppConfigEnvironment>
