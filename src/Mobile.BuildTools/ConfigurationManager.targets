@@ -18,21 +18,13 @@
                        IntermediateOutputPath="$(IntermediateOutputPath)"
                        TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                        InputConfigFiles="@(MobileBuildToolsConfig)">
-      <Output ItemName="GeneratedFile"
-              TaskParameter="CopiedConfigs"/>
-      <Output ItemName="FilesWrite"
-              TaskParameter="CopiedConfigs"/>
       <Output ItemName="GeneratedAppConfig"
               TaskParameter="OutputConfigs"/>
-      <Output ItemName="BuildToolsTempConfigs"
-              TaskParameter="CopiedConfigs" />
     </AppConfigCopyTask>
   </Target>
 
   <Target Name="ConfigurationManagerTransformAndCopy"
-          AfterTargets="_CollectAppConfigs"
-          Inputs="@(MobileBuildToolsConfig)"
-          Outputs="@(GeneratedAppConfig)">
+          AfterTargets="_CollectAppConfigs">
     <PropertyGroup>
       <AppConfigEnvironment Condition=" $(AppConfigEnvironment) == '' ">$(Configuration)</AppConfigEnvironment>
     </PropertyGroup>
@@ -43,12 +35,14 @@
                                      IntermediateOutputPath="$(IntermediateOutputPath)"
                                      TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                      AppConfigEnvironment="$(AppConfigEnvironment)"
-                                     InputConfigFiles="@(BuildToolsTempConfigs)"
-                                     ExpectedAppConfig="@(GeneratedAppConfig)">
+                                     InputConfigFiles="@(MobileBuildToolsConfig)"
+                                     GeneratedAppConfig="@(GeneratedAppConfig)">
       <Output ItemName="GeneratedFile"
-              TaskParameter="GeneratedAppConfig"/>
+              TaskParameter="OutputConfigs"/>
       <Output ItemName="FilesWrite"
-              TaskParameter="GeneratedAppConfig"/>
+              TaskParameter="OutputConfigs"/>
+      <Output ItemName="PlatformAppConfig"
+              TaskParameter="OutputConfigs"/>
     </ConfigurationManagerHandlerTask>
   </Target>
 

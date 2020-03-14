@@ -2,38 +2,24 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Configuration;
 
 namespace Mobile.BuildTools.Tasks
 {
     public class AppConfigCopyTask : BuildToolsTaskBase
     {
-        private const string EmptyAppConfig = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
-<configuration>
-  <appSettings>
-  </appSettings>
-  <connectionStrings>
-  </connectionStrings>
-</configuration>";
-
         public ITaskItem[] InputConfigFiles { get; set; }
 
         private List<ITaskItem> _outputs = new List<ITaskItem>();
         [Output]
         public ITaskItem[] OutputConfigs => _outputs.ToArray();
 
-        private List<ITaskItem> _copiedConfigs = new List<ITaskItem>();
-        [Output]
-        public ITaskItem[] CopiedConfigs => _copiedConfigs.ToArray();
-
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            // if (!System.Diagnostics.Debugger.IsAttached)
-            //     System.Diagnostics.Debugger.Launch();
-
+            // Validate Inputs
             if (!InputConfigFiles.Any())
             {
                 Log.LogMessage("No input config files were found");
@@ -48,47 +34,41 @@ namespace Mobile.BuildTools.Tasks
                 return;
             }
 
-            var files = InputConfigFiles.Select(x => x.ItemSpec);
+            // Ensure there is an app.config available
+            if (!InputConfigFiles.Any(x => FileNameEquals("app.config", x.ItemSpec) ||
+                (!string.IsNullOrEmpty(x.GetMetadata("Link")) && FileNameEquals("app.config", x.GetMetadata("Link")))))
+            {
+                Log.LogError("You must have at least one file included with the build action MobileBuildToolsConfig with the file name app.config");
+                return;
+            }
+
             var configsOutputDir = Path.Combine(IntermediateOutputPath, "configs");
 
-            if (!Directory.Exists(configsOutputDir))
+            // Determine which files need outputs
+            //var files = InputConfigFiles.Select(x => x.ItemSpec);
+            foreach (var item in InputConfigFiles)
             {
-                Directory.CreateDirectory(configsOutputDir);
-            }
-
-            foreach (var file in files)
-            {
-                CopyFile(configsOutputDir, file, config);
-            }
-
-            if(!_outputs.Any(x => Path.GetFileName(x.ItemSpec).Equals("app.config", StringComparison.InvariantCultureIgnoreCase)))
-            {
-                var projectFile = Path.Combine(config.ProjectDirectory, "app.config");
-                File.WriteAllText(projectFile, EmptyAppConfig);
-                CopyFile(configsOutputDir, projectFile, config);
+                CollectValidOutput(configsOutputDir, item, config);
             }
         }
 
-        private void CopyFile(string configsOutputDir, string file, IBuildConfiguration config)
+        private static bool FileNameEquals(string expected, string actualPath) =>
+            Path.GetFileName(actualPath).Equals(expected, StringComparison.InvariantCultureIgnoreCase);
+
+        private void CollectValidOutput(string configsOutputDir, ITaskItem item, IBuildConfiguration config)
         {
-            var outputFilePath = Path.Combine(configsOutputDir, Path.GetFileName(file));
-            var lockFilePath = $"{outputFilePath}.lock";
-            var inputFileInfo = new FileInfo(file);
-
-            if (!File.Exists(outputFilePath) || !File.Exists(lockFilePath) ||
-                DateTime.Parse(File.ReadAllText(lockFilePath)) < inputFileInfo.LastWriteTimeUtc)
-            {
-                config.Logger.LogMessage($"Copying {file} to {outputFilePath}");
-                inputFileInfo.CopyTo(outputFilePath);
-                File.WriteAllText(lockFilePath, $"{inputFileInfo.LastWriteTimeUtc.ToString()}");
-            }
-
-            _copiedConfigs.Add(new TaskItem(outputFilePath));
+            var filePath = item.ItemSpec;
+            var link = item.GetMetadata(MetaData.Link);
+            var fileName = !string.IsNullOrEmpty(link) ? Path.GetFileName(link) : Path.GetFileName(filePath);
+            var outputFilePath = Path.Combine(configsOutputDir, fileName);
+            var outputItem = new TaskItem(outputFilePath);
+            outputItem.SetMetadata(MetaData.Link, link);
+            outputItem.SetMetadata(MetaData.SourceFile, filePath);
 
             switch (config.Configuration.AppConfig.Strategy)
             {
                 case Models.AppConfigStrategy.BundleAll:
-                    _outputs.Add(new TaskItem(outputFilePath));
+                    _outputs.Add(outputItem);
                     break;
                 case Models.AppConfigStrategy.BundleNonStandard:
                     var standardConfigs = new[]
@@ -98,15 +78,15 @@ namespace Mobile.BuildTools.Tasks
                         "app.store.config",
                         "app.adhoc.config"
                     };
-                    if(!standardConfigs.Any(x => x.Equals(Path.GetFileName(file), StringComparison.InvariantCultureIgnoreCase)))
+                    if(!standardConfigs.Any(x => x.Equals(fileName, StringComparison.InvariantCultureIgnoreCase)))
                     {
-                        _outputs.Add(new TaskItem(outputFilePath));
+                        _outputs.Add(outputItem);
                     }
                     break;
                 default:
-                    if (Path.GetFileName(file).Equals("app.config", StringComparison.InvariantCultureIgnoreCase))
+                    if (fileName.Equals("app.config", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        _outputs.Add(new TaskItem(outputFilePath));
+                        _outputs.Add(outputItem);
                     }
                     break;
             }

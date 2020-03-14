@@ -38,12 +38,14 @@ namespace Mobile.BuildTools.Tests.Fixtures
 
         private void Initialize()
         {
-            var resourceDefinitionPath = Path.Combine("resources", "resourceDefinition.json");
-            if (!File.Exists(resourceDefinitionPath))
+            var rdInfo = new FileInfo(Path.Combine("resources", "resourceDefinition.json"));
+            if (!rdInfo.Exists)
             {
+                rdInfo.Directory.Create();
+                _testOutputHelper.WriteLine("Adding resourceDefinition file");
                 var assembly = GetType().Assembly;
                 using var stream = assembly.GetManifestResourceStream("Mobile.BuildTools.Tests.resources.resourceDefinition.json");
-                using var fs = File.Create(resourceDefinitionPath);
+                using var fs = rdInfo.Create();
                 stream.CopyTo(fs);
             }
         }
