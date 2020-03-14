@@ -61,7 +61,10 @@ namespace Mobile.BuildTools.Generators.Images
                     if(!File.Exists(jsonConfig))
                     {
                         var fi = new FileInfo(GetType().Assembly.Location);
-                        File.Copy(Path.Combine(fi.DirectoryName, Constants.ResourceDefinitionTemplateFile), jsonConfig);
+                        var resourceJson = new FileInfo(Path.Combine(fi.DirectoryName, "resources", "resourceDefinition.json"));
+                        resourceJson.Directory.Create();
+                        Log.LogMessage($"Looking for template json at '{resourceJson.FullName}");
+                        resourceJson.CopyTo(jsonConfig);
                     }
 
                     inputFileNames.Add(jsonConfig);
