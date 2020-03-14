@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Configuration;
 using Mobile.BuildTools.Generators;
-using Mobile.BuildTools.Logging;
+using Mobile.BuildTools.Models.Configuration;
 
 namespace Mobile.BuildTools.Tasks.Generators.AppConfig
 {
-    internal class ConfigurationManagerTransformationGenerator : GeneratorBase<IEnumerable<ITaskItem>>
+    internal class ConfigurationManagerTransformationGenerator : GeneratorBase
     {
         public ConfigurationManagerTransformationGenerator(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
@@ -29,52 +22,31 @@ namespace Mobile.BuildTools.Tasks.Generators.AppConfig
         // C:/repos/MyProject/MyProject.iOS/app.config
         public string TransformFilePath { get; set; }
 
+        public IEnumerable<ExpectedAppConfig> ExpectedConfigs { get; set; }
+
         protected override void ExecuteInternal()
         {
-            var parentDirectory = Directory.GetParent(BaseConfigPath);
-            var configFileName = Path.GetFileNameWithoutExtension(BaseConfigPath);
+            // Copy all output files...
+            foreach (var config in ExpectedConfigs)
+            {
+                Log.LogMessage($"Copying '{config.SourceFile}' to '{config.OutputPath}'.");
+                File.Copy(config.SourceFile, config.OutputPath);
+            }
 
             if (!string.IsNullOrEmpty(TransformFilePath) && File.Exists(TransformFilePath))
             {
                 var updatedConfig = TransformationHelper.Transform(File.ReadAllText(BaseConfigPath),
-                                                               File.ReadAllText(TransformFilePath));
+                                                                   File.ReadAllText(TransformFilePath));
                 if (updatedConfig is null) return;
 
-                updatedConfig.Save(BaseConfigPath);
+                var appConfig = ExpectedConfigs.First(x => Path.GetFileName(x.OutputPath) == "app.config");
+                updatedConfig.Save(appConfig.OutputPath);
 
                 if (Build.Configuration.Debug)
                 {
                     Log.LogMessage("*************** Transformed app.config ******************************");
                     Log.LogMessage(updatedConfig.ToString());
                 }
-            }
-
-            switch(Build.Configuration.AppConfig.Strategy)
-            {
-                case Models.AppConfigStrategy.BundleAll:
-                    Outputs = parentDirectory.EnumerateFiles()
-                                             .Select(x => new TaskItem(x.FullName));
-                    Log.LogMessage($"All app.config's will be bundled. {string.Join(", ", parentDirectory.EnumerateFiles().Select(x => x.Name))}");
-                    break;
-                case Models.AppConfigStrategy.BundleNonStandard:
-                    var standardConfigs = new[]
-                    {
-                        "app.debug.config",
-                        "app.release.config",
-                        "app.store.config",
-                        "app.adhoc.config"
-                    };
-                    Outputs = parentDirectory.EnumerateFiles()
-                                             .Where(x => !standardConfigs.Any(s => s.Equals(x.Name, StringComparison.InvariantCultureIgnoreCase)))
-                                             .Select(x => new TaskItem(x.FullName));
-                    if(Outputs.Count() > 1)
-                    {
-                        Log.LogMessage($"The app.config will be bundled with the following configurations. {string.Join(", ", Outputs.Select(x => Path.GetFileName(x.ItemSpec)))}");
-                    }
-                    break;
-                default:
-                    Outputs = new[] { new TaskItem(BaseConfigPath) };
-                    break;
             }
         }
     }

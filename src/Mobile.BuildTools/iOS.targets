@@ -30,7 +30,7 @@
   <Target Name="HandlePlatformAppConfig"
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy">
     <ItemGroup>
-      <BundleResource Include="@(GeneratedAppConfig)"
+      <BundleResource Include="@(PlatformAppConfig)"
                       Link="Resources\%(Filename)%(Extension)"/>
     </ItemGroup>
   </Target>

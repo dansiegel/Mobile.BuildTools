@@ -36,7 +36,7 @@
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
           BeforeTargets="_CreateDex;Compile">
     <ItemGroup>
-      <AndroidAsset Include="@(GeneratedAppConfig)"
+      <AndroidAsset Include="@(PlatformAppConfig)"
                     Link="Assets\%(Filename)%(Extension)"/>
     </ItemGroup>
   </Target>
