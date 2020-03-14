@@ -16,8 +16,8 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="flatpurple.svg"
-   inkscape:export-filename="C:\Users\seana\source\repos\github\seanalford\Mobile.BuildTools\assests\blank.png"
+   sodipodi:docname="purple.svg"
+   inkscape:export-filename="..\blank.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -3307,7 +3307,7 @@
      id="layer1"
      transform="translate(0,244.86668)">
     <g
-       id="dev-bot-flatpurple"
+       id="dev-bot-purple"
        inkscape:label=""
        transform="translate(7.8105469e-5,2709.3331)">
       <g
@@ -3346,7 +3346,7 @@
     </g>
     <g
        transform="translate(541.86666,2709.3331)"
-       id="debug-bot-flatpurple"
+       id="debug-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3384,7 +3384,7 @@
     </g>
     <g
        transform="translate(1083.7333,2709.3331)"
-       id="qa-bot-flatpurple"
+       id="qa-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3422,7 +3422,7 @@
     </g>
     <g
        transform="translate(1625.5999,2709.3331)"
-       id="uat-bot-flatpurple"
+       id="uat-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3460,7 +3460,7 @@
     </g>
     <g
        transform="translate(2167.4666,2709.3331)"
-       id="stage-bot-flatpurple"
+       id="stage-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3498,7 +3498,7 @@
     </g>
     <g
        transform="translate(2709.3333,2709.3331)"
-       id="preview-bot-flatpurple"
+       id="preview-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3536,7 +3536,7 @@
     </g>
     <g
        transform="translate(3251.2,2709.3331)"
-       id="alpha-bot-flatpurple"
+       id="alpha-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3574,7 +3574,7 @@
     </g>
     <g
        transform="translate(3793.0667,2709.3331)"
-       id="beta-bot-flatpurple"
+       id="beta-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3612,7 +3612,7 @@
     </g>
     <g
        transform="translate(4334.9334,2709.3331)"
-       id="free-bot-flatpurple"
+       id="free-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3650,7 +3650,7 @@
     </g>
     <g
        transform="translate(4876.8001,2709.3331)"
-       id="pro-bot-flatpurple"
+       id="pro-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3688,7 +3688,7 @@
     </g>
     <g
        transform="translate(5418.6667,2709.3331)"
-       id="lite-bot-flatpurple"
+       id="lite-bot-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3726,7 +3726,7 @@
     </g>
     <g
        transform="translate(1.8164062e-6,-2.9248048e-6)"
-       id="dev-top-flatpurple"
+       id="dev-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3765,7 +3765,7 @@
     </g>
     <g
        transform="translate(541.8667,-2.9248048e-6)"
-       id="debug-top-flatpurple"
+       id="debug-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3804,7 +3804,7 @@
     </g>
     <g
        transform="translate(1083.7334,-2.9248048e-6)"
-       id="qa-top-flatpurple"
+       id="qa-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3843,7 +3843,7 @@
     </g>
     <g
        transform="translate(1625.6,-2.9248048e-6)"
-       id="uat-top-flatpurple"
+       id="uat-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3882,7 +3882,7 @@
     </g>
     <g
        transform="translate(2167.4667,-2.9248048e-6)"
-       id="stage-top-flatpurple"
+       id="stage-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3921,7 +3921,7 @@
     </g>
     <g
        transform="translate(2709.3334,-2.9248048e-6)"
-       id="preview-top-flatpurple"
+       id="preview-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3960,7 +3960,7 @@
     </g>
     <g
        transform="translate(3251.2001,-2.9248048e-6)"
-       id="alpha-top-flatpurple"
+       id="alpha-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3999,7 +3999,7 @@
     </g>
     <g
        transform="translate(3793.0668,-2.9248048e-6)"
-       id="beta-top-flatpurple"
+       id="beta-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4038,7 +4038,7 @@
     </g>
     <g
        transform="translate(4334.9334,-2.9248048e-6)"
-       id="free-top-flatpurple"
+       id="free-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4077,7 +4077,7 @@
     </g>
     <g
        transform="translate(4876.8001,-2.9248048e-6)"
-       id="pro-top-flatpurple"
+       id="pro-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4116,7 +4116,7 @@
     </g>
     <g
        transform="translate(5418.6668,-2.9248048e-6)"
-       id="lite-top-flatpurple"
+       id="lite-top-purple"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4155,7 +4155,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-tl-flatpurple"
+       id="dev-tl-purple"
        transform="translate(0,541.86662)">
       <rect
          inkscape:label="background"
@@ -4194,7 +4194,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-tl-flatpurple"
+       id="debug-tl-purple"
        transform="translate(541.86664,541.86662)">
       <rect
          inkscape:label="background"
@@ -4233,7 +4233,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-tl-flatpurple"
+       id="qa-tl-purple"
        transform="translate(1083.7333,541.86662)">
       <rect
          inkscape:label="background"
@@ -4272,7 +4272,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-tl-flatpurple"
+       id="uat-tl-purple"
        transform="translate(1625.5999,541.86662)">
       <rect
          inkscape:label="background"
@@ -4311,7 +4311,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-tl-flatpurple"
+       id="stage-tl-purple"
        transform="translate(2167.4665,541.86662)">
       <rect
          inkscape:label="background"
@@ -4350,7 +4350,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-tl-flatpurple"
+       id="preview-tl-purple"
        transform="translate(2709.3331,541.86662)">
       <rect
          inkscape:label="background"
@@ -4389,7 +4389,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-tl-flatpurple"
+       id="alpha-tl-purple"
        transform="translate(3251.1997,541.86662)">
       <rect
          inkscape:label="background"
@@ -4428,7 +4428,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-tl-flatpurple"
+       id="beta-tl-purple"
        transform="translate(3793.0663,541.86662)">
       <rect
          inkscape:label="background"
@@ -4467,7 +4467,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-tl-flatpurple"
+       id="free-tl-purple"
        transform="translate(4334.9329,541.86662)">
       <rect
          inkscape:label="background"
@@ -4506,7 +4506,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-tl-flatpurple"
+       id="pro-tl-purple"
        transform="translate(4876.7995,541.86662)">
       <rect
          inkscape:label="background"
@@ -4545,7 +4545,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-tl-flatpurple"
+       id="lite-tl-purple"
        transform="translate(5418.6661,541.86662)">
       <rect
          inkscape:label="background"
@@ -4584,7 +4584,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-tr-flatpurple"
+       id="dev-tr-purple"
        transform="translate(158.59961,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4623,7 +4623,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-tr-flatpurple"
+       id="debug-tr-purple"
        transform="translate(700.46626,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4662,7 +4662,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-tr-flatpurple"
+       id="qa-tr-purple"
        transform="translate(1242.3329,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4701,7 +4701,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-tr-flatpurple"
+       id="uat-tr-purple"
        transform="translate(1784.1996,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4740,7 +4740,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-tr-flatpurple"
+       id="stage-tr-purple"
        transform="translate(2326.0663,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4779,7 +4779,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-tr-flatpurple"
+       id="preview-tr-purple"
        transform="translate(2867.933,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4818,7 +4818,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-tr-flatpurple"
+       id="alpha-tr-purple"
        transform="translate(3409.7997,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4857,7 +4857,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-tr-flatpurple"
+       id="beta-tr-purple"
        transform="translate(3951.6664,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4896,7 +4896,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-tr-flatpurple"
+       id="free-tr-purple"
        transform="translate(4493.5331,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4935,7 +4935,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-tr-flatpurple"
+       id="pro-tr-purple"
        transform="translate(5035.3998,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4974,7 +4974,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-tr-flatpurple"
+       id="lite-tr-purple"
        transform="translate(5577.2665,1083.7332)">
       <rect
          inkscape:label="background"
@@ -5013,7 +5013,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-bl-flatpurple"
+       id="dev-bl-purple"
        transform="translate(-1.4633789e-5,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5053,7 +5053,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-bl-flatpurple"
+       id="debug-bl-purple"
        transform="translate(541.86663,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5093,7 +5093,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-bl-flatpurple"
+       id="qa-bl-purple"
        transform="translate(1083.7332,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5133,7 +5133,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-bl-flatpurple"
+       id="uat-bl-purple"
        transform="translate(1625.5998,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5173,7 +5173,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-bl-flatpurple"
+       id="stage-bl-purple"
        transform="translate(2167.4664,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5213,7 +5213,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-bl-flatpurple"
+       id="preview-bl-purple"
        transform="translate(2709.333,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5253,7 +5253,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-bl-flatpurple"
+       id="alpha-bl-purple"
        transform="translate(3251.1996,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5293,7 +5293,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-bl-flatpurple"
+       id="beta-bl-purple"
        transform="translate(3793.0662,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5333,7 +5333,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-bl-flatpurple"
+       id="free-bl-purple"
        transform="translate(4334.9328,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5373,7 +5373,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-bl-flatpurple"
+       id="pro-bl-purple"
        transform="translate(4876.7994,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5413,7 +5413,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-bl-flatpurple"
+       id="lite-bl-purple"
        transform="translate(5418.666,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5453,7 +5453,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-br-flatpurple"
+       id="dev-br-purple"
        transform="translate(158.51544,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5493,7 +5493,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-br-flatpurple"
+       id="debug-br-purple"
        transform="translate(700.3821,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5533,7 +5533,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-br-flatpurple"
+       id="qa-br-purple"
        transform="translate(1242.2487,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5573,7 +5573,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-br-flatpurple"
+       id="uat-br-purple"
        transform="translate(1784.1154,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5613,7 +5613,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-br-flatpurple"
+       id="stage-br-purple"
        transform="translate(2325.982,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5653,7 +5653,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-br-flatpurple"
+       id="preview-br-purple"
        transform="translate(2867.8487,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5693,7 +5693,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-br-flatpurple"
+       id="alpha-br-purple"
        transform="translate(3409.7155,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5733,7 +5733,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-br-flatpurple"
+       id="beta-br-purple"
        transform="translate(3951.5822,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5773,7 +5773,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-br-flatpurple"
+       id="free-br-purple"
        transform="translate(4493.4489,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5813,7 +5813,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-br-flatpurple"
+       id="pro-br-purple"
        transform="translate(5035.3155,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5853,7 +5853,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-br-flatpurple"
+       id="lite-br-purple"
        transform="translate(5577.1821,2326.1504)">
       <rect
          inkscape:label="background"

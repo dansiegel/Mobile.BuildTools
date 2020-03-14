@@ -16,8 +16,8 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="flatwhite.svg"
-   inkscape:export-filename="C:\Users\seana\source\repos\github\seanalford\Mobile.BuildTools\assests\blank.png"
+   sodipodi:docname="white.svg"
+   inkscape:export-filename="..\blank.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -3307,7 +3307,7 @@
      id="layer1"
      transform="translate(0,244.86668)">
     <g
-       id="dev-bot-flatwhite"
+       id="dev-bot-white"
        inkscape:label=""
        transform="translate(7.8105469e-5,2709.3331)">
       <g
@@ -3346,7 +3346,7 @@
     </g>
     <g
        transform="translate(541.86666,2709.3331)"
-       id="debug-bot-flatwhite"
+       id="debug-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3384,7 +3384,7 @@
     </g>
     <g
        transform="translate(1083.7333,2709.3331)"
-       id="qa-bot-flatwhite"
+       id="qa-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3422,7 +3422,7 @@
     </g>
     <g
        transform="translate(1625.5999,2709.3331)"
-       id="uat-bot-flatwhite"
+       id="uat-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3460,7 +3460,7 @@
     </g>
     <g
        transform="translate(2167.4666,2709.3331)"
-       id="stage-bot-flatwhite"
+       id="stage-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3498,7 +3498,7 @@
     </g>
     <g
        transform="translate(2709.3333,2709.3331)"
-       id="preview-bot-flatwhite"
+       id="preview-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3536,7 +3536,7 @@
     </g>
     <g
        transform="translate(3251.2,2709.3331)"
-       id="alpha-bot-flatwhite"
+       id="alpha-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3574,7 +3574,7 @@
     </g>
     <g
        transform="translate(3793.0667,2709.3331)"
-       id="beta-bot-flatwhite"
+       id="beta-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3612,7 +3612,7 @@
     </g>
     <g
        transform="translate(4334.9334,2709.3331)"
-       id="free-bot-flatwhite"
+       id="free-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3650,7 +3650,7 @@
     </g>
     <g
        transform="translate(4876.8001,2709.3331)"
-       id="pro-bot-flatwhite"
+       id="pro-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3688,7 +3688,7 @@
     </g>
     <g
        transform="translate(5418.6667,2709.3331)"
-       id="lite-bot-flatwhite"
+       id="lite-bot-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3726,7 +3726,7 @@
     </g>
     <g
        transform="translate(1.8164062e-6,-2.9248048e-6)"
-       id="dev-top-flatwhite"
+       id="dev-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3765,7 +3765,7 @@
     </g>
     <g
        transform="translate(541.8667,-2.9248048e-6)"
-       id="debug-top-flatwhite"
+       id="debug-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3804,7 +3804,7 @@
     </g>
     <g
        transform="translate(1083.7334,-2.9248048e-6)"
-       id="qa-top-flatwhite"
+       id="qa-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3843,7 +3843,7 @@
     </g>
     <g
        transform="translate(1625.6,-2.9248048e-6)"
-       id="uat-top-flatwhite"
+       id="uat-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3882,7 +3882,7 @@
     </g>
     <g
        transform="translate(2167.4667,-2.9248048e-6)"
-       id="stage-top-flatwhite"
+       id="stage-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3921,7 +3921,7 @@
     </g>
     <g
        transform="translate(2709.3334,-2.9248048e-6)"
-       id="preview-top-flatwhite"
+       id="preview-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3960,7 +3960,7 @@
     </g>
     <g
        transform="translate(3251.2001,-2.9248048e-6)"
-       id="alpha-top-flatwhite"
+       id="alpha-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3999,7 +3999,7 @@
     </g>
     <g
        transform="translate(3793.0668,-2.9248048e-6)"
-       id="beta-top-flatwhite"
+       id="beta-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4038,7 +4038,7 @@
     </g>
     <g
        transform="translate(4334.9334,-2.9248048e-6)"
-       id="free-top-flatwhite"
+       id="free-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4077,7 +4077,7 @@
     </g>
     <g
        transform="translate(4876.8001,-2.9248048e-6)"
-       id="pro-top-flatwhite"
+       id="pro-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4116,7 +4116,7 @@
     </g>
     <g
        transform="translate(5418.6668,-2.9248048e-6)"
-       id="lite-top-flatwhite"
+       id="lite-top-white"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4155,7 +4155,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-tl-flatwhite"
+       id="dev-tl-white"
        transform="translate(0,541.86662)">
       <rect
          inkscape:label="background"
@@ -4194,7 +4194,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-tl-flatwhite"
+       id="debug-tl-white"
        transform="translate(541.86664,541.86662)">
       <rect
          inkscape:label="background"
@@ -4233,7 +4233,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-tl-flatwhite"
+       id="qa-tl-white"
        transform="translate(1083.7333,541.86662)">
       <rect
          inkscape:label="background"
@@ -4272,7 +4272,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-tl-flatwhite"
+       id="uat-tl-white"
        transform="translate(1625.5999,541.86662)">
       <rect
          inkscape:label="background"
@@ -4311,7 +4311,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-tl-flatwhite"
+       id="stage-tl-white"
        transform="translate(2167.4665,541.86662)">
       <rect
          inkscape:label="background"
@@ -4350,7 +4350,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-tl-flatwhite"
+       id="preview-tl-white"
        transform="translate(2709.3331,541.86662)">
       <rect
          inkscape:label="background"
@@ -4389,7 +4389,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-tl-flatwhite"
+       id="alpha-tl-white"
        transform="translate(3251.1997,541.86662)">
       <rect
          inkscape:label="background"
@@ -4428,7 +4428,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-tl-flatwhite"
+       id="beta-tl-white"
        transform="translate(3793.0663,541.86662)">
       <rect
          inkscape:label="background"
@@ -4467,7 +4467,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-tl-flatwhite"
+       id="free-tl-white"
        transform="translate(4334.9329,541.86662)">
       <rect
          inkscape:label="background"
@@ -4506,7 +4506,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-tl-flatwhite"
+       id="pro-tl-white"
        transform="translate(4876.7995,541.86662)">
       <rect
          inkscape:label="background"
@@ -4545,7 +4545,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-tl-flatwhite"
+       id="lite-tl-white"
        transform="translate(5418.6661,541.86662)">
       <rect
          inkscape:label="background"
@@ -4584,7 +4584,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-tr-flatwhite"
+       id="dev-tr-white"
        transform="translate(158.59961,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4623,7 +4623,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-tr-flatwhite"
+       id="debug-tr-white"
        transform="translate(700.46626,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4662,7 +4662,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-tr-flatwhite"
+       id="qa-tr-white"
        transform="translate(1242.3329,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4701,7 +4701,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-tr-flatwhite"
+       id="uat-tr-white"
        transform="translate(1784.1996,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4740,7 +4740,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-tr-flatwhite"
+       id="stage-tr-white"
        transform="translate(2326.0663,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4779,7 +4779,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-tr-flatwhite"
+       id="preview-tr-white"
        transform="translate(2867.933,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4818,7 +4818,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-tr-flatwhite"
+       id="alpha-tr-white"
        transform="translate(3409.7997,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4857,7 +4857,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-tr-flatwhite"
+       id="beta-tr-white"
        transform="translate(3951.6664,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4896,7 +4896,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-tr-flatwhite"
+       id="free-tr-white"
        transform="translate(4493.5331,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4935,7 +4935,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-tr-flatwhite"
+       id="pro-tr-white"
        transform="translate(5035.3998,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4974,7 +4974,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-tr-flatwhite"
+       id="lite-tr-white"
        transform="translate(5577.2665,1083.7332)">
       <rect
          inkscape:label="background"
@@ -5013,7 +5013,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-bl-flatwhite"
+       id="dev-bl-white"
        transform="translate(-1.4633789e-5,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5053,7 +5053,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-bl-flatwhite"
+       id="debug-bl-white"
        transform="translate(541.86663,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5093,7 +5093,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-bl-flatwhite"
+       id="qa-bl-white"
        transform="translate(1083.7332,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5133,7 +5133,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-bl-flatwhite"
+       id="uat-bl-white"
        transform="translate(1625.5998,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5173,7 +5173,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-bl-flatwhite"
+       id="stage-bl-white"
        transform="translate(2167.4664,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5213,7 +5213,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-bl-flatwhite"
+       id="preview-bl-white"
        transform="translate(2709.333,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5253,7 +5253,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-bl-flatwhite"
+       id="alpha-bl-white"
        transform="translate(3251.1996,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5293,7 +5293,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-bl-flatwhite"
+       id="beta-bl-white"
        transform="translate(3793.0662,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5333,7 +5333,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-bl-flatwhite"
+       id="free-bl-white"
        transform="translate(4334.9328,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5373,7 +5373,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-bl-flatwhite"
+       id="pro-bl-white"
        transform="translate(4876.7994,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5413,7 +5413,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-bl-flatwhite"
+       id="lite-bl-white"
        transform="translate(5418.666,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5453,7 +5453,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-br-flatwhite"
+       id="dev-br-white"
        transform="translate(158.51544,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5493,7 +5493,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-br-flatwhite"
+       id="debug-br-white"
        transform="translate(700.3821,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5533,7 +5533,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-br-flatwhite"
+       id="qa-br-white"
        transform="translate(1242.2487,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5573,7 +5573,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-br-flatwhite"
+       id="uat-br-white"
        transform="translate(1784.1154,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5613,7 +5613,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-br-flatwhite"
+       id="stage-br-white"
        transform="translate(2325.982,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5653,7 +5653,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-br-flatwhite"
+       id="preview-br-white"
        transform="translate(2867.8487,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5693,7 +5693,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-br-flatwhite"
+       id="alpha-br-white"
        transform="translate(3409.7155,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5733,7 +5733,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-br-flatwhite"
+       id="beta-br-white"
        transform="translate(3951.5822,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5773,7 +5773,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-br-flatwhite"
+       id="free-br-white"
        transform="translate(4493.4489,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5813,7 +5813,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-br-flatwhite"
+       id="pro-br-white"
        transform="translate(5035.3155,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5853,7 +5853,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-br-flatwhite"
+       id="lite-br-white"
        transform="translate(5577.1821,2326.1504)">
       <rect
          inkscape:label="background"

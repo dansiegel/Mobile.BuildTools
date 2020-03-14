@@ -16,8 +16,8 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="flatorange.svg"
-   inkscape:export-filename="C:\Users\seana\source\repos\github\seanalford\Mobile.BuildTools\assests\blank.png"
+   sodipodi:docname="orange.svg"
+   inkscape:export-filename="..\blank.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -3307,7 +3307,7 @@
      id="layer1"
      transform="translate(0,244.86668)">
     <g
-       id="dev-bot-flatorange"
+       id="dev-bot-orange"
        inkscape:label=""
        transform="translate(7.8105469e-5,2709.3331)">
       <g
@@ -3346,7 +3346,7 @@
     </g>
     <g
        transform="translate(541.86666,2709.3331)"
-       id="debug-bot-flatorange"
+       id="debug-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3384,7 +3384,7 @@
     </g>
     <g
        transform="translate(1083.7333,2709.3331)"
-       id="qa-bot-flatorange"
+       id="qa-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3422,7 +3422,7 @@
     </g>
     <g
        transform="translate(1625.5999,2709.3331)"
-       id="uat-bot-flatorange"
+       id="uat-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3460,7 +3460,7 @@
     </g>
     <g
        transform="translate(2167.4666,2709.3331)"
-       id="stage-bot-flatorange"
+       id="stage-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3498,7 +3498,7 @@
     </g>
     <g
        transform="translate(2709.3333,2709.3331)"
-       id="preview-bot-flatorange"
+       id="preview-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3536,7 +3536,7 @@
     </g>
     <g
        transform="translate(3251.2,2709.3331)"
-       id="alpha-bot-flatorange"
+       id="alpha-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3574,7 +3574,7 @@
     </g>
     <g
        transform="translate(3793.0667,2709.3331)"
-       id="beta-bot-flatorange"
+       id="beta-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3612,7 +3612,7 @@
     </g>
     <g
        transform="translate(4334.9334,2709.3331)"
-       id="free-bot-flatorange"
+       id="free-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3650,7 +3650,7 @@
     </g>
     <g
        transform="translate(4876.8001,2709.3331)"
-       id="pro-bot-flatorange"
+       id="pro-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3688,7 +3688,7 @@
     </g>
     <g
        transform="translate(5418.6667,2709.3331)"
-       id="lite-bot-flatorange"
+       id="lite-bot-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3726,7 +3726,7 @@
     </g>
     <g
        transform="translate(1.8164062e-6,-2.9248048e-6)"
-       id="dev-top-flatorange"
+       id="dev-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3765,7 +3765,7 @@
     </g>
     <g
        transform="translate(541.8667,-2.9248048e-6)"
-       id="debug-top-flatorange"
+       id="debug-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3804,7 +3804,7 @@
     </g>
     <g
        transform="translate(1083.7334,-2.9248048e-6)"
-       id="qa-top-flatorange"
+       id="qa-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3843,7 +3843,7 @@
     </g>
     <g
        transform="translate(1625.6,-2.9248048e-6)"
-       id="uat-top-flatorange"
+       id="uat-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3882,7 +3882,7 @@
     </g>
     <g
        transform="translate(2167.4667,-2.9248048e-6)"
-       id="stage-top-flatorange"
+       id="stage-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3921,7 +3921,7 @@
     </g>
     <g
        transform="translate(2709.3334,-2.9248048e-6)"
-       id="preview-top-flatorange"
+       id="preview-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3960,7 +3960,7 @@
     </g>
     <g
        transform="translate(3251.2001,-2.9248048e-6)"
-       id="alpha-top-flatorange"
+       id="alpha-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -3999,7 +3999,7 @@
     </g>
     <g
        transform="translate(3793.0668,-2.9248048e-6)"
-       id="beta-top-flatorange"
+       id="beta-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4038,7 +4038,7 @@
     </g>
     <g
        transform="translate(4334.9334,-2.9248048e-6)"
-       id="free-top-flatorange"
+       id="free-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4077,7 +4077,7 @@
     </g>
     <g
        transform="translate(4876.8001,-2.9248048e-6)"
-       id="pro-top-flatorange"
+       id="pro-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4116,7 +4116,7 @@
     </g>
     <g
        transform="translate(5418.6668,-2.9248048e-6)"
-       id="lite-top-flatorange"
+       id="lite-top-orange"
        inkscape:label="">
       <g
          style="display:inline"
@@ -4155,7 +4155,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-tl-flatorange"
+       id="dev-tl-orange"
        transform="translate(0,541.86662)">
       <rect
          inkscape:label="background"
@@ -4194,7 +4194,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-tl-flatorange"
+       id="debug-tl-orange"
        transform="translate(541.86664,541.86662)">
       <rect
          inkscape:label="background"
@@ -4233,7 +4233,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-tl-flatorange"
+       id="qa-tl-orange"
        transform="translate(1083.7333,541.86662)">
       <rect
          inkscape:label="background"
@@ -4272,7 +4272,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-tl-flatorange"
+       id="uat-tl-orange"
        transform="translate(1625.5999,541.86662)">
       <rect
          inkscape:label="background"
@@ -4311,7 +4311,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-tl-flatorange"
+       id="stage-tl-orange"
        transform="translate(2167.4665,541.86662)">
       <rect
          inkscape:label="background"
@@ -4350,7 +4350,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-tl-flatorange"
+       id="preview-tl-orange"
        transform="translate(2709.3331,541.86662)">
       <rect
          inkscape:label="background"
@@ -4389,7 +4389,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-tl-flatorange"
+       id="alpha-tl-orange"
        transform="translate(3251.1997,541.86662)">
       <rect
          inkscape:label="background"
@@ -4428,7 +4428,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-tl-flatorange"
+       id="beta-tl-orange"
        transform="translate(3793.0663,541.86662)">
       <rect
          inkscape:label="background"
@@ -4467,7 +4467,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-tl-flatorange"
+       id="free-tl-orange"
        transform="translate(4334.9329,541.86662)">
       <rect
          inkscape:label="background"
@@ -4506,7 +4506,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-tl-flatorange"
+       id="pro-tl-orange"
        transform="translate(4876.7995,541.86662)">
       <rect
          inkscape:label="background"
@@ -4545,7 +4545,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-tl-flatorange"
+       id="lite-tl-orange"
        transform="translate(5418.6661,541.86662)">
       <rect
          inkscape:label="background"
@@ -4584,7 +4584,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-tr-flatorange"
+       id="dev-tr-orange"
        transform="translate(158.59961,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4623,7 +4623,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-tr-flatorange"
+       id="debug-tr-orange"
        transform="translate(700.46626,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4662,7 +4662,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-tr-flatorange"
+       id="qa-tr-orange"
        transform="translate(1242.3329,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4701,7 +4701,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-tr-flatorange"
+       id="uat-tr-orange"
        transform="translate(1784.1996,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4740,7 +4740,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-tr-flatorange"
+       id="stage-tr-orange"
        transform="translate(2326.0663,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4779,7 +4779,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-tr-flatorange"
+       id="preview-tr-orange"
        transform="translate(2867.933,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4818,7 +4818,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-tr-flatorange"
+       id="alpha-tr-orange"
        transform="translate(3409.7997,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4857,7 +4857,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-tr-flatorange"
+       id="beta-tr-orange"
        transform="translate(3951.6664,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4896,7 +4896,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-tr-flatorange"
+       id="free-tr-orange"
        transform="translate(4493.5331,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4935,7 +4935,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-tr-flatorange"
+       id="pro-tr-orange"
        transform="translate(5035.3998,1083.7332)">
       <rect
          inkscape:label="background"
@@ -4974,7 +4974,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-tr-flatorange"
+       id="lite-tr-orange"
        transform="translate(5577.2665,1083.7332)">
       <rect
          inkscape:label="background"
@@ -5013,7 +5013,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-bl-flatorange"
+       id="dev-bl-orange"
        transform="translate(-1.4633789e-5,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5053,7 +5053,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-bl-flatorange"
+       id="debug-bl-orange"
        transform="translate(541.86663,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5093,7 +5093,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-bl-flatorange"
+       id="qa-bl-orange"
        transform="translate(1083.7332,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5133,7 +5133,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-bl-flatorange"
+       id="uat-bl-orange"
        transform="translate(1625.5998,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5173,7 +5173,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-bl-flatorange"
+       id="stage-bl-orange"
        transform="translate(2167.4664,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5213,7 +5213,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-bl-flatorange"
+       id="preview-bl-orange"
        transform="translate(2709.333,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5253,7 +5253,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-bl-flatorange"
+       id="alpha-bl-orange"
        transform="translate(3251.1996,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5293,7 +5293,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-bl-flatorange"
+       id="beta-bl-orange"
        transform="translate(3793.0662,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5333,7 +5333,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-bl-flatorange"
+       id="free-bl-orange"
        transform="translate(4334.9328,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5373,7 +5373,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-bl-flatorange"
+       id="pro-bl-orange"
        transform="translate(4876.7994,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5413,7 +5413,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-bl-flatorange"
+       id="lite-bl-orange"
        transform="translate(5418.666,1784.2838)">
       <rect
          inkscape:label="background"
@@ -5453,7 +5453,7 @@
     </g>
     <g
        inkscape:label=""
-       id="dev-br-flatorange"
+       id="dev-br-orange"
        transform="translate(158.51544,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5493,7 +5493,7 @@
     </g>
     <g
        inkscape:label=""
-       id="debug-br-flatorange"
+       id="debug-br-orange"
        transform="translate(700.3821,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5533,7 +5533,7 @@
     </g>
     <g
        inkscape:label=""
-       id="qa-br-flatorange"
+       id="qa-br-orange"
        transform="translate(1242.2487,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5573,7 +5573,7 @@
     </g>
     <g
        inkscape:label=""
-       id="uat-br-flatorange"
+       id="uat-br-orange"
        transform="translate(1784.1154,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5613,7 +5613,7 @@
     </g>
     <g
        inkscape:label=""
-       id="stage-br-flatorange"
+       id="stage-br-orange"
        transform="translate(2325.982,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5653,7 +5653,7 @@
     </g>
     <g
        inkscape:label=""
-       id="preview-br-flatorange"
+       id="preview-br-orange"
        transform="translate(2867.8487,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5693,7 +5693,7 @@
     </g>
     <g
        inkscape:label=""
-       id="alpha-br-flatorange"
+       id="alpha-br-orange"
        transform="translate(3409.7155,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5733,7 +5733,7 @@
     </g>
     <g
        inkscape:label=""
-       id="beta-br-flatorange"
+       id="beta-br-orange"
        transform="translate(3951.5822,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5773,7 +5773,7 @@
     </g>
     <g
        inkscape:label=""
-       id="free-br-flatorange"
+       id="free-br-orange"
        transform="translate(4493.4489,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5813,7 +5813,7 @@
     </g>
     <g
        inkscape:label=""
-       id="pro-br-flatorange"
+       id="pro-br-orange"
        transform="translate(5035.3155,2326.1504)">
       <rect
          inkscape:label="background"
@@ -5853,7 +5853,7 @@
     </g>
     <g
        inkscape:label=""
-       id="lite-br-flatorange"
+       id="lite-br-orange"
        transform="translate(5577.1821,2326.1504)">
       <rect
          inkscape:label="background"
