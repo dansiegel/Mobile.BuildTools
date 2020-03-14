@@ -23,7 +23,7 @@ Want to consume the CI packages? You can add this as a NuGet.config in your proj
 <configuration>
   <packageSources>
     <clear />
-    <add key="DanSiegel-MyGet" value="https://www.myget.org/F/dansiegel/api/v3/index.json" />
+    <add key="BuildTools-CI" value="https://pkgs.dev.azure.com/dansiegel/Mobile.BuildTools/_packaging/buildtools/nuget/v3/index.json" />
     <add key="NuGet.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
 </configuration>

@@ -23,28 +23,23 @@ If this project helped you reduce time to develop and made your app better, plea
 
 For more information on the various Build Tasks, and Properties please see the WIKI.
 
-| Package | NuGet | MyGet |
-| --------------- | ----- | ---- |
-| [Mobile.BuildTools][BuildToolsNuGet] | [![BuildToolsNuGetShield]][BuildToolsNuGet] | [![BuildToolsMyGetShield]][BuildToolsMyGet] |
-| [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] | [![BuildToolsConfigMyGetShield]][BuildToolsConfigMyGet] |
+| Package | NuGet |
+| --------------- | ----- |
+| [Mobile.BuildTools][BuildToolsNuGet] | [![BuildToolsNuGetShield]][BuildToolsNuGet] |
+| [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] |
+
+| | Status |
+|:-:|:-:|
+| Tests | ![Tests](https://img.shields.io/azure-devops/tests/dansiegel/Mobile.BuildTools/40/master) |
 
 Want to consume the CI packages? Just be sure to add the following to your NuGet sources.
 
 ```
-https://www.myget.org/F/dansiegel/api/v3/index.json
+https://pkgs.dev.azure.com/dansiegel/Mobile.BuildTools/_packaging/buildtools/nuget/v3/index.json
 ```
-
-[PrismNuGetShield]: https://img.shields.io/nuget/vpre/Prism.MFractor.Config.svg
-[QuickStartNuGetShield]: https://img.shields.io/nuget/vpre/Prism.QuickStart.MFractor.Config.svg
-[PrismNuGet]: https://www.nuget.org/packages/Prism.MFractor.Config/
-[QuickStartNuGet]: https://www.nuget.org/packages/Prism.QuickStart.MFractor.Config/
 
 [BuildToolsNuGet]: https://www.nuget.org/packages/Mobile.BuildTools/
 [BuildToolsNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.svg
-[BuildToolsMyGet]: https://www.myget.org/feed/dansiegel/package/nuget/Mobile.BuildTools/
-[BuildToolsMyGetShield]: https://img.shields.io/myget/dansiegel/vpre/Mobile.BuildTools.svg
 
 [BuildToolsConfigNuGet]: https://www.nuget.org/packages/Mobile.BuildTools.Configuration/
 [BuildToolsConfigNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.Configuration.svg
-[BuildToolsConfigMyGet]: https://www.myget.org/feed/dansiegel/package/nuget/Mobile.BuildTools.Configuration/
-[BuildToolsConfigMyGetShield]: https://img.shields.io/myget/dansiegel/vpre/Mobile.BuildTools.Configuration.svg

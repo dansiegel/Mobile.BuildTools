@@ -3,7 +3,6 @@ trigger:
   branches:
     include:
     - master
-    - v2.0
   paths:
     include:
     - src
@@ -16,7 +15,6 @@ pr:
   branches:
     include:
     - master
-    - v2.0
   paths:
     include:
     - src
@@ -25,7 +23,7 @@ pr:
     - Directory.build.targets
     - global.json
 
-name: $(Build.BuildId)
+name: 2.0.0.$(Build.BuildId)
 
 variables:
 - name: WindowsAgent
@@ -33,7 +31,7 @@ variables:
 - name: MacAgent
   value: macOS-latest
 - name: NuGetVersion
-  value: '5.3.1'
+  value: '5.4.0'
 - name: BuildConfiguration
   value: 'Release'
 - name: BuildPlatform
@@ -94,9 +92,9 @@ stages:
   dependsOn: Test
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
-  - deployment: MyGet
-    displayName: MyGet.org
-    environment: MyGet
+  - deployment: PipelineArtifacts
+    displayName: Pipeline Artifacts
+    environment: PipelineArtifacts
     strategy:
       runOnce:
         deploy:
@@ -106,8 +104,9 @@ stages:
             inputs:
               command: push
               packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg'
-              nuGetFeedType: external
-              publishFeedCredentials: 'MyGet-DanSiegel'
+              nuGetFeedType: internal
+              publishVstsFeed: 'buildtools'
+              allowPackageConflicts: true
   - deployment: NuGet
     displayName: NuGet.org
     environment: NuGet
@@ -116,40 +115,11 @@ stages:
       runOnce:
         deploy:
           steps:
-          - powershell: |
-             try {
-                 $artifactDirectory = Join-Path -Path $env:PIPELINE_WORKSPACE -ChildPath 'NuGet'
-                 Write-Host "Currect working directory - $artifactDirectory"
-                 $nupkg = Get-ChildItem -Path $artifactDirectory -Filter *.nupkg -Recurse | Select-Object -First 1
-                 if($null -eq $nupkg)
-                 {
-                     Throw "No NuGet Package could be found in the current directory"
-                 }
-                 Write-Host "Package Name $($nupkg.Name)"
-                 $nupkg.Name -match '^(.*?)\.((?:\.?[0-9]+){3,}(?:[-a-z]+)?)\.nupkg$'
-                 $VersionName = $Matches[2]
-                 $IsPreview = $VersionName -match '-pre$'
-                 $ReleaseDisplayName = $VersionName
+          - checkout: self
+            clean: true
+            submodules: false
 
-                 if($null -eq $env:IS_PREVIEW)
-                 {
-                     Write-Output ("##vso[task.setvariable variable=IS_PREVIEW;]$IsPreview")
-                 }
-                 if($true -eq $IsPreview)
-                 {
-                     $baseVersion = $VersionName.Split('-')[0]
-                     $ReleaseDisplayName = "$baseVersion - Preview"
-                 }
-                 Write-Host "Version Name - $VersionName"
-                 Write-Host "Release Display Name - $ReleaseDisplayName"
-
-                 Write-Output ("##vso[task.setvariable variable=VersionName;]$VersionName")
-                 Write-Output ("##vso[task.setvariable variable=ReleaseDisplayName;]$ReleaseDisplayName")
-             }
-             catch {
-                 Write-Error $_
-                 exit 1
-             }
+          - powershell: build/Process-Release.ps1
             displayName: Process Artifacts for Release
 
           - task: GithubRelease@0
