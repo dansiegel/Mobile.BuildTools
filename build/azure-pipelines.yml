@@ -23,7 +23,7 @@ pr:
     - Directory.build.targets
     - global.json
 
-name: 2.0.0.$(Build.BuildId)
+name: $(Build.BuildId)
 
 variables:
 - name: WindowsAgent
