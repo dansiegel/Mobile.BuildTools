@@ -102,10 +102,10 @@ stages:
           - task: NuGetCommand@2
             displayName: NuGet Push
             inputs:
-              command: push
+              command: 'push'
               packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg'
-              nuGetFeedType: internal
-              publishVstsFeed: 'buildtools'
+              nuGetFeedType: 'internal'
+              publishVstsFeed: '4ad6c5a1-ac0f-48ca-b995-6c97e879a584/b8446c23-bb38-4454-8a29-325240a11f9b'
               allowPackageConflicts: true
   - deployment: NuGet
     displayName: NuGet.org
