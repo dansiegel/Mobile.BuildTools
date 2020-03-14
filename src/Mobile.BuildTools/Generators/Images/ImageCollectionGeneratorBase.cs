@@ -61,8 +61,22 @@ namespace Mobile.BuildTools.Generators.Images
                     if(!File.Exists(jsonConfig))
                     {
                         var fi = new FileInfo(GetType().Assembly.Location);
-                        var resourceJson = new FileInfo(Path.Combine(fi.DirectoryName, "resources", "resourceDefinition.json"));
-                        resourceJson.Directory.Create();
+                        var resourceJson = new FileInfo(Path.Combine("resources", "resourceDefinition.json"));
+                        if (!resourceJson.Exists)
+                        {
+                            var resourceJson2 = Path.Combine(fi.DirectoryName, resourceJson.DirectoryName);
+                            if (File.Exists(resourceJson2))
+                            {
+                                Log.LogMessage($"Found resourceDefinition File at: {resourceJson2}");
+                                resourceJson = new FileInfo(resourceJson2);
+                            }
+                            else
+                            {
+                                using var fs = resourceJson.Create();
+                                using var writer = new StreamWriter(fs);
+                                writer.Write(JsonConvert.SerializeObject(new ResourceDefinition()));
+                            }
+                        }
                         Log.LogMessage($"Looking for template json at '{resourceJson.FullName}");
                         resourceJson.CopyTo(jsonConfig);
                     }
