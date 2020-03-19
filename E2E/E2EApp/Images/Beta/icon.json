@@ -7,5 +7,7 @@
     "resourceType": "Mipmap",
     "scale": 0.375
   },
-  "watermarkFile": "beta-version"
+  "watermark": {
+    "text": "E2E"
+  }
 }

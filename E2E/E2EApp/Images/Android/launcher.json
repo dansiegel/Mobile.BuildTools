@@ -4,5 +4,7 @@
     "resourceType": "Mipmap",
     "name": "launcher_foreground"
   },
-  "watermarkFile": "beta-version"
+  "watermark": {
+    "sourceFile": "beta-version"
+  }
 }
