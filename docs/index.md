@@ -29,6 +29,58 @@ Want to consume the CI packages? You can add this as a NuGet.config in your proj
 </configuration>
 ```
 
+## What does it do?
+
+- Automatic app bundle copy to artifacts folder in the Solution directory
+    - On iOS this copies your IPA + dSYM
+    - On Android this copies your APK / AAB
+- [Automatically update the app version](manifests/versioning.md)
+    - Configurable for local, build host or both
+    - Configurable to use timestamp or BuildId if it exists + user defined Offset
+- [Tokenize your Info.plist / AndroidManifest.xml](manifests/index.md) (`$$SomeKey$$`)
+    - Tokens replaced at build in obj to protect any against configuration values being checked in
+- [Support for SCSS files to generate Xamarin.Forms CSS files](scss-to-css/index.md)
+- [Generate 'Secrets' class at build that contains any configuration or application secrets](config/secrets/basics.md)
+    - Supports all primitive data types + Uri, DateTime, DateTimeOffset, TimeStamp, & Guid
+    - Any property can be made an array of values (useful for feature flags or OAuth scopes)
+- [ConfigurationManager with app.config](config/app.config/index.md)
+    - Optimized for Mobile with familiar Static API and Interface based Singleton
+    - Offers Opt-In API for doing runtime transformations and bundling app.config's
+    - App.config transformations at build
+    - Optionally bundle all config's or config's with Non-Standard environment (i.e. not Debug, Release)
+- [Simplified Image Handling (Android, iOS, macOS, tvOS)](images/index.md)
+    - Ability to store single high resolution images in one or more directories
+    - Ability to conditionally include images in directories based on the build target (i.e. iOS or Android)
+    - Ability to conditionally include images in directories based on the build configuration (i.e. Debug or !Debug)
+    - Ability to include images that may only be used as an overlay for another image.
+    - Ability to Draw Banner on images (i.e. Dev, Debug, Free, Pro)
+        - User controlled Text
+        - User controlled Text color & Font from System Font or local font file
+        - User control Banner color.. can include a single color for a solid look, or multiple colors for a gradient
+    - Ability to generate additional outputs for a single input image
+    - Ability add padding around an image
+    - Ability to add a background color to a transparent image
+    - Supports PNG & JPG file types
+    - Support for SVG and Gif **(Planned)**
+- [Release Notes generation](release-notes.md)
+    - Customizable output based on latest commit messages
+    - **(Planned)** Support for user templating and Flag based messages since last release/Git Tag... (i.e. `[Bug][iOS] Some bug got fixed`)
+
+### Additional Notes
+
+Some additional notes... the Mobile.BuildTools will help with some advanced scenarios like:
+
+- Generating app bundles that have different ID's for different environments
+- White Labeling
+- Use the Secrets to generate Feature Flags
+- Generate Free or Lite versions of your app along with a Pro version
+- Using the image api you could have a single input image and generate each of the following
+    - All of the outputs defined for the AppIcon iconset on iOS
+    - A typical BundleResource 1x, 2x, 3x for using in your SplashScreen storyboard
+    - A typical Drawable for you a splash screen activity (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi)
+    - The smaller icon file in the mipmap folders (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi)
+    - The larger launcher_foreground file in the mipmap folders (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi)
+
 [sponsor]: https://xam.dev/sponor-buildtools
 
 [PrismNuGetShield]: https://img.shields.io/nuget/vpre/Prism.MFractor.Config.svg

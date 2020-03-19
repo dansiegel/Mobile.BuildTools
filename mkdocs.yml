@@ -72,25 +72,14 @@ nav:
         - Intro: config/app.config/index.md
         - Transformations: config/app.config/transformations.md
         - In Code: config/app.config/in-code.md
-    - App Manifests: manifests.md
-    - Build Versioning: build-versioning.md
+    - App Manifests:
+      - Tokenized Manifests: manifests/index.md
+      - Build Versioning: manifests/versioning.md
     - Image Assets:
       - Getting Started: images/index.md
       - Configuring Images: images/configuring-images.md
       - Build Customization: images/build-customization.md
       - Built In Templates: images/built-in-templates.md
-      - Template Samples:
-        - Alpha Samples: images/samples/alpha-samples.md
-        - Beta Samples: images/samples/beta-samples.md
-        - Debug Samples: images/samples/debug-samples.md
-        - Dev Samples: images/samples/dev-samples.md
-        - Free Samples: images/samples/free-samples.md
-        - Lite Samples: images/samples/lite-samples.md
-        - Preview Samples: images/samples/preview-samples.md
-        - Pro Samples: images/samples/pro-samples.md
-        - QA Samples: images/samples/qa-samples.md
-        - Stage Samples: images/samples/stage-samples.md
-        - UAT Samples: images/samples/uat-samples.md
     - Release Note Generation: release-notes.md
     - Continuous Integration:
       - Platforms: continuous-integration/platforms.md

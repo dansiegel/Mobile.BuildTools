@@ -119,7 +119,9 @@ You will not need to do anything to the `Images\icon.json` file, however you wil
 ```json
 {
   "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
-  "watermarkFile": "beta-version"
+  "watermark": {
+    "sourceFile": "beta-version"
+  }
 }
 ```
 
@@ -127,3 +129,18 @@ You will not need to do anything to the `Images\icon.json` file, however you wil
     When using Conditional Directories to modify images with watermarks be sure that there is never more than one conditional configuration included. Doing so will result in a build error as the Mobile.BuildTools has no way of know which conditional configuration to use.
 
 With our updated configurations we can now rebuild and the Mobile.BuildTools will generally ignore the `beta-version.png` as an asset of it's own while it will apply the beta-version.png as an overlay to our icon during our debug builds.
+
+## Drawn Watermarks
+
+Just like mentioned above we can provide a configuration file for our image in a conditional directory to use the full watermarking power without having to have any specific image resource for our overlay. The Mobile.BuildTools provides a built in powerful drawing API with 6 different layout options and complete customization of the text, font and colors used.
+
+```json
+{
+  "watermark": {
+    "colors": [ "Purple", "#008888" ],
+    "text": "Dev",
+    "fontFamily": "Times New Roman",
+    "opacity": 0.85
+  }
+}
+```
