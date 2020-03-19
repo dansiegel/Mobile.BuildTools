@@ -4,7 +4,7 @@ using System.Text;
 using Mobile.BuildTools.Utils;
 using Xunit;
 
-namespace Mobile.BuildTools.Tests.Fixtures
+namespace Mobile.BuildTools.Tests.Fixtures.Utils
 {
     public class BuildToolsConfigFixture
     {

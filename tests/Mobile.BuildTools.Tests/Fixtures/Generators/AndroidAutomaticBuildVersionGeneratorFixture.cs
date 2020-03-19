@@ -6,7 +6,7 @@ using Mobile.BuildTools.Models;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Mobile.BuildTools.Tests.Fixtures
+namespace Mobile.BuildTools.Tests.Fixtures.Generators
 {
     public class AndroidAutomaticBuildVersionGeneratorFixture : FixtureBase
     {
