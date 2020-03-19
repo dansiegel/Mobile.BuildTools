@@ -7,7 +7,7 @@
     <PackageIcon>icon.png</PackageIcon>
     <DevelopmentDependency>true</DevelopmentDependency>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/dansiegel/Mobile.BuildTools/</PackageProjectUrl>
+    <PackageProjectUrl>https://mobilebuildtools.com</PackageProjectUrl>
     <LocalArtifactStagingDirectory>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Artifacts'))</LocalArtifactStagingDirectory>
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$([System.IO.Path]::Combine('$(BUILD_ARTIFACTSTAGINGDIRECTORY)', 'Artifacts'))</PackageOutputPath>
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' == '' ">$(LocalArtifactStagingDirectory)</PackageOutputPath>
