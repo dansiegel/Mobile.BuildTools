@@ -29,7 +29,10 @@ For more information on the various Build Tasks, and Properties please see the W
 | [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] |
 
 | | Status |
-|:-:|:-:|
+|-|-|
+| Build | [![Build Status][AzureDevOpsBuildStatus]][AzureDevOpsLatestBuild] |
+| Integration Tests (Mac) | [![Build Status](https://dev.azure.com/dansiegel/Mobile.BuildTools/_apis/build/status/dansiegel.Mobile.BuildTools?branchName=master&stageName=Run%20Tests&jobName=Integration%20Tests%20(Mac))][AzureDevOpsLatestBuild] |
+| Integration Tests (Windows) | [![Build Status](https://dev.azure.com/dansiegel/Mobile.BuildTools/_apis/build/status/dansiegel.Mobile.BuildTools?branchName=master&stageName=Run%20Tests&jobName=Integration%20Tests%20(Windows))][AzureDevOpsLatestBuild] |
 | Tests | ![Tests](https://img.shields.io/azure-devops/tests/dansiegel/Mobile.BuildTools/40/master) |
 
 Want to consume the CI packages? Just be sure to add the following to your NuGet sources.
@@ -43,3 +46,6 @@ https://pkgs.dev.azure.com/dansiegel/Mobile.BuildTools/_packaging/buildtools/nug
 
 [BuildToolsConfigNuGet]: https://www.nuget.org/packages/Mobile.BuildTools.Configuration/
 [BuildToolsConfigNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.Configuration.svg
+
+[AzureDevOpsBuildStatus]: https://dev.azure.com/dansiegel/Mobile.BuildTools/_apis/build/status/dansiegel.Mobile.BuildTools?branchName=master&stageName=Run%20Build
+[AzureDevOpsLatestBuild]: https://dev.azure.com/dansiegel/Mobile.BuildTools/_build/latest?definitionId=40&branchName=master
