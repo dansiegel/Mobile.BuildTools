@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Drawing;
 using Mobile.BuildTools.Models.AppIcons;
+using Newtonsoft.Json;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
@@ -17,7 +19,6 @@ namespace Mobile.BuildTools.Generators.Images
         }
 
         public IEnumerable<OutputImage> OutputImages { get; set; }
-        public double? WatermarkOpacity => Build.Configuration.Images.WatermarkOpacity;
 
         protected override void ExecuteInternal()
         {
@@ -35,29 +36,47 @@ namespace Mobile.BuildTools.Generators.Images
             var fi = new FileInfo(outputImage.OutputFile);
             Directory.CreateDirectory(Path.Combine(Build.IntermediateOutputPath, fi.DirectoryName));
             using var image = Image.Load(outputImage.InputFile);
-            image.Mutate(x =>
-            {
-                x.Resize(GetUpdatedSize(outputImage, image));
-                if (!string.IsNullOrEmpty(outputImage.WatermarkFilePath))
-                {
-                    x.ApplyWatermark(outputImage.WatermarkFilePath, WatermarkOpacity);
-                }
-            });
+            var requiresBackground = outputImage.RequiresBackgroundColor && image.HasTransparentBackground();
 
-            if (!string.IsNullOrWhiteSpace(outputImage.BackgroundColor) || (outputImage.RequiresBackgroundColor && image.HasTransparentBackground()))
+            try
             {
-                image.ApplyBackground(outputImage.BackgroundColor);
+                image.Mutate(x => MutateImage(x, outputImage, requiresBackground));
+            }
+            catch (System.Exception ex)
+            {
+#if DEBUG
+                if (!Debugger.IsAttached)
+                    Debugger.Launch();
+#endif
+                Log.LogWarning(@$"Encountered Fatal error while processing image:
+{JsonConvert.SerializeObject(outputImage)}");
+                throw;
             }
 
             using var outputStream = new FileStream(outputImage.OutputFile, FileMode.OpenOrCreate);
             image.SaveAsPng(outputStream);
         }
 
-        private static Size GetUpdatedSize(OutputImage output, Image image)
+        private static IImageProcessingContext MutateImage(IImageProcessingContext ctx, OutputImage outputImage, bool requiresBackground)
+        {
+            var currentSize = ctx.GetCurrentSize();
+            ctx.Resize(GetUpdatedSize(outputImage, currentSize));
+            ctx.ApplyWatermark(outputImage.Watermark);
+
+            if (!string.IsNullOrWhiteSpace(outputImage.BackgroundColor) || requiresBackground)
+            {
+                ctx.ApplyBackground(outputImage.BackgroundColor);
+            }
+
+            ctx.ResizeCanvas(outputImage.PaddingFactor, outputImage.PaddingColor);
+            return ctx;
+        }
+
+        private static Size GetUpdatedSize(OutputImage output, Size currentSize)
         {
             if (output.Scale > 0)
             {
-                return new Size((int)(image.Width * output.Scale), (int)(image.Height * output.Scale));
+                return new Size((int)(currentSize.Width * output.Scale), (int)(currentSize.Height * output.Scale));
             }
 
             return new Size(output.Width, output.Height);

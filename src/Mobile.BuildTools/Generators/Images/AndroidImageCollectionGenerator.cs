@@ -27,21 +27,22 @@ namespace Mobile.BuildTools.Generators.Images
         {
         }
 
-        protected internal override IEnumerable<OutputImage> GetOutputImages(ResourceDefinition resource)
+        protected internal override IEnumerable<OutputImage> GetOutputImages(IImageResource config)
         {
-            (var outputFileName, var ignore, var scale) = resource.GetConfiguration(Platform.Android);
-            if(ignore)
+            if(config.Ignore)
             {
                 yield return default;
             }
 
 #if DEBUG
-            if (outputFileName is null)
+            if (string.IsNullOrEmpty(config.Name))
+            {
                 System.Diagnostics.Debugger.Break();
+            }
 #endif
 
-            var resourceType = $"{resource?.Android?.ResourceType ?? AndroidResource.Drawable}".ToLower();
-            var platformSanitizedName = Regex.Replace(outputFileName, @"\s+", "-");
+            var resourceType = $"{config.ResourceType}".ToLower();
+            var platformSanitizedName = Regex.Replace(config.Name, @"\s+", "_");
 
             if(!Path.HasExtension(platformSanitizedName))
             {
@@ -54,10 +55,10 @@ namespace Mobile.BuildTools.Generators.Images
 
             foreach (var resolution in Resolutions)
             {
-                Log.LogMessage($"Found image: {resource.InputFilePath} -> {resourceType}-{resolution.Key}/{platformSanitizedName}");
+                Log.LogMessage($"Found image: {config.SourceFile} -> {resourceType}-{resolution.Key}/{platformSanitizedName}");
                 yield return new OutputImage
                 {
-                    InputFile = resource.InputFilePath,
+                    InputFile = config.SourceFile,
                     OutputFile = Path.Combine(Build.IntermediateOutputPath,
                                                 "Resources",
                                                 $"{resourceType}-{resolution.Key}",
@@ -65,10 +66,10 @@ namespace Mobile.BuildTools.Generators.Images
                     OutputLink = Path.Combine("Resources",
                                                 $"{resourceType}-{resolution.Key}",
                                                 platformSanitizedName),
-                    Scale = scale * (resolution.Value / 4),
+                    Scale = config.Scale * (resolution.Value / 4),
                     ShouldBeVisible = true,
-                    WatermarkFilePath = GetWatermarkFilePath(resource),
-                    BackgroundColor = resource.GetBackgroundColor(Platform.Android)
+                    Watermark = config.Watermark,
+                    BackgroundColor = config.BackgroundColor
                 };
             }
         }

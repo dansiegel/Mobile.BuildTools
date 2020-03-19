@@ -7,7 +7,7 @@ using Mobile.BuildTools.Tasks.Utils;
 using Xunit.Abstractions;
 using static Mobile.BuildTools.Tests.TestConstants;
 
-namespace Mobile.BuildTools.Tests.Fixtures
+namespace Mobile.BuildTools.Tests.Fixtures.Generators
 {
     public class AppleImageCollectionGeneratorFixture : ImageCollectionGeneratorFixture
     {
@@ -32,7 +32,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = 1.0 / 3.0,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 0,
                                 },
                                 new OutputImage
@@ -44,7 +44,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = 2.0 / 3.0,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 0
                                 },
                                 new OutputImage
@@ -56,7 +56,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = 1,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 0
                                 },
                             }
@@ -72,7 +72,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 20
                                 },
                                 new OutputImage
@@ -84,7 +84,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 29
                                 },
                                 new OutputImage
@@ -96,7 +96,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 40
                                 },
                                 new OutputImage
@@ -108,7 +108,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 58
                                 },
                                 new OutputImage
@@ -120,7 +120,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 60
                                 },
                                 new OutputImage
@@ -132,7 +132,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 76
                                 },
                                 new OutputImage
@@ -144,7 +144,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 80
                                 },
                                 new OutputImage
@@ -156,7 +156,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 87
                                 },
                                 new OutputImage
@@ -168,7 +168,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 120
                                 },
                                 new OutputImage
@@ -180,7 +180,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 152
                                 },
                                 new OutputImage
@@ -192,7 +192,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 167
                                 },
                                 new OutputImage
@@ -204,7 +204,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 180
                                 },
                                 new OutputImage
@@ -216,7 +216,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = true,
                                     Scale = 0,
                                     ShouldBeVisible = false,
-                                    WatermarkFilePath = null,
+                                    Watermark = null,
                                     Width = 1024
                                 },
                             }

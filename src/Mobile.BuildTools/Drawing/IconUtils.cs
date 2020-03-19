@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
@@ -12,17 +11,15 @@ namespace Mobile.BuildTools.Drawing
     {
         public static bool HasTransparentBackground(this Image image)
         {
-            using (var clone = image.CloneAs<Rgba32>())
+            using var clone = image.CloneAs<Rgba32>();
+            for (var y = 0; y < image.Height; ++y)
             {
-                for (var y = 0; y < image.Height; ++y)
+                var pixelRowSpan = clone.GetPixelRowSpan(y);
+                for (var x = 0; x < image.Width; ++x)
                 {
-                    var pixelRowSpan = clone.GetPixelRowSpan(y);
-                    for (var x = 0; x < image.Width; ++x)
+                    if (pixelRowSpan[x].A == 0)
                     {
-                        if (pixelRowSpan[x].A == 0)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -30,15 +27,24 @@ namespace Mobile.BuildTools.Drawing
             return false;
         }
 
-        public static void ApplyBackground(this Image image, string hexColor)
+        public static void ApplyBackground(this IImageProcessingContext context, string hexColor)
         {
-            if (string.IsNullOrWhiteSpace(hexColor))
-                hexColor = Constants.DefaultBackgroundColor;
+            var color = ColorUtils.TryParse(hexColor, out var x) ? x : Color.FromHex(Constants.DefaultBackgroundColor);
 
-            image.Mutate(c =>
-            {
-                c.BackgroundColor(Rgba32.FromHex(hexColor));
-            });
+            context.BackgroundColor(color);
+        }
+
+        public static void ResizeCanvas(this IImageProcessingContext context, double? pad, string padColorNameOrHexString)
+        {
+            if (pad is null || pad.Value < 1) return;
+
+            var scale = (double)pad;
+            var color = ColorUtils.TryParse(padColorNameOrHexString, out var result) ? result : Color.Transparent;
+
+            var size = context.GetCurrentSize();
+            var height = (int)(size.Height * scale);
+            var width = (int)(size.Width * scale);
+            context.Pad(width, height, color);
         }
     }
 }

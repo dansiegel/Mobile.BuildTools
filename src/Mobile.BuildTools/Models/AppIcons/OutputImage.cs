@@ -20,9 +20,13 @@ namespace Mobile.BuildTools.Models.AppIcons
 
         public bool ShouldBeVisible { get; set; }
 
-        public string WatermarkFilePath { get; set; }
-
         public string BackgroundColor { get; set; }
+
+        public double? PaddingFactor { get; set; }
+
+        public string PaddingColor { get; set; }
+
+        public WatermarkConfiguration Watermark { get; set; }
 
         public new bool Equals(object x, object y)
         {

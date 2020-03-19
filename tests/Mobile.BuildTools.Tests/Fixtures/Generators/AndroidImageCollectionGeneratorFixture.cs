@@ -7,7 +7,7 @@ using Mobile.BuildTools.Tasks.Utils;
 using Xunit.Abstractions;
 using static Mobile.BuildTools.Tests.TestConstants;
 
-namespace Mobile.BuildTools.Tests.Fixtures
+namespace Mobile.BuildTools.Tests.Fixtures.Generators
 {
 
     public class AndroidImageCollectionGeneratorFixture : ImageCollectionGeneratorFixture
@@ -33,7 +33,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = 1,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -45,7 +45,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = .75,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -57,7 +57,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = .5,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -69,7 +69,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = .375,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -81,7 +81,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = .25,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -93,7 +93,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = 0.1875,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                             }
             },
@@ -109,7 +109,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = 1,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -121,7 +121,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = .75,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -133,7 +133,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = .5,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -145,7 +145,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = .375,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -157,7 +157,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = .25,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                                 new OutputImage
                                 {
@@ -169,7 +169,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                                     RequiresBackgroundColor = false,
                                     Scale = 0.1875,
                                     ShouldBeVisible = true,
-                                    WatermarkFilePath = null
+                                    Watermark = null
                                 },
                             } 
             }

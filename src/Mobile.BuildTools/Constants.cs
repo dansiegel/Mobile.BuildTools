@@ -13,5 +13,7 @@
         public const string ManifestJsonFileName = "manifest.json";
 
         public const string DefaultBackgroundColor = "#FFFFFF";
+
+        public const double DefaultOpacity = 0.95;
     }
 }

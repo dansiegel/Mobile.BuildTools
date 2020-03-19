@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Tests.Mocks;
 using Xunit.Abstractions;
 
@@ -30,7 +31,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
             return new TestBuildConfiguration
             {
                 Logger = new XunitLog(_testOutputHelper),
-                Platform = Tasks.Utils.Platform.Unsupported,
+                Platform = Platform.Unsupported,
                 IntermediateOutputPath = testOutput,
                 ProjectDirectory = ProjectDirectory,
                 BuildConfiguration = "Debug",

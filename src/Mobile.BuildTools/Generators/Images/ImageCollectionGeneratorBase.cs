@@ -15,6 +15,11 @@ namespace Mobile.BuildTools.Generators.Images
         private static object executeLock = new object();
         private static readonly string[] supportedExtensions = new[] { ".png", ".jpg" };
 
+        public ImageCollectionGeneratorBase(IBuildConfiguration buildConfiguration)
+            : base(buildConfiguration)
+        {
+        }
+
         public IEnumerable<string> SearchFolders { get; set; }
 
         protected List<string> imageResourcePaths;
@@ -27,11 +32,6 @@ namespace Mobile.BuildTools.Generators.Images
                 imageInputs.AddRange(imageConfigurationPaths);
                 return imageInputs;
             }
-        }
-
-        public ImageCollectionGeneratorBase(IBuildConfiguration buildConfiguration)
-            : base(buildConfiguration)
-        {
         }
 
         protected override void ExecuteInternal()
@@ -90,14 +90,22 @@ namespace Mobile.BuildTools.Generators.Images
             {
                 // We need to iterate a second time so we can be sure we are
                 // tracking all of the image files
-                var resource = GetResourceDefinition(path);
+                var resourceDefinition = GetResourceDefinition(path);
+                var configs = resourceDefinition.GetConfigurations(Build.Platform);
+                foreach(var config in configs)
+                {
+                    if (config.Ignore)
+                        continue;
 
-                if (resource.ShouldIgnore(Build.Platform))
-                    continue;
+#if DEBUG
+                    if (string.IsNullOrEmpty(config.Name))
+                        System.Diagnostics.Debugger.Break();
+#endif
 
-                var output = GetOutputImages(resource);
-                if(output != null && output.Any())
-                    outputImageFiles.AddRange(output);
+                    var output = GetOutputImages(config);
+                    if (output != null && output.Any())
+                        outputImageFiles.AddRange(output);
+                }
             }
 
             Outputs = outputImageFiles;
@@ -152,7 +160,7 @@ namespace Mobile.BuildTools.Generators.Images
                 };
             }
 
-            definition.InputFilePath = filePath;
+            definition.SourceFile = filePath;
 
             if (definition.Scale == 0)
             {
@@ -169,17 +177,39 @@ namespace Mobile.BuildTools.Generators.Images
             return definition;
         }
 
-        protected internal abstract IEnumerable<OutputImage> GetOutputImages(ResourceDefinition resource);
+        protected internal abstract IEnumerable<OutputImage> GetOutputImages(IImageResource resource);
 
-        protected string GetWatermarkFilePath(ResourceDefinition resource)
+        protected string GetWatermarkFilePath(IImageResource resource)
         {
-            if (string.IsNullOrEmpty(resource.WatermarkFile))
+            var fileName = resource.Watermark?.SourceFile;
+            if (string.IsNullOrEmpty(fileName))
                 return null;
 
-            return ImageInputFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == resource.WatermarkFile || Path.GetFileName(x) == resource.WatermarkFile);
+            return ImageInputFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == fileName || Path.GetFileName(x) == fileName);
         }
 
         protected static bool IsSupportedExtension(string path) =>
             supportedExtensions.Any(e => e.Equals(Path.GetExtension(path), StringComparison.InvariantCultureIgnoreCase));
+
+        //protected static WatermarkConfiguration GetWatermarkConfiguration(ResourceDefinition resource, Platform platform)
+        //{
+        //    var watermark = resource.Watermark;
+        //    switch(platform)
+        //    {
+        //        case Platform.iOS:
+        //            if(resource.Apple?.Watermark != null)
+        //            {
+        //                watermark = resource.Apple.Watermark;
+        //            }
+        //            break;
+        //        case Platform.Android:
+        //            if (resource.Android?.Watermark != null)
+        //            {
+        //                watermark = resource.Android.Watermark;
+        //            }
+        //            break;
+        //    }
+        //    return watermark;
+        //}
     }
 }

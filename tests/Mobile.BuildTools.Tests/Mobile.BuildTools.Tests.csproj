@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -23,7 +23,7 @@
           CopyToOutputDirectory="PreserveNewest"
           Visible="false" />
     <EmbeddedResource Include="resources\*" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
+    <Reference Include="../../assets/runtime/*.dll" />
   </ItemGroup>
 
   <ItemGroup>

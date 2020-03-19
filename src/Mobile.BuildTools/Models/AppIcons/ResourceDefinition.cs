@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using Mobile.BuildTools.Tasks.Utils;
 using Newtonsoft.Json;
 
@@ -7,97 +10,112 @@ namespace Mobile.BuildTools.Models.AppIcons
 {
     public class ResourceDefinition : PlatformConfiguration
     {
-        [JsonIgnore]
-        public string InputFilePath { get; set; }
-
-        [JsonProperty("watermarkFile")]
-        public string WatermarkFile { get; set; }
-
         [JsonProperty("android")]
-        public AndroidConfiguration Android { get; set; }
+        public PlatformConfiguration Android { get; set; }
 
         [JsonProperty("apple")]
         public PlatformConfiguration Apple { get; set; }
 
-        public string GetBackgroundColor(Platform platform)
+        [JsonProperty("ios")]
+        [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Properly named iOS")]
+        public PlatformConfiguration iOS { get; set; }
+
+        [JsonProperty("tvos")]
+        public PlatformConfiguration TVOS { get; set; }
+
+        [JsonProperty("macos")]
+        public PlatformConfiguration MacOS { get; set; }
+
+        [JsonProperty("tizen")]
+        public PlatformConfiguration Tizen { get; set; }
+
+        [JsonProperty("uwp")]
+        public PlatformConfiguration UWP { get; set; }
+
+        public IEnumerable<IImageResource> GetConfigurations(Platform platform)
         {
-            switch (platform)
+            var plats = platform switch
             {
-                case Platform.Android:
-                    return string.IsNullOrEmpty(Android?.BackgroundColor) ? BackgroundColor : Android.BackgroundColor;
-                case Platform.iOS:
-                case Platform.macOS:
-                    return string.IsNullOrEmpty(Apple?.BackgroundColor) ? BackgroundColor : Apple.BackgroundColor;
-                default:
-                    return BackgroundColor;
+                Platform.Android => new[] { Android },
+                Platform.iOS => new[] { iOS, Apple },
+                Platform.macOS => new[] { MacOS, Apple },
+                Platform.TVOS => new[] { TVOS, Apple },
+                Platform.Tizen => new[] { Tizen },
+                Platform.UWP => new[] { UWP },
+                _ => Array.Empty<IImageResource>(),
+            };
+            plats = plats.Where(x => x != null).ToArray();
+
+            var configs = new List<IImageResource> { GetConfiguration(this, plats) };
+
+            var additional = platform switch
+            {
+                Platform.Android => Android?.AdditionalOutputs,
+                Platform.iOS => iOS?.AdditionalOutputs ?? Apple?.AdditionalOutputs,
+                Platform.macOS => MacOS?.AdditionalOutputs ?? Apple.AdditionalOutputs,
+                Platform.TVOS => TVOS?.AdditionalOutputs ?? Apple.AdditionalOutputs,
+                Platform.Tizen => Tizen?.AdditionalOutputs,
+                Platform.UWP => UWP?.AdditionalOutputs,
+                _ => null
+            } ?? AdditionalOutputs;
+
+            if(additional != null && additional.Count > 0)
+            {
+                foreach(var additionalOutput in additional)
+                {
+                    if (additionalOutput is null)
+                        continue;
+
+                    configs.Add(GetConfiguration(additionalOutput));
+                }
             }
+
+            return configs;
         }
 
-        public string GetName(Platform platform)
+        private IImageResource GetConfiguration(IImageResource xPlat, params IImageResource[] platforms)
         {
-            switch(platform)
+            var resourceType = GetValue(xPlat, c => c.ResourceType, x => true, platforms);
+            var config = new ImageResource
             {
-                case Platform.Android:
-                    return string.IsNullOrEmpty(Android?.Name) ? Name : Android.Name;
-                case Platform.iOS:
-                case Platform.macOS:
-                    return string.IsNullOrEmpty(Apple?.Name) ? Name : Apple.Name;
-                default:
-                    return Name;
+                BackgroundColor = GetValue(xPlat, c => c.BackgroundColor, x => !string.IsNullOrEmpty(x), platforms),
+                Height = GetValue(xPlat, c => c.Height, x => x.HasValue && x > 0, platforms),
+                Ignore = GetValue(xPlat, c => c.Ignore, x => x, platforms),
+                Name = GetValue(xPlat, c => c.Name, x => !string.IsNullOrEmpty(x), platforms),
+                PaddingColor = GetValue(xPlat, c => c.PaddingColor, x => !string.IsNullOrEmpty(x), platforms),
+                PaddingFactor = GetValue(xPlat, c => c.PaddingFactor, x => x.HasValue && x > 0, platforms),
+                ResourceType = GetValue(xPlat, c => c.ResourceType, x => true, platforms),
+                Scale = GetValue(xPlat, c => c.Scale, x => x > 0, platforms),
+                Watermark = GetValue(xPlat, c => c.Watermark, x => !string.IsNullOrEmpty(x?.SourceFile) || !string.IsNullOrEmpty(x?.Text), platforms),
+                Width = GetValue(xPlat, c => c.Width, x => x.HasValue && x > 0, platforms),
+                SourceFile = SourceFile
+            };
+
+            if(string.IsNullOrEmpty(config.Name))
+            {
+                config.Name = Path.GetFileNameWithoutExtension(SourceFile);
             }
+
+            return config;
         }
 
-        public (string Name, bool Ignore, double Scale) GetConfiguration(Platform platform)
+        private T GetValue<T>(IImageResource xPlat, Func<IImageResource, T> locator, Func<T, bool> predicate, params IImageResource[] platforms)
         {
-            var name = GetName(platform);
-            var ignore = ShouldIgnore(platform);
-            var scale = Scale;
+            var defaultValue = locator(xPlat);
+            if (platforms is null || platforms.Length == 0)
+                return defaultValue;
 
-            // get platform scale
-            switch (platform)
+            foreach(var plat in platforms)
             {
-                case Platform.Android:
-                    scale = Android != null && Android.Scale > 0 ? Android.Scale : Scale;
-                    break;
-                case Platform.iOS:
-                case Platform.macOS:
-                case Platform.TVOS:
-                    scale = Apple != null && Apple.Scale > 0 ? Apple.Scale : Scale;
-                    break;
+                if (plat is null)
+                    continue;
+
+                var value = locator(plat);
+                if (predicate(value))
+                    return value;
             }
 
-            if(string.IsNullOrEmpty(name))
-            {
-                name = Path.GetFileNameWithoutExtension(InputFilePath);
-            }
-
-            return (name, ignore, scale);
+            return defaultValue;
         }
-
-        public bool ShouldIgnore(Platform platform)
-        {
-            switch (platform)
-            {
-                case Platform.Android:
-                    return Ignore || (Android?.Ignore ?? false);
-                case Platform.iOS:
-                case Platform.macOS:
-                    return Ignore || (Apple?.Ignore ?? false);
-            }
-
-            return Ignore;
-        }
-    }
-
-    public class AndroidConfiguration : PlatformConfiguration
-    {
-        [DefaultValue(AndroidResource.Drawable)]
-        [JsonProperty("resourceType")]
-#if SCHEMAGENERATOR
-        [System.ComponentModel.DataAnnotations.EnumDataType(typeof(AndroidResource))]
-        public string ResourceType { get; set; }
-#else
-        public AndroidResource ResourceType { get; set; }
-#endif
     }
 }

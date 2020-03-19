@@ -10,7 +10,7 @@ using Xunit;
 using Xunit.Abstractions;
 using static Mobile.BuildTools.Tests.TestConstants;
 
-namespace Mobile.BuildTools.Tests.Fixtures
+namespace Mobile.BuildTools.Tests.Fixtures.Generators
 {
     public abstract class ImageCollectionGeneratorFixture : FixtureBase
     {
@@ -113,10 +113,13 @@ namespace Mobile.BuildTools.Tests.Fixtures
            // generator.Execute();
 
             var resource = generator.GetResourceDefinition(Path.Combine(ImageDirectory, "dotnetbot.png"));
-            (var outputFileName, var ignore, var masterScale) = resource.GetConfiguration(Platform);
-            Assert.Equal("dotnetbot", outputFileName);
-            Assert.False(ignore);
-            Assert.Equal(1, masterScale);
+            var configs = resource.GetConfigurations(Platform);
+            Assert.Single(configs);
+            var imageResource = configs.First();
+
+            Assert.Equal("dotnetbot", imageResource.Name);
+            Assert.False(imageResource.Ignore);
+            Assert.Equal(1, imageResource.Scale);
         }
 
         [Fact]
@@ -127,10 +130,13 @@ namespace Mobile.BuildTools.Tests.Fixtures
            // generator.Execute();
 
             var resource = generator.GetResourceDefinition(Path.Combine(DebugImageDirectory, "example.png"));
-            (var outputFileName, var ignore, var masterScale) = resource.GetConfiguration(Platform.iOS);
-            Assert.Equal("example", outputFileName);
-            Assert.True(ignore);
-            Assert.Equal(1, masterScale);
+            var configs = resource.GetConfigurations(Platform);
+            Assert.Single(configs);
+            var imageResource = configs.First();
+
+            Assert.Equal("example", imageResource.Name);
+            Assert.True(imageResource.Ignore);
+            Assert.Equal(1, imageResource.Scale);
         }
 
         [Fact]
@@ -141,11 +147,14 @@ namespace Mobile.BuildTools.Tests.Fixtures
             //generator.Execute();
 
             var resource = generator.GetResourceDefinition(PlatformIcon);
-            (var outputFileName, var ignore, var masterScale) = resource.GetConfiguration(Platform.iOS);
-            Assert.NotEqual(Path.GetFileNameWithoutExtension(PlatformIcon), outputFileName);
-            Assert.False(ignore);
-            Assert.Equal(1, masterScale);
-            Assert.Null(resource.WatermarkFile);
+            var configs = resource.GetConfigurations(Platform);
+            Assert.Single(configs);
+            var imageResource = configs.First();
+
+            Assert.NotEqual(Path.GetFileNameWithoutExtension(PlatformIcon), imageResource.Name);
+            Assert.False(imageResource.Ignore);
+            Assert.Equal(1, imageResource.Scale);
+            Assert.Null(imageResource.Watermark);
         }
 
         [Fact]
@@ -156,11 +165,14 @@ namespace Mobile.BuildTools.Tests.Fixtures
             //generator.Execute();
 
             var resource = generator.GetResourceDefinition(PlatformIcon);
-            (var outputFileName, var ignore, var masterScale) = resource.GetConfiguration(Platform.iOS);
-            Assert.NotEqual(Path.GetFileNameWithoutExtension(PlatformIcon), outputFileName);
-            Assert.False(ignore);
-            Assert.Equal(1, masterScale);
-            Assert.Equal("example", resource.WatermarkFile);
+            var configs = resource.GetConfigurations(Platform);
+            Assert.Single(configs);
+            var imageResource = configs.First();
+
+            Assert.NotEqual(Path.GetFileNameWithoutExtension(PlatformIcon), imageResource.Name);
+            Assert.False(imageResource.Ignore);
+            Assert.Equal(1, imageResource.Scale);
+            Assert.Equal("example", imageResource.Watermark?.SourceFile);
         }
 
         [Theory]
@@ -175,7 +187,12 @@ namespace Mobile.BuildTools.Tests.Fixtures
             var imagePath = file == "platform" ? PlatformIcon : Path.Combine(ImageDirectory, $"{file}.png");
             var resource = generator.GetResourceDefinition(imagePath);
             var expectedOutputs = ExpectedOutputs[file];
-            var actualOutputs = generator.GetOutputImages(resource);
+            var resourceConfig = resource.GetConfigurations(Platform).First();
+            if(Platform == Platform.Android)
+            {
+                Assert.Equal(file == "platform" ? AndroidResource.Mipmap : AndroidResource.Drawable, resourceConfig.ResourceType);
+            }
+            var actualOutputs = generator.GetOutputImages(resourceConfig);
 
             Assert.Equal(expectedOutputs.Count(), actualOutputs.Count());
 
@@ -191,7 +208,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                 Assert.Equal(expectedOutput.RequiresBackgroundColor, actualOutput.RequiresBackgroundColor);
                 Assert.Equal(expectedOutput.Scale, actualOutput.Scale);
                 Assert.Equal(expectedOutput.ShouldBeVisible, actualOutput.ShouldBeVisible);
-                Assert.Equal(expectedOutput.WatermarkFilePath, actualOutput.WatermarkFilePath);
+                Assert.Equal(expectedOutput.Watermark?.SourceFile, actualOutput.Watermark?.SourceFile);
             }
         }
 

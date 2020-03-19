@@ -30,10 +30,7 @@
     <None Update="Resources\*" Pack="true" PackagePath="$(PrimaryOutputKind)/resources/%(Filename)%(Extension)" />
     <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
     <None Include="../../assets/runtime/*.dll" Pack="true" Kind="$(PrimaryOutputKind)" Visible="false" />
-    <ImageAsset Include="../../assets/*.png"
-                IgnoreIntermediateOutputFile="$(IntermediateOutputPath)\assets\%(Filename).json"
-                ImageName="%(Filename)%(Extension)"
-                IgnoreFileName="%(Filename).json" />
+    <Reference Include="../../assets/runtime/*.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,29 +39,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
     <PackageReference Include="NuGet.Build.Packaging" Version="0.2.5-dev.10" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.Core" Version="1.0.0-beta0008" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta0009" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.Shapes" Version="1.0.0-beta0009" PrivateAssets="all" />
   </ItemGroup>
-
-  <Target Name="AddDefaultOverlays"
-          AfterTargets="ResolveReferences"
-          Inputs="@(ImageAsset)"
-          Outputs="%(ImageAsset.ImageName)">
-    <PropertyGroup>
-      <ImageAssetFile>%(ImageAsset.ImageName)</ImageAssetFile>
-      <ImageAssetJsonFile>%(ImageAsset.IgnoreFileName)</ImageAssetJsonFile>
-    </PropertyGroup>
-    <ItemGroup>
-      <PackageFile Include="../../assets/$(ImageAssetFile)"
-                   Pack="true"
-                   PackagePath="$(PrimaryOutputKind)/assets/$(ImageAssetFile)" />
-      <PackageFile Include="../../assets/ignore.json"
-                   Pack="true"
-                   PackagePath="$(PrimaryOutputKind)/assets/$(ImageAssetJsonFile)" />
-    </ItemGroup>
-  </Target>
 
 </Project>

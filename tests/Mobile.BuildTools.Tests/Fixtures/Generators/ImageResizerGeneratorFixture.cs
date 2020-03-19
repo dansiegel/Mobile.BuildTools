@@ -11,11 +11,11 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Advanced;
 
-namespace Mobile.BuildTools.Tests.Fixtures
+namespace Mobile.BuildTools.Tests.Fixtures.Generators
 {
-    public class ImageResizerFixture : FixtureBase
+    public class ImageResizerGeneratorFixture : FixtureBase
     {
-        public ImageResizerFixture(ITestOutputHelper testOutputHelper) 
+        public ImageResizerGeneratorFixture(ITestOutputHelper testOutputHelper) 
             : base(Path.Combine("Templates", "Apple"), testOutputHelper)
         {
         }
@@ -40,7 +40,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                 RequiresBackgroundColor = false,
                 Scale = scale,
                 ShouldBeVisible = true,
-                WatermarkFilePath = null
+                Watermark = null
             };
 
             var ex = Record.Exception(() => generator.ProcessImage(image));
@@ -72,7 +72,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                 RequiresBackgroundColor = false,
                 Scale = 0,
                 ShouldBeVisible = true,
-                WatermarkFilePath = null
+                Watermark = null
             };
 
             var ex = Record.Exception(() => generator.ProcessImage(image));
@@ -104,7 +104,10 @@ namespace Mobile.BuildTools.Tests.Fixtures
                 RequiresBackgroundColor = false,
                 Scale = 1,
                 ShouldBeVisible = true,
-                WatermarkFilePath = Path.Combine(TestConstants.WatermarkImageDirectory, $"{watermarkImage}.png")
+                Watermark = new WatermarkConfiguration
+                {
+                    SourceFile = Path.Combine(TestConstants.WatermarkImageDirectory, $"{watermarkImage}.png")
+                }
             };
 
             generator.ProcessImage(image);
@@ -147,7 +150,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                 RequiresBackgroundColor = true,
                 Scale = 1,
                 ShouldBeVisible = true,
-                WatermarkFilePath = null
+                Watermark = null
             };
 
             generator.ProcessImage(image);
@@ -196,7 +199,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
                 RequiresBackgroundColor = true,
                 Scale = 1,
                 ShouldBeVisible = true,
-                WatermarkFilePath = null,
+                Watermark = null,
                 BackgroundColor = "#8A2BE2"
             };
 
@@ -228,6 +231,33 @@ namespace Mobile.BuildTools.Tests.Fixtures
             }
 
             Assert.True(comparedTransparentPixel);
+        }
+
+        [Theory]
+        [InlineData("Dev")]
+        [InlineData("Stage")]
+        public void AppliesTextBanner(string text)
+        {
+            var config = GetConfiguration();
+            var generator = new ImageResizeGenerator(config);
+
+            var image = new OutputImage
+            {
+                Height = 0,
+                Width = 0,
+                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                RequiresBackgroundColor = true,
+                Scale = .5,
+                ShouldBeVisible = true,
+                Watermark = new WatermarkConfiguration
+                {
+                    Text = text
+                }
+            };
+
+            generator.ProcessImage(image);
         }
     }
 }
