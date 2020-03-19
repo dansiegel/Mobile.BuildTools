@@ -11,8 +11,11 @@ namespace Mobile.BuildTools.Handlers
             _requiredSuffix = requiredSuffix;
         }
 
-        public string Format(string rawValue)
+        public string Format(string rawValue, bool safeOutput)
         {
+            if (safeOutput)
+                return string.Join(string.Empty, rawValue.Select(x => "*"));
+
             var c = rawValue.Last();
             if (char.IsLetter(c) && char.ToLowerInvariant(c).Equals(char.ToLowerInvariant(_requiredSuffix)))
                 return rawValue;

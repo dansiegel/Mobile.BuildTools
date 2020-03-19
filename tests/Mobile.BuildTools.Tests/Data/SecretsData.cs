@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Mobile.BuildTools.Models.Secrets;
-using static Mobile.BuildTools.Tests.Fixtures.SecretsClassGeneratorFixture;
+using static Mobile.BuildTools.Tests.Fixtures.Generators.SecretsClassGeneratorFixture;
 
 namespace Mobile.BuildTools.Tests.Data
 {

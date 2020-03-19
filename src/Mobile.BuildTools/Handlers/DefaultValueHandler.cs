@@ -1,4 +1,6 @@
-﻿namespace Mobile.BuildTools.Handlers
+﻿using System.Linq;
+
+namespace Mobile.BuildTools.Handlers
 {
     internal class DefaultValueHandler : IValueHandler
     {
@@ -14,6 +16,12 @@
 
         private string _format { get; }
 
-        public string Format(string args) => string.Format(_format, args);
+        public string Format(string args, bool safeOutput)
+        {
+            if (safeOutput)
+                args = string.Join(string.Empty, args.Select(c => "*"));
+
+            return string.Format(_format, args);
+        }
     }
 }
