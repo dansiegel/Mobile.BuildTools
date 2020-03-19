@@ -1,7 +1,7 @@
 {
   "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
   "artifactCopy": {
-    "disable": true
+    "disable": false
   },
   "appConfig": {
     "strategy": "BundleAll"
