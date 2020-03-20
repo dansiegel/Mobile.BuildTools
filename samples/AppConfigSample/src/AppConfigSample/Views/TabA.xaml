@@ -4,8 +4,8 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             Title="Main Page"
-             x:Class="AppConfigSample.Views.MainPage">
+             Title="Tab A"
+             x:Class="AppConfigSample.Views.TabA">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="Label">
@@ -16,6 +16,9 @@
 
     <StackLayout HorizontalOptions="Center"
                  VerticalOptions="Center">
+        <Label Text="Interface Based API"
+               Style="{DynamicResource Title}"
+               HorizontalTextAlignment="Center" />
         <Label Text="{Binding Foo, StringFormat='Foo: {0}'}" />
         <Label Text="{Binding Bar, StringFormat='Bar: {0}'}" />
         <Label Text="{Binding Test, StringFormat='Test: {0}'}" />

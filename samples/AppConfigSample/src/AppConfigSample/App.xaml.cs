@@ -17,7 +17,7 @@ namespace AppConfigSample
         {
             InitializeComponent();
 
-            var result = await NavigationService.NavigateAsync("MainPage");
+            var result = await NavigationService.NavigateAsync("TabbedPage?createTab=TabA&createTab=TabB");
 
             if(!result.Success)
             {
@@ -28,7 +28,9 @@ namespace AppConfigSample
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<TabbedPage>();
+            containerRegistry.RegisterForNavigation<TabA, TabAViewModel>();
+            containerRegistry.RegisterForNavigation<TabB>();
             containerRegistry.RegisterInstance<IConfigurationManager>(ConfigurationManager.Current);
         }
     }

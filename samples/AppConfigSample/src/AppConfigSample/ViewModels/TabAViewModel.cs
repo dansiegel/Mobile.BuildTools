@@ -5,11 +5,11 @@ using Prism.Mvvm;
 
 namespace AppConfigSample.ViewModels
 {
-    public class MainPageViewModel : BindableBase
+    public class TabAViewModel : BindableBase
     {
         private IConfigurationManager _configurationManager { get; }
 
-        public MainPageViewModel(IConfigurationManager configurationManager)
+        public TabAViewModel(IConfigurationManager configurationManager)
         {
             _configurationManager = configurationManager;
             SetEnvironmentCommand = new DelegateCommand<string>(OnSetEnvironmentCommandExecuted, x => !string.IsNullOrEmpty(x));
