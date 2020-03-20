@@ -137,7 +137,6 @@ namespace Mobile.BuildTools.Drawing
                 points = new[] { new PointF(0, 0), new PointF(imgSize.Width, 0) };
             }
 
-            System.Diagnostics.Debugger.Break();
             var fullThickness = (float)(thickness * 2);
             var pen = new Pen(brush, fullThickness);
             var polygon = new Polygon(new LinearLineSegment(points));
