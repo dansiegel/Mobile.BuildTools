@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Images;
+using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Tasks.Utils;
 
 namespace Mobile.BuildTools.Tasks
@@ -66,7 +67,7 @@ namespace Mobile.BuildTools.Tasks
             }
         }
 
-        private IEnumerable<string> GetSearchPaths(IBuildConfiguration config)
+        internal IEnumerable<string> GetSearchPaths(IBuildConfiguration config)
         {
             var searchPaths = new List<string>();
             var imageConfig = config.Configuration.Images;
@@ -82,15 +83,15 @@ namespace Mobile.BuildTools.Tasks
             }
 
 
-            if (imageConfig.Directories?.Any() ?? false)
+            if (imageConfig?.Directories?.Any() ?? false)
             {
                 searchPaths.AddRange(imageConfig.Directories.Select(GetSearchPath));
             }
 
-            var monoandroidKey = GetKey(imageConfig.ConditionalDirectories.Keys, "monoandroid", "android", "droid");
-            var xamariniOSKey = GetKey(imageConfig.ConditionalDirectories.Keys, "xamarin.ios", "xamarinios", "ios", "apple");
-            var xamarinMacKey = GetKey(imageConfig.ConditionalDirectories.Keys, "xamarin.mac", "xamarinmac", "mac", "apple");
-            var xamarinTVOSKey = GetKey(imageConfig.ConditionalDirectories.Keys, "xamarin.tvos", "xamarintvos", "tvos", "apple");
+            var monoandroidKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "monoandroid", "android", "droid");
+            var xamariniOSKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "xamarin.ios", "xamarinios", "ios", "apple");
+            var xamarinMacKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "xamarin.mac", "xamarinmac", "mac", "apple");
+            var xamarinTVOSKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "xamarin.tvos", "xamarintvos", "tvos", "apple");
 
             var platformKeys = new[] { monoandroidKey, xamariniOSKey, xamarinMacKey, xamarinTVOSKey }.Where(x => x != null);
 
@@ -115,17 +116,33 @@ namespace Mobile.BuildTools.Tasks
             }
 
             // TODO: Make this even smarter with conditions like `Release || Store`... perhaps we also should consider evaluating the defined constants.
-            var keys = imageConfig.ConditionalDirectories.Keys.Where(k => !platformKeys.Any(x => x == k) && (k.Equals(config.BuildConfiguration) || !k.Equals($"!{config.BuildConfiguration}")));
+            var keys = imageConfig?.ConditionalDirectories?.Keys.Where(k => IsValidConditionalDirectory(k, platformKeys, config.BuildConfiguration)) ?? Array.Empty<string>();
             foreach(var validCondition in keys)
             {
                 searchPaths.AddRange(imageConfig.ConditionalDirectories[validCondition].Select(GetSearchPath));
             }
 
-            return searchPaths.Distinct();
+            return searchPaths.Where(x => !string.IsNullOrEmpty(x)).Distinct();
+        }
+
+        private static bool IsValidConditionalDirectory(string condition, IEnumerable<string> platformKeys, string buildConfiguration)
+        {
+            if (platformKeys.Any(k => k.Equals(condition, StringComparison.InvariantCultureIgnoreCase)))
+                return false;
+
+            if (condition.Equals(buildConfiguration, StringComparison.InvariantCultureIgnoreCase))
+                return true;
+
+            if (condition[0] == '!')
+                return true;
+
+            return false;
         }
 
         private string GetKey(IEnumerable<string> conditionalKeys, params string[] possibleNames)
         {
+            if (conditionalKeys is null) return null;
+
             foreach(var name in possibleNames)
             {
                 var key = conditionalKeys.FirstOrDefault(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
