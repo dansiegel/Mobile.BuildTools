@@ -20,7 +20,7 @@ namespace Mobile.BuildTools.Tasks
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
             // Validate Inputs
-            if (!InputConfigFiles.Any())
+            if (InputConfigFiles is null || !InputConfigFiles.Any())
             {
                 Log.LogMessage("No input config files were found");
                 return;
