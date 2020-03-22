@@ -1,4 +1,4 @@
 ﻿{
-    "TemplatedParameter": "$$TemplatedParameter$$",
+    "TemplatedParameter": "$TemplatedParameter$",
     "CustomTokenParameter": "%%CustomTokenParameter%%"
 }

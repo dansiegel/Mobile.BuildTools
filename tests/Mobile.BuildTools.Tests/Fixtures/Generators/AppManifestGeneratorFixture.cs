@@ -52,7 +52,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             Assert.NotEmpty(matches);
             Assert.Single(matches);
             var match = matches.Cast<Match>().FirstOrDefault();
-            Assert.Equal("$$TemplatedParameter$$", match.Value);
+            Assert.Equal("$TemplatedParameter$", match.Value);
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             });
 
             Assert.Equal(nameof(AppManifestGeneratorFixture), json.CustomTokenParameter);
-            Assert.Equal("$$TemplatedParameter$$", json.TemplatedParameter);
+            Assert.Equal("$TemplatedParameter$", json.TemplatedParameter);
         }
 
         //[Fact]
