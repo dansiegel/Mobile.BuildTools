@@ -1,47 +1,93 @@
 {
   "definitions": {
-    "AndroidConfiguration": {
+    "WatermarkConfiguration": {
+      "type": [ "object", "null" ],
+      "properties": {
+        "sourceFile": {
+          "type": [ "string", "null" ],
+          "description": "The name of the source file you want to overlay without an extension or folder path"
+        },
+        "colors": {
+          "type": [ "array", "null" ],
+          "items": {
+            "type": "string",
+            "description": "A Color Name such as Red, or OrangeRed... or a Hex String"
+          }
+        },
+        "position": {
+          "type": [ "string", "null" ],
+          "enum": [ "Top", "Bottom", "TopLeft", "TopRight", "BottomLeft", "BottomRight" ],
+          "default": "BottomRight"
+        },
+        "text": {
+          "type": [ "string", "null" ],
+          "description": "The text to be added to the banner. (i.e. Dev, Stage, Lite, Pro)"
+        },
+        "textColor": {
+          "type": [ "string", "null" ],
+          "description": "The color of the text"
+        },
+        "fontFamily": {
+          "type": [ "string", "null" ],
+          "description": "The name of a Font Family installed on the machine. This defaults to Arial"
+        },
+        "fontFile": {
+          "type": [ "string", "null" ],
+          "description": "The relative path to a font file to use."
+        },
+        "opacity": {
+          "type": [ "number", "null" ],
+          "description": "The opacity of the banner over your icon. This is 0.95 by default"
+        }
+      }
+    },
+    "ImageConfiguration": {
       "type": [
         "object",
         "null"
       ],
       "properties": {
-        "resourceType": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "enum": [
-            "Drawable",
-            "Mipmap"
-          ],
-          "default": "Drawable"
-        },
         "ignore": {
-          "type": [
-            "boolean",
-            "null"
-          ],
+          "type": [ "boolean", "null" ],
           "default": false
         },
         "name": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "The file name without the file extension"
+          "type": [ "string", "null" ],
+          "description": "Defines the name of the output image or iconset without an extension"
         },
         "scale": {
-          "type": "number",
+          "type": [ "number", "null" ],
           "default": 1,
-          "description": "A real number between 0-1"
+          "description": "Sets the scale from size of the source image to the largest output image"
         },
         "backgroundColor": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "A Hex String such as #FFFFFF"
+          "type": [ "string", "null" ],
+          "default": "#FFFFFF",
+          "description": "Sets a background color to use for a transparent image if desired"
+        },
+        "width": {
+          "type": [ "integer", "null" ],
+          "description": "Sets the desired width of the largest output image"
+        },
+        "height": {
+          "type": [ "integer", "null" ],
+          "description": "Sets the desired height of the largest output image"
+        },
+        "padFactor": {
+          "type": [ "number", "null" ],
+          "description": "If set will change the largest image output size by changing the canvas size by the set factor. This should be greater than 1, like 1.5."
+        },
+        "padColor": {
+          "type": [ "string", "null" ],
+          "description": "If set this will set a color to use on the background when adding a pad to your image"
+        },
+        "resourceType": {
+          "type": [ "string", "null" ],
+          "enum": [ "Drawable", "Mipmap" ],
+          "description": "This is only used for images on Android and will be set to Drawable by default"
+        },
+        "watermark": {
+          "$ref": "#/definitions/WatermarkConfiguration"
         }
       }
     },
@@ -52,30 +98,54 @@
       ],
       "properties": {
         "ignore": {
-          "type": [
-            "boolean",
-            "null"
-          ],
+          "type": [ "boolean", "null" ],
           "default": false
         },
         "name": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "The file name without the file extension"
+          "type": [ "string", "null" ],
+          "description": "Defines the name of the output image or iconset without an extension"
         },
         "scale": {
-          "type": "number",
+          "type": [ "number", "null" ],
           "default": 1,
-          "description": "A real number between 0-1"
+          "description": "Sets the scale from size of the source image to the largest output image"
         },
         "backgroundColor": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "A Hex String such as #FFFFFF"
+          "type": [ "string", "null" ],
+          "default": "#FFFFFF",
+          "description": "Sets a background color to use for a transparent image if desired"
+        },
+        "width": {
+          "type": [ "integer", "null" ],
+          "description": "Sets the desired width of the largest output image"
+        },
+        "height": {
+          "type": [ "integer", "null" ],
+          "description": "Sets the desired height of the largest output image"
+        },
+        "padFactor": {
+          "type": [ "number", "null" ],
+          "description": "If set will change the largest image output size by changing the canvas size by the set factor. This should be greater than 1, like 1.5."
+        },
+        "padColor": {
+          "type": [ "string", "null" ],
+          "description": "If set this will set a color to use on the background when adding a pad to your image"
+        },
+        "resourceType": {
+          "type": [ "string", "null" ],
+          "enum": [ "Drawable", "Mipmap" ],
+          "description": "This is only used for images on Android and will be set to Drawable by default"
+        },
+        "watermark": {
+          "$ref": "#/definitions/WatermarkConfiguration",
+          "description": "A watermark to overlay on the output image"
+        },
+        "additionalOutputs": {
+          "type": [ "array", "null" ],
+          "items": {
+            "$ref": "#/definitions/ImageConfiguration"
+          },
+          "description": "Optional additional copies of the input image"
         }
       }
     }
@@ -89,36 +159,72 @@
       ]
     },
     "android": {
-      "$ref": "#/definitions/AndroidConfiguration"
+      "$ref": "#/definitions/PlatformConfiguration"
     },
     "apple": {
       "$ref": "#/definitions/PlatformConfiguration"
     },
+    "ios": {
+      "$ref": "#/definitions/PlatformConfiguration"
+    },
+    "tvos": {
+      "$ref": "#/definitions/PlatformConfiguration"
+    },
+    "macos": {
+      "$ref": "#/definitions/PlatformConfiguration"
+    },
+    "tizen": {
+      "$ref": "#/definitions/PlatformConfiguration"
+    },
     "ignore": {
-      "type": [
-        "boolean",
-        "null"
-      ],
+      "type": [ "boolean", "null" ],
       "default": false
     },
     "name": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "description": "The file name without the file extension"
+      "type": [ "string", "null" ],
+      "description": "Defines the name of the output image or iconset without an extension"
     },
     "scale": {
-      "type": "number",
+      "type": [ "number", "null" ],
       "default": 1,
-      "description": "A real number between 0-1"
+      "description": "Sets the scale from size of the source image to the largest output image"
     },
     "backgroundColor": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "description": "A Hex String such as #FFFFFF"
+      "type": [ "string", "null" ],
+      "default": "#FFFFFF",
+      "description": "Sets a background color to use for a transparent image if desired"
+    },
+    "width": {
+      "type": [ "integer", "null" ],
+      "description": "Sets the desired width of the largest output image"
+    },
+    "height": {
+      "type": [ "integer", "null" ],
+      "description": "Sets the desired height of the largest output image"
+    },
+    "padFactor": {
+      "type": [ "number", "null" ],
+      "description": "If set will change the largest image output size by changing the canvas size by the set factor. This should be greater than 1, like 1.5."
+    },
+    "padColor": {
+      "type": [ "string", "null" ],
+      "description": "If set this will set a color to use on the background when adding a pad to your image"
+    },
+    "resourceType": {
+      "type": [ "string", "null" ],
+      "enum": [ "Drawable", "Mipmap" ],
+      "description": "This is only used for images on Android and will be set to Drawable by default"
+    },
+    "watermark": {
+      "$ref": "#/definitions/WatermarkConfiguration",
+      "description": "A watermark to overlay on the output image"
+    },
+    "additionalOutputs": {
+      "type": [ "array", "null" ],
+      "items": {
+        "$ref": "#/definitions/ImageConfiguration"
+      },
+      "description": "Optional additional copies of the input image"
     }
   }
 }
