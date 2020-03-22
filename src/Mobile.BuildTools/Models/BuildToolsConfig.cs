@@ -7,7 +7,7 @@ namespace Mobile.BuildTools.Models
     public class BuildToolsConfig
     {
 #if !SCHEMAGENERATOR
-        private string _schema = "https://xam.dev/buildtools.schema.json";
+        private string _schema = "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json";
         [JsonProperty("$schema")]
         public string Schema
         {

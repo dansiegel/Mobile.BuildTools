@@ -101,7 +101,7 @@ namespace Mobile.BuildTools.Utils
                 Manifests = new TemplatedManifest
                 {
                     Disable = false,
-                    Token = "$$",
+                    Token = "$",
                     MissingTokensAsErrors = false,
                     VariablePrefix = "Manifest_"
                 },
