@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -54,6 +55,7 @@ namespace Mobile.BuildTools.Tasks
         Platform IBuildConfiguration.Platform =>
             TargetFrameworkIdentifier.GetTargetPlatform();
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "We are aborting the build if an Exception has been logged.")]
         public sealed override bool Execute()
         {
             try
@@ -76,7 +78,7 @@ namespace Mobile.BuildTools.Tasks
                 if(ConfigHelper.Exists(ConfigurationPath)
                     && ConfigHelper.GetConfig(ConfigurationPath).Debug)
                 {
-                    Log.LogWarning("******** DEBUG OUTPUT ****************");
+                    Log.LogWarning("**************** DEBUG OUTPUT ****************");
                     Log.LogWarning(ex.ToString());
                 }
             }
