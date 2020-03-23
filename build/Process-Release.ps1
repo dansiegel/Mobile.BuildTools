@@ -1,4 +1,12 @@
-$nupkg = Get-ChildItem -Path . -Filter *.nupkg -Recurse | Select-Object -First 1
+$searchPath = "."
+
+if ($null -ne $env:PIPELINE_WORKSPACE)
+{
+    $searchPath = Join-Path -Path $env:PIPELINE_WORKSPACE -ChildPath 'Artifacts'
+}
+
+Write-Host "Artifact search directory - $searchPath"
+$nupkg = Get-ChildItem -Path $searchPath -Filter *.nupkg -Recurse | Select-Object -First 1
 $nupkg.Name -match '^(.*?)\.((?:\.?[0-9]+){3,}(?:[-a-z]+)?)\.nupkg$'
 
 $VersionName = $Matches[2]
