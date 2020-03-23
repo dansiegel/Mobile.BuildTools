@@ -5,6 +5,7 @@ trigger:
     - master
   paths:
     include:
+    - build
     - src
     - tests
     - Directory.build.props
@@ -17,6 +18,7 @@ pr:
     - master
   paths:
     include:
+    - build
     - src
     - tests
     - Directory.build.props
