@@ -127,7 +127,7 @@ stages:
           - task: GithubRelease@0
             displayName: 'Create GitHub Release'
             inputs:
-              gitHubConnection: 'DanSiegel - GitHub'
+              gitHubConnection: 'Mobile.BuildTools'
               title: '$(ReleaseDisplayName)'
               tagSource: manual
               tag: 'v$(VersionName)'
