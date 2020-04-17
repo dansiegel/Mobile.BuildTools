@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models.AppIcons;
-using Mobile.BuildTools.Tasks.Utils;
 
 namespace Mobile.BuildTools.Generators.Images
 {
@@ -69,7 +67,8 @@ namespace Mobile.BuildTools.Generators.Images
                     Scale = config.Scale * (resolution.Value / 4),
                     ShouldBeVisible = true,
                     Watermark = config.Watermark,
-                    BackgroundColor = config.BackgroundColor
+                    BackgroundColor = config.BackgroundColor,
+                    BuildAction = "AndroidResource"
                 };
             }
         }

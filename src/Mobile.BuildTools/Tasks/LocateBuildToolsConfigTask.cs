@@ -1,12 +1,8 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models;
-using Mobile.BuildTools.Models.Secrets;
-using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 

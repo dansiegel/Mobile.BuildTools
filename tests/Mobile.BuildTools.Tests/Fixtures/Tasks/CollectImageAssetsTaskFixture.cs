@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Tasks;
-using Mobile.BuildTools.Tasks.Utils;
+using Mobile.BuildTools.Utils;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -1,4 +1,4 @@
-﻿namespace Mobile.BuildTools.Tasks.Utils
+﻿namespace Mobile.BuildTools.Utils
 {
     public static class StringExtensions
     {

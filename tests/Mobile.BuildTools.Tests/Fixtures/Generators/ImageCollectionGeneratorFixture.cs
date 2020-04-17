@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Images;
 using Mobile.BuildTools.Models.AppIcons;
-using Mobile.BuildTools.Tasks.Utils;
+using Mobile.BuildTools.Utils;
 using Xunit;
 using Xunit.Abstractions;
 using static Mobile.BuildTools.Tests.TestConstants;

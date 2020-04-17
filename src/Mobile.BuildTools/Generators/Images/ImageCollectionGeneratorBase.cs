@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models.AppIcons;
-using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 

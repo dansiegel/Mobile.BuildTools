@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Secrets;
-using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tests.Mocks

@@ -3,7 +3,7 @@ using System.IO;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Images;
 using Mobile.BuildTools.Models.AppIcons;
-using Mobile.BuildTools.Tasks.Utils;
+using Mobile.BuildTools.Utils;
 using Xunit.Abstractions;
 using static Mobile.BuildTools.Tests.TestConstants;
 

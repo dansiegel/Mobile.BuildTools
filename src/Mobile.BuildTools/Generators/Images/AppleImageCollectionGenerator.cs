@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models.AppIcons;
-using Mobile.BuildTools.Tasks.Utils;
 using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Generators.Images
@@ -70,7 +69,8 @@ namespace Mobile.BuildTools.Generators.Images
                     Scale = config.Scale * x.Value,
                     ShouldBeVisible = true,
                     Watermark = config.Watermark,
-                    BackgroundColor = config.BackgroundColor
+                    BackgroundColor = config.BackgroundColor,
+                    BuildAction = "BundleResource"
                 });
            }
         }
@@ -139,7 +139,8 @@ namespace Mobile.BuildTools.Generators.Images
                 ShouldBeVisible = false,
                 //WatermarkFilePath = watermarkFilePath,
                 Watermark = resource.Watermark,
-                BackgroundColor = resource.BackgroundColor
+                BackgroundColor = resource.BackgroundColor,
+                BuildAction = "ImageAsset"
             };
         }
     }

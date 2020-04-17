@@ -1,10 +1,8 @@
-using System;
 using System.IO;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Manifests;
-using Mobile.BuildTools.Logging;
-using Mobile.BuildTools.Tasks.Utils;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {

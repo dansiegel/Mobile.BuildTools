@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
-using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Tests.Mocks;
+using Mobile.BuildTools.Utils;
 using Xunit.Abstractions;
 
 namespace Mobile.BuildTools.Tests.Fixtures

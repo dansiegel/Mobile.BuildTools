@@ -10,6 +10,8 @@ namespace Mobile.BuildTools.Models.AppIcons
 
         public string OutputLink { get; set; }
 
+        public string BuildAction { get; set; }
+
         public int Height { get; set; }
 
         public int Width { get; set; }

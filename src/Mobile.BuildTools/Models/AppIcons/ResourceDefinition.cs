@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using Mobile.BuildTools.Tasks.Utils;
+using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models.AppIcons

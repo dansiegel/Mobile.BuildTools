@@ -2,7 +2,7 @@
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Secrets;
-using Mobile.BuildTools.Tasks.Utils;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Build
 {

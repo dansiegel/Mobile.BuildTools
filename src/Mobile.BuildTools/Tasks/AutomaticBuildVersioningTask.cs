@@ -2,7 +2,6 @@
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Versioning;
 using Mobile.BuildTools.Models;
-using Mobile.BuildTools.Tasks.Utils;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks

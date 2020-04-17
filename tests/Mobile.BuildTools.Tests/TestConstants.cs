@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Mobile.BuildTools.Tasks.Utils;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tests
 {

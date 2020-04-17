@@ -14,6 +14,7 @@
   <ItemGroup>
     <Compile Include="..\..\src\Mobile.BuildTools\Models\**\*.cs" Link="Models\%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="..\..\src\Mobile.BuildTools\Utils\ConfigHelper.cs" Link="Utils\%(Filename)%(Extension)" />
+    <Compile Include="..\..\src\Mobile.BuildTools\Utils\ConfigHelper.shared.cs" Link="Utils\%(Filename)%(Extension)" />
     <Compile Include="..\..\src\Mobile.BuildTools\Utils\Platform.cs" Link="Utils\%(Filename)%(Extension)" />
     <Compile Include="..\..\src\Mobile.BuildTools\Handlers\*.cs" Link="Handlers\%(Filename)%(Extension)" />
     <Compile Include="..\..\src\Mobile.BuildTools\Constants.cs" />
