@@ -6,6 +6,12 @@
     <IsPackable>false</IsPackable>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
+  
+  
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="../Mobile.BuildTools/*.cs" Link="%(Filename)%(Extension)" />
