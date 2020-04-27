@@ -22,15 +22,18 @@ namespace Mobile.BuildTools.Generators
             if (releaseNotesOptions.Disable) return;
 
             var currentHash = GetGitHash();
-            var generatedMarkerFilePath = Path.Combine(Build.SolutionDirectory, ".vs", $"generated-releasenotes.{currentHash}");
-            var outputDirectory = releaseNotesOptions.CreateInRoot ? Build.SolutionDirectory : Build.ProjectDirectory;
 
-            if (!Directory.Exists(outputDirectory))
-                Directory.CreateDirectory(outputDirectory);
+            var generatedMarkerFilePath = new FileInfo(Path.Combine(Build.SolutionDirectory, ".vs", $"generated-releasenotes.{currentHash}"));
 
-            var releaseNotesFilePath = Path.Combine(outputDirectory, releaseNotesOptions.FileName);
+            if (!generatedMarkerFilePath.Directory.Exists)
+                generatedMarkerFilePath.Directory.Create();
 
-            if (File.Exists(releaseNotesFilePath) && File.Exists(generatedMarkerFilePath))
+            var releaseNotesFilePath = new FileInfo(Path.Combine(releaseNotesOptions.CreateInRoot ? Build.SolutionDirectory : Build.ProjectDirectory, releaseNotesOptions.FileName));
+
+            if (!releaseNotesFilePath.Directory.Exists)
+                releaseNotesFilePath.Directory.Create();
+
+            if (releaseNotesFilePath.Exists && generatedMarkerFilePath.Exists)
             {
                 Log.LogMessage("Current Release Notes file has already been generated.");
                 return;
@@ -78,8 +81,8 @@ namespace Mobile.BuildTools.Generators
                 }
             }
 
-            File.WriteAllText(releaseNotesFilePath, notes.Trim());
-            File.WriteAllText(generatedMarkerFilePath, @"99 little bugs in the code,
+            File.WriteAllText(releaseNotesFilePath.FullName, notes.Trim());
+            File.WriteAllText(generatedMarkerFilePath.FullName, @"99 little bugs in the code,
 99 bugs in the code,
 1 bug fixed... compile again,
 100 little bugs in the code.");
