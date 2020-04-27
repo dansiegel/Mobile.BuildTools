@@ -22,21 +22,18 @@ namespace Mobile.BuildTools.Generators
             if (releaseNotesOptions.Disable) return;
 
             var currentHash = GetGitHash();
-            var generatedMarkerDirectory = Path.Combine(Build.SolutionDirectory, ".vs");
 
-            if (!Directory.Exists(generatedMarkerDirectory))
-                Directory.CreateDirectory(generatedMarkerDirectory);
+            var generatedMarkerFilePath = new FileInfo(Path.Combine(Build.SolutionDirectory, ".vs", $"generated-releasenotes.{currentHash}"));
 
-            var generatedMarkerFilePath = Path.Combine(generatedMarkerDirectory, $"generated-releasenotes.{currentHash}");
+            if (!generatedMarkerFilePath.Directory.Exists)
+                generatedMarkerFilePath.Directory.Create();
 
-            var outputDirectory = releaseNotesOptions.CreateInRoot ? Build.SolutionDirectory : Build.ProjectDirectory;
+            var releaseNotesFilePath = new FileInfo(Path.Combine(releaseNotesOptions.CreateInRoot ? Build.SolutionDirectory : Build.ProjectDirectory, releaseNotesOptions.FileName));
 
-            if (!Directory.Exists(outputDirectory))
-                Directory.CreateDirectory(outputDirectory);
+            if (!releaseNotesFilePath.Directory.Exists)
+                releaseNotesFilePath.Directory.Create();
 
-            var releaseNotesFilePath = Path.Combine(outputDirectory, releaseNotesOptions.FileName);
-
-            if (File.Exists(releaseNotesFilePath) && File.Exists(generatedMarkerFilePath))
+            if (releaseNotesFilePath.Exists && generatedMarkerFilePath.Exists)
             {
                 Log.LogMessage("Current Release Notes file has already been generated.");
                 return;
@@ -84,8 +81,8 @@ namespace Mobile.BuildTools.Generators
                 }
             }
 
-            File.WriteAllText(releaseNotesFilePath, notes.Trim());
-            File.WriteAllText(generatedMarkerFilePath, @"99 little bugs in the code,
+            File.WriteAllText(releaseNotesFilePath.FullName, notes.Trim());
+            File.WriteAllText(generatedMarkerFilePath.FullName, @"99 little bugs in the code,
 99 bugs in the code,
 1 bug fixed... compile again,
 100 little bugs in the code.");
