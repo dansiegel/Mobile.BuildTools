@@ -22,7 +22,13 @@ namespace Mobile.BuildTools.Generators
             if (releaseNotesOptions.Disable) return;
 
             var currentHash = GetGitHash();
-            var generatedMarkerFilePath = Path.Combine(Build.SolutionDirectory, ".vs", $"generated-releasenotes.{currentHash}");
+            var generatedMarkerDirectory = Path.Combine(Build.SolutionDirectory, ".vs");
+
+            if (!Directory.Exists(generatedMarkerDirectory))
+                Directory.CreateDirectory(generatedMarkerDirectory);
+
+            var generatedMarkerFilePath = Path.Combine(generatedMarkerDirectory, $"generated-releasenotes.{currentHash}");
+
             var outputDirectory = releaseNotesOptions.CreateInRoot ? Build.SolutionDirectory : Build.ProjectDirectory;
 
             if (!Directory.Exists(outputDirectory))
