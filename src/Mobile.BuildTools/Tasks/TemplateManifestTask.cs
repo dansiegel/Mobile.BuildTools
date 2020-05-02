@@ -3,6 +3,7 @@ using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Manifests;
 using Mobile.BuildTools.Utils;
+using Xamarin.Android.Tools;
 
 namespace Mobile.BuildTools.Tasks
 {
