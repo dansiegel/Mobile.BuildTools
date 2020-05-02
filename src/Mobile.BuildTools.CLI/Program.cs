@@ -13,11 +13,12 @@ namespace Mobile.BuildTools
     {
         public static void Main(string[] args)
         {
-            var app = new CommandLineApplication(throwOnUnexpectedArg: false)
+            var app = new CommandLineApplication()
             {
                 Name = Settings.CommandName,
                 FullName = $"Mobile.BuildTools CLI (v{Version})",
-                Description = "Project Home: https://github.com/dansiegel/Mobile.BuildTools"
+                Description = "Project Home: https://github.com/dansiegel/Mobile.BuildTools",
+                UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.Throw
             };
             app.HelpOption();
         }
