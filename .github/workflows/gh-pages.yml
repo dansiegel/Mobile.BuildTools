@@ -16,10 +16,18 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Setup Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
-        python-version: '3.6'
-        architecture: 'x64'
+        python-version: '3.8'
+
+    - name: Upgrade pip
+      run: |
+        # install pip=>20.1 to use "pip cache dir"
+        python3 -m pip install --upgrade pip
+
+    - name: Get pip cache dir
+      id: pip-cache
+      run: echo "::set-output name=dir::$(pip cache dir)"
 
     - name: Cache dependencies
       uses: actions/cache@v1
@@ -37,10 +45,8 @@ jobs:
     - run: mkdocs build
 
     - name: Deploy
-      uses: peaceiris/actions-gh-pages@v2.5.0
-      env:
-        ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-        PUBLISH_BRANCH: gh-pages
-        PUBLISH_DIR: ./site
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        emptyCommits: false
+        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        publish_dir: ./site
+        publish_branch: gh-pages
