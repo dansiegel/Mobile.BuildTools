@@ -47,7 +47,7 @@ namespace Mobile.BuildTools.Tasks
 
         private BuildToolsConfig _config;
         BuildToolsConfig IBuildConfiguration.Configuration =>
-            _config ?? (_config = ConfigHelper.GetConfig(ConfigurationPath));
+            _config ??= ConfigHelper.GetConfig(ConfigurationPath);
 
         Platform IBuildConfiguration.Platform =>
             TargetFrameworkIdentifier.GetTargetPlatform();
