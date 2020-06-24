@@ -12,22 +12,12 @@ This project is maintained by Dan Siegel. If this project has helped you please 
 
 ## Latest NuGet's
 
-| Package | NuGet | MyGet |
+| Package | NuGet | SponsorConnect |
 | --------------- | ----- | ---- |
-| [Mobile.BuildTools][BuildToolsNuGet] | [![Latest NuGet][BuildToolsNuGetShield]][BuildToolsNuGet] | [![Latest CI Package][BuildToolsMyGetShield]][BuildToolsMyGet] |
-| [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![Latest NuGet][BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] | [![Latest CI Package][BuildToolsConfigMyGetShield]][BuildToolsConfigMyGet] |
+| [Mobile.BuildTools][BuildToolsNuGet] | [![Latest NuGet][BuildToolsNuGetShield]][BuildToolsNuGet] | [![Latest CI Package][BuildToolsSponsorConnectShield]][BuildToolsSponsorConnect] |
+| [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![Latest NuGet][BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] | [![Latest CI Package][BuildToolsConfigSponsorConnectShield]][BuildToolsConfigSponsorConnect] |
 
-Want to consume the CI packages? You can add this as a NuGet.config in your project root and Visual Studio will automatically pick up the configuration to provide packages from the CI Feed. Note that packages from this feed have passed all of the tests, but may have code that is still unstable.
-
-```xml
-<configuration>
-  <packageSources>
-    <clear />
-    <add key="BuildTools-CI" value="https://pkgs.dev.azure.com/dansiegel/Mobile.BuildTools/_packaging/buildtools/nuget/v3/index.json" />
-    <add key="NuGet.org" value="https://api.nuget.org/v3/index.json" />
-  </packageSources>
-</configuration>
-```
+Want to consume the CI packages? Sign up as a [GitHub sponsor][sponsor] and you can access the Sponsor Connect private feed.
 
 ## What does it do?
 
@@ -87,10 +77,10 @@ Some additional notes... the Mobile.BuildTools will help with some advanced scen
 
 [BuildToolsNuGet]: https://www.nuget.org/packages/Mobile.BuildTools/
 [BuildToolsNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.svg
-[BuildToolsMyGet]: https://www.myget.org/feed/dansiegel/package/nuget/Mobile.BuildTools/
-[BuildToolsMyGetShield]: https://img.shields.io/myget/dansiegel/vpre/Mobile.BuildTools.svg
+[BuildToolsSponsorConnect]: https://sponsorconnect.dev/nuget/package/Mobile.BuildTools/
+[BuildToolsSponsorConnectShield]: https://img.shields.io/endpoint?url=https%3A%2F%2Fsponsorconnect.dev%2Fshield%2FMobile.BuildTools%2Fvpre
 
 [BuildToolsConfigNuGet]: https://www.nuget.org/packages/Mobile.BuildTools.Configuration/
 [BuildToolsConfigNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.Configuration.svg
-[BuildToolsConfigMyGet]: https://www.myget.org/feed/dansiegel/package/nuget/Mobile.BuildTools.Configuration/
-[BuildToolsConfigMyGetShield]: https://img.shields.io/myget/dansiegel/vpre/Mobile.BuildTools.Configuration.svg
+[BuildToolsConfigSponsorConnect]: https://sponsorconnect.dev/nuget/package/Mobile.BuildTools.Configuration/
+[BuildToolsConfigSponsorConnectShield]: https://img.shields.io/endpoint?url=https%3A%2F%2Fsponsorconnect.dev%2Fshield%2FMobile.BuildTools.Configuration%2Fvpre

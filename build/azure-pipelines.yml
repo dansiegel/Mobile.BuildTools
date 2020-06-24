@@ -94,9 +94,9 @@ stages:
   dependsOn: Test
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
-  - deployment: PipelineArtifacts
-    displayName: Pipeline Artifacts
-    environment: PipelineArtifacts
+  - deployment: SponsorConnect
+    displayName: Sponsor Connect
+    environment: SponsorConnect
     strategy:
       runOnce:
         deploy:
@@ -104,11 +104,10 @@ stages:
           - task: NuGetCommand@2
             displayName: NuGet Push
             inputs:
-              command: 'push'
-              packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg'
-              nuGetFeedType: 'internal'
-              publishVstsFeed: '4ad6c5a1-ac0f-48ca-b995-6c97e879a584/b8446c23-bb38-4454-8a29-325240a11f9b'
-              allowPackageConflicts: true
+              command: push
+              packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;$(Pipeline.Workspace)/**/*.snupkg'
+              nuGetFeedType: external
+              publishFeedCredentials: 'SponsorConnect'
   - deployment: NuGet
     displayName: NuGet.org
     environment: NuGet
@@ -134,6 +133,7 @@ stages:
               isPreRelease: $(IS_PREVIEW)
               assets: |
                $(Pipeline.Workspace)/**/*.nupkg
+               $(Pipeline.Workspace)/**/*.snupkg
               isDraft: true
               addChangeLog: true
 
@@ -141,7 +141,7 @@ stages:
             displayName: NuGet Push
             inputs:
               command: push
-              packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;!$(Pipeline.Workspace)/**/*.symbols.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;$(Pipeline.Workspace)/**/*.snupkg'
               nuGetFeedType: external
               publishFeedCredentials: 'NuGet'
 

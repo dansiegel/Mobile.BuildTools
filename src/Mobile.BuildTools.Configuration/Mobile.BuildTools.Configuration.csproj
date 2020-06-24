@@ -6,6 +6,7 @@
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Provides a Cross Platform implementation of the ConfigurationManager. This allows you to load an app.config from any platform head as well as load custom configs at runtime or transform your configuration at runtime.</Description>
+    <DevelopmentDependency>false</DevelopmentDependency>
   </PropertyGroup>
 
   <ItemGroup>
