@@ -35,6 +35,7 @@
     <LocateBuildToolsConfigTask ProjectDir="$(MSBuildProjectDirectory)"
                                 ProjectName="$(MSBuildProjectName)"
                                 SolutionDir="$(SolutionDir)"
+                                BuildToolsConfigFilePath="$(BuildToolsConfigFilePath)"
                                 TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                 SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
                                 IsCrossTargetingBuild="$(IsCrossTargetingBuild)">

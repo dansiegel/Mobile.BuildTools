@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -127,6 +127,15 @@ namespace Mobile.BuildTools.Tasks
 
         private void GetConfiguration()
         {
+            if(!string.IsNullOrEmpty(BuildToolsConfigFilePath))
+            {
+                if(!ConfigHelper.Exists(BuildToolsConfigFilePath))
+                {
+                    ConfigHelper.SaveDefaultConfig(BuildToolsConfigFilePath);
+                }
+                return;
+            }
+
             var configPath = SolutionDir;
             if(!string.IsNullOrEmpty(configPath) && !ConfigHelper.Exists(configPath))
             {
