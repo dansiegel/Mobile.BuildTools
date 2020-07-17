@@ -182,7 +182,9 @@
       ],
       "properties": {
         "disable": {
-          "type": "boolean"
+          "description": "Disables this Mobile.Build.Tools Task",
+          "type": [ "boolean", "null" ],
+          "default": false
         },
         "delimiter": {
           "description": "The delimiter used to separate values into an array. (i.e. ';' value1;value2)",
@@ -317,10 +319,7 @@
           "type": [ "boolean", "null" ],
           "default": false
         }
-      },
-      "required": [
-        "disable"
-      ]
+      }
     }
   },
   "type": "object",

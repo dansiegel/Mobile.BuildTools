@@ -2,67 +2,64 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Build.Utilities;
+using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Tasks;
 using Mobile.BuildTools.Tests.Mocks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Mobile.BuildTools.Tests.Fixtures.Tasks
+namespace Mobile.BuildTools.Tests.Fixtures.Generators
 {
-    public class ScssProcessorTaskFixture
+    public class ScssGeneratorFixture : FixtureBase
     {
-        private const string OutputFolder = "Generated";
         private const string Templates = "Templates";
         private static readonly string ExpectedCssPath;
         private static readonly string Sass;
         private static readonly string Scss;
 
-        static ScssProcessorTaskFixture()
+        static ScssGeneratorFixture()
         {
             ExpectedCssPath = $"{Templates}{Path.DirectorySeparatorChar}Css";
             Sass = $"{Templates}{Path.DirectorySeparatorChar}Sass";
             Scss = $"{Templates}{Path.DirectorySeparatorChar}Scss";
         }
 
-        private ITestOutputHelper _testOutputHelper { get; }
+        private IEnumerable<string> FilesToProcess { get; }
 
-        public ScssProcessorTaskFixture(ITestOutputHelper testOutputHelper)
+        public ScssGeneratorFixture(ITestOutputHelper testOutputHelper)
+            : base(testOutputHelper)
         {
-            _testOutputHelper = testOutputHelper;
-            ResetOutputFolder();
+            FilesToProcess = Directory.GetFiles(Scss, "*");
         }
 
         [Fact]
         public void Generates_Two_CssFiles_FromScss()
         {
-            ResetOutputFolder();
-
-            var task = new ScssProcessorTask
+            var config = GetConfiguration();
+            IGenerator<IEnumerable<string>> generator = new ScssGenerator(config)
             {
-                OutputDirectory = OutputFolder,
-                ScssFiles = Directory.GetFiles(Scss, "*"),
-                Logger = new XunitLog(_testOutputHelper)
+                InputFiles = FilesToProcess
             };
 
-            bool success = false;
             var exception = Record.Exception(() =>
             {
-                success = task.Execute();
+                generator.Execute();
             });
 
             Assert.Null(exception);
-            Assert.True(success);
 
-            _testOutputHelper.WriteLine($"Generated Files: {task.GeneratedCssFiles.Length}");
-            Assert.Equal(2, task.GeneratedCssFiles.Length);
-            var files = Directory.GetFiles(OutputFolder, "*", SearchOption.AllDirectories);
+            var outputs = generator.Outputs.ToArray();
+            _testOutputHelper.WriteLine($"Generated Files: {outputs.Length}");
+            Assert.Equal(2, outputs.Length);
+            var files = Directory.GetFiles(config.IntermediateOutputPath, "*", SearchOption.AllDirectories);
 
             _testOutputHelper.WriteLine($"Files found: {string.Join(", ", files)}");
             Assert.Equal(2, files.Length);
 
-            foreach (var item in task.GeneratedCssFiles)
+            foreach (var item in generator.Outputs)
             {
-                Assert.Contains(item.ItemSpec.ToString(), files);
+                Assert.Contains(item, files);
             }
         }
 
@@ -156,25 +153,22 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
         public void GeneratedExpectedCss_FromScss(string fileName, string expectedFileName)
         {
             _testOutputHelper.WriteLine($"Checking: {fileName} - {expectedFileName}");
-            var task = new ScssProcessorTask
+            var config = GetConfiguration();
+            IGenerator<IEnumerable<string>> generator = new ScssGenerator(config)
             {
-                OutputDirectory = OutputFolder,
-                ScssFiles = Directory.GetFiles(Scss, "*"),
-                Logger = new XunitLog(_testOutputHelper)
+                InputFiles = FilesToProcess
             };
 
-            bool success = false;
             var exception = Record.Exception(() =>
             {
-                success = task.Execute();
+                generator.Execute();
             });
 
             Assert.Null(exception);
-            Assert.True(success);
 
-            Assert.Equal(2, task.GeneratedCssFiles.Length);
+            Assert.Equal(2, generator.Outputs.Count());
 
-            var files = Directory.GetFiles(OutputFolder, fileName, SearchOption.AllDirectories);
+            var files = Directory.GetFiles(config.IntermediateOutputPath, fileName, SearchOption.AllDirectories);
             Assert.Single(files);
             var generatedFile = files.First(f => f.EndsWith(fileName, StringComparison.CurrentCultureIgnoreCase));
             Assert.Equal(File.ReadLines(Path.Combine(ExpectedCssPath, expectedFileName)).First(),
@@ -184,31 +178,20 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
         [Fact]
         public void NoOutputDoesNotCauseNullOutputCollection()
         {
-            var task = new ScssProcessorTask
+            var config = GetConfiguration();
+            IGenerator<IEnumerable<string>> generator = new ScssGenerator(config)
             {
-                OutputDirectory = OutputFolder,
-                ScssFiles = Directory.GetFiles(ExpectedCssPath, "*"),
-                Logger = new XunitLog(_testOutputHelper)
+                InputFiles = Directory.GetFiles(ExpectedCssPath, "*"),
             };
 
-            bool success = false;
             var exception = Record.Exception(() =>
             {
-                success = task.Execute();
+                generator.Execute();
             });
 
             Assert.Null(exception);
-            Assert.True(success);
-            Assert.NotNull(task.GeneratedCssFiles);
-            Assert.Empty(task.GeneratedCssFiles);
-        }
-
-        private void ResetOutputFolder()
-        {
-            if (Directory.Exists(OutputFolder))
-                Directory.Delete(OutputFolder, true);
-
-            Directory.CreateDirectory(OutputFolder);
+            Assert.NotNull(generator.Outputs);
+            Assert.Empty(generator.Outputs);
         }
     }
 }

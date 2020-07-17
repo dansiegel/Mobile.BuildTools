@@ -20,6 +20,7 @@ namespace Mobile.BuildTools.Tests.Mocks
                 Prefix = "UNIT_TEST_",
                 Properties = new List<ValueConfig>()
             };
+            Configuration.Css.Minify = true;
         }
 
         public bool BuildingInsideVisualStudio => true;

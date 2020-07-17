@@ -61,9 +61,13 @@
       <ProcessScssDebug Condition=" '$(ProcessScssDebug)' == '' ">$(MobileBuildToolsDebug)</ProcessScssDebug>
     </PropertyGroup>
 
-    <ScssProcessorTask OutputDirectory="$(IntermediateOutputPath)"
-                       ScssFiles="@(_Scss)"
-                       DebugOutput="$(ProcessScssDebug)">
+    <ScssProcessorTask ScssFiles="@(_Scss)"
+                       ConfigurationPath="$(BuildToolsConfigFilePath)"
+                       ProjectName="$(MSBuildProjectName)"
+                       ProjectDirectory="$(MSBuildProjectDirectory)"
+                       SolutionDirectory="$(SolutionDir)"
+                       IntermediateOutputPath="$(IntermediateOutputPath)"
+                       TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)">
       <Output ItemName="GeneratedFile"
               TaskParameter="GeneratedCssFiles"/>
       <Output ItemName="FilesWrite"
