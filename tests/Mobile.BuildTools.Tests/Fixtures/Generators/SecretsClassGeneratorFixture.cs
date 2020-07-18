@@ -268,9 +268,13 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 PropertyType = propertyType,
                 IsArray = isArray
             });
+            var sourceFile = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Secrets", secretsFile);
+            config.ProjectDirectory = Path.Combine(nameof(SecretsClassGeneratorFixture), nameof(GeneratesValidClass), Path.GetFileNameWithoutExtension(secretsFile));
+            Directory.CreateDirectory(config.ProjectDirectory);
+
+            File.Copy(sourceFile, Path.Combine(config.ProjectDirectory, "secrets.json"));
             var generator = new SecretsClassGenerator(config)
             {
-                SecretsJsonFilePath = Path.Combine("Templates", "Secrets", secretsFile),
                 BaseNamespace = config.ProjectName
             };
             generator.Execute();
