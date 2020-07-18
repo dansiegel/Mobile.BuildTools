@@ -29,7 +29,7 @@ namespace Mobile.BuildTools.Drawing
 
         public static void ApplyBackground(this IImageProcessingContext context, string hexColor)
         {
-            var color = ColorUtils.TryParse(hexColor, out var x) ? x : Color.FromHex(Constants.DefaultBackgroundColor);
+            var color = ColorUtils.TryParse(hexColor, out var c) ? c : Color.ParseHex(Constants.DefaultBackgroundColor);
 
             context.BackgroundColor(color);
         }

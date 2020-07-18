@@ -7,8 +7,8 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using Mobile.BuildTools.Models.AppIcons;
 using SixLabors.Fonts;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Drawing;
 
 namespace Mobile.BuildTools.Drawing
 {
@@ -99,11 +99,12 @@ namespace Mobile.BuildTools.Drawing
                 _ => new PointF(imgSize.Width / 2, imgSize.Height - (imgSize.Height / 9)),
             };
 
-            var textGraphicOptions = new TextGraphicsOptions(true)
+            var textOptions = new TextOptions
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
+            var textGraphicOptions = new TextGraphicsOptions(new GraphicsOptions(), textOptions);
 
             // Apply Banner
             context.DrawBanner(settings)
@@ -116,7 +117,14 @@ namespace Mobile.BuildTools.Drawing
         {
             var imgSize = context.GetCurrentSize();
 
-            var options = new GraphicsOptions(true, PixelColorBlendingMode.Normal, PixelAlphaCompositionMode.SrcOver, 1);
+            var options = new GraphicsOptions
+            {
+                AlphaCompositionMode = PixelAlphaCompositionMode.SrcOver,
+                Antialias = true,
+                ColorBlendingMode = PixelColorBlendingMode.Normal,
+                AntialiasSubpixelDepth = 1
+            };
+            var shapeOptions = new ShapeGraphicsOptions(options, new ShapeOptions());
 
             var points = new[] { new PointF(0, imgSize.Height), new PointF(imgSize.Width, imgSize.Height) };
 
@@ -141,7 +149,7 @@ namespace Mobile.BuildTools.Drawing
             var pen = new Pen(brush, fullThickness);
             var polygon = new Polygon(new LinearLineSegment(points));
 
-            return context.Draw(options, pen, polygon);
+            return context.Draw(shapeOptions, pen, polygon);
         }
     }
 }

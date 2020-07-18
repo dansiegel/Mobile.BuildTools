@@ -35,7 +35,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Drawing
             new object[] { "Red", Color.Red },
             new object[] { "Blue", Color.Blue },
             new object[] { "OrangeRed", Color.OrangeRed },
-            new object[] { "#FF88DD", Color.FromHex("#FF88DD") },
+            new object[] { "#FF88DD", Color.ParseHex("#FF88DD") },
         };
     }
 }
