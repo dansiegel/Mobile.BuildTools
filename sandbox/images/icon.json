@@ -1,0 +1,16 @@
+{
+  "$schema": "https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "name": "AppIcon",
+  "background": "#ffffff",
+  "watermark": {
+    "text": "Test"
+  },
+  "additionalOutputs": [
+    {
+      "name": "logo"
+    }
+  ],
+  "android": {
+    "ignore": true
+  }
+}

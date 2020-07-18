@@ -1,0 +1,29 @@
+{
+  "$schema": "https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "android": {
+    "resourceType": "Mipmap",
+    "name": "icon",
+    "scale": 0.1875,
+    "watermark": {
+      "text": "Test"
+    },
+    "additionalOutputs": [
+      {
+        "name": "launcher_foreground",
+        "resourceType": "Mipmap",
+        "scale": 0.28125,
+        "padFactor": 1.5,
+        "watermark": {
+          "text": "Test"
+        }
+      },
+      {
+        "name": "logo",
+        "resourceType": "Drawable"
+      }
+    ]
+  },
+  "iOS": {
+    "ignore": true
+  }
+}

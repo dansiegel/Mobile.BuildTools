@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:essentials="clr-namespace:Xamarin.Essentials;assembly=Xamarin.Essentials"
+             xmlns:helpers="clr-namespace:FormsDemo.Helpers"
+             mc:Ignorable="d"
+             x:Class="FormsDemo.Views.ItemsPage"
+             Title="{Binding Title}"
+             x:Name="BrowseItemsPage">
+
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Add" Clicked="AddItem_Clicked" />
+  </ContentPage.ToolbarItems>
+
+  <Grid RowDefinitions="auto,*,auto">
+    <Image Source="{x:Static helpers:Secrets.SampleUri}" />
+    <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}"
+                 Grid.Row="1"
+                 Command="{Binding LoadItemsCommand}">
+      <CollectionView x:Name="ItemsCollectionView"
+                      ItemsSource="{Binding Items}">
+        <CollectionView.ItemTemplate>
+          <DataTemplate>
+            <StackLayout Padding="10">
+              <Label Text="{Binding Text}" 
+                     d:Text="{Binding .}"
+                     LineBreakMode="NoWrap" 
+                     Style="{DynamicResource ListItemTextStyle}" 
+                     FontSize="16" />
+              <Label Text="{Binding Description}" 
+                     d:Text="Item descripton"
+                     LineBreakMode="NoWrap"
+                     Style="{DynamicResource ListItemDetailTextStyle}"
+                     FontSize="13" />
+              <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="OnItemSelected"></TapGestureRecognizer>
+              </StackLayout.GestureRecognizers>
+            </StackLayout>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+    </RefreshView>
+    <StackLayout HorizontalOptions="Center"
+               Margin="0,10,0,20"
+               Grid.Row="2">
+      <Label Text="{x:Static essentials:AppInfo.Name}" HorizontalTextAlignment="Center" />
+      <Label Text="{x:Static essentials:AppInfo.VersionString}" HorizontalTextAlignment="Center" />
+    </StackLayout>
+  </Grid>
+</ContentPage>

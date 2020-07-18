@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <MBTSharedAppConfigDir>$(MSBuildThisFileDirectory)</MBTSharedAppConfigDir>
+    <BuildToolsConfigFilePath>$(MSBuildThisFileDirectory)buildtools.json</BuildToolsConfigFilePath>
+  </PropertyGroup>
+
+  <Import Project="..\src\Mobile.BuildTools\Mobile.BuildTools.props" />
+
+  <PropertyGroup>
+    <_MobileBuildToolsBinaries>$(MSBuildThisFileDirectory)..\src\Mobile.BuildTools\bin\$(Configuration)\net472\</_MobileBuildToolsBinaries>
+    <_MobileBuildToolsParentBuildTasksDll>$(_MobileBuildToolsBinaries)Mobile.BuildTools.dll</_MobileBuildToolsParentBuildTasksDll>
+  </PropertyGroup>
+</Project>

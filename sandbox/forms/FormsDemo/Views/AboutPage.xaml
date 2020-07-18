@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:essentials="clr-namespace:Xamarin.Essentials;assembly=Xamarin.Essentials"
+             mc:Ignorable="d"
+             x:Class="FormsDemo.Views.AboutPage"
+             xmlns:vm="clr-namespace:FormsDemo.ViewModels"
+             Title="{Binding Title}">
+
+  <ContentPage.BindingContext>
+    <vm:AboutViewModel />
+  </ContentPage.BindingContext>
+
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <Color x:Key="Primary">#2196F3</Color>
+      <Color x:Key="Accent">#96d1ff</Color>
+      <Color x:Key="LightTextColor">#999999</Color>
+    </ResourceDictionary>
+  </ContentPage.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <BoxView StyleClass="accent" />
+    <Image Source="banner.png" VerticalOptions="Center" HeightRequest="64" Margin="0,40" />
+    <ScrollView Grid.Row="1">
+      <StackLayout Orientation="Vertical" Padding="16,40" Spacing="10">
+        <Label FontSize="22">
+          <Label.FormattedText>
+            <FormattedString>
+              <FormattedString.Spans>
+                <Span Text="{x:Static essentials:AppInfo.Name}"
+                      FontAttributes="Bold"
+                      FontSize="22" />
+                <Span Text=" " />
+                <Span Text="{x:Static essentials:AppInfo.VersionString}"
+                      ForegroundColor="{StaticResource LightTextColor}" />
+              </FormattedString.Spans>
+            </FormattedString>
+          </Label.FormattedText>
+        </Label>
+        <Label>
+          <Label.FormattedText>
+            <FormattedString>
+              <FormattedString.Spans>
+                <Span Text="The " />
+                <Span Text="Mobile.BuildTools" FontAttributes="Bold" />
+                <Span Text=" is an easy to use NuGet package that adds new MSBuild targets to your build pipeline. In essenence it teaches MSBuild some new tricks to help make your DevOps easier and help you follow better practices while developing your application." />
+              </FormattedString.Spans>
+            </FormattedString>
+          </Label.FormattedText>
+        </Label>
+        <Label>
+          <Label.FormattedText>
+            <FormattedString>
+              <FormattedString.Spans>
+                <Span Text="The bulk of support is around Xamarin.Android and Xamarin.iOS and it will work regardless of whether you are using the " />
+                <Span Text="native tooling, Xamarin.Forms, or Uno"
+                      FontAttributes="Bold" />
+                <Span Text=" to create your UI." />
+              </FormattedString.Spans>
+            </FormattedString>
+          </Label.FormattedText>
+        </Label>
+        <Button Text="Learn more"
+                Command="{Binding OpenWebCommand}"
+                StyleClass="primaryButton"/>
+      </StackLayout>
+    </ScrollView>
+  </Grid>
+
+</ContentPage>

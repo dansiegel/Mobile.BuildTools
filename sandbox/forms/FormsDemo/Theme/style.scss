@@ -1,0 +1,24 @@
+@import "colors";
+
+.primaryButton {
+    background-color: $primary;
+    color: $textColor;
+    margin: 0,10,0,0;
+}
+
+navigationpage:any {
+    -xf-bar-background-color: $primaryDark;
+    -xf-bar-text-color: $textColor;
+}
+
+toolbaritem:any {
+    color: $textColor;
+}
+
+.accent {
+    background-color: $accent;
+}
+
+.lightText {
+    color: #999999
+}
