@@ -15,7 +15,7 @@ namespace Mobile.BuildTools.Tasks
         public string RootNamespace { get; set; }
 
         [Output]
-        public ITaskItem[] GeneratedCodeFiles => _generatedCodeFiles ?? new ITaskItem[0];
+        public ITaskItem[] GeneratedCodeFiles => _generatedCodeFiles ?? Array.Empty<ITaskItem>();
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {

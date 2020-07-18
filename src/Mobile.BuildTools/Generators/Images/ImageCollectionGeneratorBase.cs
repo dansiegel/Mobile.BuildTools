@@ -22,7 +22,7 @@ namespace Mobile.BuildTools.Generators.Images
         public IEnumerable<string> SearchFolders { get; set; }
 
         protected List<string> imageResourcePaths;
-        private List<string> imageConfigurationPaths = new List<string>();
+        private readonly List<string> imageConfigurationPaths = new List<string>();
         public IReadOnlyList<string> ImageInputFiles
         {
             get
