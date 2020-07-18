@@ -136,11 +136,28 @@
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" Exists('app.config') ">
+  <PropertyGroup>
+    <MBTSharedAppConfigDir Condition=" $(MBTSharedAppConfigDir) == '' ">$(SolutionDir)</MBTSharedAppConfigDir>
+    <_SolutionConfig>$([System.IO.Path]::Combine('$(MBTSharedAppConfigDir)', 'app.config'))</_SolutionConfig>
+    <_SolutionEnvironmentConfig>$([System.IO.Path]::Combine('$(MBTSharedAppConfigDir)', 'app.*.config'))</_SolutionEnvironmentConfig>
+    <_ProjectConfig>app.config</_ProjectConfig>
+    <_ProjectEnvironmentConfig>app.*.config</_ProjectEnvironmentConfig>
+    <_UseProjectAppConfig>false</_UseProjectAppConfig>
+    <_UseProjectAppConfig Condition=" Exists('$(_ProjectConfig)') ">true</_UseProjectAppConfig>
+    <_UseSolutionAppConfig>false</_UseSolutionAppConfig>
+    <_UseSolutionAppConfig Condition="'$(_UseProjectAppConfig)' == 'false'">Exists('$(_SolutionConfig)')</_UseSolutionAppConfig>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" $(_UseProjectAppConfig) == 'true' ">
     <None Remove="app.config" />
     <None Remove="app.*.config" />
-    <MobileBuildToolsConfig Include="app.config" Visible="true" IsRootConfig="true" />
-    <MobileBuildToolsConfig Include="app.*.config" DependentUpon="app.config" Visible="true" />
+    <MobileBuildToolsConfig Include="$(_ProjectConfig)"  Visible="Exists(%(FullPath))" IsRootConfig="true" />
+    <MobileBuildToolsConfig Include="$(_ProjectEnvironmentConfig)" DependentUpon="app.config" Visible="Exists(%(FullPath))" />
+  </ItemGroup>
+
+  <ItemGroup  Condition=" !$(TargetFramework.StartsWith('netstandard')) And $(_UseSolutionAppConfig) == 'true' ">
+    <MobileBuildToolsConfig Include="$(_SolutionConfig)" Visible="Exists(%(FullPath))" IsRootConfig="true" />
+    <MobileBuildToolsConfig Include="$(_SolutionEnvironmentConfig)" DependentUpon="app.config" Visible="Exists(%(FullPath))" />
   </ItemGroup>
 
 </Project>
