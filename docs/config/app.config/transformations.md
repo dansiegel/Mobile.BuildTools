@@ -15,7 +15,7 @@ A basic app config may look like:
 </configuration>
 ```
 
-A Trasnsformation config may look like:
+A Transformation config may look like:
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>

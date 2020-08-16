@@ -2,7 +2,7 @@
 
 #### Should every value in my Secrets be "Secret"?
 
-The Secrets Class is a great way to prevent security vulnerbilities created from checking into source control things like Client Id's, Consumer Secrets, or Connection Strings. But it really doesn't have to stop there. In fact the Secrets class is a great way of setting the configuration environment for your application at build. Should your build point to the Dev, Stage, or Production API? This is also a great way of being very intentional about it.
+The Secrets Class is a great way to prevent security vulnerabilities created from checking into source control things like Client Id's, Consumer Secrets, or Connection Strings. But it really doesn't have to stop there. In fact the Secrets class is a great way of setting the configuration environment for your application at build. Should your build point to the Dev, Stage, or Production API? This is also a great way of being very intentional about it.
 
 #### Does the Secrets class have to be in the Helpers namespace or named Secrets?
 
@@ -14,4 +14,4 @@ We try to be smart about what we will and will not do. There is an initializatio
 
 #### I installed the Mobile.BuildTools why can't I access the ConfigurationManager?
 
-We explicitly seperated the ConfigurationManager from the Mobile.BuildTools as we recognize that not everyone will want to use this feature. In order to get the build time transformations you will need to have the Mobile.BuildTools installed in your platform projects, however you will need the Mobile.BuildTools.Configuration package installed in any project where you want to use the ConfigurationManager.
+We explicitly separated the ConfigurationManager from the Mobile.BuildTools as we recognize that not everyone will want to use this feature. In order to get the build time transformations you will need to have the Mobile.BuildTools installed in your platform projects, however you will need the Mobile.BuildTools.Configuration package installed in any project where you want to use the ConfigurationManager.
