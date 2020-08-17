@@ -8,4 +8,4 @@ While the Mobile.BuildTools does not add any external dependencies to your proje
 | SixLabors.ImageSharp | Apache | [SixLabors/ImageSharp/](https://github.com/SixLabors/ImageSharp/) |
 
 !!! note Note
-    Microsoft.Web.Xdt is the only reference added to projects, if using the Mobile.BuildTools.Configuration pacakge. There is never any bloat added by the core Mobile.BuildTools pacakge to your applications. Despite being from the aspnet team this package does not bring in any additional references.
+    Microsoft.Web.Xdt is the only reference added to projects, if using the Mobile.BuildTools.Configuration package. There is never any bloat added by the core Mobile.BuildTools package to your applications. Despite being from the aspnet team this package does not bring in any additional references.

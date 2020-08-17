@@ -1,6 +1,6 @@
 # Build Versioning
 
-Build versioning can be extremely important for analytics and dianostics. What's more is that Mobile development requires unique builds. No longer can you be lazy and ship apps for 15 years at Version 1.0.0.0. Ok technically all of your binaries in the application all will show that version, but the app itself must have a unique build number to allow you to upload to the App Store and Google Play.
+Build versioning can be extremely important for analytics and diagnostics. What's more is that Mobile development requires unique builds. No longer can you be lazy and ship apps for 15 years at Version 1.0.0.0. Ok technically all of your binaries in the application all will show that version, but the app itself must have a unique build number to allow you to upload to the App Store and Google Play.
 
 ```json
 {

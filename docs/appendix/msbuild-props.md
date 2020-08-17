@@ -1,6 +1,6 @@
 # MSBuild Properties
 
-The Mobile.BuildTools additionally provides a number of MSBuild Properties to futher assist advanced developers in creating advanced build pipelines.
+The Mobile.BuildTools additionally provides a number of MSBuild Properties to further assist advanced developers in creating advanced build pipelines.
 
 | PropertyName | Description |
 |:------------:|:-----------:|

@@ -1,6 +1,6 @@
 # Getting Started
 
-The Mobile.BuildTools is an easy to use NuGet package that adds new MSBuild targets to your build pipeline. In essenence it teaches MSBuild some new tricks to help make your DevOps easier and help you follow better practices while developing your application. The bulk of support is around Xamarin.Android and Xamarin.iOS and it will work regardless of whether you are using the native tooling, Xamarin.Forms, or Uno to create your UI.
+The Mobile.BuildTools is an easy to use NuGet package that adds new MSBuild targets to your build pipeline. In essence it teaches MSBuild some new tricks to help make your DevOps easier and help you follow better practices while developing your application. The bulk of support is around Xamarin.Android and Xamarin.iOS and it will work regardless of whether you are using the native tooling, Xamarin.Forms, or Uno to create your UI.
 
 The Mobile.BuildTools are a collection of MSBuild Tasks that help make MSBuild smarter in handling the build process for CI/CD with Mobile Applications. The library was born from a desire to share build processes from one app to the next without having to copy and paste a bunch of build scripts each of which could easily end up out of date. Because the Mobile.BuildTools simply provides MSBuild Tasks, this adds nothing to the size of your application and if being used on a project that will be packed and shared, you can set the PackageReference's PrivateAssets to all.
 
