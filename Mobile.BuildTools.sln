@@ -1,10 +1,9 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools", "src\Mobile.BuildTools\Mobile.BuildTools.csproj", "{ECB330A6-90E5-4EF2-8889-86DE2AC0723E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.CLI", "src\Mobile.BuildTools.CLI\Mobile.BuildTools.CLI.csproj", "{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.Configuration", "src\Mobile.BuildTools.Configuration\Mobile.BuildTools.Configuration.csproj", "{25063D4D-2ECC-4B75-98D0-F7B6BAD9D1F7}"
 EndProject
@@ -26,9 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{677B710E-6C18-47C0-93B2-A3899370BF5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BuildTools.SchemaGenerator", "tools\Mobile.BuildTools.SchemaGenerator\Mobile.BuildTools.SchemaGenerator.csproj", "{B102C625-C640-4E90-B634-CC730140CB7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.SchemaGenerator", "tools\Mobile.BuildTools.SchemaGenerator\Mobile.BuildTools.SchemaGenerator.csproj", "{B102C625-C640-4E90-B634-CC730140CB7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BuildTools.Reference", "src\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj", "{20FB88AB-5FE0-41DC-97B7-4C8772A0D059}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.Reference", "src\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj", "{20FB88AB-5FE0-41DC-97B7-4C8772A0D059}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,18 +51,6 @@ Global
 		{ECB330A6-90E5-4EF2-8889-86DE2AC0723E}.Release|x64.Build.0 = Release|Any CPU
 		{ECB330A6-90E5-4EF2-8889-86DE2AC0723E}.Release|x86.ActiveCfg = Release|Any CPU
 		{ECB330A6-90E5-4EF2-8889-86DE2AC0723E}.Release|x86.Build.0 = Release|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Debug|x64.Build.0 = Debug|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Debug|x86.Build.0 = Debug|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Release|x64.ActiveCfg = Release|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Release|x64.Build.0 = Release|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Release|x86.ActiveCfg = Release|Any CPU
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF}.Release|x86.Build.0 = Release|Any CPU
 		{25063D4D-2ECC-4B75-98D0-F7B6BAD9D1F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{25063D4D-2ECC-4B75-98D0-F7B6BAD9D1F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25063D4D-2ECC-4B75-98D0-F7B6BAD9D1F7}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -130,7 +117,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ECB330A6-90E5-4EF2-8889-86DE2AC0723E} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
-		{E8B73A93-DB45-42B7-8902-0E0AE945D7BF} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
 		{25063D4D-2ECC-4B75-98D0-F7B6BAD9D1F7} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
 		{22808734-C8D3-431E-AA9A-92432DE4EB6A} = {2510D213-21AF-4B25-888D-E63163356A4F}
 		{82EF42A8-49A3-4086-A045-5E2C2F094C04} = {2510D213-21AF-4B25-888D-E63163356A4F}

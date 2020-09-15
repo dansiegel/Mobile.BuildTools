@@ -39,8 +39,8 @@
       <!-- <_NativeRuntime Condition="$([System.Environment]::Is64BitProcess)">win-x64</_NativeRuntime> -->
       <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
       <_NativeRuntimeFile Condition=" '$(OS)' != 'Windows_NT'">libsass.dylib</_NativeRuntimeFile>
-      <ScssRuntimeInput>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'runtimes', $(_NativeRuntime), $(_NativeRuntimeFile)))</ScssRuntimeInput>
-      <ScssRuntimeOutput>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), $(_NativeRuntimeFile)))</ScssRuntimeOutput>
+      <ScssRuntimeInput Condition=" '$(ScssRuntimeInput)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'runtimes', $(_NativeRuntime), $(_NativeRuntimeFile)))</ScssRuntimeInput>
+      <ScssRuntimeOutput Condition=" '$(ScssRuntimeOutput)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), $(_NativeRuntimeFile)))</ScssRuntimeOutput>
     </PropertyGroup>
 
     <Message Text="Looking for ScssRuntime in $(ScssRuntimeInput)" />

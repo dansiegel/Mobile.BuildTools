@@ -1,0 +1,67 @@
+{
+  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "appConfig": {
+    "strategy": "TransformOnly",
+    "disable": false
+  },
+  "artifactCopy": {
+    "disable": false
+  },
+  "automaticVersioning": {
+    "behavior": "PreferBuildNumber",
+    "environment": "All",
+    "versionOffset": 0,
+    "disable": false
+  },
+  "css": {
+    "minify": false,
+    "bundleScss": false,
+    "disable": false
+  },
+  "images": {
+    "directories": [
+      "images"
+    ],
+    "conditionalDirectories": {
+      "ios": [
+        "images\\ios"
+      ],
+      "android": [
+        "images\\android"
+      ]
+    },
+    "watermarkOpacity": null,
+    "disable": false
+  },
+  "manifests": {
+    "token": "$",
+    "variablePrefix": "Manifest_",
+    "missingTokensAsErrors": false,
+    "disable": false
+  },
+  "releaseNotes": {
+    "maxDays": 7,
+    "maxCommit": 10,
+    "characterLimit": 250,
+    "filename": "ReleaseNotes.txt",
+    "createInRoot": true,
+    "disable": false
+  },
+  "projectSecrets": {
+    "BuildToolsSample": {
+      "disable": false,
+      "delimiter": ";",
+      "prefix": "BuildTools_",
+      "className": "Secrets",
+      "namespace": "Helpers",
+      "properties": [
+        {
+          "name": "Foo",
+          "type": "String",
+          "isArray": false
+        }
+      ]
+    }
+  },
+  "debug": true
+}
