@@ -38,6 +38,14 @@ variables:
   value: 'Any CPU'
 - name: TargetSolution
   value: 'Mobile.BuildTools.sln'
+- name: SampleString
+  value: 'Sample String'
+- name: SampleInt
+  value: '1'
+- name: SampleDouble
+  value: '2.1'
+- name: SampleBool
+  value: 'true'
 - group: 'Code Signing'
 - group: 'AppSigning'
 - group: 'GitHubRelease'

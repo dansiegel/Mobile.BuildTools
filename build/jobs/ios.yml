@@ -48,11 +48,6 @@ jobs:
     inputs:
       solutionFile: '${{ parameters.appRootDirectory }}/${{ parameters.csprojName }}'
       configuration: ${{ parameters.buildConfiguration }}
-    env:
-      Secret_SampleString: 'Sample String'
-      Secret_SampleInt: '1'
-      Secret_SampleDouble: '2.1'
-      Secret_SampleBool: 'true'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: iOS'

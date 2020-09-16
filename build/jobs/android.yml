@@ -40,11 +40,6 @@ jobs:
       projectFile: ${{ parameters.appRootDirectory }}/${{ parameters.csprojName }}
       outputDirectory: '$(Build.BinariesDirectory)/${{ parameters.buildConfiguration }}'
       configuration: '${{ parameters.buildConfiguration }}'
-    env:
-      Secret_SampleString: 'Sample String'
-      Secret_SampleInt: '1'
-      Secret_SampleDouble: '2.1'
-      Secret_SampleBool: 'true'
 
   - task: AndroidSigning@3
     displayName: 'Signing and aligning APK file(s) $(Build.BinariesDirectory)/${{ parameters.buildConfiguration }}/*.apk'

@@ -46,7 +46,7 @@ jobs:
     condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
     enabled: false
 
-  - task: PublishPipelineArtifact@0
+  - task: PublishPipelineArtifact@1
     displayName: 'Publish Artifacts'
     inputs:
       artifactName: Artifacts
