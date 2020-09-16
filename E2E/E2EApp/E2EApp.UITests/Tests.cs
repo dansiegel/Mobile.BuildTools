@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -51,12 +52,8 @@ namespace E2EApp.UITests
 
         private string GetBuildNumber()
         {
-            if(File.Exists("buildnumber.txt"))
-            {
-                return File.ReadAllText("buildnumber.txt");
-            }
-
-            return string.Empty;
+            var assembly = GetType().Assembly;
+            return FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
         }
     }
 }
