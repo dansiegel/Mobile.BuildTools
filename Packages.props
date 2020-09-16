@@ -34,4 +34,8 @@
   <ItemGroup>
     <PackageReference Update="Newtonsoft.Json.Schema" Version="3.0.13" />
   </ItemGroup>
+
+  <ItemGroup>
+    <GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.2.31" />
+  </ItemGroup>
 </Project>

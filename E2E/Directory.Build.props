@@ -1,0 +1,16 @@
+<Project>
+
+  <Import Project="../Directory.Build.props" />
+
+  <PropertyGroup>
+    <GeneratedLocalPackage>$([System.IO.Directory]::GetFiles('$(LocalArtifactStagingDirectory)', 'Mobile.BuildTools.2.*.nupkg')[0])</GeneratedLocalPackage>
+    <GenerateLocalPackageFileName>$([System.IO.Path]::GetFileNameWithoutExtension('$(GeneratedLocalPackage)'))</GenerateLocalPackageFileName>
+    <GeneratedPackageVersion>$(GenerateLocalPackageFileName.Replace('Mobile.BuildTools.', ''))</GeneratedPackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mobile.BuildTools" VersionOverride="$(GeneratedPackageVersion)" PrivateAssets="all" />
+    <PackageReference Include="Mobile.BuildTools.Configuration" VersionOverride="$(GeneratedPackageVersion)" />
+  </ItemGroup>
+
+</Project>
