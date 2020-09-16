@@ -1,0 +1,5 @@
+{
+  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "name": "banner",
+  "scale": 1.0
+}
