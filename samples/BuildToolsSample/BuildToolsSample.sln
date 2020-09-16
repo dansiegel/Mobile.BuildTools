@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildToolsSample.UWP", "src\platform\BuildToolsSample.UWP\BuildToolsSample.UWP.csproj", "{A34F7AAD-DE91-4A1A-B5DE-1B1F5769E483}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildToolsSample.Android", "src\platformBuildToolsSample.Android\BuildToolsSample.Android.csproj", "{4E987D86-4E13-4BBC-9C3A-69006801D049}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildToolsSample.Android", "src\platform\BuildToolsSample.Android\BuildToolsSample.Android.csproj", "{4E987D86-4E13-4BBC-9C3A-69006801D049}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildToolsSample.iOS", "src\platform\BuildToolsSample.iOS\BuildToolsSample.iOS.csproj", "{BEE0A49E-FC11-40CD-BA64-F426B1B23A0E}"
 EndProject

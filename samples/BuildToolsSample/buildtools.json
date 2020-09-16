@@ -49,16 +49,12 @@
   },
   "projectSecrets": {
     "BuildToolsSample": {
-      "disable": false,
-      "delimiter": ";",
-      "prefix": "BuildTools_",
-      "className": "Secrets",
+      "className": "Settings",
       "namespace": "Helpers",
       "properties": [
         {
           "name": "Foo",
-          "type": "String",
-          "isArray": false
+          "type": "String"
         }
       ]
     }

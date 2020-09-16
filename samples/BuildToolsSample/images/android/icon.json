@@ -1,0 +1,22 @@
+{
+  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "name": "icon",
+  "android": {
+    "resourceType": "Mipmap",
+    "name": "icon",
+    "scale": 0.1875,
+    "additionalOutputs": [
+      {
+        "name": "launcher_foreground",
+        "resourceType": "Mipmap",
+        "scale": 0.28125,
+        "padFactor": 1.5
+      },
+      {
+        "name": "notifications",
+        "resourceType": "Drawable",
+        "scale": 0.1875
+      }
+    ]
+  }
+}

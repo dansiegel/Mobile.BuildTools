@@ -1,4 +1,5 @@
 ﻿using System;
+using BuildToolsSample.Views;
 using Prism.Ioc;
 using Xamarin.Forms;
 
@@ -14,7 +15,7 @@ namespace BuildToolsSample
         {
             InitializeComponent();
 
-            var result = await NavigationService.NavigateAsync("TabbedPage?createTab=TabA&createTab=TabB");
+            var result = await NavigationService.NavigateAsync("MainPage");
 
             if(!result.Success)
             {
@@ -26,6 +27,7 @@ namespace BuildToolsSample
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<TabbedPage>();
+            containerRegistry.RegisterForNavigation<MainPage>();
         }
     }
 }
