@@ -189,7 +189,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var resourceConfig = resource.GetConfigurations(Platform).First();
             if(Platform == Platform.Android)
             {
-                Assert.Equal(file == "platform" ? AndroidResource.Mipmap : AndroidResource.Drawable, resourceConfig.ResourceType);
+                Assert.Equal(file == "platform" ? PlatformResourceType.Mipmap : PlatformResourceType.Drawable, resourceConfig.ResourceType);
             }
             var actualOutputs = generator.GetOutputImages(resourceConfig);
 

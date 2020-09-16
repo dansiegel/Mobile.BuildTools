@@ -7,14 +7,10 @@
     <PackageId>$(AssemblyName)</PackageId>
     <Description>Additional MSBuild targets and properties for .NET projects. Especially enhances Xamarin targets. Enables better development practices with CI/CD pipelines. See the Wiki on GitHub for more information in how to Get Started or customize your experience.</Description>
     <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
-    <PackageReleaseNotes>https://github.com/dansiegel/Mobile.BuildTools/</PackageReleaseNotes>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <PrimaryOutputKind>build</PrimaryOutputKind>
     <IsPackable>true</IsPackable>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/dansiegel/Mobile.BuildTools.git</RepositoryUrl>
-    <NeutralLanguage>en</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,11 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildNuGetVersion)" Pack="false" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildNuGetVersion)" Pack="false" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
-    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.5-dev.10" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Web.Xdt" Version="3.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build" Pack="false" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
+    <PackageReference Include="Newtonsoft.Json" PrivateAssets="all" />
+    <PackageReference Include="NuGet.Build.Packaging" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Web.Xdt" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

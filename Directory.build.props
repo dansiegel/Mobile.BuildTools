@@ -5,8 +5,8 @@
     <Copyright>© Dan Siegel</Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/dansiegel/Mobile.BuildTools/master/logo/icon.png</PackageIconUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <DevelopmentDependency>true</DevelopmentDependency>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>https://github.com/dansiegel/Mobile.BuildTools/releases</PackageReleaseNotes>
     <PackageProjectUrl>https://mobilebuildtools.com</PackageProjectUrl>
     <LocalArtifactStagingDirectory>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Artifacts'))</LocalArtifactStagingDirectory>
     <PackageOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$([System.IO.Path]::Combine('$(BUILD_ARTIFACTSTAGINGDIRECTORY)', 'Artifacts'))</PackageOutputPath>
@@ -16,11 +16,14 @@
     <VersionSuffix>ci</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_PREVIEW)' == 'true' ">pre</VersionSuffix>
     <VersionSuffix Condition=" '$(IS_RELEASE)' == 'true' "></VersionSuffix>
-    <LangVersion Condition=" '$(OS)' == 'Windows_NT' ">8.0</LangVersion>
     <IsPackable>false</IsPackable>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <IncludeSource>True</IncludeSource>
+    <LangVersion>latest</LangVersion>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/dansiegel/Mobile.BuildTools.git</RepositoryUrl>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <!-- CI Helper -->
@@ -28,10 +31,6 @@
     <CI>false</CI>
     <CI Condition=" '$(BUILD_BUILDNUMBER)' != '' ">true</CI>
     <ContinuousIntegrationBuild>$(CI)</ContinuousIntegrationBuild>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <MicrosoftBuildNuGetVersion>16.0.461</MicrosoftBuildNuGetVersion>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsPackable)">

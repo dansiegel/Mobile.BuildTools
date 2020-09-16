@@ -1,6 +1,5 @@
 <Project>
 
-  <Import Project="..\Dependencies.props" />
   <Import Project="..\Directory.build.props" />
 
   <PropertyGroup>
@@ -9,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mobile.BuildTools" Version="$(MobileBuildToolsVersion)" PrivateAssets="all" />
-    <PackageReference Include="Mobile.BuildTools.Configuration" Version="$(MobileBuildToolsVersion)" />
+    <PackageReference Include="Mobile.BuildTools" VersionOverride="$(MobileBuildToolsVersion)" PrivateAssets="all" />
+    <PackageReference Include="Mobile.BuildTools.Configuration" VersionOverride="$(MobileBuildToolsVersion)" />
   </ItemGroup>
 
 </Project>
