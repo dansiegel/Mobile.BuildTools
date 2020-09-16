@@ -1,5 +1,12 @@
 ﻿namespace Mobile.BuildTools.Models.AppIcons
 {
+    public interface IUpdatableImageResource
+    {
+#if !SCHEMAGENERATOR
+        PlatformResourceType ResourceType { get; set; }
+#endif
+    }
+
     public interface IImageResource
     {
         string SourceFile { get; }
@@ -19,7 +26,7 @@
         int? Width { get; }
     }
 
-    internal sealed class ImageResource : IImageResource
+    internal sealed class ImageResource : IImageResource, IUpdatableImageResource
     {
         public string SourceFile { get; set; }
         public string BackgroundColor { get; set; }

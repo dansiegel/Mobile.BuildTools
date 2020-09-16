@@ -77,6 +77,16 @@ namespace Mobile.BuildTools.Models.AppIcons
                 }
             }
 
+#if !SCHEMAGENERATOR
+            if (platform == Platform.Android)
+            {
+                foreach (var config in configs.Where(x => x.ResourceType != PlatformResourceType.Mipmap && x.ResourceType != PlatformResourceType.Drawable).Cast<IUpdatableImageResource>())
+                {
+                    config.ResourceType = PlatformResourceType.Drawable;
+                }
+            }
+#endif
+
             return configs;
         }
 
