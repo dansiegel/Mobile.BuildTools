@@ -35,7 +35,8 @@ namespace Mobile.BuildTools.Tasks
 
             GeneratedImages = Array.Empty<ITaskItem>();
             var generator = CreateGenerator(config.Platform, config);
-            if(generator is null)
+            generator.SearchFolders = GetSearchPaths(config);
+            if (generator is null)
             {
                 Log.LogWarning($"Cannot collect image assets for {TargetFrameworkIdentifier}, target framework is not supported.");
                 return;
@@ -51,16 +52,13 @@ namespace Mobile.BuildTools.Tasks
             switch(platform)
             {
                 case Platform.Android:
-                    return new AndroidImageCollectionGenerator(this)
-                    {
-                        SearchFolders = GetSearchPaths(config)
-                    };
+                    return new AndroidImageCollectionGenerator(this);
                 case Platform.iOS:
                 case Platform.macOS:
-                    return new AppleImageCollectionGenerator(this)
-                    {
-                        SearchFolders = GetSearchPaths(config)
-                    };
+                case Platform.TVOS:
+                    return new AppleImageCollectionGenerator(this);
+                case Platform.UWP:
+                    return new UwpImageCollectionGenerator(this);
                 default: return null;
             }
         }

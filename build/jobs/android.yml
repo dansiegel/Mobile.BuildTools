@@ -25,6 +25,12 @@ jobs:
       sourcePath: ${{ parameters.appRootDirectory }}/Properties/AndroidManifest.xml
       versionName: '2.0.$(Build.BuildId)'
 
+  - bash: |
+       dotnet tool install --global boots
+       dotnet boots --stable Mono
+       dotnet boots --stable XamarinAndroid
+    displayName: 'Ensure latest stable Mono & Xamarin.Android SDKs'
+
   - template: ../steps/local-nuget-restore.yml
     parameters:
       version: ${{ parameters.nugetVersion }}

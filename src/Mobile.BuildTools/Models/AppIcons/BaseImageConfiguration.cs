@@ -33,7 +33,7 @@ namespace Mobile.BuildTools.Models.AppIcons
 
         [JsonProperty("resourceType", DefaultValueHandling = DefaultValueHandling.Ignore)]
 #if SCHEMAGENERATOR
-        [System.ComponentModel.DataAnnotations.EnumDataType(typeof(AndroidResource))]
+        [System.ComponentModel.DataAnnotations.EnumDataType(typeof(PlatformResourceType))]
         public string ResourceType { get; set; }
 #else
         public PlatformResourceType ResourceType { get; set; }
