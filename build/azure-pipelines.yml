@@ -32,8 +32,6 @@ variables:
   value: windows-latest
 - name: MacAgent
   value: macOS-latest
-- name: NuGetVersion
-  value: '5.4.0'
 - name: BuildConfiguration
   value: 'Release'
 - name: BuildPlatform
@@ -51,7 +49,6 @@ stages:
   - template: jobs/build-library.yml
     parameters:
       solution: Mobile.BuildTools.sln
-      nugetVersion: $(NuGetVersion)
 
 - stage: Test
   displayName: Run Tests
@@ -60,7 +57,6 @@ stages:
   - template: jobs/integration-tests.yml
     parameters:
       solution: E2E/E2E.sln
-      nugetVersion: $(NuGetVersion)
       vmImage: $(WindowsAgent)
       jobName: IntegrationTestsWin
       displayName: Integration Tests (Windows)
@@ -68,7 +64,6 @@ stages:
   - template: jobs/integration-tests.yml
     parameters:
       solution: E2E/E2E.sln
-      nugetVersion: $(NuGetVersion)
       vmImage: $(MacAgent)
       jobName: IntegrationTestsMac
       displayName: Integration Tests (Mac)
@@ -79,7 +74,6 @@ stages:
   #     baseSolutionDirectory: E2E/E2EApp
   #     appRootDirectory: E2E/E2EApp/E2EApp.Android
   #     csprojName: E2EApp.Android.csproj
-  #     nugetVersion: $(NuGetVersion)
 
   # - template: jobs/ios.yml
   #   parameters:
@@ -87,7 +81,6 @@ stages:
   #     baseSolutionDirectory: E2E/E2EApp
   #     appRootDirectory: E2E/E2EApp/E2EApp.iOS
   #     csprojName: E2EApp.iOS.csproj
-  #     nugetVersion: $(NuGetVersion)
 
 - stage: Release
   displayName: Deploy NuGet Artifacts

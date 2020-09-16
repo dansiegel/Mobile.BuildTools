@@ -1,6 +1,5 @@
 parameters:
   solution: '**/*.sln'
-  nugetVersion: ''
   vmImage: ''
   jobName: ''
 
@@ -16,7 +15,6 @@ jobs:
 
   - template: ../steps/local-nuget-restore.yml
     parameters:
-      version: ${{ parameters.nugetVersion }}
       workingDirectory: E2E
 
   - task: MSBuild@1

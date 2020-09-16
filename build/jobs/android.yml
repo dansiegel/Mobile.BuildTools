@@ -4,7 +4,6 @@ parameters:
   appRootDirectory: ''
   csprojName: ''
   buildConfiguration: 'Debug'
-  nugetVersion: ''
 
 jobs:
 - job: AndroidBuild
@@ -33,7 +32,6 @@ jobs:
 
   - template: ../steps/local-nuget-restore.yml
     parameters:
-      version: ${{ parameters.nugetVersion }}
       workingDirectory: ${{ parameters.baseSolutionDirectory }}
 
   - task: XamarinAndroid@1

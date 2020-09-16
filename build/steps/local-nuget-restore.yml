@@ -1,12 +1,11 @@
 parameters:
   workingDirectory: ''
-  version: '5.3.1'
 
 steps:
-- task: NuGetToolInstaller@0
-  displayName: Use NuGet ${{ parameters.version }}
+- task: NuGetToolInstaller@1
+  displayName: Use Latest NuGet
   inputs:
-    versionSpec: ${{ parameters.version }}
+    checkLatest: true
 
 - task: DownloadPipelineArtifact@1
   inputs:
