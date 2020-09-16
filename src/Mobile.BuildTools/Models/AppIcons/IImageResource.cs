@@ -12,7 +12,7 @@
 #if SCHEMAGENERATOR
         string ResourceType { get; }
 #else
-        AndroidResource ResourceType { get; }
+        PlatformResourceType ResourceType { get; }
 #endif
         double Scale { get; }
         WatermarkConfiguration Watermark { get; }
@@ -31,7 +31,7 @@
 #if SCHEMAGENERATOR
         public string ResourceType { get; set; }
 #else
-        public AndroidResource ResourceType { get; set; }
+        public PlatformResourceType ResourceType { get; set; }
 #endif
         public double Scale { get; set; }
         public WatermarkConfiguration Watermark { get; set; }

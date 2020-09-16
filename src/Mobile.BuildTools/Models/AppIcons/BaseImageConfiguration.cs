@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models.AppIcons
 {
@@ -15,7 +13,6 @@ namespace Mobile.BuildTools.Models.AppIcons
         [JsonProperty("scale", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public double Scale { get; set; }
 
-        [Obsolete]
         [JsonProperty("backgroundColor", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string BackgroundColor { get; set; }
 
@@ -39,8 +36,7 @@ namespace Mobile.BuildTools.Models.AppIcons
         [System.ComponentModel.DataAnnotations.EnumDataType(typeof(AndroidResource))]
         public string ResourceType { get; set; }
 #else
-        [DefaultValue(AndroidResource.Drawable)]
-        public AndroidResource ResourceType { get; set; }
+        public PlatformResourceType ResourceType { get; set; }
 #endif
         [JsonIgnore]
         public string SourceFile { get; set; }
