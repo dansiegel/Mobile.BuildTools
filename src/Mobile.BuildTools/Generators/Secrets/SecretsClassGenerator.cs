@@ -35,7 +35,7 @@ namespace Mobile.BuildTools.Generators.Secrets
 // ------------------------------------------------------------------------------
 ";
 
-        private const string SafePlaceholder = "*****";
+        //private const string SafePlaceholder = "*****";
 
         private const string TabSpace = "    ";
 
@@ -63,7 +63,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             var replacement = string.Empty;
             var safeReplacement = string.Empty;
             var secretsConfig = Build.GetSecretsConfig();
-            bool saveConfig = secretsConfig is null;
+            var saveConfig = secretsConfig is null;
             if(saveConfig)
             {
                 secretsConfig = new SecretsConfig()
@@ -195,7 +195,7 @@ namespace Mobile.BuildTools.Generators.Secrets
         {
             var value = secret.Value.ToString();
             var valueArray = Regex.Split(value, $"(?<!\\\\){config.Delimiter}").Select(x => x.Replace($"\\{config.Delimiter}", config.Delimiter));
-            bool isArray = false;
+            var isArray = false;
             if (valueArray.Count() > 1)
             {
                 value = valueArray.FirstOrDefault();

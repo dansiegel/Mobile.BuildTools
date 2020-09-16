@@ -84,7 +84,7 @@
         "resourceType": {
           "type": [ "string", "null" ],
           "enum": [ "Default", "Drawable", "Mipmap", "AllSquareTiles", "SquareTile", "SmallTile", "WideTile", "SplashScreen" ],
-          "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this may be AllSquareTiles, WideTile, or SplashScreen depending on the resource size. If you specify an explicit SmallTile resource only the other square tile resources will be generated."
+          "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this will by default generate a standard image asset, or you can specify other app resource types."
         },
         "watermark": {
           "$ref": "#/definitions/WatermarkConfiguration"
@@ -134,7 +134,7 @@
         "resourceType": {
           "type": [ "string", "null" ],
           "enum": [ "Default", "Drawable", "Mipmap", "AllSquareTiles", "SquareTile", "SmallTile", "WideTile", "SplashScreen" ],
-          "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this may be AllSquareTiles, WideTile, or SplashScreen depending on the resource size. If you specify an explicit SmallTile resource only the other square tile resources will be generated."
+          "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this will by default generate a standard image asset, or you can specify other app resource types."
         },
         "watermark": {
           "$ref": "#/definitions/WatermarkConfiguration",
@@ -213,7 +213,7 @@
     "resourceType": {
       "type": [ "string", "null" ],
       "enum": [ "Default", "Drawable", "Mipmap", "AllSquareTiles", "SquareTile", "SmallTile", "WideTile", "SplashScreen" ],
-      "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this may be AllSquareTiles, WideTile, or SplashScreen depending on the resource size. If you specify an explicit SmallTile resource only the other square tile resources will be generated."
+      "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this will by default generate a standard image asset, or you can specify other app resource types."
     },
     "watermark": {
       "$ref": "#/definitions/WatermarkConfiguration",
