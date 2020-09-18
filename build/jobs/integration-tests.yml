@@ -11,7 +11,7 @@ jobs:
     demands:
     - msbuild
   steps:
-  - powershell: rm global.json
+  - template: ../steps/setup-dotnetcore.yml
 
   - template: ../steps/local-nuget-restore.yml
     parameters:

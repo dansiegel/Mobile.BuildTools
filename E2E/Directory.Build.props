@@ -2,8 +2,15 @@
 
   <Import Project="../Directory.Build.props" />
 
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(PIPELINE_WORKSPACE)' != '' ">
+    <CIArtifactsDirectory>$([System.IO.Path]::Combine('$(PIPELINE_WORKSPACE)', 'Artifacts'))</CIArtifactsDirectory>
+    <GeneratedLocalPackage>$([System.IO.Directory]::GetFiles('$(CIArtifactsDirectory)', 'Mobile.BuildTools.2.*.nupkg')[0])</GeneratedLocalPackage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(PIPELINE_WORKSPACE)' == '' ">
     <GeneratedLocalPackage>$([System.IO.Directory]::GetFiles('$(LocalArtifactStagingDirectory)', 'Mobile.BuildTools.2.*.nupkg')[0])</GeneratedLocalPackage>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <GenerateLocalPackageFileName>$([System.IO.Path]::GetFileNameWithoutExtension('$(GeneratedLocalPackage)'))</GenerateLocalPackageFileName>
     <GeneratedPackageVersion>$(GenerateLocalPackageFileName.Replace('Mobile.BuildTools.', ''))</GeneratedPackageVersion>
   </PropertyGroup>
