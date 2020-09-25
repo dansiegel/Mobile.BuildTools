@@ -1,7 +1,19 @@
 parameters:
-  solution: '**/*.sln'
-  vmImage: ''
-  jobName: ''
+- name: solution
+  type: string
+  default: '**/*.sln'
+- name: vmImage
+  type: string
+  default: ''
+- name: jobName
+  type: string
+  default: ''
+- name: displayName
+  type: string
+  default: 'Integration Tests'
+- name: runBoots
+  type: boolean
+  default: false
 
 jobs:
 - job: ${{ parameters.jobName }}
@@ -11,6 +23,9 @@ jobs:
     demands:
     - msbuild
   steps:
+  - ${{ if eq(parameters.runBoots, true) }}:
+    - template: ../steps/boots.yml
+
   - template: ../steps/setup-dotnetcore.yml
 
   - template: ../steps/local-nuget-restore.yml

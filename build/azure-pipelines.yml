@@ -75,6 +75,7 @@ stages:
       vmImage: $(MacAgent)
       jobName: IntegrationTestsMac
       displayName: Integration Tests (Mac)
+      runBoots: true
 
   # - template: jobs/android.yml
   #   parameters:

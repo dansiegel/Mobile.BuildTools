@@ -1,0 +1,7 @@
+steps:
+- script: |
+    dotnet tool install --global boots
+    boots --stable Mono
+    boots --stable XamarinAndroid
+    boots --stable XamariniOS
+  displayName: 'Install latest Mono Version'
