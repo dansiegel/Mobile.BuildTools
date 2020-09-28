@@ -13,6 +13,33 @@ namespace Mobile.BuildTools.Utils
     {
         private static readonly object lockObject = new object();
 
+        public static string GetConfigurationPath(string searchDirectory, string slnDir = null)
+        {
+            if (string.IsNullOrEmpty(searchDirectory)) return null;
+
+            var rootPath = Path.GetPathRoot(searchDirectory);
+            var configPath = Path.Combine(searchDirectory, "buildtools.json");
+            if (File.Exists(configPath))
+            {
+                return searchDirectory;
+            }
+
+            if(string.IsNullOrEmpty(slnDir) && Directory.GetFiles(searchDirectory, "*.sln").Length > 0)
+            {
+                slnDir = searchDirectory;
+            }
+
+            if (searchDirectory == rootPath)
+            {
+                var outputDir = string.IsNullOrEmpty(slnDir) ? searchDirectory : slnDir;
+                SaveDefaultConfig(outputDir);
+                return outputDir;
+            }
+
+            var parentDirectory = Directory.GetParent(searchDirectory);
+            return GetConfigurationPath(parentDirectory.FullName);
+        }
+
         public static bool Exists(string path) =>
             File.Exists(GetConfigFilePath(path));
 
@@ -24,9 +51,10 @@ namespace Mobile.BuildTools.Utils
 
         public static BuildToolsConfig GetConfig(string path)
         {
-            if(!Exists(path, out var filePath))
+            var filePath = GetConfigurationPath(path);
+            if(File.GetAttributes(filePath).HasFlag(FileAttributes.Directory))
             {
-                SaveDefaultConfig(path);
+                filePath = Path.Combine(filePath, "buildtools.json");
             }
 
             var json = string.Empty;

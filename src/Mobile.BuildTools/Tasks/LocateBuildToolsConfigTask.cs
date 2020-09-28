@@ -55,11 +55,11 @@ namespace Mobile.BuildTools.Tasks
         public override bool Execute()
         {
 //#if DEBUG
-//            if (!Debugger.IsAttached)
-//                Debugger.Launch();
+//            if (!System.Diagnostics.Debugger.IsAttached)
+//                System.Diagnostics.Debugger.Launch();
 //#endif
             LocateSolution();
-            GetConfiguration();
+            BuildToolsConfigFilePath = ConfigHelper.GetConfigurationPath(ProjectDir);
 
             var crossTargetingProject = IsCrossTargeting();
             var platform = TargetFrameworkIdentifier.GetTargetPlatform();
@@ -125,36 +125,6 @@ namespace Mobile.BuildTools.Tasks
             LocatedSolutionDirectory = LocateSolution(ProjectDir);
         }
 
-        private void GetConfiguration()
-        {
-            var configPath = SolutionDir;
-            if(!string.IsNullOrEmpty(configPath) && !ConfigHelper.Exists(configPath))
-            {
-                configPath = GetConfiguration(ProjectDir);
-            }
-
-            BuildToolsConfigFilePath = configPath;
-        }
-
-        private string GetConfiguration(string searchDirectory)
-        {
-            if (string.IsNullOrEmpty(searchDirectory)) return null;
-
-            var configPath = Path.Combine(searchDirectory, "buildtools.json");
-            if (File.Exists(configPath))
-            {
-                return searchDirectory;
-            }
-            else if (Path.IsPathRooted(searchDirectory))
-            {
-                GenerateDefaultConfig(SolutionDir);
-                return SolutionDir;
-            }
-
-            var parentDirectory = Directory.GetParent(searchDirectory);
-            return GetConfiguration(parentDirectory.FullName);
-        }
-
         private string LocateSolution(string searchDirectory)
         {
             var solutionFiles = Directory.GetFiles(searchDirectory, "*.sln");
@@ -168,12 +138,6 @@ namespace Mobile.BuildTools.Tasks
             }
 
             return LocateSolution(Directory.GetParent(searchDirectory).FullName);
-        }
-
-        private void GenerateDefaultConfig(string path)
-        {
-            Log.LogMessage($"Auto-Generating BuildTools configuration at '{path}'");
-            ConfigHelper.SaveDefaultConfig(path);
         }
     }
 }

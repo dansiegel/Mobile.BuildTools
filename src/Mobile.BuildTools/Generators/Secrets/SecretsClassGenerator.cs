@@ -41,23 +41,29 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         private string CompileGeneratedAttribute { get; }
 
-        public SecretsClassGenerator(IBuildConfiguration buildConfiguration)
+        private string[] SecretsFileLocations { get; }
+
+        public SecretsClassGenerator(IBuildConfiguration buildConfiguration, params string[] secretsFileLocations)
             : base(buildConfiguration)
         {
             var assembly = typeof(SecretsClassGenerator).Assembly;
             var toolVersion = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
             CompileGeneratedAttribute = @$"[GeneratedCodeAttribute(""Mobile.BuildTools.Generators.Secrets.SecretsClassGenerator"", ""{toolVersion}"")]";
+
+            SecretsFileLocations = secretsFileLocations;
         }
 #pragma warning restore IDE1006, IDE0040
-
-        public string ConfigurationSecretsJsonFilePath { get; set; }
-
-        public string SecretsJsonFilePath { get; set; }
 
         public string BaseNamespace { get; set; }
 
         protected override void ExecuteInternal()
         {
+            if (!SecretsFileLocations.Any(x => File.Exists(x)))
+            {
+                Log.LogMessage("No secrets.json was found in either the Project or Solution Directory.");
+                return;
+            }
+
             var secrets = GetMergedSecrets();
 
             var replacement = string.Empty;
@@ -135,10 +141,12 @@ namespace Mobile.BuildTools.Generators.Secrets
         internal JObject GetMergedSecrets()
         {
             JObject secrets = null;
-            CreateOrMerge(SecretsJsonFilePath, ref secrets);
-            CreateOrMerge(ConfigurationSecretsJsonFilePath, ref secrets);
+            foreach (var file in SecretsFileLocations)
+            {
+                CreateOrMerge(file, ref secrets);
+            }
 
-            if(secrets is null)
+            if (secrets is null)
             {
                 throw new Exception("An unexpected error occurred. Could not locate any secrets.");
             }

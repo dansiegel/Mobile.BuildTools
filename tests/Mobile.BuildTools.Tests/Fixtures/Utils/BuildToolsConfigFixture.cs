@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Mobile.BuildTools.Utils;
 using Xunit;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Utils
 {
-    public class BuildToolsConfigFixture
+    public sealed class BuildToolsConfigFixture : IDisposable
     {
-        private static readonly string MockEmptyConfigPath = @"Templates/buildtools.json";
+        private static readonly string MockEmptyConfigPath = Path.Combine(Environment.CurrentDirectory, nameof(BuildToolsConfigFixture));
+
+        public BuildToolsConfigFixture()
+        {
+            Directory.CreateDirectory(MockEmptyConfigPath);
+            ConfigHelper.SaveDefaultConfig(MockEmptyConfigPath);
+        }
 
         [Fact]
         public void AppConfigIsNotNull()
@@ -72,6 +79,14 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             var config = ConfigHelper.GetConfig(MockEmptyConfigPath);
 
             Assert.NotNull(config.ReleaseNotes);
+        }
+
+        public void Dispose()
+        {
+            if(File.Exists(MockEmptyConfigPath))
+            {
+                File.Delete(MockEmptyConfigPath);
+            }
         }
     }
 }

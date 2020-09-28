@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Secrets;
@@ -7,28 +8,26 @@ namespace Mobile.BuildTools.Tasks
 {
     public class BuildHostSecretsTask : BuildToolsTaskBase
     {
-        public string SecretsJsonFilePath { get; set; }
-
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            Log.LogMessage($"Output Path: {SecretsJsonFilePath}");
-            if (string.IsNullOrWhiteSpace(SecretsJsonFilePath))
-            {
-                Log.LogMessage($"No Secrets file specified for '{TargetFrameworkIdentifier}'");
-            }
-            else if (File.Exists(SecretsJsonFilePath))
-            {
-                Log.LogMessage("A secrets file already exists. Pleaes delete the file to regenerate the secrets");
-            }
-            else
-            {
-                IGenerator generator = new BuildHostSecretsGenerator(this)
-                {
-                    SecretsJsonFilePath = SecretsJsonFilePath,
-                };
+            if (config.Configuration.ProjectSecrets.All(x => x.Value.Disable))
+                return;
 
-                generator.Execute();
+            var globalSecretsJson = Path.Combine(config.SolutionDirectory, "secrets.json");
+
+            if (File.Exists(globalSecretsJson) || File.Exists(Path.Combine(ProjectDirectory, "secrets.json")))
+            {
+                Log.LogMessage("A secrets file already exists. Please delete the file to regenerate the secrets");
+                return;
             }
+
+            Log.LogMessage($"Output Path: {globalSecretsJson}");
+            IGenerator generator = new BuildHostSecretsGenerator(this)
+            {
+                SecretsJsonFilePath = globalSecretsJson,
+            };
+
+            generator.Execute();
         }
     }
 }
