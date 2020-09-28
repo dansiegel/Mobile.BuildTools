@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="True"
+             ios:NavigationPage.PrefersLargeTitles="True"
+             xmlns:controls="clr-namespace:BuildToolsSample.Controls"
+             Title="Docs"
+             x:Class="BuildToolsSample.Views.DocsPage">
+
+  <NavigationPage.TitleView>
+    <Image Aspect="AspectFit"
+           HorizontalOptions="Start"
+           VerticalOptions="Start"
+           Margin="0,0,0,3"
+           Source="BuildToolsLogo" />
+  </NavigationPage.TitleView>
+
+  <controls:PageTitleView Subtitle="Docs">
+    <WebView Source="https://mobilebuildtools.com"
+           HorizontalOptions="Fill"
+           VerticalOptions="Fill" />
+  </controls:PageTitleView>
+  
+</ContentPage>

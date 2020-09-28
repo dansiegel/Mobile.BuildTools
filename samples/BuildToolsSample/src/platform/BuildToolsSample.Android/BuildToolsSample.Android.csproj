@@ -15,7 +15,7 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
@@ -54,7 +54,6 @@
   <ItemGroup>
     <PackageReference Include="Prism.DryIoc.Forms" />
     <PackageReference Include="Xamarin.Forms" />
-    <PackageReference Include="Xamarin.Android.Support.Core.Utils" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />

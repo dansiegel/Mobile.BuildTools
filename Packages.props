@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Prism.DryIoc.Forms" Version="7.2.0.1422" />
-    <PackageReference Update="Xamarin.Forms" Version="4.8.0.1364" />
+    <PackageReference Update="Prism.DryIoc.Forms" Version="8.0.0.1850-pre" />
+    <PackageReference Update="Xamarin.Forms" Version="4.8.0.1451" />
     <PackageReference Update="Xamarin.Forms.Mocks" Version="4.7.0.1" />
     <PackageReference Update="Xamarin.Essentials" Version="1.5.3.2" />
     <PackageReference Update="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />

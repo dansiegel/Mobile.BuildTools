@@ -9,6 +9,10 @@ end_of_line = lf
 insert_final_newline = true
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
 
+# Style Sheets
+[*.{css,scss}]
+indent_size = 2
+
 # Code files
 [*.{cs,csx,vb,vbx}]
 indent_size = 4

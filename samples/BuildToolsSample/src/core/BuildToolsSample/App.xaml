@@ -6,33 +6,9 @@
              xmlns:prism="http://prismlibrary.com"
              mc:Ignorable="d"
              x:Class="BuildToolsSample.App">
-    <Application.Resources>
-        <Color x:Key="PrimaryColor">#7E7D81</Color>
-        <Color x:Key="AccentColor">#00A5F2</Color>
-        <Color x:Key="TextColor">White</Color>
 
-        <Style TargetType="TabbedPage">
-            <Setter Property="BarBackgroundColor" Value="{StaticResource PrimaryColor}" />
-            <Setter Property="BarTextColor" Value="{StaticResource TextColor}" />
-            <Setter Property="SelectedTabColor" Value="{StaticResource AccentColor}" />
-            <Setter Property="UnselectedTabColor" Value="{StaticResource PrimaryColor}" />
-        </Style>
+  <Application.Resources>
+    <StyleSheet Source="Theme/style.css" />
+  </Application.Resources>
 
-        <Style TargetType="NavigationPage">
-            <Setter Property="BarBackgroundColor" Value="{StaticResource PrimaryColor}" />
-            <Setter Property="BarTextColor" Value="{StaticResource TextColor}" />
-        </Style>
-
-        <Style TargetType="Button">
-            <Setter Property="BackgroundColor" Value="{StaticResource AccentColor}" />
-            <Setter Property="TextColor" Value="{StaticResource TextColor}" />
-            <Setter Property="CornerRadius" Value="15" />
-        </Style>
-
-        <Style TargetType="Button" x:Key="DarkButton">
-            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
-            <Setter Property="TextColor" Value="{StaticResource TextColor}" />
-            <Setter Property="CornerRadius" Value="15" />
-        </Style>
-    </Application.Resources>
 </prism:PrismApplication>

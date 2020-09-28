@@ -3,10 +3,15 @@
   <Import Project="..\..\src\Mobile.BuildTools\Mobile.BuildTools.props" />
 
   <PropertyGroup>
-
-    <_MobileBuildToolsParentBuildTasksDll>$(MSBuildThisFileDirectory)..\..\src\Mobile.BuildTools\bin\$(Configuration)\net472\Mobile.BuildTools.dll</_MobileBuildToolsParentBuildTasksDll>
-    <ScssRuntimeOutput>$(MSBuildThisFileDirectory)..\..\src\assets\runtimes\win-x64\libsass.dll</ScssRuntimeOutput>
-    <ScssRuntimeOutput Condition=" '$(OS)' != 'Windows_NT'">$(MSBuildThisFileDirectory)..\..\src\assets\runtimes\osx-x64\libsass.dylib</ScssRuntimeOutput>
-    <ScssRuntimeInput>$(ScssRuntimeOutput)</ScssRuntimeInput>
+    <__LibSassNative>win-x86</__LibSassNative>
+    <__LibSassNativeFile>libsass.dll</__LibSassNativeFile>
+    <__LibSassNative Condition=" '$(OS)' != 'Windows_NT'">osx-x64</__LibSassNative>
+    <__LibSassNativeFile Condition=" '$(OS)' != 'Windows_NT'">libsass.dylib</__LibSassNativeFile>
+    <Configuration Condition=" $(Configuration) == '' ">Debug</Configuration>
+    <_BuildToolsSrcFolder>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), '..', '..', 'src'))</_BuildToolsSrcFolder>
+    <_BuildToolsBinariesOutput>$([System.IO.Path]::Combine($(_BuildToolsSrcFolder), 'Mobile.BuildTools', 'bin', $(Configuration), 'net472'))</_BuildToolsBinariesOutput>
+    <_MobileBuildToolsParentBuildTasksDll>$([System.IO.Path]::Combine($(_BuildToolsBinariesOutput), 'Mobile.BuildTools.dll'))</_MobileBuildToolsParentBuildTasksDll>
+    <ScssRuntimeInput>$([System.IO.Path]::Combine($(_BuildToolsSrcFolder), 'assets', 'runtimes', $(__LibSassNative), $(__LibSassNativeFile)))</ScssRuntimeInput>
+    <ScssRuntimeOutput>$([System.IO.Path]::Combine($(_BuildToolsBinariesOutput), $(__LibSassNativeFile)))</ScssRuntimeOutput>
   </PropertyGroup>
 </Project>
