@@ -1,6 +1,5 @@
 parameters:
   solution: '**/*.sln'
-  nugetVersion: ''
 
 jobs:
 - job: BuildNuGet
@@ -20,7 +19,6 @@ jobs:
 
   - template: ../steps/nuget-restore.yml
     parameters:
-      version: ${{ parameters.nugetVersion }}
       solution: Mobile.BuildTools.sln
 
   - task: MSBuild@1
@@ -48,7 +46,7 @@ jobs:
     condition: and(succeeded(), eq(variables['system.pullrequest.isfork'], false))
     enabled: false
 
-  - task: PublishPipelineArtifact@0
+  - task: PublishPipelineArtifact@1
     displayName: 'Publish Artifacts'
     inputs:
       artifactName: Artifacts

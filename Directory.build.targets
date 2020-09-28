@@ -1,4 +1,5 @@
 <Project>
+  <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.79" />
 
   <PropertyGroup>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
@@ -7,6 +8,7 @@
   <Target Name="DeleteCachedPackage" Condition="'$(CI)' != 'true'" BeforeTargets="Pack">
     <ItemGroup>
       <ToDelete Include="$(PackageOutputPath)\$(PackageId).$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)*.*" />
+      <ToDelete Include="$(LocalArtifactStagingDirectory)\$(PackageId).$(GitBaseVersionMajor).$(GitBaseVersionMinor).*" />
     </ItemGroup>
     <Delete Files="@(ToDelete)" />
     <Exec Command='rd "$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())" /q /s'

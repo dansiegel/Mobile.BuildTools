@@ -1,44 +1,42 @@
-﻿using System.ComponentModel;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models.AppIcons
 {
     public class BaseImageConfiguration : IImageResource
     {
-        [JsonProperty("ignore")]
+        [JsonProperty("ignore", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool Ignore { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("scale")]
+        [JsonProperty("scale", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public double Scale { get; set; }
 
-        [JsonProperty("backgroundColor")]
+        [JsonProperty("backgroundColor", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string BackgroundColor { get; set; }
 
-        [JsonProperty("width")]
+        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? Width { get; set; }
 
-        [JsonProperty("height")]
+        [JsonProperty("height", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? Height { get; set; }
 
-        [JsonProperty("padFactor")]
+        [JsonProperty("padFactor", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public double? PaddingFactor { get; set; }
 
-        [JsonProperty("padColor")]
+        [JsonProperty("padColor", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string PaddingColor { get; set; }
 
-        [JsonProperty("watermark")]
+        [JsonProperty("watermark", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public WatermarkConfiguration Watermark { get; set; }
 
-        [JsonProperty("resourceType")]
+        [JsonProperty("resourceType", DefaultValueHandling = DefaultValueHandling.Ignore)]
 #if SCHEMAGENERATOR
-        [System.ComponentModel.DataAnnotations.EnumDataType(typeof(AndroidResource))]
+        [System.ComponentModel.DataAnnotations.EnumDataType(typeof(PlatformResourceType))]
         public string ResourceType { get; set; }
 #else
-        [DefaultValue(AndroidResource.Drawable)]
-        public AndroidResource ResourceType { get; set; }
+        public PlatformResourceType ResourceType { get; set; }
 #endif
         [JsonIgnore]
         public string SourceFile { get; set; }

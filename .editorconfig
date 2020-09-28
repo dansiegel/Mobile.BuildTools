@@ -31,6 +31,10 @@ indent_size = 2
 [*.xml]
 indent_size = 2
 
+# XAML Files
+[*.xaml]
+indent_size = 2
+
 # Dotnet code style settings:
 [*.{cs,vb}]
 # Sort using and Import directives with System.* appearing first

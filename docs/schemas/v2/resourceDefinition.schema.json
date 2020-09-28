@@ -83,8 +83,8 @@
         },
         "resourceType": {
           "type": [ "string", "null" ],
-          "enum": [ "Drawable", "Mipmap" ],
-          "description": "This is only used for images on Android and will be set to Drawable by default"
+          "enum": [ "Default", "Drawable", "Mipmap", "AllSquareTiles", "SquareTile", "SmallTile", "WideTile", "SplashScreen" ],
+          "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this will by default generate a standard image asset, or you can specify other app resource types."
         },
         "watermark": {
           "$ref": "#/definitions/WatermarkConfiguration"
@@ -133,8 +133,8 @@
         },
         "resourceType": {
           "type": [ "string", "null" ],
-          "enum": [ "Drawable", "Mipmap" ],
-          "description": "This is only used for images on Android and will be set to Drawable by default"
+          "enum": [ "Default", "Drawable", "Mipmap", "AllSquareTiles", "SquareTile", "SmallTile", "WideTile", "SplashScreen" ],
+          "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this will by default generate a standard image asset, or you can specify other app resource types."
         },
         "watermark": {
           "$ref": "#/definitions/WatermarkConfiguration",
@@ -212,8 +212,8 @@
     },
     "resourceType": {
       "type": [ "string", "null" ],
-      "enum": [ "Drawable", "Mipmap" ],
-      "description": "This is only used for images on Android and will be set to Drawable by default"
+      "enum": [ "Default", "Drawable", "Mipmap", "AllSquareTiles", "SquareTile", "SmallTile", "WideTile", "SplashScreen" ],
+      "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this will by default generate a standard image asset, or you can specify other app resource types."
     },
     "watermark": {
       "$ref": "#/definitions/WatermarkConfiguration",

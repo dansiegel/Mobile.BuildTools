@@ -10,26 +10,33 @@ namespace Mobile.BuildTools.Models.AppIcons
 {
     public class ResourceDefinition : PlatformConfiguration
     {
-        [JsonProperty("android")]
+        [JsonProperty("$schema")]
+        public string Schema
+        {
+            get => "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json";
+            set { }
+        }
+
+        [JsonProperty("android", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration Android { get; set; }
 
-        [JsonProperty("apple")]
+        [JsonProperty("apple", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration Apple { get; set; }
 
-        [JsonProperty("ios")]
+        [JsonProperty("ios", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Properly named iOS")]
         public PlatformConfiguration iOS { get; set; }
 
-        [JsonProperty("tvos")]
+        [JsonProperty("tvos", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration TVOS { get; set; }
 
-        [JsonProperty("macos")]
+        [JsonProperty("macos", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration MacOS { get; set; }
 
-        [JsonProperty("tizen")]
+        [JsonProperty("tizen", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration Tizen { get; set; }
 
-        [JsonProperty("uwp")]
+        [JsonProperty("uwp", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration UWP { get; set; }
 
         public IEnumerable<IImageResource> GetConfigurations(Platform platform)
@@ -69,6 +76,16 @@ namespace Mobile.BuildTools.Models.AppIcons
                     configs.Add(GetConfiguration(additionalOutput));
                 }
             }
+
+#if !SCHEMAGENERATOR
+            if (platform == Platform.Android)
+            {
+                foreach (var config in configs.Where(x => x.ResourceType != PlatformResourceType.Mipmap && x.ResourceType != PlatformResourceType.Drawable).Cast<IUpdatableImageResource>())
+                {
+                    config.ResourceType = PlatformResourceType.Drawable;
+                }
+            }
+#endif
 
             return configs;
         }

@@ -1,8 +1,19 @@
 parameters:
-  solution: '**/*.sln'
-  nugetVersion: ''
-  vmImage: ''
-  jobName: ''
+- name: solution
+  type: string
+  default: '**/*.sln'
+- name: vmImage
+  type: string
+  default: ''
+- name: jobName
+  type: string
+  default: ''
+- name: displayName
+  type: string
+  default: 'Integration Tests'
+- name: runBoots
+  type: boolean
+  default: false
 
 jobs:
 - job: ${{ parameters.jobName }}
@@ -12,11 +23,13 @@ jobs:
     demands:
     - msbuild
   steps:
-  - powershell: rm global.json
+  - ${{ if eq(parameters.runBoots, true) }}:
+    - template: ../steps/boots.yml
+
+  - template: ../steps/setup-dotnetcore.yml
 
   - template: ../steps/local-nuget-restore.yml
     parameters:
-      version: ${{ parameters.nugetVersion }}
       workingDirectory: E2E
 
   - task: MSBuild@1

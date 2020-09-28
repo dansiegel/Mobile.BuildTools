@@ -1,0 +1,7 @@
+<Project>
+  <Import Project="../Directory.Build.props" />
+  <ItemGroup>
+    <PackageReference Include="Mobile.BuildTools" VersionOverride="GeneratedPackageVersion" PrivateAssets="all" />
+    <PackageReference Include="Mobile.BuildTools.Configuration" VersionOverride="GeneratedPackageVersion" />
+  </ItemGroup>
+</Project>

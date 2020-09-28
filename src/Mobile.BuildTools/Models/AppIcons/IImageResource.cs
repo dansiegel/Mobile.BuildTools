@@ -1,5 +1,12 @@
 ﻿namespace Mobile.BuildTools.Models.AppIcons
 {
+    public interface IUpdatableImageResource
+    {
+#if !SCHEMAGENERATOR
+        PlatformResourceType ResourceType { get; set; }
+#endif
+    }
+
     public interface IImageResource
     {
         string SourceFile { get; }
@@ -12,14 +19,14 @@
 #if SCHEMAGENERATOR
         string ResourceType { get; }
 #else
-        AndroidResource ResourceType { get; }
+        PlatformResourceType ResourceType { get; }
 #endif
         double Scale { get; }
         WatermarkConfiguration Watermark { get; }
         int? Width { get; }
     }
 
-    internal sealed class ImageResource : IImageResource
+    internal sealed class ImageResource : IImageResource, IUpdatableImageResource
     {
         public string SourceFile { get; set; }
         public string BackgroundColor { get; set; }
@@ -31,7 +38,7 @@
 #if SCHEMAGENERATOR
         public string ResourceType { get; set; }
 #else
-        public AndroidResource ResourceType { get; set; }
+        public PlatformResourceType ResourceType { get; set; }
 #endif
         public double Scale { get; set; }
         public WatermarkConfiguration Watermark { get; set; }

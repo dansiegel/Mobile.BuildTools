@@ -1,7 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <XamarinFormsVersion>4.5.0.356</XamarinFormsVersion>
-    <PrismVersion>7.2.0.1422</PrismVersion>
-    <XamarinEssentialsVersion>1.5.1</XamarinEssentialsVersion>
-  </PropertyGroup>
-</Project>

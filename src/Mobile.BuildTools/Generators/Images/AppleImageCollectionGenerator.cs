@@ -31,11 +31,16 @@ namespace Mobile.BuildTools.Generators.Images
 
 #if DEBUG
             if (config.Name is null)
-                System.Diagnostics.Debugger.Break();
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Break();
+                else
+                    System.Diagnostics.Debugger.Launch();
+            }
 #endif
 
-           // Check for appiconset
-           var assetsIconSetBasePath = Path.Combine(
+            // Check for appiconset
+            var assetsIconSetBasePath = Path.Combine(
                "Assets.xcassets",
                $"{config.Name}.appiconset");
            var mediaRootIconSetBasePath = Path.Combine(

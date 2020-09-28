@@ -28,8 +28,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="Xamarin.UITest" Version="3.0.3 " />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="Xamarin.UITest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\E2EApp.iOS\E2EApp.iOS.csproj">

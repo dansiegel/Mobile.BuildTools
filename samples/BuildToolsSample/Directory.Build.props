@@ -1,0 +1,12 @@
+<Project>
+  <Import Project="..\Directory.Build.props" />
+  <Import Project="..\..\src\Mobile.BuildTools\Mobile.BuildTools.props" />
+
+  <PropertyGroup>
+
+    <_MobileBuildToolsParentBuildTasksDll>$(MSBuildThisFileDirectory)..\..\src\Mobile.BuildTools\bin\$(Configuration)\net472\Mobile.BuildTools.dll</_MobileBuildToolsParentBuildTasksDll>
+    <ScssRuntimeOutput>$(MSBuildThisFileDirectory)..\..\src\assets\runtimes\win-x64\libsass.dll</ScssRuntimeOutput>
+    <ScssRuntimeOutput Condition=" '$(OS)' != 'Windows_NT'">$(MSBuildThisFileDirectory)..\..\src\assets\runtimes\osx-x64\libsass.dylib</ScssRuntimeOutput>
+    <ScssRuntimeInput>$(ScssRuntimeOutput)</ScssRuntimeInput>
+  </PropertyGroup>
+</Project>

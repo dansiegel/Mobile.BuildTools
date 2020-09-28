@@ -4,7 +4,6 @@ parameters:
   appRootDirectory: ''
   csprojName: ''
   buildConfiguration: 'Debug'
-  nugetVersion: ''
 
 jobs:
 - job: iOSBuild
@@ -36,26 +35,19 @@ jobs:
 
   - template: ../steps/local-nuget-restore.yml
     parameters:
-      version: ${{ parameters.nugetVersion }}
       workingDirectory: ${{ parameters.baseSolutionDirectory }}
 
   - bash: |
-       # To manually select a Xamarin SDK version on the Hosted macOS agent, run this script with the SDK version you want to target
-       # https://go.microsoft.com/fwlink/?linkid=871629
-
-       sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 5_18_1
-    displayName: 'Select Xamarin SDK version'
+       dotnet tool install --global boots
+       dotnet boots --stable Mono
+       dotnet boots --stable XamariniOS
+    displayName: 'Ensure latest stable Mono & Xamarin.iOS SDKs'
 
   - task: XamariniOS@2
     displayName: 'Build Xamarin.iOS solution'
     inputs:
       solutionFile: '${{ parameters.appRootDirectory }}/${{ parameters.csprojName }}'
       configuration: ${{ parameters.buildConfiguration }}
-    env:
-      Secret_SampleString: 'Sample String'
-      Secret_SampleInt: '1'
-      Secret_SampleDouble: '2.1'
-      Secret_SampleBool: 'true'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: iOS'

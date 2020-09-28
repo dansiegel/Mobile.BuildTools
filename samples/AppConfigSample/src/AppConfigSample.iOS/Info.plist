@@ -23,9 +23,9 @@
 	<key>MinimumOSVersion</key>
 	<string>10.0</string>
 	<key>CFBundleDisplayName</key>
-	<string>Prism Sample</string>
+	<string>App Config</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.prismlibrary.AppConfigSample</string>
+	<string>com.avantipoint.appconfigsample</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>

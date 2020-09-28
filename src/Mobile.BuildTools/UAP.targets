@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
+  <Import Project="ImageResize.targets" />
+  <Import Project="ConfigurationManager.targets" />
+  <!-- When the Manifests are supported use the PlatformHead.targets
+  <Import Project="ManifestsShared.targets" />
+  -->
+
   <Target Name="HandlePlatformAppConfig"
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
           Inputs="@(GeneratedAppConfig)"
           Outputs="@(GeneratedAppConfig)">
     <ItemGroup>
-      <BundleResource Include="@(GeneratedAppConfig)"
+      <Content Include="@(GeneratedAppConfig)"
                       Link="Assets\%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="IncludeUnifiedImageAsset"
+          BeforeTargets="_CollectBundleResources"
+          AfterTargets="UnifiedImageAssetProcessing;_CollectImageAssets">
+    <ItemGroup>
+      <Content Include="@(UnifiedImageAsset)"
+               Link="%(UnifiedImageAsset.OutputLink)"
+               Visible="true" />
     </ItemGroup>
   </Target>
 

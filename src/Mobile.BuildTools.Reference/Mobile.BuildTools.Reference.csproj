@@ -4,10 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefineConstants>$(DefineConstants);CLI_TOOL</DefineConstants>
     <IsPackable>false</IsPackable>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
-  
-  
+
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
@@ -17,6 +15,7 @@
     <Compile Include="../Mobile.BuildTools/*.cs" Link="%(Filename)%(Extension)" />
     <Compile Include="../Mobile.BuildTools/Models/AppIcons/*.cs" Link="Models/AppIcons/%(Filename)%(Extension)" />
     <Compile Include="../Mobile.BuildTools/Models/Configuration/*.cs" Link="Models/Configuration/%(Filename)%(Extension)" />
+    <Compile Include="../Mobile.BuildTools/Extensions/DictionaryExtensions.cs" Link="Extensions/%(Filename)%(Extension)" />
     <Compile Include="../Mobile.BuildTools/Models/Secrets/*.cs" Link="Models/Secrets/%(Filename)%(Extension)" />
     <Compile Include="../Mobile.BuildTools/Models/*.cs" Link="Models/%(Filename)%(Extension)" />
     <Compile Include="../Mobile.BuildTools/Utils/Platform.cs" Link="Utils/%(Filename)%(Extension)" />
@@ -30,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" ExcludeAssets="runtime" />
+    <PackageReference Include="Newtonsoft.Json" ExcludeAssets="runtime" />
   </ItemGroup>
 
 </Project>

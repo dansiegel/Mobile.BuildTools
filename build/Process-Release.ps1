@@ -11,7 +11,7 @@ $nupkg.Name -match '^(.*?)\.((?:\.?[0-9]+){3,}(?:[-a-z]+)?)\.nupkg$'
 
 $VersionName = $Matches[2]
 $IsPreview = $VersionName -match '-pre$'
-$DeployToNuGet = !($VersionName -match '-ci$')
+$DeployToNuGet = !($VersionName -match '-pre-.*$')
 $ReleaseDisplayName = $VersionName
 
 if($IsPreview -eq $true)

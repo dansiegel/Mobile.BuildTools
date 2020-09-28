@@ -33,13 +33,20 @@ namespace Mobile.BuildTools.Generators.Images
             }
 
 #if DEBUG
-            if (string.IsNullOrEmpty(config.Name))
+            if (config.Name is null)
             {
-                System.Diagnostics.Debugger.Break();
+                if (System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Break();
+                else
+                    System.Diagnostics.Debugger.Launch();
             }
 #endif
 
-            var resourceType = $"{config.ResourceType}".ToLower();
+            var resourceType = config.ResourceType switch
+            {
+                PlatformResourceType.Mipmap => "mipmap",
+                _ => "drawable"
+            };
             var platformSanitizedName = Regex.Replace(config.Name, @"\s+", "_");
 
             if(!Path.HasExtension(platformSanitizedName))

@@ -32,14 +32,20 @@ variables:
   value: windows-latest
 - name: MacAgent
   value: macOS-latest
-- name: NuGetVersion
-  value: '5.4.0'
 - name: BuildConfiguration
   value: 'Release'
 - name: BuildPlatform
   value: 'Any CPU'
 - name: TargetSolution
   value: 'Mobile.BuildTools.sln'
+- name: SampleString
+  value: 'Sample String'
+- name: SampleInt
+  value: '1'
+- name: SampleDouble
+  value: '2.1'
+- name: SampleBool
+  value: 'true'
 - group: 'Code Signing'
 - group: 'AppSigning'
 - group: 'GitHubRelease'
@@ -51,7 +57,6 @@ stages:
   - template: jobs/build-library.yml
     parameters:
       solution: Mobile.BuildTools.sln
-      nugetVersion: $(NuGetVersion)
 
 - stage: Test
   displayName: Run Tests
@@ -60,7 +65,6 @@ stages:
   - template: jobs/integration-tests.yml
     parameters:
       solution: E2E/E2E.sln
-      nugetVersion: $(NuGetVersion)
       vmImage: $(WindowsAgent)
       jobName: IntegrationTestsWin
       displayName: Integration Tests (Windows)
@@ -68,10 +72,10 @@ stages:
   - template: jobs/integration-tests.yml
     parameters:
       solution: E2E/E2E.sln
-      nugetVersion: $(NuGetVersion)
       vmImage: $(MacAgent)
       jobName: IntegrationTestsMac
       displayName: Integration Tests (Mac)
+      runBoots: true
 
   # - template: jobs/android.yml
   #   parameters:
@@ -79,7 +83,6 @@ stages:
   #     baseSolutionDirectory: E2E/E2EApp
   #     appRootDirectory: E2E/E2EApp/E2EApp.Android
   #     csprojName: E2EApp.Android.csproj
-  #     nugetVersion: $(NuGetVersion)
 
   # - template: jobs/ios.yml
   #   parameters:
@@ -87,12 +90,11 @@ stages:
   #     baseSolutionDirectory: E2E/E2EApp
   #     appRootDirectory: E2E/E2EApp/E2EApp.iOS
   #     csprojName: E2EApp.iOS.csproj
-  #     nugetVersion: $(NuGetVersion)
 
 - stage: Release
   displayName: Deploy NuGet Artifacts
   dependsOn: Test
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/v2.0')))
   jobs:
   - deployment: SponsorConnect
     displayName: Sponsor Connect
@@ -111,7 +113,7 @@ stages:
   - deployment: NuGet
     displayName: NuGet.org
     environment: NuGet
-    condition: and(succeeded(),or(eq(variables['IS_PREVIEW'], true), eq(variables['IS_RELEASE'], true)))
+    condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/v2.0'))
     strategy:
       runOnce:
         deploy:
@@ -123,14 +125,13 @@ stages:
           - powershell: build/Process-Release.ps1
             displayName: Process Artifacts for Release
 
-          - task: GithubRelease@0
+          - task: GitHubRelease@1
             displayName: 'Create GitHub Release'
             inputs:
               gitHubConnection: 'github.com'
               title: '$(ReleaseDisplayName)'
-              tagSource: manual
               tag: 'v$(VersionName)'
-              isPreRelease: $(IS_PREVIEW)
+              isPreRelease: $(IsPreview)
               assets: |
                $(Pipeline.Workspace)/**/*.nupkg
                $(Pipeline.Workspace)/**/*.snupkg

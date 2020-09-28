@@ -143,11 +143,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.DryIoc.Forms">
-      <Version>$(PrismVersion)</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="$(XamarinFormsVersion)" />
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.9" />
+    <PackageReference Include="Prism.DryIoc.Forms" />
+    <PackageReference Include="Xamarin.Forms" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\Mobile.BuildTools.Configuration\Mobile.BuildTools.Configuration.csproj">
