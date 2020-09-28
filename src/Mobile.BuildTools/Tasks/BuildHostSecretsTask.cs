@@ -3,6 +3,7 @@ using System.Linq;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Secrets;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -10,21 +11,20 @@ namespace Mobile.BuildTools.Tasks
     {
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            if (config.Configuration.ProjectSecrets.All(x => x.Value.Disable))
+            if (config.GetSecretsConfig().Disable || config.BuildingInsideVisualStudio)
                 return;
 
-            var globalSecretsJson = Path.Combine(config.SolutionDirectory, "secrets.json");
-
-            if (File.Exists(globalSecretsJson) || File.Exists(Path.Combine(ProjectDirectory, "secrets.json")))
+            var secretsFile = Path.Combine(ProjectDirectory, "secrets.json");
+            if (File.Exists(secretsFile))
             {
                 Log.LogMessage("A secrets file already exists. Please delete the file to regenerate the secrets");
                 return;
             }
 
-            Log.LogMessage($"Output Path: {globalSecretsJson}");
+            Log.LogMessage($"Output Path: {secretsFile}");
             IGenerator generator = new BuildHostSecretsGenerator(this)
             {
-                SecretsJsonFilePath = globalSecretsJson,
+                SecretsJsonFilePath = secretsFile,
             };
 
             generator.Execute();
