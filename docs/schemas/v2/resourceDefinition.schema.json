@@ -176,6 +176,9 @@
     "tizen": {
       "$ref": "#/definitions/PlatformConfiguration"
     },
+    "uwp": {
+      "$ref": "#/definitions/PlatformConfiguration"
+    },
     "ignore": {
       "type": [ "boolean", "null" ],
       "default": false
