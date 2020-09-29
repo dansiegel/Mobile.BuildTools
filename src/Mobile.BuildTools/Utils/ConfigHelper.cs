@@ -145,7 +145,7 @@ secrets.*.json
             if (config.ProjectSecrets != null && config.ProjectSecrets.Any(x => x.Key == projectName))
                 return config.ProjectSecrets.First(x => x.Key == projectName).Value;
 
-            return null;
+            return new SecretsConfig { Disable = true };
         }
     }
 }

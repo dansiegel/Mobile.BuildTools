@@ -43,9 +43,13 @@
       <ScssRuntimeOutput Condition=" '$(ScssRuntimeOutput)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), $(_NativeRuntimeFile)))</ScssRuntimeOutput>
     </PropertyGroup>
 
-    <Message Text="Looking for ScssRuntime in $(ScssRuntimeInput)" />
+    <Message Text="LibSass native binary exists at: $(ScssRuntimeOutput)"
+             Condition="Exists($(ScssRuntimeOutput))" />
+    <Message Text="Copying LibSass native binary from '$(ScssRuntimeOutput)' to '$(ScssRuntimeInput)'"
+             Condition="!Exists($(ScssRuntimeOutput))" />
+
     <Copy SourceFiles="$(ScssRuntimeInput)"
-          DestinationFolder="$(MSBuildThisFileDirectory)"
+          DestinationFiles="$(ScssRuntimeOutput)"
           Condition="!Exists($(ScssRuntimeOutput))" />
   </Target>
 

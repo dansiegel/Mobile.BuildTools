@@ -268,9 +268,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 PropertyType = propertyType,
                 IsArray = isArray
             });
-            var generator = new SecretsClassGenerator(config)
+            var generator = new SecretsClassGenerator(config, Path.Combine("Templates", "Secrets", secretsFile))
             {
-                SecretsJsonFilePath = Path.Combine("Templates", "Secrets", secretsFile),
                 BaseNamespace = config.ProjectName
             };
             generator.Execute();

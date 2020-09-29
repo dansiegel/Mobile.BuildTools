@@ -1,54 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             xmlns:helpers="clr-namespace:BuildToolsSample.Helpers"
-             xmlns:essentials="clr-namespace:Xamarin.Essentials;assembly=Xamarin.Essentials"
-             ios:Page.UseSafeArea="True"
+                  xmlns:prism="http://prismlibrary.com"
              x:Class="BuildToolsSample.Views.MainPage">
-  <StackLayout HorizontalOptions="Center"
-               Padding="20">
-    <Image Source="BuildToolsLogo"
-           Margin="20" />
-    <Label>
-      <Label.FormattedText>
-        <FormattedString>
-          <Span Text="Settings.Foo: " />
-          <Span Text="{x:Static helpers:Settings.Foo}" />
-        </FormattedString>
-      </Label.FormattedText>
-    </Label>
-    <Label>
-      <Label.FormattedText>
-        <FormattedString>
-          <Span Text="Name: " />
-          <Span Text="{x:Static essentials:AppInfo.Name}" />
-        </FormattedString>
-      </Label.FormattedText>
-    </Label>
-    <Label>
-      <Label.FormattedText>
-        <FormattedString>
-          <Span Text="Package Name: " />
-          <Span Text="{x:Static essentials:AppInfo.PackageName}" />
-        </FormattedString>
-      </Label.FormattedText>
-    </Label>
-    <Label>
-      <Label.FormattedText>
-        <FormattedString>
-          <Span Text="App Version: " />
-          <Span Text="{x:Static essentials:AppInfo.VersionString}" />
-        </FormattedString>
-      </Label.FormattedText>
-    </Label>
-    <Label>
-      <Label.FormattedText>
-        <FormattedString>
-          <Span Text="Bundle Version: " />
-          <Span Text="{x:Static essentials:AppInfo.BuildString}" />
-        </FormattedString>
-      </Label.FormattedText>
-    </Label>
-  </StackLayout>
-</ContentPage>
+
+  <MasterDetailPage.Master>
+    <ContentPage Title="menu"
+                 IconImageSource="{OnPlatform iOS='hamburger'}">
+      <StackLayout Margin="{OnPlatform Default='20', iOS='20,40'}">
+        <Button Text="Home"
+                Command="{prism:NavigateTo 'NavigationPage/HomePage'}" />
+        <Button Text="App Config"
+                Command="{prism:NavigateTo 'NavigationPage/AppConfigPage'}" />
+        <Button Text="Docs"
+                Command="{prism:NavigateTo 'NavigationPage/DocsPage'}" />
+      </StackLayout>
+    </ContentPage>
+  </MasterDetailPage.Master>
+
+</MasterDetailPage>

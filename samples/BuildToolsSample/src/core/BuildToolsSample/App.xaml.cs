@@ -15,7 +15,7 @@ namespace BuildToolsSample
         {
             InitializeComponent();
 
-            var result = await NavigationService.NavigateAsync("MainPage");
+            var result = await NavigationService.NavigateAsync("MainPage/NavigationPage/HomePage");
 
             if(!result.Success)
             {
@@ -26,8 +26,10 @@ namespace BuildToolsSample
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<TabbedPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<AppConfigPage>();
+            containerRegistry.RegisterForNavigation<DocsPage>();
+            containerRegistry.RegisterForNavigation<HomePage>();
         }
     }
 }

@@ -11,7 +11,7 @@
       ],
       "properties": {
         "disable": {
-          "description": "Disables this Mobile.Build.Tools Task",
+          "description": "Disables this Mobile.BuildTools Task",
           "type": [ "boolean", "null" ],
           "default": false
         },
@@ -33,7 +33,7 @@
       ],
       "properties": {
         "disable": {
-          "description": "Disables this Mobile.Build.Tools Task",
+          "description": "Disables this Mobile.BuildTools Task",
           "type": [ "boolean", "null" ],
           "default": false
         }
@@ -67,7 +67,7 @@
           "default": 0
         },
         "disable": {
-          "description": "Disables this Mobile.Build.Tools Task",
+          "description": "Disables this Mobile.BuildTools Task",
           "type": [ "boolean", "null" ],
           "default": false
         }
@@ -128,7 +128,7 @@
           "default": 0.95
         },
         "disable": {
-          "description": "Disables this Mobile.Build.Tools Task",
+          "description": "Disables this Mobile.BuildTools Task",
           "type": [ "boolean", "null" ],
           "default": false
         }
@@ -169,7 +169,7 @@
           "default": true
         },
         "disable": {
-          "description": "Disables this Mobile.Build.Tools Task",
+          "description": "Disables this Mobile.BuildTools Task",
           "type": [ "boolean", "null" ],
           "default": false
         }
@@ -182,7 +182,9 @@
       ],
       "properties": {
         "disable": {
-          "type": "boolean"
+          "description": "Disables this Mobile.BuildTools Task",
+          "type": "boolean",
+          "default": false
         },
         "delimiter": {
           "description": "The delimiter used to separate values into an array. (i.e. ';' value1;value2)",
@@ -251,7 +253,7 @@
           "default": false
         },
         "disable": {
-          "description": "Disables this Mobile.Build.Tools Task",
+          "description": "Disables this Mobile.BuildTools Task",
           "type": [ "boolean", "null" ],
           "default": false
         }
@@ -313,14 +315,11 @@
       ],
       "properties": {
         "disable": {
-          "description": "Disables this Mobile.Build.Tools Task",
+          "description": "Disables this Mobile.BuildTools Task",
           "type": [ "boolean", "null" ],
           "default": false
         }
-      },
-      "required": [
-        "disable"
-      ]
+      }
     }
   },
   "type": "object",
