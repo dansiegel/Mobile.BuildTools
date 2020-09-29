@@ -9,8 +9,13 @@ namespace Mobile.BuildTools.Tasks
 {
     public class BuildHostSecretsTask : BuildToolsTaskBase
     {
+        public string JsonSecretsFilePath { get; set; }
+
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
+            if (!string.IsNullOrEmpty(JsonSecretsFilePath) && File.Exists(JsonSecretsFilePath) && File.GetAttributes(JsonSecretsFilePath).HasFlag(FileAttributes.Normal))
+                return;
+
             if (config.GetSecretsConfig().Disable || config.BuildingInsideVisualStudio)
                 return;
 

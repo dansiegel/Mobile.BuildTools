@@ -11,6 +11,8 @@ namespace Mobile.BuildTools.Tasks
 
         public string RootNamespace { get; set; }
 
+        public string JsonSecretsFilePath { get; set; }
+
         [Output]
         public ITaskItem[] GeneratedCodeFiles => _generatedCodeFiles ?? new ITaskItem[0];
 
@@ -25,7 +27,8 @@ namespace Mobile.BuildTools.Tasks
                 Path.Combine(SolutionDirectory, Constants.SecretsJsonFileName),
                 Path.Combine(SolutionDirectory, configJson),
                 Path.Combine(ProjectDirectory, Constants.SecretsJsonFileName),
-                Path.Combine(ProjectDirectory, configJson))
+                Path.Combine(ProjectDirectory, configJson),
+                JsonSecretsFilePath)
             {
                 BaseNamespace = RootNamespace,
             };
