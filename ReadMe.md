@@ -23,10 +23,10 @@ If this project helped you reduce time to develop and made your app better, plea
 
 For more information on the various Build Tasks, and Properties please see the WIKI.
 
-| Package | NuGet |
-| --------------- | ----- |
-| [Mobile.BuildTools][BuildToolsNuGet] | [![BuildToolsNuGetShield]][BuildToolsNuGet] |
-| [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] |
+| Package | NuGet | Sponsor Connect |
+| --------------- | ----- | ----- |
+| [Mobile.BuildTools][BuildToolsNuGet] | [![BuildToolsNuGetShield]][BuildToolsNuGet] | [![BuildToolsSponsorConnectShield]][BuildToolsSponsorConnect] |
+| [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] | [![BuildToolsConfigSponsorConnectShield]][BuildToolsConfigSponsorConnect] |
 
 | | Status |
 |-|-|
@@ -35,17 +35,20 @@ For more information on the various Build Tasks, and Properties please see the W
 | Integration Tests (Windows) | [![Build Status](https://dev.azure.com/dansiegel/Mobile.BuildTools/_apis/build/status/dansiegel.Mobile.BuildTools?branchName=master&stageName=Run%20Tests&jobName=Integration%20Tests%20(Windows))][AzureDevOpsLatestBuild] |
 | Tests | ![Tests](https://img.shields.io/azure-devops/tests/dansiegel/Mobile.BuildTools/40/master) |
 
-Want to consume the CI packages? Just be sure to add the following to your NuGet sources.
+Want to consume the CI packages? Be sure to [sign up as a GitHub sponsor](https://xam.dev/sponsor-buildtools) and get the pacakges from Sponsor Connect.
 
-```
-https://pkgs.dev.azure.com/dansiegel/Mobile.BuildTools/_packaging/buildtools/nuget/v3/index.json
-```
 
 [BuildToolsNuGet]: https://www.nuget.org/packages/Mobile.BuildTools/
 [BuildToolsNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.svg
 
 [BuildToolsConfigNuGet]: https://www.nuget.org/packages/Mobile.BuildTools.Configuration/
 [BuildToolsConfigNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.Configuration.svg
+
+[BuildToolsSponsorConnect]: https://sponsorconnect.dev/package/Mobile.BuildTools
+[BuildToolsSponsorConnectShield]: https://img.shields.io/endpoint?url=https%3A%2F%2Fsponsorconnect.dev%2Fshield%2FMobile.BuildTools%2Fvpre
+
+[BuildToolsConfigSponsorConnect]: https://sponsorconnect.dev/package/Mobile.BuildTools.Configuration
+[BuildToolsConfigSponsorConnectShield]: https://img.shields.io/endpoint?url=https%3A%2F%2Fsponsorconnect.dev%2Fshield%2FMobile.BuildTools.Configuration%2Fvpre
 
 [AzureDevOpsBuildStatus]: https://dev.azure.com/dansiegel/Mobile.BuildTools/_apis/build/status/dansiegel.Mobile.BuildTools?branchName=master&stageName=Run%20Build
 [AzureDevOpsLatestBuild]: https://dev.azure.com/dansiegel/Mobile.BuildTools/_build/latest?definitionId=40&branchName=master
