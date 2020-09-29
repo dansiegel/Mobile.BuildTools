@@ -156,7 +156,7 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         internal void CreateOrMerge(string jsonFilePath, ref JObject secrets)
         {
-            if(File.Exists(jsonFilePath))
+            if(!string.IsNullOrEmpty(jsonFilePath) && File.Exists(jsonFilePath))
             {
                 var json = File.ReadAllText(jsonFilePath);
                 if(secrets is null)

@@ -17,10 +17,12 @@ namespace Mobile.BuildTools.Tasks
     public abstract class BuildToolsTaskBase : Task, IBuildConfiguration
     {
         string IBuildConfiguration.BuildConfiguration =>
-            GetProperty("Configuration");
+            GetProperty("Configuration") ?? Configuration;
 
         bool IBuildConfiguration.BuildingInsideVisualStudio =>
-            bool.TryParse(GetProperty("BuildingInsideVisualStudio"), out var inVS) ? inVS : false;
+            bool.TryParse(GetProperty("BuildingInsideVisualStudio"), out var inVS) && inVS;
+
+        public string Configuration { get; set; }
 
         [Required]
         public string ConfigurationPath { get; set; }
@@ -58,10 +60,10 @@ namespace Mobile.BuildTools.Tasks
             {
                 ConfigurationPath = ConfigHelper.GetConfigurationPath(ProjectDirectory);
                 _config = ConfigHelper.GetConfig(ConfigurationPath);
-#if DEBUG
-                if (!Debugger.IsAttached && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    Debugger.Launch();
-#endif
+//#if DEBUG
+//                if (!Debugger.IsAttached && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+//                    Debugger.Launch();
+//#endif
                 ExecuteInternal(this);
             }
             catch (Exception ex)
