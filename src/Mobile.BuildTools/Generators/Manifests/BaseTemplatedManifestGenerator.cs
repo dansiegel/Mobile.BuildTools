@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Logging;
+using Newtonsoft.Json.Linq;
 using Xamarin.MacDev;
 
 namespace Mobile.BuildTools.Generators.Manifests
@@ -41,7 +42,7 @@ namespace Mobile.BuildTools.Generators.Manifests
 
             var template = ReadManifest();
 
-            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(ProjectDirectory, true);
+            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(Build.BuildConfiguration, Build.ProjectDirectory, true);
             foreach (Match match in GetMatches(template))
             {
                 template = ProcessMatch(template, match, variables);
@@ -75,10 +76,30 @@ namespace Mobile.BuildTools.Generators.Manifests
             }
             else
             {
-                Log?.LogWarning($"Unable to locate replacement value for {tokenId}");
+                var errorMessage = $"Unable to locate replacement value for '{match.Value}' on line {GetLineNumber(template, match.Value)}";
+                if (Build.Configuration.Manifests.MissingTokensAsErrors)
+                {
+                    Log?.LogError(errorMessage);
+                }
+                else
+                {
+                    Log?.LogWarning(errorMessage);
+                }
             }
 
             return template;
+        }
+
+        private static int GetLineNumber(string input, string value)
+        {
+            var lines = input.Split('\n');
+            for(var i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains(value))
+                    return i + 1;
+            }
+
+            return -1;
         }
 
         internal string GetKey(string matchValue, IDictionary<string, string> variables)

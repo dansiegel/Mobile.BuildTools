@@ -1,4 +1,6 @@
 using System.IO;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Manifests;
@@ -11,6 +13,9 @@ namespace Mobile.BuildTools.Tasks
         public string[] ReferenceAssemblyPaths { get; set; }
 
         public string ManifestPath { get; set; }
+
+        [Output]
+        public ITaskItem ProcessedManifest { get; private set; }
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
@@ -44,6 +49,11 @@ namespace Mobile.BuildTools.Tasks
             }
 
             generator?.Execute();
+
+            if(File.Exists(ManifestPath))
+            {
+                ProcessedManifest = new TaskItem(ManifestPath);
+            }
         }
     }
 }

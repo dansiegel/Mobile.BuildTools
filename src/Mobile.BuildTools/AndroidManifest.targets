@@ -4,11 +4,32 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
-  <Target Name="_GatherManifests"
+  <PropertyGroup>
+    <BeforeGenerateAndroidManifest>
+      MobileBuildToolsInit;
+      $(BeforeGenerateAndroidManifest);
+    </BeforeGenerateAndroidManifest>
+    <AfterGenerateAndroidManifest>
+      HandleAndroidManifest;
+      AutomaticBuildVersioning;
+      $(AfterGenerateAndroidManifest);
+    </AfterGenerateAndroidManifest>
+</PropertyGroup>
+
+  <Target Name="_MBTGatherManifests"
+          BeforeTargets="HandleAndroidManifest"
           Condition="$(BuildToolsEnableTemplateManifests)">
     <PropertyGroup>
-      <TemlateAppManifest>$(IntermediateOutputPath)android\AndroidManifest.xml</TemlateAppManifest>
+      <TemplateAppManifest>$(IntermediateOutputPath)android\AndroidManifest.xml</TemplateAppManifest>
+      <ProcessedAppManifest>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'templated', 'AndroidManifest.xml'))</ProcessedAppManifest>
+      <VersionedAppManifest>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'versioned', 'AndroidManifest.xml'))</VersionedAppManifest>
     </PropertyGroup>
+
+    <ItemGroup>
+      <TemplatedManifest Include="$(TemplateAppManifest)" Visible="false" />
+      <TemplatedHandledManifest Include="$(ProcessedAppManifest)" Visible="false" />
+      <VersionedPlist Include="$(VersionedAppManifest)" Visible="false" />
+    </ItemGroup>
   </Target>
 
   <Target Name="HandleAndroidManifest"
@@ -18,11 +39,15 @@
                           ProjectName="$(MSBuildProjectName)"
                           ProjectDirectory="$(MSBuildProjectDirectory)"
                           SolutionDirectory="$(SolutionDir)"
+                          Configuration="$(Configuration)"
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                           ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
                           ManifestPath="$(TemplateAppManifest)"
-                          Condition="$(BuildToolsEnableTemplateManifests)" />
+                          Condition="$(BuildToolsEnableTemplateManifests)">
+      <Output TaskParameter="ProcessedManifest"
+              PropertyName="_AppManifest" />
+    </TemplateManifestTask>
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
@@ -33,10 +58,15 @@
                                   ProjectName="$(MSBuildProjectName)"
                                   ProjectDirectory="$(MSBuildProjectDirectory)"
                                   SolutionDirectory="$(SolutionDir)"
+                                  Configuration="$(Configuration)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                  ManifestPath="$(TemplateAppManifest)"
                                   ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
-                                  Condition="$(BuildToolsEnableAutomaticVersioning)" />
+                                  Condition="$(BuildToolsEnableAutomaticVersioning)" >
+      <!--<Output TaskParameter="VersionedManifest"
+              PropertyName="_AppManifest" />-->
+    </AutomaticBuildVersioningTask>
   </Target>
 
 </Project>
