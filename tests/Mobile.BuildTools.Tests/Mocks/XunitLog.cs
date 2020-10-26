@@ -28,9 +28,14 @@ namespace Mobile.BuildTools.Tests.Mocks
             _testOutputHelper.WriteLine(formattedString, args);
         }
 
-        public void LogErrorFromException(Exception ex)
+        void ILog.LogErrorFromException(Exception ex)
         {
             _testOutputHelper.WriteLine(ex.ToString());
+        }
+
+        void ILog.LogError(string message)
+        {
+            _testOutputHelper.WriteLine(message);
         }
     }
 }
