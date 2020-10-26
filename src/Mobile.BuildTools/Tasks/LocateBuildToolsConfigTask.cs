@@ -122,22 +122,7 @@ namespace Mobile.BuildTools.Tasks
                 return;
             }
 
-            LocatedSolutionDirectory = LocateSolution(ProjectDir);
-        }
-
-        private string LocateSolution(string searchDirectory)
-        {
-            var solutionFiles = Directory.GetFiles(searchDirectory, "*.sln");
-            if(solutionFiles.Length > 0)
-            {
-                return searchDirectory;
-            }
-            else if(Path.IsPathRooted(searchDirectory))
-            {
-                return searchDirectory;
-            }
-
-            return LocateSolution(Directory.GetParent(searchDirectory).FullName);
+            LocatedSolutionDirectory = Utils.EnvironmentAnalyzer.LocateSolution(ProjectDir);
         }
     }
 }

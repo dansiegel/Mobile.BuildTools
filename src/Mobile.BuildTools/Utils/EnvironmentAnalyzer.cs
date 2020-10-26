@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace Mobile.BuildTools.Utils
         private const string LegacySecretPrefix = "Secret_";
         private const string DefaultManifestPrefix = "Manifest_";
 
-        public static IDictionary<string, string> GatherEnvironmentVariables(string projectPath = null, bool includeManifest = false)
+        public static IDictionary<string, string> GatherEnvironmentVariables(string buildConfiguration = null, string projectPath = null, bool includeManifest = false)
         {
             var env = new Dictionary<string, string>();
             foreach(var key in Environment.GetEnvironmentVariables().Keys)
@@ -21,17 +21,42 @@ namespace Mobile.BuildTools.Utils
                 env.Add(key.ToString(), Environment.GetEnvironmentVariable(key.ToString()));
             }
 
-            if(!string.IsNullOrWhiteSpace(projectPath))
-            {
-                LoadSecrets(Path.Combine(projectPath, Constants.SecretsJsonFileName), ref env);
-            }
+            if (string.IsNullOrWhiteSpace(projectPath))
+                return env;
+
+
+            var solutionPath = LocateSolution(projectPath);
+            LoadSecrets(Path.Combine(projectPath, Constants.SecretsJsonFileName), ref env);
+            LoadSecrets(Path.Combine(projectPath, string.Format(Constants.SecretsJsonConfigurationFileFormat, buildConfiguration)), ref env);
+            LoadSecrets(Path.Combine(solutionPath, Constants.SecretsJsonFileName), ref env);
+            LoadSecrets(Path.Combine(solutionPath, string.Format(Constants.SecretsJsonConfigurationFileFormat, buildConfiguration)), ref env);
 
             if (includeManifest)
             {
                 LoadSecrets(Path.Combine(projectPath, Constants.ManifestJsonFileName), ref env);
+                LoadSecrets(Path.Combine(solutionPath, Constants.ManifestJsonFileName), ref env);
             }
 
             return env;
+        }
+
+        public static string LocateSolution(string searchDirectory)
+        {
+            var solutionFiles = Directory.GetFiles(searchDirectory, "*.sln");
+            if (solutionFiles.Length > 0)
+            {
+                return searchDirectory;
+            }
+            else if (Directory.EnumerateDirectories(searchDirectory).Any(x => x == ".git"))
+            {
+                return searchDirectory;
+            }
+            else if (searchDirectory == Path.GetPathRoot(searchDirectory))
+            {
+                return searchDirectory;
+            }
+
+            return LocateSolution(Directory.GetParent(searchDirectory).FullName);
         }
 
         public static IEnumerable<string> GetManifestPrefixes(Platform platform, string knownPrefix)

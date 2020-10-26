@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -58,6 +60,8 @@ namespace Mobile.BuildTools.Tasks
         {
             try
             {
+                LocateSolution();
+
                 ConfigurationPath = ConfigHelper.GetConfigurationPath(ProjectDirectory);
                 _config = ConfigHelper.GetConfig(ConfigurationPath);
 //#if DEBUG
@@ -101,6 +105,16 @@ namespace Mobile.BuildTools.Tasks
                 return buildConfig.GlobalProperties[name];
 
             return null;
+        }
+
+        private void LocateSolution()
+        {
+            if (!string.IsNullOrEmpty(SolutionDirectory) && Directory.EnumerateFiles(SolutionDirectory, "*.sln").Any())
+            {
+                return;
+            }
+
+            SolutionDirectory = Utils.EnvironmentAnalyzer.LocateSolution(ProjectDirectory);
         }
     }
 }
