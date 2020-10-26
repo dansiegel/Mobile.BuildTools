@@ -14,6 +14,8 @@ namespace Mobile.BuildTools.Tasks
 
         public string ManifestPath { get; set; }
 
+        public string OutputManifestPath { get; set; }
+
         [Output]
         public ITaskItem ProcessedManifest { get; private set; }
 
@@ -31,18 +33,20 @@ namespace Mobile.BuildTools.Tasks
                 return;
             }
 
-            IGenerator generator = null;
+            IGenerator<string> generator = null;
             switch(config.Platform)
             {
                 case Platform.iOS:
                     generator = new TemplatedPlistGenerator(config)
                     {
-                        ManifestOutputPath = ManifestPath
+                        ManifestInputPath = ManifestPath,
+                        ManifestOutputPath = OutputManifestPath
                     };
                     break;
                 case Platform.Android:
                     generator = new TemplatedAndroidAppManifestGenerator(config, ReferenceAssemblyPaths)
                     {
+                        ManifestInputPath = ManifestPath,
                         ManifestOutputPath = ManifestPath
                     };
                     break;
@@ -50,9 +54,9 @@ namespace Mobile.BuildTools.Tasks
 
             generator?.Execute();
 
-            if(File.Exists(ManifestPath))
+            if(File.Exists(generator.Outputs))
             {
-                ProcessedManifest = new TaskItem(ManifestPath);
+                ProcessedManifest = new TaskItem(generator.Outputs);
             }
         }
     }

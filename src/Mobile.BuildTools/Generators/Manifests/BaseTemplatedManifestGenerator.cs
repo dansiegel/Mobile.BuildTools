@@ -1,17 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
-using Mobile.BuildTools.Logging;
-using Newtonsoft.Json.Linq;
-using Xamarin.MacDev;
 
 namespace Mobile.BuildTools.Generators.Manifests
 {
-    internal abstract class BaseTemplatedManifestGenerator : GeneratorBase
+    internal abstract class BaseTemplatedManifestGenerator : GeneratorBase<string>
     {
         internal const string DefaultToken = @"\$\$";
 
@@ -31,14 +25,23 @@ namespace Mobile.BuildTools.Generators.Manifests
 
         public string ProjectDirectory => Build.ProjectDirectory;
 
+        public string ManifestInputPath { get; set; }
+
         public string ManifestOutputPath { get; set; }
 
         protected override void ExecuteInternal()
         {
-            if (!File.Exists(ManifestOutputPath))
+            Outputs = ManifestOutputPath;
+
+            if (!File.Exists(ManifestInputPath))
             {
-                Log?.LogWarning("There is no Template Manifest at the path: '{0}'", ManifestOutputPath);
+                Log?.LogWarning("There is no Template Manifest at the path: '{0}'", ManifestInputPath);
+                return;
             }
+
+            var outputInfo = new FileInfo(ManifestOutputPath);
+            if (!outputInfo.Directory.Exists)
+                outputInfo.Directory.Create();
 
             var template = ReadManifest();
 

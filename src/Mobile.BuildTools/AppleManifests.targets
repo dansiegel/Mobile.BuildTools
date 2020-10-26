@@ -36,15 +36,15 @@
                           ManifestPath="$(_AppManifest)"
                           OutputManifestPath="$(ProcessedInfoPlist)"
                           Condition="$(BuildToolsEnableTemplateManifests)">
-      <Output TaskParameter="ProcessedManifest"
-              PropertyName="_AppManifest" />
+      <!-- <Output TaskParameter="ProcessedManifest"
+              PropertyName="_AppManifest" /> -->
     </TemplateManifestTask>
   </Target>
 
   <!-- Version Info.plist -->
   <Target Name="AutomaticBuildVersioning"
-        AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit"
-        Condition="$(BuildToolsEnableAutomaticVersioning) == 'True'">
+          AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit"
+          Condition="$(BuildToolsEnableAutomaticVersioning) == 'True'">
 
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                                   ProjectName="$(MSBuildProjectName)"
@@ -53,10 +53,10 @@
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                   ManifestPath="$(ProcessedInfoPlist)"
-                                  OutputManifestPath="$(VersionedInfoPlist)"
                                   Condition=" $(BuildToolsEnableAutomaticVersioning) ">
-      <Output TaskParameter="VersionedManifest"
-              PropertyName="_AppManifest" />
+                                  <!-- OutputManifestPath="$(VersionedInfoPlist)" -->
+      <!-- <Output TaskParameter="VersionedManifest"
+              PropertyName="_AppManifest" /> -->
     </AutomaticBuildVersioningTask>
 
   </Target>
