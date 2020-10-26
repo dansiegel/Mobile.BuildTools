@@ -1,16 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
-using Mobile.BuildTools.Logging;
-using Xamarin.MacDev;
 
 namespace Mobile.BuildTools.Generators.Manifests
 {
-    internal abstract class BaseTemplatedManifestGenerator : GeneratorBase
+    internal abstract class BaseTemplatedManifestGenerator : GeneratorBase<string>
     {
         internal const string DefaultToken = @"\$\$";
 
@@ -30,18 +25,27 @@ namespace Mobile.BuildTools.Generators.Manifests
 
         public string ProjectDirectory => Build.ProjectDirectory;
 
+        public string ManifestInputPath { get; set; }
+
         public string ManifestOutputPath { get; set; }
 
         protected override void ExecuteInternal()
         {
-            if (!File.Exists(ManifestOutputPath))
+            Outputs = ManifestOutputPath;
+
+            if (!File.Exists(ManifestInputPath))
             {
-                Log?.LogWarning("There is no Template Manifest at the path: '{0}'", ManifestOutputPath);
+                Log?.LogWarning("There is no Template Manifest at the path: '{0}'", ManifestInputPath);
+                return;
             }
+
+            var outputInfo = new FileInfo(ManifestOutputPath);
+            if (!outputInfo.Directory.Exists)
+                outputInfo.Directory.Create();
 
             var template = ReadManifest();
 
-            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(ProjectDirectory, true);
+            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(Build.BuildConfiguration, Build.ProjectDirectory, true);
             foreach (Match match in GetMatches(template))
             {
                 template = ProcessMatch(template, match, variables);
@@ -75,10 +79,30 @@ namespace Mobile.BuildTools.Generators.Manifests
             }
             else
             {
-                Log?.LogWarning($"Unable to locate replacement value for {tokenId}");
+                var errorMessage = $"Unable to locate replacement value for '{match.Value}' on line {GetLineNumber(template, match.Value)}";
+                if (Build.Configuration.Manifests.MissingTokensAsErrors)
+                {
+                    Log?.LogError(errorMessage);
+                }
+                else
+                {
+                    Log?.LogWarning(errorMessage);
+                }
             }
 
             return template;
+        }
+
+        private static int GetLineNumber(string input, string value)
+        {
+            var lines = input.Split('\n');
+            for(var i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains(value))
+                    return i + 1;
+            }
+
+            return -1;
         }
 
         internal string GetKey(string matchValue, IDictionary<string, string> variables)

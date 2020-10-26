@@ -6,8 +6,8 @@ namespace Mobile.BuildTools.Generators.Versioning
 {
     internal class iOSAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
     {
-        public iOSAutomaticBuildVersionGenerator(IBuildConfiguration buildConfiguration)
-            : base(buildConfiguration)
+        public iOSAutomaticBuildVersionGenerator(IBuildConfiguration buildConfiguration, string manifestPath)
+            : base(buildConfiguration, manifestPath)
         {
         }
 

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Mobile.BuildTools.Build;
 using Xamarin.MacDev;
 
@@ -11,7 +11,7 @@ namespace Mobile.BuildTools.Generators.Manifests
         {
         }
 
-        protected override string ReadManifest() => PDictionary.FromFile(ManifestOutputPath).ToXml();
+        protected override string ReadManifest() => PDictionary.FromFile(ManifestInputPath).ToXml();
 
         protected override void SaveManifest(string manifest)
         {

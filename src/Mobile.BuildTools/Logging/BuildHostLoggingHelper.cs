@@ -17,6 +17,11 @@ namespace Mobile.BuildTools.Logging
             _taskLoggingHelper.LogWarning(message);
         }
 
+        void ILog.LogError(string message)
+        {
+            _taskLoggingHelper.LogError(message);
+        }
+
         void ILog.LogWarning(string formattedString, params object[] args)
         {
             _taskLoggingHelper.LogWarning(formattedString, args);

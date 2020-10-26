@@ -15,7 +15,7 @@ namespace Mobile.BuildTools.Generators.Manifests
         public AndroidVersions AndroidVersions { get; set; }
 
         protected override string ReadManifest() => 
-            AndroidAppManifest.Load(ManifestOutputPath, AndroidVersions)
+            AndroidAppManifest.Load(ManifestInputPath, AndroidVersions)
                               .Document
                               .ToString();
 

@@ -4,6 +4,7 @@ namespace Mobile.BuildTools.Logging
     public interface ILog
     {
         void LogMessage(string message);
+        void LogError(string message);
 
         void LogWarning(string message);
 

@@ -9,9 +9,10 @@ namespace Mobile.BuildTools.Generators.Versioning
 {
     internal abstract class BuildVersionGeneratorBase : GeneratorBase
     {
-        public BuildVersionGeneratorBase(IBuildConfiguration buildConfiguration)
+        public BuildVersionGeneratorBase(IBuildConfiguration buildConfiguration, string manifestPath)
             : base(buildConfiguration)
         {
+            ManifestPath = manifestPath;
         }
 
         private static DateTimeOffset EPOCOffset => new DateTimeOffset(new DateTime(2018, 1, 1));
@@ -33,7 +34,7 @@ namespace Mobile.BuildTools.Generators.Versioning
 
             if(string.IsNullOrWhiteSpace(ManifestPath))
             {
-                Log.LogMessage("This platform is unsupported");
+                Log.LogMessage($"This platform is unsupported. No Manifest path has been found for {Build.Platform}");
                 return;
             }
 

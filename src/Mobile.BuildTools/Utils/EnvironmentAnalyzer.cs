@@ -13,7 +13,7 @@ namespace Mobile.BuildTools.Utils
         private const string LegacySecretPrefix = "Secret_";
         private const string DefaultManifestPrefix = "Manifest_";
 
-        public static IDictionary<string, string> GatherEnvironmentVariables(string projectPath = null, bool includeManifest = false)
+        public static IDictionary<string, string> GatherEnvironmentVariables(string buildConfiguration = null, string projectPath = null, bool includeManifest = false)
         {
             var env = new Dictionary<string, string>();
             foreach(var key in Environment.GetEnvironmentVariables().Keys)
@@ -21,17 +21,42 @@ namespace Mobile.BuildTools.Utils
                 env.Add(key.ToString(), Environment.GetEnvironmentVariable(key.ToString()));
             }
 
-            if(!string.IsNullOrWhiteSpace(projectPath))
-            {
-                LoadSecrets(Path.Combine(projectPath, Constants.SecretsJsonFileName), ref env);
-            }
+            if (string.IsNullOrWhiteSpace(projectPath))
+                return env;
+
+
+            var solutionPath = LocateSolution(projectPath);
+            LoadSecrets(Path.Combine(projectPath, Constants.SecretsJsonFileName), ref env);
+            LoadSecrets(Path.Combine(projectPath, string.Format(Constants.SecretsJsonConfigurationFileFormat, buildConfiguration)), ref env);
+            LoadSecrets(Path.Combine(solutionPath, Constants.SecretsJsonFileName), ref env);
+            LoadSecrets(Path.Combine(solutionPath, string.Format(Constants.SecretsJsonConfigurationFileFormat, buildConfiguration)), ref env);
 
             if (includeManifest)
             {
                 LoadSecrets(Path.Combine(projectPath, Constants.ManifestJsonFileName), ref env);
+                LoadSecrets(Path.Combine(solutionPath, Constants.ManifestJsonFileName), ref env);
             }
 
             return env;
+        }
+
+        public static string LocateSolution(string searchDirectory)
+        {
+            var solutionFiles = Directory.GetFiles(searchDirectory, "*.sln");
+            if (solutionFiles.Length > 0)
+            {
+                return searchDirectory;
+            }
+            else if (Directory.EnumerateDirectories(searchDirectory).Any(x => x == ".git"))
+            {
+                return searchDirectory;
+            }
+            else if (searchDirectory == Path.GetPathRoot(searchDirectory))
+            {
+                return searchDirectory;
+            }
+
+            return LocateSolution(Directory.GetParent(searchDirectory).FullName);
         }
 
         public static IEnumerable<string> GetManifestPrefixes(Platform platform, string knownPrefix)
@@ -57,40 +82,28 @@ namespace Mobile.BuildTools.Utils
 
         private static string GetPlatformManifestPrefix(Platform platform)
         {
-            switch (platform)
+            return platform switch
             {
-                case Platform.Android:
-                    return "DroidManifest_";
-                case Platform.iOS:
-                    return "iOSManifest_";
-                case Platform.UWP:
-                    return "UWPManifest_";
-                case Platform.macOS:
-                    return "MacManifest_";
-                case Platform.Tizen:
-                    return "TizenManifest_";
-                default:
-                    return null;
-            }
+                Platform.Android => "DroidManifest_",
+                Platform.iOS => "iOSManifest_",
+                Platform.UWP => "UWPManifest_",
+                Platform.macOS => "MacManifest_",
+                Platform.Tizen => "TizenManifest_",
+                _ => null,
+            };
         }
 
         public static string[] GetPlatformSecretPrefix(Platform platform)
         {
-            switch (platform)
+            return platform switch
             {
-                case Platform.Android:
-                    return new[] { "DroidSecret_" };
-                case Platform.iOS:
-                    return new[] { "iOSSecret_" };
-                case Platform.UWP:
-                    return new[] { "UWPSecret_" };
-                case Platform.macOS:
-                    return new[] { "MacSecret_" };
-                case Platform.Tizen:
-                    return new[] { "TizenSecret_" };
-                default:
-                    return new[] { DefaultSecretPrefix, LegacySecretPrefix };
-            }
+                Platform.Android => new[] { "DroidSecret_" },
+                Platform.iOS => new[] { "iOSSecret_" },
+                Platform.UWP => new[] { "UWPSecret_" },
+                Platform.macOS => new[] { "MacSecret_" },
+                Platform.Tizen => new[] { "TizenSecret_" },
+                _ => new[] { DefaultSecretPrefix, LegacySecretPrefix },
+            };
         }
 
         public static IEnumerable<string> GetSecretPrefixes(Platform platform, bool forceIncludeDefault = false)

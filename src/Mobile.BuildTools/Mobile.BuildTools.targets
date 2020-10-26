@@ -8,6 +8,8 @@
           Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid'" />
   <Import Project="iOS.targets"
           Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS'" />
+  <Import Project="iOS.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.TVOS'" />
   <Import Project="Mac.targets"
           Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'" />
   <Import Project="UAP.targets"

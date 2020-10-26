@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -7,9 +6,11 @@ namespace Mobile.BuildTools.Tasks
     {
         public string ProjectDirectory { get; set; }
 
+        public string Configuration { get; set; }
+
         public override bool Execute()
         {
-            var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(ProjectDirectory, true);
+            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(Configuration, ProjectDirectory, true);
 
             string message;
             if (variables.Any())

@@ -5,7 +5,8 @@
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Target Name="CIEnvironmentDump">
-    <BuildEnvironmentDumpTask ProjectDirectory="$(MSBuildProjectDirectory)" />
+    <BuildEnvironmentDumpTask ProjectDirectory="$(MSBuildProjectDirectory)"
+                              Configuration="$(Configuration)" />
   </Target>
 
 </Project>

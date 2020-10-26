@@ -5,8 +5,8 @@ namespace Mobile.BuildTools.Generators.Versioning
 {
     internal class AndroidAutomaticBuildVersionGenerator : BuildVersionGeneratorBase
     {
-        public AndroidAutomaticBuildVersionGenerator(IBuildConfiguration buildConfiguration)
-            : base(buildConfiguration)
+        public AndroidAutomaticBuildVersionGenerator(IBuildConfiguration buildConfiguration, string manifestPath)
+            : base(buildConfiguration, manifestPath)
         {
         }
 

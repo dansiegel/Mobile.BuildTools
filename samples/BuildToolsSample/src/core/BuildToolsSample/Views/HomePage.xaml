@@ -23,7 +23,7 @@
         <Label.FormattedText>
           <FormattedString>
             <Span Text="Settings.Foo: " />
-            <Span Text="{x:Static helpers:Settings.Foo}" />
+            <Span Text="{x:Static helpers:Settings.Message}" />
           </FormattedString>
         </Label.FormattedText>
       </Label>

@@ -4,6 +4,9 @@ namespace Mobile.BuildTools.Logging
 {
     internal class ConsoleLogger : ILog
     {
+        public void LogError(string message) =>
+            Console.WriteLine(message);
+
         public void LogErrorFromException(Exception ex) =>
             Console.WriteLine(ex);
 
