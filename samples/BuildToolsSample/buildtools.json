@@ -36,7 +36,7 @@
   "manifests": {
     "token": "$",
     "variablePrefix": "Manifest_",
-    "missingTokensAsErrors": false,
+    "missingTokensAsErrors": true,
     "disable": false
   },
   "releaseNotes": {
@@ -53,8 +53,20 @@
       "namespace": "Helpers",
       "properties": [
         {
-          "name": "Foo",
+          "name": "Message",
           "type": "String"
+        },
+        {
+          "name": "AppCenterId",
+          "type": "String"
+        },
+        {
+          "name": "Backend",
+          "type": "Uri"
+        },
+        {
+          "name": "ClientId",
+          "type": "Guid"
         }
       ]
     }
