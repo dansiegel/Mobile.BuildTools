@@ -1,12 +1,5 @@
 {
   "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
   "name": "AppIcon",
-  "scale": 1.0,
-  "watermark": {
-    "text": "Sample",
-    "colors": [
-      "#666666",
-      "Blue"
-    ]
-  }
+  "scale": 1.0
 }
