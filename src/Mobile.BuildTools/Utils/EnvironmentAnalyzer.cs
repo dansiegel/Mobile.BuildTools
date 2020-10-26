@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -82,40 +82,28 @@ namespace Mobile.BuildTools.Utils
 
         private static string GetPlatformManifestPrefix(Platform platform)
         {
-            switch (platform)
+            return platform switch
             {
-                case Platform.Android:
-                    return "DroidManifest_";
-                case Platform.iOS:
-                    return "iOSManifest_";
-                case Platform.UWP:
-                    return "UWPManifest_";
-                case Platform.macOS:
-                    return "MacManifest_";
-                case Platform.Tizen:
-                    return "TizenManifest_";
-                default:
-                    return null;
-            }
+                Platform.Android => "DroidManifest_",
+                Platform.iOS => "iOSManifest_",
+                Platform.UWP => "UWPManifest_",
+                Platform.macOS => "MacManifest_",
+                Platform.Tizen => "TizenManifest_",
+                _ => null,
+            };
         }
 
         public static string[] GetPlatformSecretPrefix(Platform platform)
         {
-            switch (platform)
+            return platform switch
             {
-                case Platform.Android:
-                    return new[] { "DroidSecret_" };
-                case Platform.iOS:
-                    return new[] { "iOSSecret_" };
-                case Platform.UWP:
-                    return new[] { "UWPSecret_" };
-                case Platform.macOS:
-                    return new[] { "MacSecret_" };
-                case Platform.Tizen:
-                    return new[] { "TizenSecret_" };
-                default:
-                    return new[] { DefaultSecretPrefix, LegacySecretPrefix };
-            }
+                Platform.Android => new[] { "DroidSecret_" },
+                Platform.iOS => new[] { "iOSSecret_" },
+                Platform.UWP => new[] { "UWPSecret_" },
+                Platform.macOS => new[] { "MacSecret_" },
+                Platform.Tizen => new[] { "TizenSecret_" },
+                _ => new[] { DefaultSecretPrefix, LegacySecretPrefix },
+            };
         }
 
         public static IEnumerable<string> GetSecretPrefixes(Platform platform, bool forceIncludeDefault = false)
