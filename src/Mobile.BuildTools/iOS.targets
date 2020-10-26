@@ -2,25 +2,12 @@
 <Project>
 
   <Import Project="PlatformHead.targets" />
-  <Import Project="iOSManifests.targets" />
+  <Import Project="AppleManifests.targets" />
 
   <Target Name="_GatherManifests">
     <PropertyGroup>
       <TemlateAppManifest>$(_AppBundlePath)Info.plist</TemlateAppManifest>
     </PropertyGroup>
-  </Target>
-
-  <Target Name="AutomaticBuildVersioning"
-          AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit"
-          Condition="$(Platform) == 'iPhone' And $(BuildToolsEnableAutomaticVersioning) == 'True'">
-
-    <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
-                                  ProjectName="$(MSBuildProjectName)"
-                                  ProjectDirectory="$(MSBuildProjectDirectory)"
-                                  SolutionDirectory="$(SolutionDir)"
-                                  IntermediateOutputPath="$(IntermediateOutputPath)"
-                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                                  Condition=" $(BuildToolsEnableAutomaticVersioning) " />
   </Target>
 
   <PropertyGroup>
@@ -49,6 +36,37 @@
                   Visible="false"
                   Condition="%(UnifiedImageAsset.ShouldBeVisible) != 'true' " />
     </ItemGroup>
+  </Target>
+
+  <Target Name="IPACopyToStagingDirectory"
+          AfterTargets="_ZipIpa"
+          DependsOnTargets="_ZipIpa"
+          Condition=" $(Platform) == 'iPhone' And '$(BuildToolsEnableArtifactCopy)' And !'$(IsAppCenter)' ">
+
+    <PropertyGroup>
+      <__IpaFileName Condition=" '$(IpaPackagePath)' != '' ">$([System.IO.Path]::GetFileNameWithoutExtension('$(IpaPackagePath)'))</__IpaFileName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <__Generated_dSYM Include="$([System.IO.Path]::GetDirectoryName('$(IpaPackagePath)'))\**"
+                        Condition=" '$(IpaPackagePath)' != '' "/>
+    </ItemGroup>
+
+    <Message Text="Could not copy the IPA. The IpaPackagePath was undefined"
+             Condition=" '$(IpaPackagePath)' == '' " />
+
+    <Copy SourceFiles="@(__Generated_dSYM)"
+          DestinationFolder="$(BuildToolsArtifactOutputPath)\$(__IpaFileName).app.dSYM\%(RecursiveDir)"
+          SkipUnchangedFiles="false"
+          OverwriteReadOnlyFiles="true"
+          Retries="3"
+          RetryDelayMilliseconds="300"
+          Condition=" '$(IpaPackagePath)' != '' " />
+
+    <Copy SourceFiles="$(IpaPackagePath)"
+          DestinationFiles="$(BuildToolsArtifactOutputPath)\$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))"
+          Condition=" '$(IpaPackagePath)' != '' " />
+
   </Target>
 
 </Project>

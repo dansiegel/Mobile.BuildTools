@@ -2,6 +2,7 @@
 <Project>
 
   <Import Project="PlatformHead.targets" />
+  <Import Project="AppleManifests.targets" />
 
   <Target Name="_GatherManifests">
     <PropertyGroup>

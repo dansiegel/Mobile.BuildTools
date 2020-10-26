@@ -1,0 +1,84 @@
+<Project>
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+
+  <!-- Collect Info.plist -->
+  <Target Name="_MBTGatherManifests"
+          BeforeTargets="HandleTokenizedInfoPlist"
+          DependsOnTargets="_DetectAppManifest">
+    <PropertyGroup>
+      <TemlateAppManifest>$(_AppBundlePath)Info.plist</TemlateAppManifest>
+      <ProcessedInfoPlist>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'templated', 'Info.plist'))</ProcessedInfoPlist>
+      <VersionedInfoPlist>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'versioned', 'Info.plist'))</VersionedInfoPlist>
+    </PropertyGroup>
+    <ItemGroup>
+      <TemplatedManifest Include="$(_AppManifest)" Visible="false" />
+      <TemplatedHandledManifest Include="$(ProcessedInfoPlist)" Visible="false" />
+      <VersionedPlist Include="$(VersionedInfoPlist)" Visible="false" />
+    </ItemGroup>
+
+    <!-- We only want to delete the Versioned PList so update the version -->
+    <Delete Files="@(VersionedPlist)" />
+  </Target>
+
+  <!-- Process Info.plist -->
+  <Target Name="HandleTokenizedInfoPlist"
+          BeforeTargets="_DetectSigningIdentity;AutomaticBuildVersioning"
+          DependsOnTargets="MobileBuildToolsInit"
+          Inputs="@(TemplatedManifest)"
+          Outputs="@(TemplatedHandledManifest)">
+    <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                          ProjectName="$(MSBuildProjectName)"
+                          ProjectDirectory="$(MSBuildProjectDirectory)"
+                          SolutionDirectory="$(SolutionDir)"
+                          IntermediateOutputPath="$(IntermediateOutputPath)"
+                          TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                          ManifestPath="$(_AppManifest)"
+                          OutputManifestPath="$(ProcessedInfoPlist)"
+                          Condition="$(BuildToolsEnableTemplateManifests)">
+      <Output TaskParameter="ProcessedManifest"
+              PropertyName="_AppManifest" />
+    </TemplateManifestTask>
+  </Target>
+
+  <!-- Version Info.plist -->
+  <Target Name="AutomaticBuildVersioning"
+        AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit"
+        Condition="$(BuildToolsEnableAutomaticVersioning) == 'True'">
+
+    <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                  ProjectName="$(MSBuildProjectName)"
+                                  ProjectDirectory="$(MSBuildProjectDirectory)"
+                                  SolutionDirectory="$(SolutionDir)"
+                                  IntermediateOutputPath="$(IntermediateOutputPath)"
+                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                  ManifestPath="$(ProcessedInfoPlist)"
+                                  OutputManifestPath="$(VersionedInfoPlist)"
+                                  Condition=" $(BuildToolsEnableAutomaticVersioning) ">
+      <Output TaskParameter="VersionedManifest"
+              PropertyName="_AppManifest" />
+    </AutomaticBuildVersioningTask>
+
+  </Target>
+
+  <!-- Update Includes -->
+  <Target Name="SetProcessedAppManifest"
+        AfterTargets="AutomaticBuildVersioning;HandleTokenizedInfoPlist"
+        BeforeTargets="_DetectAppManifest">
+    <PropertyGroup>
+      <__OutputMBTInfoPlist Condition=" Exists('$(ProcessedInfoPlist)') AND !Exists('$(VersionedInfoPlist)') ">$(ProcessedInfoPlist)</__OutputMBTInfoPlist>
+      <__OutputMBTInfoPlist Condition=" Exists('$(VersionedInfoPlist)') ">$(VersionedInfoPlist)</__OutputMBTInfoPlist>
+    </PropertyGroup>
+    <ItemGroup Condition=" $(__OutputMBTInfoPlist) != '' ">
+      <None Update="Info.plist" LogicalName="RawInfo.plist" />
+      <None Include="$(__OutputMBTInfoPlist)" LogicalName="Info.plist" Visible="false" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Update APS Environment -->
+  <Target Name="SetApsEnvironmentToProduction"
+          AfterTargets="HandleTokenizedInfoPlist"
+          Condition=" '$(APSProductionEnvironment)' != '' And '$(APSProductionEnvironment)' != 'false' ">
+    <PropertyListEditor PropertyList="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent" Action="Set" Entry="aps-environment" Type="String" Value="production" />
+  </Target>
+</Project>
