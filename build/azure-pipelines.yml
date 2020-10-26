@@ -3,6 +3,7 @@ trigger:
   branches:
     include:
     - master
+    - v*.*
   paths:
     exclude:
       - theme/*
@@ -89,10 +90,10 @@ stages:
   #     appRootDirectory: E2E/E2EApp/E2EApp.iOS
   #     csprojName: E2EApp.iOS.csproj
 
-- stage: Release
+- stage: CIRelease
   displayName: Deploy NuGet Artifacts
   dependsOn: Test
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/v2.0')))
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/v')))
   jobs:
   - deployment: SponsorConnect
     displayName: Sponsor Connect
@@ -108,10 +109,15 @@ stages:
               packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;$(Pipeline.Workspace)/**/*.snupkg'
               nuGetFeedType: external
               publishFeedCredentials: 'SponsorConnect'
+
+- stage: Release
+  displayName: Deploy Release
+  dependsOn: CIRelease
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/v'))
+  jobs:
   - deployment: NuGet
     displayName: NuGet.org
     environment: NuGet
-    condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/v2.0'))
     strategy:
       runOnce:
         deploy:
