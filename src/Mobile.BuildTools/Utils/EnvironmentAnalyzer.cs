@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Mobile.BuildTools.Build;
 using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Utils
@@ -13,7 +14,7 @@ namespace Mobile.BuildTools.Utils
         private const string LegacySecretPrefix = "Secret_";
         private const string DefaultManifestPrefix = "Manifest_";
 
-        public static IDictionary<string, string> GatherEnvironmentVariables(string buildConfiguration = null, string projectPath = null, bool includeManifest = false)
+        public static IDictionary<string, string> GatherEnvironmentVariables(IBuildConfiguration buildConfiguration = null, bool includeManifest = false)
         {
             var env = new Dictionary<string, string>();
             foreach(var key in Environment.GetEnvironmentVariables().Keys)
@@ -21,23 +22,49 @@ namespace Mobile.BuildTools.Utils
                 env.Add(key.ToString(), Environment.GetEnvironmentVariable(key.ToString()));
             }
 
-            if (string.IsNullOrWhiteSpace(projectPath))
+            if (buildConfiguration is null)
                 return env;
 
-
-            var solutionPath = LocateSolution(projectPath);
-            LoadSecrets(Path.Combine(projectPath, Constants.SecretsJsonFileName), ref env);
-            LoadSecrets(Path.Combine(projectPath, string.Format(Constants.SecretsJsonConfigurationFileFormat, buildConfiguration)), ref env);
-            LoadSecrets(Path.Combine(solutionPath, Constants.SecretsJsonFileName), ref env);
-            LoadSecrets(Path.Combine(solutionPath, string.Format(Constants.SecretsJsonConfigurationFileFormat, buildConfiguration)), ref env);
+            var projectDirectory = buildConfiguration.ProjectDirectory;
+            var solutionDirectory = buildConfiguration.SolutionDirectory;
+            var configuration = buildConfiguration.BuildConfiguration;
+            LoadSecrets(Path.Combine(projectDirectory, Constants.SecretsJsonFileName), ref env);
+            LoadSecrets(Path.Combine(projectDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)), ref env);
+            LoadSecrets(Path.Combine(solutionDirectory, Constants.SecretsJsonFileName), ref env);
+            LoadSecrets(Path.Combine(solutionDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)), ref env);
 
             if (includeManifest)
             {
-                LoadSecrets(Path.Combine(projectPath, Constants.ManifestJsonFileName), ref env);
-                LoadSecrets(Path.Combine(solutionPath, Constants.ManifestJsonFileName), ref env);
+                LoadSecrets(Path.Combine(projectDirectory, Constants.ManifestJsonFileName), ref env);
+                LoadSecrets(Path.Combine(solutionDirectory, Constants.ManifestJsonFileName), ref env);
+            }
+
+            if(buildConfiguration?.Configuration?.Environment != null)
+            {
+                var settings = buildConfiguration.Configuration.Environment;
+                var defaultSettings = settings.Defaults ?? new Dictionary<string, string>();
+                if(settings.Configuration != null && settings.Configuration.ContainsKey(configuration))
+                {
+                    foreach ((var key, var value) in settings.Configuration[configuration])
+                        defaultSettings[key] = value;
+                }
+
+                UpdateVariables(defaultSettings, ref env);
             }
 
             return env;
+        }
+
+        internal static void UpdateVariables(IDictionary<string, string> settings, ref Dictionary<string, string> output)
+        {
+            if (settings is null || settings.Count < 1)
+                return;
+
+            foreach((var key, var value) in settings)
+            {
+                if (!output.ContainsKey(key))
+                    output[key] = value;
+            }
         }
 
         public static string LocateSolution(string searchDirectory)
@@ -133,9 +160,9 @@ namespace Mobile.BuildTools.Utils
             return variables.Keys.Where(k => prefixes.Any(p => k.StartsWith(p)));
         }
 
-        public static IDictionary<string, string> GetSecrets(Platform platform, string knownPrefix)
+        public static IDictionary<string, string> GetSecrets(IBuildConfiguration build, string knownPrefix)
         {
-            var prefixes = GetSecretPrefixes(platform);
+            var prefixes = GetSecretPrefixes(build.Platform);
             if(!string.IsNullOrEmpty(knownPrefix))
             {
                 prefixes = new List<string>(prefixes)
@@ -154,6 +181,21 @@ namespace Mobile.BuildTools.Utils
                     output.Add(key, pair.Value);
                 }
             }
+
+            if (build?.Configuration?.Environment != null)
+            {
+                var configuration = build.BuildConfiguration;
+                var settings = build.Configuration.Environment;
+                var defaultSettings = settings.Defaults ?? new Dictionary<string, string>();
+                if (settings.Configuration != null && settings.Configuration.ContainsKey(configuration))
+                {
+                    foreach ((var key, var value) in settings.Configuration[configuration])
+                        defaultSettings[key] = value;
+                }
+
+                UpdateVariables(defaultSettings, ref output);
+            }
+
             return output;
         }
 

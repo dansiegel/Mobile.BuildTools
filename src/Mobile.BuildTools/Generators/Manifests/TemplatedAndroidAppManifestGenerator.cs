@@ -24,5 +24,12 @@ namespace Mobile.BuildTools.Generators.Manifests
             var doc = XDocument.Parse(manifest);
             AndroidAppManifest.Load(doc, AndroidVersions).WriteToFile(ManifestOutputPath);
         }
+
+        protected override string SetAppBundleId(string manifest, string packageName)
+        {
+            var appManifest = AndroidAppManifest.Load(XDocument.Parse(manifest), AndroidVersions);
+            appManifest.PackageName = packageName;
+            return appManifest.Document.ToString();
+        }
     }
 }

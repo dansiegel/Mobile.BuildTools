@@ -23,6 +23,8 @@
       <TemplateAppManifest>$(IntermediateOutputPath)android\AndroidManifest.xml</TemplateAppManifest>
       <ProcessedAppManifest>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'templated', 'AndroidManifest.xml'))</ProcessedAppManifest>
       <VersionedAppManifest>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'versioned', 'AndroidManifest.xml'))</VersionedAppManifest>
+      <InputAndroidManifest>$(AndroidManifest)</InputAndroidManifest>
+      <AndroidManifest>$(ProcessedAppManifest)</AndroidManifest>
     </PropertyGroup>
 
     <ItemGroup>
@@ -43,11 +45,9 @@
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                           ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
-                          ManifestPath="$(TemplateAppManifest)"
-                          Condition="$(BuildToolsEnableTemplateManifests)">
-      <Output TaskParameter="ProcessedManifest"
-              PropertyName="_AppManifest" />
-    </TemplateManifestTask>
+                          ManifestPath="$(InputAndroidManifest)"
+                          OutputManifestPath="$(ProcessedAppManifest)"
+                          Condition="$(BuildToolsEnableTemplateManifests)" />
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
@@ -61,12 +61,10 @@
                                   Configuration="$(Configuration)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                                  ManifestPath="$(TemplateAppManifest)"
+                                  ManifestPath="$(ProcessedAppManifest)"
+                                  OutputManifestPath="$(ProcessedAppManifest)"
                                   ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
-                                  Condition="$(BuildToolsEnableAutomaticVersioning)" >
-      <!--<Output TaskParameter="VersionedManifest"
-              PropertyName="_AppManifest" />-->
-    </AutomaticBuildVersioningTask>
+                                  Condition="$(BuildToolsEnableAutomaticVersioning)" />
   </Target>
 
 </Project>

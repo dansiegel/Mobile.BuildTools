@@ -1,4 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Logging;
+using Mobile.BuildTools.Models;
+using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -10,7 +16,8 @@ namespace Mobile.BuildTools.Tasks
 
         public override bool Execute()
         {
-            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(Configuration, ProjectDirectory, true);
+            var config = new BuildConfig(Configuration, ProjectDirectory);
+            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(config, true);
 
             string message;
             if (variables.Any())
@@ -29,6 +36,38 @@ namespace Mobile.BuildTools.Tasks
             Log.LogMessage(Microsoft.Build.Framework.MessageImportance.High, message);
 
             return true;
+        }
+
+        private class BuildConfig : IBuildConfiguration
+        {
+            public BuildConfig(string configuration, string projectDir)
+            {
+                BuildConfiguration = configuration;
+                ProjectDirectory = projectDir;
+                SolutionDirectory = EnvironmentAnalyzer.LocateSolution(projectDir);
+                Configuration = ConfigHelper.GetConfig(projectDir);
+            }
+
+            public string BuildConfiguration { get; }
+            public bool BuildingInsideVisualStudio { get; }
+            public IDictionary<string, string> GlobalProperties { get; }
+            public string ProjectName { get; }
+            public string ProjectDirectory { get; }
+            public string SolutionDirectory { get; }
+            public string IntermediateOutputPath { get; }
+            public ILog Logger { get; }
+            public BuildToolsConfig Configuration { get; }
+            public Platform Platform { get; }
+
+            public SecretsConfig GetSecretsConfig()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void SaveConfiguration()
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }

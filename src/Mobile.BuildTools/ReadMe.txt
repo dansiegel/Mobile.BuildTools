@@ -121,6 +121,16 @@ You can provide a solution wide configuration. The solution wide configuration m
     "Contoso.Android": {
       "AzureAdDataScheme": null // will use String by default
     }
+  },
+  "environment": {
+    "Debug": {
+      "AppId": "com.company.awesomeappdev",
+      "Backend": "https://dev.api.awesomeapp.com"
+    },
+    "Release": {
+      "AppId": "com.company.awesomeapp",
+      "Backend": "https://api.awesomeapp.com"
+    }
   }
 }
 ```

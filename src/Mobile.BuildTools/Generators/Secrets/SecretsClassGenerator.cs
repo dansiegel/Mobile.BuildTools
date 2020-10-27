@@ -151,7 +151,27 @@ namespace Mobile.BuildTools.Generators.Secrets
                 throw new Exception("An unexpected error occurred. Could not locate any secrets.");
             }
 
+            if (Build?.Configuration?.Environment != null)
+            {
+                var settings = Build.Configuration.Environment;
+                UpdateVariables(settings.Defaults, ref secrets);
+                if (settings.Configuration != null && settings.Configuration.ContainsKey(Build.BuildConfiguration))
+                    UpdateVariables(settings.Configuration[Build.BuildConfiguration], ref secrets);
+            }
+
             return secrets;
+        }
+
+        private static void UpdateVariables(IDictionary<string, string> settings, ref JObject output)
+        {
+            if (settings is null)
+                return;
+
+            foreach ((var key, var value) in settings)
+            {
+                if (!output.ContainsKey(key))
+                    output[key] = value;
+            }
         }
 
         internal void CreateOrMerge(string jsonFilePath, ref JObject secrets)
