@@ -28,7 +28,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
             File.Copy(TemplateAndroidManifestPath, TemplateAndroidManifestOutputPath);
 
-            return new AndroidAutomaticBuildVersionGenerator(GetConfiguration(), TemplateAndroidManifestOutputPath);
+            return new AndroidAutomaticBuildVersionGenerator(GetConfiguration(), TemplateAndroidManifestPath, TemplateAndroidManifestOutputPath);
         }
 
         //[Fact]

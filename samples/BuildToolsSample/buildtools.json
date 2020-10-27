@@ -71,5 +71,15 @@
       ]
     }
   },
+  "environment": {
+    "defaults": {
+      "AppId": "com.avantipoint.buildtoolssample"
+    },
+    "configuration": {
+      "Debug": {
+        "AppId": "com.avantipoint.buildtoolssampledev"
+      }
+    }
+  },
   "debug": true
 }

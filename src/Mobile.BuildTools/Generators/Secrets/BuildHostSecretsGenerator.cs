@@ -77,6 +77,6 @@ namespace Mobile.BuildTools.Generators.Secrets
         }
 
         internal IDictionary<string, string> GetSecrets(string knownPrefix) =>
-            Utils.EnvironmentAnalyzer.GetSecrets(Build.Platform, knownPrefix);
+            Utils.EnvironmentAnalyzer.GetSecrets(Build, knownPrefix);
     }
 }

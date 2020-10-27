@@ -16,7 +16,14 @@ namespace Mobile.BuildTools.Generators.Manifests
         protected override void SaveManifest(string manifest)
         {
             var plist = PDictionary.FromString(manifest);
-            File.WriteAllBytes(ManifestOutputPath, plist.ToByteArray(PropertyListFormat.Binary));
+            File.WriteAllBytes(ManifestOutputPath, plist.ToByteArray(PropertyListFormat.Xml));
+        }
+
+        protected override string SetAppBundleId(string manifest, string packageName)
+        {
+            var plist = PDictionary.FromString(manifest) as PDictionary;
+            plist.SetCFBundleIdentifier(packageName);
+            return plist.ToXml();
         }
     }
 }

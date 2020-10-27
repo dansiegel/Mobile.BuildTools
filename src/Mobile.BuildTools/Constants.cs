@@ -15,5 +15,7 @@
         public const string DefaultBackgroundColor = "#FFFFFF";
 
         public const double DefaultOpacity = 0.95;
+
+        public const string AppPackageName = "MBTPackageName";
     }
 }

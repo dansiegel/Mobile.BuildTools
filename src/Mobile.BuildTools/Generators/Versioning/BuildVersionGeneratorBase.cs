@@ -9,15 +9,17 @@ namespace Mobile.BuildTools.Generators.Versioning
 {
     internal abstract class BuildVersionGeneratorBase : GeneratorBase
     {
-        public BuildVersionGeneratorBase(IBuildConfiguration buildConfiguration, string manifestPath)
+        public BuildVersionGeneratorBase(IBuildConfiguration buildConfiguration, string manifestPath, string manifestOutputPath)
             : base(buildConfiguration)
         {
             ManifestPath = manifestPath;
+            ManifestOutputPath = string.IsNullOrEmpty(manifestOutputPath) ? manifestPath : manifestOutputPath;
         }
 
         private static DateTimeOffset EPOCOffset => new DateTimeOffset(new DateTime(2018, 1, 1));
 
         private string ManifestPath { get; }
+        private string ManifestOutputPath { get; }
         public VersionBehavior Behavior => Build.Configuration.AutomaticVersioning.Behavior;
         public VersionEnvironment VersionEnvironment => Build.Configuration.AutomaticVersioning.Environment;
         public int VersionOffset => Build.Configuration.AutomaticVersioning.VersionOffset;
@@ -50,7 +52,7 @@ namespace Mobile.BuildTools.Generators.Versioning
             LogManifestContents();
 
             Log.LogMessage("Processing Manifest");
-            ProcessManifest(ManifestPath, BuildNumber);
+            ProcessManifest(ManifestPath, ManifestOutputPath, BuildNumber);
 
             LogManifestContents();
         }
@@ -63,7 +65,7 @@ namespace Mobile.BuildTools.Generators.Versioning
             }
         }
 
-        protected abstract void ProcessManifest(string path, string buildNumber);
+        protected abstract void ProcessManifest(string path, string outputPath, string buildNumber);
 
         protected string GetBuildNumber()
         {

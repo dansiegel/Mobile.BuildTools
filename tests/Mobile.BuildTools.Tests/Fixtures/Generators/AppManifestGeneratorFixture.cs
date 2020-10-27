@@ -61,7 +61,13 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var generator = CreateGenerator();
             var template = File.ReadAllText(TemplateManifestPath);
             var match = generator.GetMatches(template).Cast<Match>().FirstOrDefault();
-            var variables = EnvironmentAnalyzer.GatherEnvironmentVariables("Test", Directory.GetCurrentDirectory(), true);
+            var config = new TestBuildConfiguration
+            {
+                BuildConfiguration = "Test",
+                ProjectDirectory = Directory.GetCurrentDirectory(),
+                SolutionDirectory = Directory.GetCurrentDirectory()
+            };
+            var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(config, true);
             foreach(var variable in variables)
             {
                 _testOutputHelper.WriteLine($"  - {variable.Key}: {variable.Value}");
@@ -81,12 +87,14 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void ProcessCustomTokenizedVariables()
         {
             var config = GetConfiguration();
+            config.BuildConfiguration = "Test";
+            config.ProjectDirectory = config.SolutionDirectory = Directory.GetCurrentDirectory();
             config.Configuration.Manifests.Token = @"%%";
             var generator = CreateGenerator(config);
 
             var template = File.ReadAllText(TemplateManifestPath);
             var match = generator.GetMatches(template).Cast<Match>().FirstOrDefault();
-            var variables = EnvironmentAnalyzer.GatherEnvironmentVariables("Test", Directory.GetCurrentDirectory(), true);
+            var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(config, true);
             var processedTemplate = generator.ProcessMatch(template, match, variables);
             var json = JsonConvert.DeserializeAnonymousType(processedTemplate, new
             {

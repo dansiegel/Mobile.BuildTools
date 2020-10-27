@@ -14,6 +14,8 @@ namespace Mobile.BuildTools.Tasks
         [Required]
         public string ManifestPath { get; set; }
 
+        public string OutputManifestPath { get; set; }
+
         internal override void ExecuteInternal(IBuildConfiguration buildConfiguration)
         {
             if (buildConfiguration.Configuration.AutomaticVersioning.Behavior == VersionBehavior.Off)
@@ -46,33 +48,29 @@ namespace Mobile.BuildTools.Tasks
 
         private IGenerator GetGenerator(Platform platform)
         {
-            switch (platform)
+            return platform switch
             {
-                case Platform.Android:
-                    return new AndroidAutomaticBuildVersionGenerator(this, ManifestPath)
-                    {
-                        ReferenceAssemblyPaths = ReferenceAssemblyPaths
-                    };
-                case Platform.iOS:
-                case Platform.macOS:
-                    return new iOSAutomaticBuildVersionGenerator(this, ManifestPath);
-                default:
-                    return null;
-
-            }
+                Platform.Android => new AndroidAutomaticBuildVersionGenerator(this, ManifestPath, OutputManifestPath)
+                {
+                    ReferenceAssemblyPaths = ReferenceAssemblyPaths
+                },
+                Platform.iOS => new iOSAutomaticBuildVersionGenerator(this, ManifestPath, OutputManifestPath),
+                Platform.macOS => new iOSAutomaticBuildVersionGenerator(this, ManifestPath, OutputManifestPath),
+                Platform.TVOS => new iOSAutomaticBuildVersionGenerator(this, ManifestPath, OutputManifestPath),
+                _ => null
+            };
         }
 
         private bool IsSupported(Platform platform)
         {
-            switch(platform)
+            return platform switch
             {
-                case Platform.Android:
-                case Platform.iOS:
-                case Platform.macOS:
-                    return true;
-                default:
-                    return false;
-            }
+                Platform.Android => true,
+                Platform.iOS => true,
+                Platform.macOS => true,
+                Platform.TVOS => true,
+                _ => false
+            };
         }
     }
 }

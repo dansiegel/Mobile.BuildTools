@@ -40,6 +40,9 @@ namespace Mobile.BuildTools.Models
         [JsonProperty("projectSecrets")]
         public Dictionary<string, SecretsConfig> ProjectSecrets { get; set; }
 
+        [JsonProperty("environment")]
+        public EnvironmentSettings Environment { get; set; }
+
         [JsonProperty("debug")]
         public bool Debug { get; set; }
     }

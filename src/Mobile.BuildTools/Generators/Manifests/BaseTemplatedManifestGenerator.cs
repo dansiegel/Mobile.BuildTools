@@ -45,14 +45,22 @@ namespace Mobile.BuildTools.Generators.Manifests
 
             var template = ReadManifest();
 
-            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(Build.BuildConfiguration, Build.ProjectDirectory, true);
+            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(Build, true);
             foreach (Match match in GetMatches(template))
             {
                 template = ProcessMatch(template, match, variables);
             }
 
+            if (variables.ContainsKey(Constants.AppPackageName))
+            {
+                Log.LogMessage($"Setting App Package Name to: {variables[Constants.AppPackageName]}");
+                template = SetAppBundleId(template, variables[Constants.AppPackageName]);
+            }
+
             SaveManifest(template);
         }
+
+        protected abstract string SetAppBundleId(string manifest, string packageName);
 
         protected abstract string ReadManifest();
 
@@ -73,8 +81,9 @@ namespace Mobile.BuildTools.Generators.Manifests
 
             if (!string.IsNullOrWhiteSpace(key))
             {
-                Log?.LogMessage($"Replacing token '{tokenId}'");
                 var value = variables[key];
+                var message = Build.Configuration.Debug ? $"Replacing token '{tokenId}' with '{value}'." : $"Replacing token '{tokenId}'.";
+                Log?.LogMessage(message);
                 template = Regex.Replace(template, $@"{token}{tokenId}{token}", value);
             }
             else

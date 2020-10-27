@@ -33,10 +33,17 @@ namespace Mobile.BuildTools.Tasks
                 return;
             }
 
+            if (string.IsNullOrEmpty(OutputManifestPath))
+            {
+                OutputManifestPath = ManifestPath;
+            }
+
             IGenerator<string> generator = null;
             switch(config.Platform)
             {
                 case Platform.iOS:
+                case Platform.macOS:
+                case Platform.TVOS:
                     generator = new TemplatedPlistGenerator(config)
                     {
                         ManifestInputPath = ManifestPath,
@@ -47,7 +54,7 @@ namespace Mobile.BuildTools.Tasks
                     generator = new TemplatedAndroidAppManifestGenerator(config, ReferenceAssemblyPaths)
                     {
                         ManifestInputPath = ManifestPath,
-                        ManifestOutputPath = ManifestPath
+                        ManifestOutputPath = OutputManifestPath
                     };
                     break;
             }
