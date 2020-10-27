@@ -73,6 +73,28 @@
         }
       }
     },
+    "EnvironmentSettings": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "default": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "default": { }
+        },
+        "configuration": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "default": { "Debug": { } }
+        }
+      }
+    },
     "ImageResize": {
       "type": [
         "object",
@@ -354,6 +376,9 @@
         "$ref": "#/definitions/SecretsConfig"
       }
     },
+    "environment": {
+      "type": [ "object", "null" ]
+    }
     "debug": {
       "type": "boolean"
     }
