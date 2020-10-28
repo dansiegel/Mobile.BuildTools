@@ -109,31 +109,38 @@ namespace Mobile.BuildTools.Generators.Secrets
             File.WriteAllText(intermediateFile, secretsClass);
         }
 
-        internal JObject GetMergedSecrets()
+        internal IDictionary<string, string> GetMergedSecrets()
         {
-            JObject secrets = null;
+            JObject jObject = null;
             foreach (var file in SecretsFileLocations)
             {
-                CreateOrMerge(file, ref secrets);
+                CreateOrMerge(file, ref jObject);
             }
 
-            if (secrets is null)
+            if (jObject is null)
             {
                 throw new Exception("An unexpected error occurred. Could not locate any secrets.");
             }
 
+            var secrets = jObject.ToObject<Dictionary<string, string>>();
+
             if (Build?.Configuration?.Environment != null)
             {
                 var settings = Build.Configuration.Environment;
-                UpdateVariables(settings.Defaults, ref secrets);
+                var defaultSettings = settings.Defaults ?? new Dictionary<string, string>();
                 if (settings.Configuration != null && settings.Configuration.ContainsKey(Build.BuildConfiguration))
-                    UpdateVariables(settings.Configuration[Build.BuildConfiguration], ref secrets);
+                {
+                    foreach ((var key, var value) in settings.Configuration[Build.BuildConfiguration])
+                        defaultSettings[key] = value;
+                }
+
+                UpdateVariables(defaultSettings, ref secrets);
             }
 
             return secrets;
         }
 
-        private static void UpdateVariables(IDictionary<string, string> settings, ref JObject output)
+        private static void UpdateVariables(IDictionary<string, string> settings, ref Dictionary<string, string> output)
         {
             if (settings is null)
                 return;
@@ -164,7 +171,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             }
         }
 
-        internal CodeWriter GenerateClass(SecretsConfig secretsConfig, JObject secrets)
+        internal CodeWriter GenerateClass(SecretsConfig secretsConfig, IDictionary<string, string> secrets)
         {
             var writer = new CodeWriter();
             writer.AppendLine("// ------------------------------------------------------------------------------");
@@ -201,7 +208,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             return writer;
         }
 
-        private void ProcessSecret(KeyValuePair<string, JToken> secret, SecretsConfig secretsConfig, ref CodeWriter writer)
+        private void ProcessSecret(KeyValuePair<string, string> secret, SecretsConfig secretsConfig, ref CodeWriter writer)
         {
             if (!secretsConfig.HasKey(secret.Key, out var valueConfig))
             {
@@ -227,7 +234,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             writer.AppendLine(standardOutput, safeOutput);
         }
 
-        internal string ProcessSecret(KeyValuePair<string, JToken> secret, SecretsConfig secretsConfig, bool saveOutput, bool safeOutput = false)
+        internal string ProcessSecret(KeyValuePair<string, string> secret, SecretsConfig secretsConfig, bool saveOutput, bool safeOutput = false)
         {
             if (!secretsConfig.HasKey(secret.Key, out var valueConfig) && !saveOutput)
             {
@@ -249,7 +256,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             return PropertyBuilder(secret, mapping.Type, mapping.Handler, valueConfig.IsArray, safeOutput);
         }
 
-        internal ValueConfig GenerateValueConfig(KeyValuePair<string, JToken> secret, SecretsConfig config)
+        internal ValueConfig GenerateValueConfig(KeyValuePair<string, string> secret, SecretsConfig config)
         {
             var value = secret.Value.ToString();
             var valueArray = Regex.Split(value, $"(?<!\\\\){config.Delimiter}").Select(x => x.Replace($"\\{config.Delimiter}", config.Delimiter));
@@ -301,7 +308,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             return $"{BaseNamespace}.{relativeNamespace}";
         }
 
-        internal string PropertyBuilder(KeyValuePair<string, JToken> secret, Type type, IValueHandler valueHandler, bool isArray, bool safeOutput)
+        internal string PropertyBuilder(KeyValuePair<string, string> secret, Type type, IValueHandler valueHandler, bool isArray, bool safeOutput)
         {
             var output = string.Empty;
             var typeDeclaration = type.GetStandardTypeName();

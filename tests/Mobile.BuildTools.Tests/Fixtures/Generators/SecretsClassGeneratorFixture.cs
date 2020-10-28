@@ -10,7 +10,6 @@ using Microsoft.CSharp;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Models.Secrets;
-using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -44,7 +43,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void ProcessSecretHidesValueForSafeOutput(bool firstRun)
         {
             var value = "TestValue";
-            var pair = new KeyValuePair<string, JToken>(TestKey, value);
+            var pair = new KeyValuePair<string, string>(TestKey, value);
             var generator = GetGenerator();
             var config = new SecretsConfig()
             {
@@ -61,8 +60,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void ProcessSecretGeneratesBooleanValue(bool firstRun)
         {
             var key = "TestKey";
-            var value = true;
-            var pair = new KeyValuePair<string, JToken>(key, value);
+            var value = bool.TrueString;
+            var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
             var config = new SecretsConfig()
             {
@@ -79,8 +78,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void ProcessSecretGeneratesIntegerValue(bool firstRun)
         {
             var key = "TestKey";
-            var value = 2;
-            var pair = new KeyValuePair<string, JToken>(key, value);
+            var value = "2";
+            var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
             var config = new SecretsConfig()
             {
@@ -97,8 +96,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void ProcessSecretGeneratesDoubleValue(bool firstRun)
         {
             var key = "TestKey";
-            var value = 2.2;
-            var pair = new KeyValuePair<string, JToken>(key, value);
+            var value = "2.2";
+            var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
             var config = new SecretsConfig()
             {
@@ -116,7 +115,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         {
             var key = "TestKey";
             var value = "TestValue";
-            var pair = new KeyValuePair<string, JToken>(key, value);
+            var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
             var config = new SecretsConfig()
             {
@@ -206,7 +205,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         [InlineData(false, true, PropertyType.TimeSpan, "static readonly System.TimeSpan[]", "6:12;4:20", "new System.TimeSpan[] { System.TimeSpan.Parse(\"6:12\"), System.TimeSpan.Parse(\"4:20\") }")]
         public void ProcessSecretValue(bool firstRun, bool isArray, PropertyType type, string typeDeclaration, string value, string valueDeclaration)
         {
-            var pair = new KeyValuePair<string, JToken>(TestKey, value);
+            var pair = new KeyValuePair<string, string>(TestKey, value);
             var generator = GetGenerator();
             var valueConfig = new ValueConfig
             {
