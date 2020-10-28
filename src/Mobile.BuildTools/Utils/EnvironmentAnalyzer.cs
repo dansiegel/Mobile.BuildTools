@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -197,6 +197,24 @@ namespace Mobile.BuildTools.Utils
             }
 
             return output;
+        }
+
+        public static bool IsInGitRepo(string projectPath)
+        {
+            var di = new DirectoryInfo(projectPath);
+            if (di.EnumerateDirectories().Any(x => x.Name == ".git"))
+                return true;
+
+            if (IsRootPath(di))
+                return false;
+
+            return IsInGitRepo(di.Parent.FullName);
+        }
+
+        private static bool IsRootPath(DirectoryInfo directoryPath)
+        {
+            return directoryPath.Root.FullName == directoryPath.FullName ||
+                directoryPath.FullName == Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
         private static void LoadSecrets(string path, ref Dictionary<string, string> env)
