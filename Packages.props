@@ -28,7 +28,7 @@
     <PackageReference Update="xunit" Version="2.4.1" />
     <PackageReference Update="xunit.runner.visualstudio" Version="2.4.3" />
     <PackageReference Update="NUnit" Version="3.12.0" />
-    <PackageReference Update="Xamarin.UITest" Version="3.0.8-dev1" />
+    <PackageReference Update="Xamarin.UITest" Version="3.0.8-dev2" />
   </ItemGroup>
 
   <ItemGroup>
