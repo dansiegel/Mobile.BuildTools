@@ -67,18 +67,18 @@ namespace Mobile.BuildTools.Utils
             }
         }
 
+        // This should stop looking when:
+        // - We have found a solution
+        // - Either the Current directory or Parent is the Root i.e. c:\
+        // - Either the Current directory or Parent is the User directory i.e. c:\Users\Dan
+        // - The Current directory contains the .git folder
         public static string LocateSolution(string searchDirectory)
         {
-            var solutionFiles = Directory.GetFiles(searchDirectory, "*.sln");
-            if (solutionFiles.Length > 0)
-            {
-                return searchDirectory;
-            }
-            else if (Directory.EnumerateDirectories(searchDirectory).Any(x => x == ".git"))
-            {
-                return searchDirectory;
-            }
-            else if (searchDirectory == Path.GetPathRoot(searchDirectory))
+            var di = new DirectoryInfo(searchDirectory);
+            if (di.EnumerateFiles("*.sln").Any() 
+                || IsRootPath(di.Parent) 
+                || di.EnumerateDirectories().Any(x => x.Name == ".git")
+                || IsRootPath(di))
             {
                 return searchDirectory;
             }
@@ -197,6 +197,24 @@ namespace Mobile.BuildTools.Utils
             }
 
             return output;
+        }
+
+        public static bool IsInGitRepo(string projectPath)
+        {
+            var di = new DirectoryInfo(projectPath);
+            if (di.EnumerateDirectories().Any(x => x.Name == ".git"))
+                return true;
+
+            if (IsRootPath(di))
+                return false;
+
+            return IsInGitRepo(di.Parent.FullName);
+        }
+
+        private static bool IsRootPath(DirectoryInfo directoryPath)
+        {
+            return directoryPath.Root.FullName == directoryPath.FullName ||
+                directoryPath.FullName == Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
         private static void LoadSecrets(string path, ref Dictionary<string, string> env)

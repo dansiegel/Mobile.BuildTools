@@ -71,7 +71,7 @@ namespace Mobile.BuildTools.Tasks
             EnableAutomaticVersioning = !crossTargetingProject && IsEnabled(configuration?.AutomaticVersioning) && isPlatformHead;
             EnableImageProcessing = !crossTargetingProject && IsEnabled(configuration?.Images) && (platform == Platform.iOS || platform == Platform.Android);
             EnableTemplateManifests = !crossTargetingProject && IsEnabled(configuration?.Manifests) && isPlatformHead;
-            EnableReleaseNotes = IsEnabled(configuration?.ReleaseNotes) && isPlatformHead;
+            EnableReleaseNotes = IsEnabled(configuration?.ReleaseNotes) && isPlatformHead && EnvironmentAnalyzer.IsInGitRepo(ProjectDir);
 
             // Only run this if it's not disabled and there are SCSS files
             EnableScssToCss = IsEnabled(configuration?.Css) && Directory.EnumerateFiles(ProjectDir, "*.scss", SearchOption.AllDirectories).Any();
