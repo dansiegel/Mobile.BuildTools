@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
@@ -9,11 +9,11 @@
       MobileBuildToolsInit;
       $(BeforeGenerateAndroidManifest);
     </BeforeGenerateAndroidManifest>
-    <AfterGenerateAndroidManifest>
+    <_OnResolveMonoAndroidSdks>
       HandleAndroidManifest;
       AutomaticBuildVersioning;
-      $(AfterGenerateAndroidManifest);
-    </AfterGenerateAndroidManifest>
+      $(_OnResolveMonoAndroidSdks);
+    </_OnResolveMonoAndroidSdks>
 </PropertyGroup>
 
   <Target Name="_MBTGatherManifests"
@@ -35,8 +35,13 @@
   </Target>
 
   <Target Name="HandleAndroidManifest"
-          AfterTargets="_GenerateJavaStubs;_SetLatestTargetFrameworkVersion"
+          AfterTargets="_MBTGatherManifests"
           DependsOnTargets="MobileBuildToolsInit">
+    <PropertyGroup>
+      <_InputManifestToHandle>$(InputAndroidManifest)</_InputManifestToHandle>
+      <_InputManifestToHandle Condition=" Exists('$(TemplateAppManifest)') ">$(TemplateAppManifest)</_InputManifestToHandle>
+      <ProcessedAppManifest Condition=" $(_InputManifestToHandle) == $(TemplateAppManifest) ">$(ProcessedAppManifest)</ProcessedAppManifest>
+    </PropertyGroup>
     <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                           ProjectName="$(MSBuildProjectName)"
                           ProjectDirectory="$(MSBuildProjectDirectory)"
@@ -45,13 +50,13 @@
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                           ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
-                          ManifestPath="$(InputAndroidManifest)"
+                          ManifestPath="$(_InputManifestToHandle)"
                           OutputManifestPath="$(ProcessedAppManifest)"
                           Condition="$(BuildToolsEnableTemplateManifests)" />
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
-          AfterTargets="HandleAndroidManifest;HandleTokenizedInfoPlist"
+          AfterTargets="HandleAndroidManifest"
           DependsOnTargets="MobileBuildToolsInit">
 
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
