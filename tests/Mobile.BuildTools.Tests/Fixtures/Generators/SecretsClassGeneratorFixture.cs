@@ -55,9 +55,11 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ProcessSecretGeneratesBooleanValue(bool firstRun)
+        [InlineData(Accessibility.Internal, true)]
+        [InlineData(Accessibility.Internal, false)]
+        [InlineData(Accessibility.Public, true)]
+        [InlineData(Accessibility.Public, false)]
+        public void ProcessSecretGeneratesBooleanValue(Accessibility accessibility, bool firstRun)
         {
             var key = "TestKey";
             var value = bool.TrueString;
@@ -65,17 +67,20 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var generator = GetGenerator();
             var config = new SecretsConfig()
             {
+                Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.Bool } }
             };
 
             var output = generator.ProcessSecret(pair, config, firstRun);
-            Assert.Contains($"const bool {key}", output);
+            Assert.Contains($"{accessibility.ToString().ToLower()} const bool {key}", output);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ProcessSecretGeneratesIntegerValue(bool firstRun)
+        [InlineData(Accessibility.Internal, true)]
+        [InlineData(Accessibility.Internal, false)]
+        [InlineData(Accessibility.Public, true)]
+        [InlineData(Accessibility.Public, false)]
+        public void ProcessSecretGeneratesIntegerValue(Accessibility accessibility, bool firstRun)
         {
             var key = "TestKey";
             var value = "2";
@@ -83,17 +88,20 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var generator = GetGenerator();
             var config = new SecretsConfig()
             {
+                Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.Int } }
             };
 
             var output = generator.ProcessSecret(pair, config, firstRun);
-            Assert.Contains($"const int {key}", output);
+            Assert.Contains($"{accessibility.ToString().ToLower()} const int {key}", output);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ProcessSecretGeneratesDoubleValue(bool firstRun)
+        [InlineData(Accessibility.Internal, true)]
+        [InlineData(Accessibility.Internal, false)]
+        [InlineData(Accessibility.Public, true)]
+        [InlineData(Accessibility.Public, false)]
+        public void ProcessSecretGeneratesDoubleValue(Accessibility accessibility, bool firstRun)
         {
             var key = "TestKey";
             var value = "2.2";
@@ -101,17 +109,20 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var generator = GetGenerator();
             var config = new SecretsConfig()
             {
+                Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.Double } }
             };
 
             var output = generator.ProcessSecret(pair, config, firstRun);
-            Assert.Contains($"const double {key}", output);
+            Assert.Contains($"{accessibility.ToString().ToLower()} const double {key}", output);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ProcessSecretGeneratesStringValue(bool firstRun)
+        [InlineData(Accessibility.Internal, true)]
+        [InlineData(Accessibility.Internal, false)]
+        [InlineData(Accessibility.Public, true)]
+        [InlineData(Accessibility.Public, false)]
+        public void ProcessSecretGeneratesStringValue(Accessibility accessibility, bool firstRun)
         {
             var key = "TestKey";
             var value = "TestValue";
@@ -119,11 +130,12 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var generator = GetGenerator();
             var config = new SecretsConfig()
             {
+                Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.String } }
             };
 
             var output = generator.ProcessSecret(pair, config, firstRun);
-            Assert.Contains($"const string {key}", output);
+            Assert.Contains($"{accessibility.ToString().ToLower()} const string {key}", output);
         }
 
         [Theory]

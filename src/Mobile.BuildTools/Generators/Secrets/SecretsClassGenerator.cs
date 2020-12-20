@@ -195,7 +195,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             using (writer.Block($"namespace {GetNamespace(secretsConfig.Namespace)}"))
             {
                 writer.AppendAttribute(CompileGeneratedAttribute);
-                using(writer.Block($"static partial class {secretsConfig.ClassName}"))
+                using(writer.Block($"{secretsConfig.Accessibility.ToString().ToLower()} static partial class {secretsConfig.ClassName}"))
                 {
                     foreach (var secret in secrets)
                     {
@@ -227,9 +227,10 @@ namespace Mobile.BuildTools.Generators.Secrets
             }
 
             var mapping = valueConfig.PropertyType.GetPropertyTypeMapping();
+            var accessibility = secretsConfig.Accessibility.ToString().ToLower();
 
-            var standardOutput = PropertyBuilder(secret, mapping.Type, mapping.Handler, valueConfig.IsArray, false);
-            var safeOutput = PropertyBuilder(secret, mapping.Type, mapping.Handler, valueConfig.IsArray, true);
+            var standardOutput = PropertyBuilder(secret, mapping.Type, mapping.Handler, valueConfig.IsArray, false, accessibility);
+            var safeOutput = PropertyBuilder(secret, mapping.Type, mapping.Handler, valueConfig.IsArray, true, accessibility);
             writer.AppendAttribute(CompileGeneratedAttribute);
             writer.AppendLine(standardOutput, safeOutput);
         }
@@ -253,7 +254,9 @@ namespace Mobile.BuildTools.Generators.Secrets
             }
 
             var mapping = valueConfig.PropertyType.GetPropertyTypeMapping();
-            return PropertyBuilder(secret, mapping.Type, mapping.Handler, valueConfig.IsArray, safeOutput);
+            var accessibility = secretsConfig.Accessibility.ToString().ToLower();
+
+            return PropertyBuilder(secret, mapping.Type, mapping.Handler, valueConfig.IsArray, safeOutput, accessibility);
         }
 
         internal ValueConfig GenerateValueConfig(KeyValuePair<string, string> secret, SecretsConfig config)
@@ -308,7 +311,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             return $"{BaseNamespace}.{relativeNamespace}";
         }
 
-        internal string PropertyBuilder(KeyValuePair<string, string> secret, Type type, IValueHandler valueHandler, bool isArray, bool safeOutput)
+        internal string PropertyBuilder(KeyValuePair<string, string> secret, Type type, IValueHandler valueHandler, bool isArray, bool safeOutput, string accessibility)
         {
             var output = string.Empty;
             var typeDeclaration = type.GetStandardTypeName();
@@ -329,7 +332,7 @@ namespace Mobile.BuildTools.Generators.Secrets
                 output = output.ToLower();
             }
 
-            return $"internal {accessModifier} {typeDeclaration} {secret.Key} = {output};";
+            return $"{accessibility} {accessModifier} {typeDeclaration} {secret.Key} = {output};";
         }
 
         internal static IEnumerable<string> GetValueArray(JToken token) =>
