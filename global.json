@@ -6,6 +6,6 @@
   },
   "msbuild-sdks": {
     "MSBuild.Sdk.Extras": "2.1.2",
-    "Microsoft.Build.NoTargets": "2.0.1"
+    "Microsoft.Build.NoTargets": "3.0.0"
   }
 }
