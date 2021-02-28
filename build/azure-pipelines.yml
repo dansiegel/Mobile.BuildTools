@@ -144,7 +144,6 @@ stages:
 
           - task: NuGetCommand@2
             displayName: NuGet Push
-            enabled: $(DeployToNuGet)
             inputs:
               command: push
               packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;$(Pipeline.Workspace)/**/*.snupkg'

@@ -26,6 +26,11 @@ Write-Host "Version Name" $VersionName
 Write-Host "IsPreview $IsPreview"
 Write-Host "Deploy to NuGet: $DeployToNuGet"
 
+if($VersionName -match '-pre-.*$')
+{
+    Write-Error -Message "The Package version seems to be for CI and should not be pushed to NuGet.org." -ErrorAction Stop
+}
+
 Write-Output ("##vso[task.setvariable variable=DeployToNuGet;]$DeployToNuGet")
 Write-Output ("##vso[task.setvariable variable=VersionName;]$VersionName")
 Write-Output ("##vso[task.setvariable variable=IsPreview;]$IsPreview")
