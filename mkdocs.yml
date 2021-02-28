@@ -10,17 +10,20 @@ repo_url: https://github.com/dansiegel/Mobile.BuildTools
 edit_uri: ""
 
 # Copyright
-copyright: 'Copyright &copy; 2017 - 2020 Dan Siegel'
+copyright: 'Copyright &copy; 2017 - 2021 Dan Siegel'
 
 # Configuration
 theme:
   name: 'material'
   custom_dir: 'theme'
+  icon:
+    repo: fontawesome/brands/github
   logo: assets/icon.svg
   favicon: assets/favicon.ico
   language: en
-  feature:
-    tabs: true
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
   palette:
     primary: white
     accent: deep-orange
@@ -97,4 +100,6 @@ nav:
       - MSBuild Properties: appendix/msbuild-props.md
     - Credits: credits.md
 
-#google_analytics: 'UA-153405647-4'
+google_analytics:
+  - UA-153405647-4
+  - auto

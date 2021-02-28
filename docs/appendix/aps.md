@@ -2,6 +2,9 @@
 
 When using Push Notifications on iOS you must be sure to set the `aps-environment` from `development` to `production` before submitting to the App Store. The Mobile.BuildTools will handle this for you easily at build.
 
+!!! danger "Critical Note"
+    While this was originally slated for v2.0, this will not be done until 2.1.
+
 ## From the Build Definition
 
 You can accomplish this easily by updating your build definition to pass additional MSBuild arguments with the value `/p:APSProductionEnvironment=true` and the Mobile.BuildTools will automatically update the `aps-environment` for you.

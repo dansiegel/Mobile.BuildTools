@@ -2,6 +2,9 @@
 
 There are many times in which you may need to parameterize an AndroidManifest.xml or Info.plist. One such example would be when using the MSAL library for Azure Active Directory / Azure Active Directory B2C user authentication in which you must create a custom url scheme like:
 
+!!! danger "Critical Note"
+    While this was originally slated for v2.0, this will not be done until 2.1.
+
 ```xml
 <key>CFBundleURLTypes</key>
 <array>
