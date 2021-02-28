@@ -7,6 +7,9 @@ if ($null -ne $env:PIPELINE_WORKSPACE)
 
 Write-Host "Artifact search directory - $searchPath"
 $nupkg = Get-ChildItem -Path $searchPath -Filter *.nupkg -Recurse | Select-Object -First 1
+
+Write-Host "Evaluating package: $($nupkg.Name)"
+
 $nupkg.Name -match '^(.*?)\.((?:\.?[0-9]+){3,}(?:[-a-z]+)?)\.nupkg$'
 
 $VersionName = $Matches[2]

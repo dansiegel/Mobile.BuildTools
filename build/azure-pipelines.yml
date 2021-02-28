@@ -3,7 +3,7 @@ trigger:
   branches:
     include:
     - master
-    - v*.*
+    - release
   paths:
     exclude:
       - theme/*
@@ -93,7 +93,7 @@ stages:
 - stage: CIRelease
   displayName: Deploy NuGet Artifacts
   dependsOn: Test
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/v')))
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/release')))
   jobs:
   - deployment: SponsorConnect
     displayName: Sponsor Connect
@@ -113,7 +113,7 @@ stages:
 - stage: Release
   displayName: Deploy Release
   dependsOn: CIRelease
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/v'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
   jobs:
   - deployment: NuGet
     displayName: NuGet.org
@@ -144,10 +144,10 @@ stages:
 
           - task: NuGetCommand@2
             displayName: NuGet Push
+            enabled: $(DeployToNuGet)
             inputs:
               command: push
               packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;$(Pipeline.Workspace)/**/*.snupkg'
               nuGetFeedType: external
               publishFeedCredentials: 'NuGet'
-
 
