@@ -160,6 +160,55 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Theory]
+        [InlineData(false, PropertyType.Bool, "const bool", "false")]
+        [InlineData(true, PropertyType.Bool, "static readonly bool[]", "System.Array.Empty<bool>()")]
+        [InlineData(false, PropertyType.Byte, "const byte", "default")]
+        [InlineData(true, PropertyType.Byte, "static readonly byte[]", "System.Array.Empty<byte>()")]
+        [InlineData(false, PropertyType.Char, "const char", "default")]
+        [InlineData(true, PropertyType.Char, "static readonly char[]", "System.Array.Empty<char>()")]
+        [InlineData(false, PropertyType.DateTime, "static readonly System.DateTime", "default")]
+        [InlineData(true, PropertyType.DateTime, "static readonly System.DateTime[]", "System.Array.Empty<System.DateTime>()")]
+        [InlineData(false, PropertyType.DateTimeOffset, "static readonly System.DateTimeOffset", "default")]
+        [InlineData(true, PropertyType.DateTimeOffset, "static readonly System.DateTimeOffset[]", "System.Array.Empty<System.DateTimeOffset>()")]
+        [InlineData(false, PropertyType.Decimal, "const decimal", "default")]
+        [InlineData(true, PropertyType.Decimal, "static readonly decimal[]", "System.Array.Empty<decimal>()")]
+        [InlineData(false, PropertyType.Double, "const double", "default")]
+        [InlineData(true, PropertyType.Double, "static readonly double[]", "System.Array.Empty<double>()")]
+        [InlineData(false, PropertyType.Float, "const float", "default")]
+        [InlineData(true, PropertyType.Float, "static readonly float[]", "System.Array.Empty<float>()")]
+        [InlineData(false, PropertyType.Guid, "static readonly System.Guid", "default")]
+        [InlineData(true, PropertyType.Guid, "static readonly System.Guid[]", "System.Array.Empty<System.Guid>()")]
+        [InlineData(false, PropertyType.Int, "const int", "default")]
+        [InlineData(true, PropertyType.Int, "static readonly int[]", "System.Array.Empty<int>()")]
+        [InlineData(false, PropertyType.Long, "const long", "default")]
+        [InlineData(true, PropertyType.Long, "static readonly long[]", "System.Array.Empty<long>()")]
+        [InlineData(false, PropertyType.SByte, "const sbyte", "default")]
+        [InlineData(true, PropertyType.SByte, "static readonly sbyte[]", "System.Array.Empty<sbyte>()")]
+        [InlineData(false, PropertyType.Short, "const short", "default")]
+        [InlineData(true, PropertyType.Short, "static readonly short[]", "System.Array.Empty<short>()")]
+        [InlineData(false, PropertyType.String, "const string", "default")]
+        [InlineData(true, PropertyType.String, "static readonly string[]", "System.Array.Empty<string>()")]
+        [InlineData(false, PropertyType.TimeSpan, "static readonly System.TimeSpan", "default")]
+        [InlineData(true, PropertyType.TimeSpan, "static readonly System.TimeSpan[]", "System.Array.Empty<System.TimeSpan>()")]
+        [InlineData(false, PropertyType.Uri, "static readonly System.Uri", "default")]
+        [InlineData(true, PropertyType.Uri, "static readonly System.Uri[]", "System.Array.Empty<System.Uri>()")]
+        public void HandleNullValue(bool isArray, PropertyType type, string typeDeclaration, string valueDeclaration)
+        {
+            var pair = new KeyValuePair<string, string>(TestKey, "null");
+            var generator = GetGenerator();
+            var valueConfig = new ValueConfig
+            {
+                Name = TestKey,
+                PropertyType = type,
+                IsArray = isArray
+            };
+            var secretsConfig = new SecretsConfig { Properties = new List<ValueConfig> { valueConfig } };
+            var output = generator.ProcessSecret(pair, secretsConfig, false);
+            Assert.Contains($"{typeDeclaration} {TestKey}", output);
+            Assert.Contains(valueDeclaration, output);
+        }
+
+        [Theory]
         // bool
         [InlineData(false, false, PropertyType.Bool, "const bool", "False", "false")]
         [InlineData(false, true, PropertyType.Bool, "static readonly bool[]", "False;True", "new bool[] { false, true }")]

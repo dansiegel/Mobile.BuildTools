@@ -18,5 +18,8 @@ namespace Mobile.BuildTools.Models.Secrets
 
         [JsonProperty("isArray")]
         public bool IsArray { get; set; }
+
+        [JsonProperty("defaultValue")]
+        public string DefaultValue { get; set; }
     }
 }

@@ -60,6 +60,41 @@ namespace Mobile.BuildTools.Generators.Secrets
                 };
             }
 
+            if (string.IsNullOrEmpty(secretsConfig.ClassName))
+                secretsConfig.ClassName = "Secrets";
+
+            if (string.IsNullOrEmpty(secretsConfig.Namespace))
+                secretsConfig.ClassName = "Helpers";
+
+            if (string.IsNullOrEmpty(secretsConfig.Delimiter))
+                secretsConfig.ClassName = ";";
+
+            if (string.IsNullOrEmpty(secretsConfig.Prefix))
+                secretsConfig.ClassName = "BuildTools_";
+
+            foreach (var propConfig in secretsConfig.Properties)
+            {
+                if (string.IsNullOrEmpty(propConfig.DefaultValue))
+                    continue;
+                if (secrets.ContainsKey(propConfig.Name) || secrets.ContainsKey($"{secretsConfig.Prefix}{propConfig.Name}"))
+                    continue;
+
+                secrets.Add(propConfig.Name, propConfig.DefaultValue == "null" || propConfig.DefaultValue == "default" ? null : propConfig.DefaultValue);
+            }
+
+            var hasErrors = false;
+            foreach(var propConfig in secretsConfig.Properties)
+            {
+                if (!secrets.ContainsKey(propConfig.Name) && !secrets.ContainsKey($"{secretsConfig.Prefix}{propConfig.Name}"))
+                {
+                    hasErrors = true;
+                    Log.LogError($"No value was provided for the required parameter: {propConfig.Name}");
+                }
+            }
+
+            if (hasErrors)
+                return;
+
             if(saveConfig)
             {
                 if (Build.Configuration.ProjectSecrets is null)
@@ -68,16 +103,6 @@ namespace Mobile.BuildTools.Generators.Secrets
                 }
                 Build.Configuration.ProjectSecrets.Add(Build.ProjectName, secretsConfig);
                 Build.SaveConfiguration();
-            }
-
-            if(string.IsNullOrEmpty(secretsConfig.Namespace))
-            {
-                secretsConfig.Namespace = "Helpers";
-            }
-
-            if(string.IsNullOrEmpty(secretsConfig.ClassName))
-            {
-                secretsConfig.ClassName = "Secrets";
             }
 
             var writer = GenerateClass(secretsConfig, secrets);
@@ -316,20 +341,39 @@ namespace Mobile.BuildTools.Generators.Secrets
             var output = string.Empty;
             var typeDeclaration = type.GetStandardTypeName();
             var accessModifier = type.FullName == typeDeclaration || isArray ? "static readonly" : "const";
-            if (isArray)
+            if(secret.Value == "null" || secret.Value == "default")
+            {
+                if(type == typeof(bool) && !isArray)
+                {
+                    output = bool.FalseString.ToLower();
+                }
+                else if(isArray)
+                {
+                    output = $"System.Array.Empty<{typeDeclaration}>()";
+                    typeDeclaration += "[]";
+                }
+                else
+                {
+                    output = "default";
+                }
+            }
+            else if (isArray)
             {
                 typeDeclaration += "[]";
                 var valueArray = GetValueArray(secret.Value).Select(x => valueHandler.Format(x, safeOutput));
                 output = "new " + typeDeclaration + " { " + string.Join(", ", valueArray) + " }";
+                if (type == typeof(bool))
+                {
+                    output = output.ToLower();
+                }
             }
             else
             {
                 output = valueHandler.Format(secret.Value, safeOutput);
-            }
-
-            if(type == typeof(bool))
-            {
-                output = output.ToLower();
+                if (type == typeof(bool))
+                {
+                    output = output.ToLower();
+                }
             }
 
             return $"{accessibility} {accessModifier} {typeDeclaration} {secret.Key} = {output};";
