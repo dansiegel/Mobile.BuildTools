@@ -4,6 +4,9 @@ The Mobile.BuildTools is an easy to use NuGet package that adds new MSBuild targ
 
 The Mobile.BuildTools are a collection of MSBuild Tasks that help make MSBuild smarter in handling the build process for CI/CD with Mobile Applications. The library was born from a desire to share build processes from one app to the next without having to copy and paste a bunch of build scripts each of which could easily end up out of date. Because the Mobile.BuildTools simply provides MSBuild Tasks, this adds nothing to the size of your application and if being used on a project that will be packed and shared, you can set the PackageReference's PrivateAssets to all.
 
+!!! warning "NOTE"
+    The docs on this site are specific to the Mobile.BuildTools v2.0. For those still using v1.4 please refer to the Wiki on GitHub.
+
 ## Support
 
 This project is maintained by Dan Siegel. If this project has helped you please consider sponsoring Dan on GitHub. Your contributions help make great open source projects possible.
