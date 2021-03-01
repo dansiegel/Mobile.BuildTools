@@ -318,6 +318,9 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         internal string GetNamespace(string relativeNamespace)
         {
+            if (string.IsNullOrEmpty(relativeNamespace))
+                relativeNamespace = "Helpers";
+
             var parts = relativeNamespace.Split('.', '/', '\\').Where(x => !string.IsNullOrEmpty(x));
             var count = parts.Count();
             if (count == 0)
