@@ -10,6 +10,7 @@ using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Handlers;
 using Mobile.BuildTools.Models.Secrets;
 using Mobile.BuildTools.Utils;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Generators.Secrets
@@ -36,9 +37,25 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         protected override void ExecuteInternal()
         {
+            var secretsConfig = Build.GetSecretsConfig();
+
             if (!SecretsFileLocations.Any(x => File.Exists(x)))
             {
                 Log.LogMessage("No secrets.json was found in either the Project or Solution Directory.");
+
+                if(secretsConfig.Properties.Any())
+                {
+                    var jObject = new JObject();
+                    foreach (var propConfig in secretsConfig.Properties)
+                    {
+                        jObject[propConfig.Name] = $"{propConfig.PropertyType}";
+                        Log.LogError($"Missing Secret parameter: {propConfig.Name}");
+                    }
+
+                    Log.LogWarning(@$"To fix the build please add a secrets.json in either the Project or Solution root directory.");
+                    Log.LogMessage(jObject.ToString(Formatting.Indented));
+                }
+
                 return;
             }
 
@@ -46,7 +63,6 @@ namespace Mobile.BuildTools.Generators.Secrets
 
             var replacement = string.Empty;
             var safeReplacement = string.Empty;
-            var secretsConfig = Build.GetSecretsConfig();
             var saveConfig = secretsConfig is null;
             if(saveConfig)
             {
@@ -64,13 +80,13 @@ namespace Mobile.BuildTools.Generators.Secrets
                 secretsConfig.ClassName = "Secrets";
 
             if (string.IsNullOrEmpty(secretsConfig.Namespace))
-                secretsConfig.ClassName = "Helpers";
+                secretsConfig.Namespace = "Helpers";
 
             if (string.IsNullOrEmpty(secretsConfig.Delimiter))
-                secretsConfig.ClassName = ";";
+                secretsConfig.Delimiter = ";";
 
             if (string.IsNullOrEmpty(secretsConfig.Prefix))
-                secretsConfig.ClassName = "BuildTools_";
+                secretsConfig.Prefix = "BuildTools_";
 
             foreach (var propConfig in secretsConfig.Properties)
             {
@@ -88,7 +104,7 @@ namespace Mobile.BuildTools.Generators.Secrets
                 if (!secrets.ContainsKey(propConfig.Name) && !secrets.ContainsKey($"{secretsConfig.Prefix}{propConfig.Name}"))
                 {
                     hasErrors = true;
-                    Log.LogError($"No value was provided for the required parameter: {propConfig.Name}");
+                    Log.LogError($"Missing Secret parameter: {propConfig.Name}");
                 }
             }
 

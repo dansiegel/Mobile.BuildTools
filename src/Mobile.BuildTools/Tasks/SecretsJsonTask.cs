@@ -1,7 +1,9 @@
 using System.IO;
+using System.Linq;
 using Microsoft.Build.Framework;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Secrets;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -18,17 +20,26 @@ namespace Mobile.BuildTools.Tasks
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
+            //System.Diagnostics.Debugger.Launch();
+
             if (config.GetSecretsConfig().Disable)
                 return;
 
             var configJson = string.Format(Constants.SecretsJsonConfigurationFileFormat, config.BuildConfiguration.ToLower());
+            var searchPaths = new[]
+            {
+                SolutionDirectory,
+                ProjectDirectory,
+                ConfigHelper.GetConfigurationPath(ProjectDirectory, SolutionDirectory)
+            }
+            .SelectMany(x => new[] { Path.Combine(x, Constants.SecretsJsonFileName), Path.Combine(x, configJson) })
+            .Where(x => File.Exists(x))
+            .ToList();
 
-            var generator = new SecretsClassGenerator(config, 
-                Path.Combine(SolutionDirectory, Constants.SecretsJsonFileName),
-                Path.Combine(SolutionDirectory, configJson),
-                Path.Combine(ProjectDirectory, Constants.SecretsJsonFileName),
-                Path.Combine(ProjectDirectory, configJson),
-                JsonSecretsFilePath)
+            if (!string.IsNullOrEmpty(JsonSecretsFilePath) && !searchPaths.Contains(JsonSecretsFilePath))
+                searchPaths.Add(JsonSecretsFilePath);
+
+            var generator = new SecretsClassGenerator(config, searchPaths.ToArray())
             {
                 BaseNamespace = RootNamespace,
             };

@@ -21,9 +21,7 @@ namespace Mobile.BuildTools.Utils
 
         public void AppendAttribute(string value, string safeValue = null)
         {
-            _indentLevel++;
             AppendLine(value, safeValue);
-            _indentLevel--;
         }
 
         public void Append(string value, string safeValue = null)
