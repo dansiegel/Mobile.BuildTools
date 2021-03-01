@@ -13,6 +13,12 @@ using SixLabors.ImageSharp.Advanced;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Generators
 {
+    public class ImageResizer { }
+
+    [CollectionDefinition(nameof(ImageResizer), DisableParallelization = true)]
+    public class ImageResizerCollection : ICollectionFixture<ImageResizer> { }
+
+    [Collection(nameof(ImageResizer))]
     public class ImageResizerGeneratorFixture : FixtureBase
     {
         public ImageResizerGeneratorFixture(ITestOutputHelper testOutputHelper) 
