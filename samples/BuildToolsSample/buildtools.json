@@ -44,7 +44,7 @@
     "maxCommit": 10,
     "characterLimit": 250,
     "filename": "ReleaseNotes.txt",
-    "createInRoot": true,
+    "createInRoot": false,
     "disable": false
   },
   "projectSecrets": {

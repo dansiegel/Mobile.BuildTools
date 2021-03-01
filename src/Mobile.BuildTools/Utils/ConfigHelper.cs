@@ -69,7 +69,7 @@ namespace Mobile.BuildTools.Utils
                 {
                     Disable = false,
                     CharacterLimit = 250,
-                    CreateInRoot = true,
+                    CreateInRoot = false,
                     FileName = "ReleaseNotes.txt",
                     MaxCommit = 10,
                     MaxDays = 7

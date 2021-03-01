@@ -13,6 +13,7 @@
                                  SolutionDirectory="$(SolutionDir)"
                                  IntermediateOutputPath="$(IntermediateOutputPath)"
                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                 OutputPath="$(OutputPath)"
                                  Condition=" '$(BuildToolsEnableReleaseNotes)' " />
   </Target>
 

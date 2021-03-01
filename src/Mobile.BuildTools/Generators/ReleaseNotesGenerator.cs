@@ -5,15 +5,19 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Generators
 {
     internal class ReleaseNotesGenerator : GeneratorBase
     {
-        public ReleaseNotesGenerator(IBuildConfiguration buildConfiguration)
+        public ReleaseNotesGenerator(IBuildConfiguration buildConfiguration, string outputPath)
             : base(buildConfiguration)
         {
+            OutputPath = outputPath;
         }
+
+        public string OutputPath { get; }
 
         protected override void ExecuteInternal()
         {
@@ -21,23 +25,11 @@ namespace Mobile.BuildTools.Generators
 
             if (releaseNotesOptions.Disable) return;
 
-            var currentHash = GetGitHash();
-
-            var generatedMarkerFilePath = new FileInfo(Path.Combine(Build.SolutionDirectory, ".vs", $"generated-releasenotes.{currentHash}"));
-
-            if (!generatedMarkerFilePath.Directory.Exists)
-                generatedMarkerFilePath.Directory.Create();
-
-            var releaseNotesFilePath = new FileInfo(Path.Combine(releaseNotesOptions.CreateInRoot ? Build.SolutionDirectory : Build.ProjectDirectory, releaseNotesOptions.FileName));
+            var rootDirectory = ConfigHelper.GetConfigurationPath(Build.ProjectDirectory, Build.SolutionDirectory);
+            var releaseNotesFilePath = new FileInfo(Path.Combine(releaseNotesOptions.CreateInRoot ? rootDirectory : OutputPath, releaseNotesOptions.FileName ?? "ReleaseNotes.txt"));
 
             if (!releaseNotesFilePath.Directory.Exists)
                 releaseNotesFilePath.Directory.Create();
-
-            if (releaseNotesFilePath.Exists && generatedMarkerFilePath.Exists)
-            {
-                Log.LogMessage("Current Release Notes file has already been generated.");
-                return;
-            }
 
             var branchName = GetBranchName();
             if (string.IsNullOrWhiteSpace(branchName))
@@ -82,10 +74,7 @@ namespace Mobile.BuildTools.Generators
             }
 
             File.WriteAllText(releaseNotesFilePath.FullName, notes.Trim());
-            File.WriteAllText(generatedMarkerFilePath.FullName, @"99 little bugs in the code,
-99 bugs in the code,
-1 bug fixed... compile again,
-100 little bugs in the code.");
+
         }
 
         internal IEnumerable<string> GetCommitDates(DateTime fromDate)
