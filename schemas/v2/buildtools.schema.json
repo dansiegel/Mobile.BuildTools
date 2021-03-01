@@ -398,7 +398,7 @@
     },
     "environment": {
       "type": [ "object", "null" ]
-    }
+    },
     "debug": {
       "type": "boolean"
     }
