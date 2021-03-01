@@ -18,15 +18,15 @@ namespace Mobile.BuildTools.Utils
             if (string.IsNullOrEmpty(searchDirectory)) return null;
 
             var rootPath = Path.GetPathRoot(searchDirectory);
-            var configPath = Path.Combine(searchDirectory, "buildtools.json");
-            if (File.Exists(configPath))
+            var configPath = new FileInfo(Path.Combine(searchDirectory, "buildtools.json"));
+            if (configPath.Exists)
             {
                 return searchDirectory;
             }
-
-            if(string.IsNullOrEmpty(slnDir) && Directory.GetFiles(searchDirectory, "*.sln").Length > 0)
+            else if (configPath.Directory.EnumerateFiles("*.sln").Any() ||
+                configPath.Directory.EnumerateDirectories().Any(x => x.Name == ".git"))
             {
-                slnDir = searchDirectory;
+                return configPath.Directory.FullName;
             }
 
             if (searchDirectory == rootPath)
@@ -37,7 +37,7 @@ namespace Mobile.BuildTools.Utils
             }
 
             var parentDirectory = Directory.GetParent(searchDirectory);
-            return GetConfigurationPath(parentDirectory.FullName);
+            return GetConfigurationPath(parentDirectory.FullName, slnDir ?? searchDirectory);
         }
 
         public static bool Exists(string path) =>
