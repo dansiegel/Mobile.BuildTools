@@ -53,28 +53,28 @@
       "properties": [
         {
           "name": "SampleString",
-          "type": "String",
-          "isArray": false
+          "type": "String"
         },
         {
           "name": "SampleBool",
-          "type": "Bool",
-          "isArray": false
+          "type": "Bool"
         },
         {
           "name": "SampleInt",
-          "type": "Int",
-          "isArray": false
+          "type": "Int"
         },
         {
           "name": "SampleDouble",
-          "type": "Double",
-          "isArray": false
+          "type": "Double"
         },
         {
           "name": "SampleUri",
-          "type": "Uri",
-          "isArray": false
+          "type": "Uri"
+        },
+        {
+          "name": "SampleMessage",
+          "type": "String",
+          "defaultValue": "Hello World!"
         }
       ]
     }
