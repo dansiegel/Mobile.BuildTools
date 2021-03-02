@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
@@ -29,7 +26,7 @@ namespace Mobile.BuildTools.Drawing
 
         public static void ApplyBackground(this IImageProcessingContext context, string hexColor)
         {
-            var color = ColorUtils.TryParse(hexColor, out var x) ? x : Color.FromHex(Constants.DefaultBackgroundColor);
+            var color = ColorUtils.TryParse(hexColor, out var x) ? x : Color.ParseHex(Constants.DefaultBackgroundColor);
 
             context.BackgroundColor(color);
         }

@@ -7,7 +7,6 @@ using Mobile.BuildTools.Models.AppIcons;
 using Newtonsoft.Json;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 
 namespace Mobile.BuildTools.Generators.Images
 {

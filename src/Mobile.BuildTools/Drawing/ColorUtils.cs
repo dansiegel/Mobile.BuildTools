@@ -8,9 +8,9 @@ namespace Mobile.BuildTools.Drawing
 {
     internal static class ColorUtils
     {
-        private static readonly Dictionary<string, Rgba32> namedColors = typeof(Rgba32).GetFields(BindingFlags.Public | BindingFlags.Static)
-                   .Where(x => x.FieldType == typeof(Rgba32))
-                   .ToDictionary(x => x.Name, x => (Rgba32)x.GetValue(null));
+        private static readonly Dictionary<string, Color> namedColors = typeof(Color).GetFields(BindingFlags.Public | BindingFlags.Static)
+                   .Where(x => x.FieldType == typeof(Color))
+                   .ToDictionary(x => x.Name, x => (Color)x.GetValue(null));
 
         public static bool TryParse(string input, out Color result)
         {
@@ -28,7 +28,7 @@ namespace Mobile.BuildTools.Drawing
 
             try
             {
-                result = Rgba32.FromHex(input);
+                result = Rgba32.ParseHex(input);
                 return true;
             }
             catch

@@ -25,8 +25,6 @@
     <None Include="*.targets;*.props" Pack="true" Kind="$(PrimaryOutputKind)" />
     <None Update="Resources\*" Pack="true" PackagePath="$(PrimaryOutputKind)/resources/%(Filename)%(Extension)" />
     <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
-    <None Include="../../assets/runtime/*.dll" Pack="true" Kind="$(PrimaryOutputKind)" Visible="false" />
-    <Reference Include="../../assets/runtime/*.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +33,13 @@
     <PackageReference Include="Newtonsoft.Json" PrivateAssets="all" />
     <PackageReference Include="NuGet.Build.Packaging" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Web.Xdt" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.ImageSharp" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.Fonts" PrivateAssets="all" />
+    <PackageReference Include="System.Buffers" PrivateAssets="all" />
+    <PackageReference Include="System.Memory" PrivateAssets="all" />
+    <PackageReference Include="System.Numerics.Vectors" PrivateAssets="all" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

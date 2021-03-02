@@ -7,8 +7,8 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using Mobile.BuildTools.Models.AppIcons;
 using SixLabors.Fonts;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Drawing;
 
 namespace Mobile.BuildTools.Drawing
 {
@@ -99,10 +99,17 @@ namespace Mobile.BuildTools.Drawing
                 _ => new PointF(imgSize.Width / 2, imgSize.Height - (imgSize.Height / 9)),
             };
 
-            var textGraphicOptions = new TextGraphicsOptions(true)
+            var textGraphicOptions = new TextGraphicsOptions
             {
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
+                GraphicsOptions = new GraphicsOptions
+                {
+                    Antialias = true
+                },
+                TextOptions = new TextOptions
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                }
             };
 
             // Apply Banner
@@ -115,8 +122,20 @@ namespace Mobile.BuildTools.Drawing
         private static IImageProcessingContext DrawBanner(this IImageProcessingContext context, WatermarkSettings settings)
         {
             var imgSize = context.GetCurrentSize();
-
-            var options = new GraphicsOptions(true, PixelColorBlendingMode.Normal, PixelAlphaCompositionMode.SrcOver, 1);
+            var options = new ShapeGraphicsOptions
+            {
+                GraphicsOptions = new GraphicsOptions
+                {
+                    Antialias = true,
+                    ColorBlendingMode = PixelColorBlendingMode.Normal,
+                    BlendPercentage = 1,
+                    AlphaCompositionMode = PixelAlphaCompositionMode.SrcOver
+                },
+                ShapeOptions = new ShapeOptions
+                {
+                    IntersectionRule = IntersectionRule.Nonzero
+                }
+            };
 
             var points = new[] { new PointF(0, imgSize.Height), new PointF(imgSize.Width, imgSize.Height) };
 
