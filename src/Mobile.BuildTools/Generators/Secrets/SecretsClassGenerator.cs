@@ -240,8 +240,15 @@ namespace Mobile.BuildTools.Generators.Secrets
                 {
                     foreach (var secret in secrets)
                     {
-                        ProcessSecret(secret, secretsConfig, ref writer);
-                        writer.AppendLine();
+                        try
+                        {
+                            ProcessSecret(secret, secretsConfig, ref writer);
+                            writer.AppendLine();
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception($"An error occurred while processing {secret.Key}.", ex);
+                        }
                     }
                 }
             }
@@ -360,7 +367,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             var output = string.Empty;
             var typeDeclaration = type.GetStandardTypeName();
             var accessModifier = type.FullName == typeDeclaration || isArray ? "static readonly" : "const";
-            if(secret.Value == "null" || secret.Value == "default")
+            if(secret.Value is null || secret.Value == "null" || secret.Value == "default")
             {
                 if(type == typeof(bool) && !isArray)
                 {

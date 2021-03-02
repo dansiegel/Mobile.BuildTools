@@ -42,6 +42,16 @@
         {
           "name": "AUri",
           "type": "Uri"
+        },
+        {
+          "name": "AppCenterSecret",
+          "type": "String",
+          "defaultValue": "default"
+        },
+        {
+          "name": "SomeDefaultBool",
+          "type": "Bool",
+          "defaultValue": "null"
         }
       ]
     }

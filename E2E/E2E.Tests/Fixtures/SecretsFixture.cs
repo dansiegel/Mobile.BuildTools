@@ -59,5 +59,19 @@ namespace E2E.Tests.Fixtures
         {
             Assert.IsType<string[]>(Secrets.AStringArray);
         }
+
+        [Fact]
+        public void AppCenterSecretIsNull()
+        {
+            Assert.IsType<string>(Secrets.AppCenterSecret);
+            Assert.Null(Secrets.AppCenterSecret);
+        }
+
+        [Fact]
+        public void SomeDefaultBoolIsFalse()
+        {
+            Assert.IsType<bool>(Secrets.SomeDefaultBool);
+            Assert.False(Secrets.SomeDefaultBool);
+        }
     }
 }
