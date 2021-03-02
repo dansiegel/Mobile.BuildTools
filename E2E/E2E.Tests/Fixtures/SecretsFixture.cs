@@ -63,7 +63,6 @@ namespace E2E.Tests.Fixtures
         [Fact]
         public void AppCenterSecretIsNull()
         {
-            Assert.IsType<string>(Secrets.AppCenterSecret);
             Assert.Null(Secrets.AppCenterSecret);
         }
 
