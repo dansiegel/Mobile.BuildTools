@@ -19,6 +19,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/dansiegel/Mobile.BuildTools.git</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <!-- CI Helper -->
