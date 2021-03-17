@@ -43,6 +43,9 @@ namespace Mobile.BuildTools.Models
         [JsonProperty("environment")]
         public EnvironmentSettings Environment { get; set; }
 
+        [JsonProperty("google")]
+        public GoogleConfig Google { get; set; }
+
         [JsonProperty("debug")]
         public bool Debug { get; set; }
     }
