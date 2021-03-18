@@ -90,8 +90,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
                 {
                     ConditionalDirectories = new Dictionary<string, IEnumerable<string>>
                     {
-                        { "Debug", new[] { Path.Combine(Environment.CurrentDirectory, "images", "Debug" )} },
-                        { "Release", new[] { Path.Combine(Environment.CurrentDirectory, "images", "Release" )} },
+                        { directory, new[] { Path.Combine(Environment.CurrentDirectory, "images", directory )} },
                         { "Fake", new[] { Path.Combine(Environment.CurrentDirectory, "images", "Fake" )} },
                     },
                     Directories = new List<string>
@@ -106,7 +105,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             Assert.Equal(expectedPaths, paths.Count());
             Assert.Contains(paths, p => p == Path.Combine(Environment.CurrentDirectory, "images"));
             if (expectedPaths > 1)
-                Assert.Contains(paths, p => p == Path.Combine(Environment.CurrentDirectory, "images", configuration));
+                Assert.Contains(paths, p => p == Path.Combine(Environment.CurrentDirectory, "images", directory));
         }
     }
 }
