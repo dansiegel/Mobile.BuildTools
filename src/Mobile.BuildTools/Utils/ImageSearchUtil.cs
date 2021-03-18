@@ -109,7 +109,8 @@ namespace Mobile.BuildTools.Utils
             if (Uri.TryCreate(directory, UriKind.RelativeOrAbsolute, out var result) && result.IsAbsoluteUri)
                 return directory;
 
-            return Path.Combine(buildToolsConfigPath, directory);
+            var sanitizedDirectoryPath = Path.Combine(directory.Split('/', '\\'));
+            return Path.Combine(buildToolsConfigPath, sanitizedDirectoryPath);
         }
     }
 }

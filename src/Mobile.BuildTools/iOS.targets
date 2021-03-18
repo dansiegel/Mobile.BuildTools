@@ -69,4 +69,22 @@
 
   </Target>
 
+  <Target Name="MBTBundleGoogleServices"
+          BeforeTargets="Compile;CoreCompile">
+    <GoogleTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                ProjectName="$(MSBuildProjectName)"
+                ProjectDirectory="$(MSBuildProjectDirectory)"
+                SolutionDirectory="$(SolutionDir)"
+                Configuration="$(Configuration)"
+                IntermediateOutputPath="$(IntermediateOutputPath)"
+                TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)">
+      <Output ItemName="GeneratedFile"
+              TaskParameter="GoogleOutput"/>
+      <Output ItemName="FilesWrite"
+              TaskParameter="GoogleOutput"/>
+      <Output ItemName="BundleResource"
+              TaskParameter="GoogleOutput" />
+    </GoogleTask>
+  </Target>
+
 </Project>
