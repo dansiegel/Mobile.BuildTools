@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.GoogleTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+
   <Import Project="PlatformHead.targets" />
   <Import Project="AndroidManifest.targets" />
 
