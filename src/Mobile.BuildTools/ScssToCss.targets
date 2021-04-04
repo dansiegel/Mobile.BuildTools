@@ -7,19 +7,16 @@
   <PropertyGroup>
     <CssGDependsOn>
       _CollectScss;
-      _EnsureScssRuntimeIsAvailable;
       ProcessScss;
       $(CssGDependsOn);
     </CssGDependsOn>
     <PrepareResourcesDependsOn>
       _CollectScss;
-      _EnsureScssRuntimeIsAvailable;
       ProcessScss;
       $(PrepareResourcesDependsOn)
     </PrepareResourcesDependsOn>
     <ProcessScssDependsOn>
       _CollectScss;
-      _EnsureScssRuntimeIsAvailable;
     </ProcessScssDependsOn>
   </PropertyGroup>
 
@@ -29,28 +26,6 @@
       <_PartialScss Include="@(_AllScss)" Condition="$([MSBuild]::ValueOrDefault('%(Filename)', '').StartsWith('_'))" />
       <_Scss Include="@(_AllScss)" Exclude="@(_PartialScss)" />
     </ItemGroup>
-  </Target>
-
-  <Target Name="_EnsureScssRuntimeIsAvailable"
-          BeforeTargets="ProcessScss">
-    <PropertyGroup>
-      <_NativeRuntime>win-x86</_NativeRuntime>
-      <_NativeRuntimeFile>libsass.dll</_NativeRuntimeFile>
-      <!-- <_NativeRuntime Condition="$([System.Environment]::Is64BitProcess)">win-x64</_NativeRuntime> -->
-      <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
-      <_NativeRuntimeFile Condition=" '$(OS)' != 'Windows_NT'">libsass.dylib</_NativeRuntimeFile>
-      <ScssRuntimeInput Condition=" '$(ScssRuntimeInput)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'runtimes', $(_NativeRuntime), $(_NativeRuntimeFile)))</ScssRuntimeInput>
-      <ScssRuntimeOutput Condition=" '$(ScssRuntimeOutput)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), $(_NativeRuntimeFile)))</ScssRuntimeOutput>
-    </PropertyGroup>
-
-    <Message Text="LibSass native binary exists at: $(ScssRuntimeOutput)"
-             Condition="Exists($(ScssRuntimeOutput))" />
-    <Message Text="Copying LibSass native binary from '$(ScssRuntimeOutput)' to '$(ScssRuntimeInput)'"
-             Condition="!Exists($(ScssRuntimeOutput))" />
-
-    <Copy SourceFiles="$(ScssRuntimeInput)"
-          DestinationFiles="$(ScssRuntimeOutput)"
-          Condition="!Exists($(ScssRuntimeOutput))" />
   </Target>
 
   <Target Name="ProcessScss"
