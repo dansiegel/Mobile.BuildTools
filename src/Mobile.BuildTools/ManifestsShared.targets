@@ -3,6 +3,8 @@
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.AutomaticBuildVersioningTask"
              AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
+             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <Target Name="_TemplateManifestDebug"
           BeforeTargets="HandleTokenizedInfoPlist;HandleAndroidManifest"

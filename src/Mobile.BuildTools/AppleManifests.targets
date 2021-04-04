@@ -1,13 +1,11 @@
 <Project>
-  <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
 
   <!-- Collect Info.plist -->
   <Target Name="_MBTGatherManifests"
           BeforeTargets="HandleTokenizedInfoPlist"
           DependsOnTargets="_DetectAppManifest">
     <PropertyGroup>
-      <TemlateAppManifest>$(_AppBundlePath)Info.plist</TemlateAppManifest>
+      <TemlateAppManifest>$([System.IO.Path]::Combine('$(_AppBundlePath)', 'Info.plist'))</TemlateAppManifest>
       <ProcessedInfoPlist>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'templated', 'Info.plist'))</ProcessedInfoPlist>
       <VersionedInfoPlist>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'versioned', 'Info.plist'))</VersionedInfoPlist>
     </PropertyGroup>
@@ -43,7 +41,7 @@
   </Target>
 
   <!-- Version Info.plist -->
-  <Target Name="AutomaticBuildVersioning"
+  <!-- <Target Name="AutomaticBuildVersioning"
           AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit"
           Condition="$(BuildToolsEnableAutomaticVersioning) == 'True'">
 
@@ -56,15 +54,12 @@
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                   ManifestPath="$(ProcessedInfoPlist)"
                                   Condition=" $(BuildToolsEnableAutomaticVersioning) ">
-                                  <!-- OutputManifestPath="$(VersionedInfoPlist)" -->
-      <!-- <Output TaskParameter="VersionedManifest"
-              PropertyName="_AppManifest" /> -->
     </AutomaticBuildVersioningTask>
 
-  </Target>
+  </Target> -->
 
   <!-- Update Includes -->
-  <Target Name="SetProcessedAppManifest"
+  <!-- <Target Name="SetProcessedAppManifest"
         AfterTargets="AutomaticBuildVersioning;HandleTokenizedInfoPlist"
         BeforeTargets="_DetectAppManifest">
     <PropertyGroup>
@@ -75,7 +70,7 @@
       <None Update="Info.plist" LogicalName="RawInfo.plist" />
       <None Include="$(__OutputMBTInfoPlist)" LogicalName="Info.plist" Visible="false" />
     </ItemGroup>
-  </Target>
+  </Target> -->
 
   <!-- Update APS Environment -->
   <Target Name="SetApsEnvironmentToProduction"

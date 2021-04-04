@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
-  <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
-
   <PropertyGroup>
     <BeforeGenerateAndroidManifest>
       MobileBuildToolsInit;
