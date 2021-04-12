@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Drawing;
 using Mobile.BuildTools.Models.AppIcons;
 using Newtonsoft.Json;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
+using SkiaSharp;
 
 namespace Mobile.BuildTools.Generators.Images
 {
@@ -34,12 +35,39 @@ namespace Mobile.BuildTools.Generators.Images
             Log.LogMessage($"Generating file '{outputImage.OutputFile}");
             var fi = new FileInfo(outputImage.OutputFile);
             Directory.CreateDirectory(Path.Combine(Build.IntermediateOutputPath, fi.DirectoryName));
-            using var image = Image.Load(outputImage.InputFile);
-            var requiresBackground = outputImage.RequiresBackgroundColor && image.HasTransparentBackground();
+
+            using var image = ImageBase.Load(outputImage.InputFile);
 
             try
             {
-                image.Mutate(x => MutateImage(x, outputImage, requiresBackground));
+                var outputSize = GetOutputSize(outputImage, image.GetOriginalSize());
+
+                if (Math.Abs(outputSize.Scale.X - outputSize.Scale.Y) >= 0.0001)
+                {
+                    Log.LogWarning("Image aspect ratio is not being maintained.");
+                }
+
+                // Allocate
+                using (var tempBitmap = new SKBitmap(outputSize.Size.Width, outputSize.Size.Height))
+                {
+                    // Draw (copy)
+                    using (var canvas = new SKCanvas(tempBitmap))
+                    {
+                        var backgroundColor = GetBackgroundColor(outputImage, image.HasTransparentBackground);
+                        canvas.Clear(backgroundColor);
+                        canvas.Save();
+                        canvas.Scale(outputSize.Scale.X, outputSize.Scale.Y);
+
+                        image.Draw(canvas, outputSize.Scale.X, backgroundColor);
+
+                        // TODO: apply watermark
+                        // TODO: apply padding.
+                    }
+
+                    // Save (encode)
+                    using var stream = File.Create(outputImage.OutputFile);
+                    tempBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
+                }
             }
             catch (System.Exception ex)
             {
@@ -51,34 +79,39 @@ namespace Mobile.BuildTools.Generators.Images
 {JsonConvert.SerializeObject(outputImage)}");
                 throw;
             }
-
-            using var outputStream = new FileStream(outputImage.OutputFile, FileMode.OpenOrCreate);
-            image.SaveAsPng(outputStream);
         }
 
-        private static IImageProcessingContext MutateImage(IImageProcessingContext ctx, OutputImage outputImage, bool requiresBackground)
+        private static SKColor GetBackgroundColor(OutputImage outputImage, bool hasTransparentBackground)
         {
-            var currentSize = ctx.GetCurrentSize();
-            ctx.Resize(GetUpdatedSize(outputImage, currentSize));
-            ctx.ApplyWatermark(outputImage.Watermark);
+            var requiresBackground = outputImage.RequiresBackgroundColor && hasTransparentBackground;
+            var isExpectedBackgroundDefined = !string.IsNullOrWhiteSpace(outputImage.BackgroundColor);
 
-            if (!string.IsNullOrWhiteSpace(outputImage.BackgroundColor) || requiresBackground)
+            if (isExpectedBackgroundDefined || requiresBackground)
             {
-                ctx.ApplyBackground(outputImage.BackgroundColor);
+                if (ColorUtils.TryParse(isExpectedBackgroundDefined ? outputImage.BackgroundColor : Constants.DefaultBackgroundColor, out var color))
+                {
+                    return color;
+                }
             }
 
-            ctx.ResizeCanvas(outputImage.PaddingFactor, outputImage.PaddingColor);
-            return ctx;
+            return SKColors.Transparent;
         }
 
-        private static Size GetUpdatedSize(OutputImage output, Size currentSize)
+        private static OutputSize GetOutputSize(OutputImage output, Size currentSize)
         {
             if (output.Scale > 0)
             {
-                return new Size((int)(currentSize.Width * output.Scale), (int)(currentSize.Height * output.Scale));
+                return new OutputSize(
+                    (int)(currentSize.Width * output.Scale),
+                    (int)(currentSize.Height * output.Scale),
+                    (float)output.Scale);
             }
 
-            return new Size(output.Width, output.Height);
+            return new OutputSize(
+                output.Width,
+                output.Height,
+                (float)output.Width / currentSize.Width,
+                (float)output.Height / currentSize.Height);
         }
     }
 }

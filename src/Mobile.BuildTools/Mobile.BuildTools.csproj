@@ -34,13 +34,18 @@
     <PackageReference Include="Newtonsoft.Json" PrivateAssets="all" />
     <PackageReference Include="NuGet.Build.Packaging" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Web.Xdt" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.ImageSharp" PrivateAssets="all" />
+    <!-- <PackageReference Include="SixLabors.ImageSharp" PrivateAssets="all" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" PrivateAssets="all" />
     <PackageReference Include="SixLabors.Fonts" PrivateAssets="all" />
     <PackageReference Include="System.Buffers" PrivateAssets="all" />
     <PackageReference Include="System.Memory" PrivateAssets="all" />
     <PackageReference Include="System.Numerics.Vectors" PrivateAssets="all" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" PrivateAssets="all" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" PrivateAssets="all" /> -->
+    <PackageReference Include="SkiaSharp" PrivateAssets="all" />
+    <PackageReference Include="System.Memory" PrivateAssets="all" />
+    <PackageReference Include="Svg.Skia" PrivateAssets="all" />
+    <PackageReference Include="Svg.Custom" PrivateAssets="all" />
+    <PackageReference Include="Svg.Picture" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
