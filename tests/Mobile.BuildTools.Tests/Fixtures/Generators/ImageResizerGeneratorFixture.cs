@@ -21,20 +21,24 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Theory]
-        [InlineData("xxxhdpi", 1, 300)]
-        [InlineData("xxhdpi", .75, 225)]
-        [InlineData("xhdpi", .5, 150)]
-        public void GeneratesImage(string resourcePath, double scale, int expectedOutput)
+        [InlineData("dotnetbot.png", "xxxhdpi", 1, 300)]
+        [InlineData("dotnetbot.png", "xxhdpi", .75, 225)]
+        [InlineData("dotnetbot.png", "xhdpi", .5, 150)]
+        [InlineData("dotnetbot.svg", "xxxhdpi", 1, 419)]
+        [InlineData("dotnetbot.svg", "xxhdpi", .75, 314)]
+        [InlineData("dotnetbot.svg", "xhdpi", .5, 209)]
+        public void GeneratesImage(string inputFile, string resourcePath, double scale, int expectedOutput)
         {
             var config = GetConfiguration();
             config.IntermediateOutputPath += resourcePath;
+            config.IntermediateOutputPath += $"-with-{inputFile}";
             var generator = new ImageResizeGenerator(config);
 
             var image = new OutputImage
             {
                 Height = 0,
                 Width = 0,
-                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                InputFile = Path.Combine(TestConstants.ImageDirectory, inputFile),
                 OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
                 OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
                 RequiresBackgroundColor = false,
@@ -53,84 +57,24 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Theory]
-        [InlineData("xxxhdpi", 1, 419)]
-        [InlineData("xxhdpi", .75, 314)]
-        [InlineData("xhdpi", .5, 209)]
-        public void GeneratesImageFromSVG(string resourcePath, double scale, int expectedOutput)
+        [InlineData("dotnetbot.png", "xxxhdpi", 300)]
+        [InlineData("dotnetbot.png", "xxhdpi", 225)]
+        [InlineData("dotnetbot.png", "xhdpi", 150)]
+        [InlineData("dotnetbot.svg", "xxxhdpi", 300)]
+        [InlineData("dotnetbot.svg", "xxhdpi", 225)]
+        [InlineData("dotnetbot.svg", "xhdpi", 150)]
+        public void GeneratesImageWithCustomHeightWidth(string inputFile, string resourcePath, int expectedOutput)
         {
             var config = GetConfiguration();
             config.IntermediateOutputPath += resourcePath;
-            var generator = new ImageResizeGenerator(config);
-
-            var image = new OutputImage
-            {
-                Height = 0,
-                Width = 0,
-                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.svg"),
-                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
-                RequiresBackgroundColor = false,
-                Scale = scale,
-                ShouldBeVisible = true,
-                Watermark = null
-            };
-
-            var ex = Record.Exception(() => generator.ProcessImage(image));
-
-            Assert.Null(ex);
-            Assert.True(File.Exists(image.OutputFile));
-
-            using var imageResource = ImageBase.Load(image.OutputFile);
-            Assert.Equal(expectedOutput, imageResource.Width);
-        }
-
-        [Theory]
-        [InlineData("xxxhdpi", 300)]
-        [InlineData("xxhdpi", 225)]
-        [InlineData("xhdpi", 150)]
-        public void GeneratesImageWithCustomHeightWidth(string resourcePath, int expectedOutput)
-        {
-            var config = GetConfiguration();
-            config.IntermediateOutputPath += resourcePath;
+            config.IntermediateOutputPath += $"-with-{inputFile}";
             var generator = new ImageResizeGenerator(config);
 
             var image = new OutputImage
             {
                 Height = expectedOutput,
                 Width = expectedOutput,
-                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
-                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
-                RequiresBackgroundColor = false,
-                Scale = 0,
-                ShouldBeVisible = true,
-                Watermark = null
-            };
-
-            var ex = Record.Exception(() => generator.ProcessImage(image));
-
-            Assert.Null(ex);
-            Assert.True(File.Exists(image.OutputFile));
-
-            using var imageResource = ImageBase.Load(image.OutputFile);
-            Assert.Equal(expectedOutput, imageResource.Width);
-        }
-
-        [Theory]
-        [InlineData("xxxhdpi", 300)]
-        [InlineData("xxhdpi", 225)]
-        [InlineData("xhdpi", 150)]
-        public void GeneratesImageWithCustomHeightWidthFromSVG(string resourcePath, int expectedOutput)
-        {
-            var config = GetConfiguration();
-            config.IntermediateOutputPath += resourcePath;
-            var generator = new ImageResizeGenerator(config);
-
-            var image = new OutputImage
-            {
-                Height = expectedOutput,
-                Width = expectedOutput,
-                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.svg"),
+                InputFile = Path.Combine(TestConstants.ImageDirectory, inputFile),
                 OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
                 OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
                 RequiresBackgroundColor = false,
