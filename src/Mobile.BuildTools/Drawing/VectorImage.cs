@@ -19,12 +19,21 @@ namespace Mobile.BuildTools.Drawing
         public override Size GetOriginalSize() =>
             new Size((int)svg.Picture.CullRect.Size.Width, (int)svg.Picture.CullRect.Size.Height);
 
-        public override void Draw(SKCanvas canvas, float scale, SKColor backgroundColor)
+        public override void Draw(SKCanvas canvas, Context context)
         {
-            if (scale >= 1)
+            SKPaint opacityPaint = null;
+            if (context.Opacity != 1d)
+            {
+                opacityPaint = new SKPaint
+                {
+                    Color = SKColors.Transparent.WithAlpha((byte)(0xFF * context.Opacity))
+                };
+            }
+
+            if (context.Scale.X >= 1)
             {
                 // draw using default scaling
-                canvas.DrawPicture(svg.Picture, Paint);
+                canvas.DrawPicture(svg.Picture, opacityPaint);
             }
             else
             {
@@ -40,8 +49,8 @@ namespace Mobile.BuildTools.Drawing
                 using var cvn = new SKCanvas(bmp);
 
                 // draw to a larger canvas first
-                cvn.Clear(backgroundColor);
-                cvn.DrawPicture(svg.Picture, Paint);
+                cvn.Clear(context.BackgroundColor);
+                cvn.DrawPicture(svg.Picture, opacityPaint);
 
                 // set the paint to be the highest quality it can find
                 var paint = new SKPaint
@@ -53,6 +62,8 @@ namespace Mobile.BuildTools.Drawing
                 // draw to the main canvas using the correct quality settings
                 canvas.DrawBitmap(bmp, 0, 0, paint);
             }
+
+            opacityPaint?.Dispose();
         }
 
         public override void Dispose()

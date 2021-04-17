@@ -40,34 +40,34 @@ namespace Mobile.BuildTools.Generators.Images
 
             try
             {
-                var outputSize = GetOutputSize(outputImage, image.GetOriginalSize());
+                var backgroundColor = GetBackgroundColor(outputImage, image.HasTransparentBackground);
+                var context = CreateContext(backgroundColor, Log, 1.0, outputImage.Scale, outputImage.Width, outputImage.Height, image.GetOriginalSize());
 
-                if (Math.Abs(outputSize.Scale.X - outputSize.Scale.Y) >= 0.0001)
+                if (!context.Scale.X.IsEqualTo(context.Scale.Y))
                 {
                     Log.LogWarning("Image aspect ratio is not being maintained.");
                 }
 
-                // Allocate
-                using (var tempBitmap = new SKBitmap(outputSize.Size.Width, outputSize.Size.Height))
+                using var tempBitmap = new SKBitmap(context.Size.Width, context.Size.Height);
+                using var canvas = new SKCanvas(tempBitmap);
+
+                canvas.Clear(backgroundColor);
+                canvas.Save();
+                canvas.Scale(context.Scale.X, context.Scale.Y);
+
+                image.Draw(canvas, context);
+
+                // Apply watermark
+                if (outputImage.Watermark != null)
                 {
-                    // Draw (copy)
-                    using (var canvas = new SKCanvas(tempBitmap))
-                    {
-                        var backgroundColor = GetBackgroundColor(outputImage, image.HasTransparentBackground);
-                        canvas.Clear(backgroundColor);
-                        canvas.Save();
-                        canvas.Scale(outputSize.Scale.X, outputSize.Scale.Y);
-
-                        image.Draw(canvas, outputSize.Scale.X, backgroundColor);
-
-                        // TODO: apply watermark
-                        // TODO: apply padding.
-                    }
-
-                    // Save (encode)
-                    using var stream = File.Create(outputImage.OutputFile);
-                    tempBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
+                    using var watermark = new Watermark(outputImage.Watermark, new PointF(1 / context.Scale.X, 1 / context.Scale.Y));
+                    var watermarkContext = CreateContext(SKColors.Transparent, Log, outputImage.Watermark.Opacity ?? 1.0, 0, context.Size.Width, context.Size.Height, watermark.GetOriginalSize());
+                    watermark.Draw(canvas, watermarkContext);
                 }
+                // TODO: apply padding.
+
+                using var stream = File.Create(outputImage.OutputFile);
+                tempBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
             catch (System.Exception ex)
             {
@@ -97,21 +97,27 @@ namespace Mobile.BuildTools.Generators.Images
             return SKColors.Transparent;
         }
 
-        private static OutputSize GetOutputSize(OutputImage output, Size currentSize)
+        private static Context CreateContext(SKColor backgroundColor, Logging.ILog log, double opacity, double scale, int width, int height, Size currentSize)
         {
-            if (output.Scale > 0)
+            if (scale > 0)
             {
-                return new OutputSize(
-                    (int)(currentSize.Width * output.Scale),
-                    (int)(currentSize.Height * output.Scale),
-                    (float)output.Scale);
+                return new Context(
+                    backgroundColor,
+                    log,
+                    opacity,
+                    (int)(currentSize.Width * scale),
+                    (int)(currentSize.Height * scale),
+                    (float)scale);
             }
 
-            return new OutputSize(
-                output.Width,
-                output.Height,
-                (float)output.Width / currentSize.Width,
-                (float)output.Height / currentSize.Height);
+            return new Context(
+                backgroundColor,
+                log,
+                opacity,
+                width,
+                height,
+                (float)width / currentSize.Width,
+                (float)height / currentSize.Height);
         }
     }
 }

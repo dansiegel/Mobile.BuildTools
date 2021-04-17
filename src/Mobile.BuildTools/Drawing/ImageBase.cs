@@ -14,8 +14,6 @@ namespace Mobile.BuildTools.Drawing
 
         public string Filename { get; }
 
-        public SKPaint Paint { get; }
-
         public abstract bool HasTransparentBackground { get; }
 
         public int Height => GetOriginalSize().Height;
@@ -24,7 +22,7 @@ namespace Mobile.BuildTools.Drawing
 
         public abstract Size GetOriginalSize();
 
-        public abstract void Draw(SKCanvas canvas, float scale, SKColor backgroundColor);
+        public abstract void Draw(SKCanvas canvas, Context context);
 
         public static ImageBase Load(string filename)
             => IsVector(filename)
@@ -34,6 +32,9 @@ namespace Mobile.BuildTools.Drawing
         private static bool IsVector(string filename) =>
             Path.GetExtension(filename)?.Equals(".svg", StringComparison.OrdinalIgnoreCase) ?? false;
 
-        public abstract void Dispose();
+        public virtual void Dispose()
+        {
+
+        }
     }
 }

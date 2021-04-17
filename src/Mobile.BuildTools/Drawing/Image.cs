@@ -5,11 +5,11 @@ namespace Mobile.BuildTools.Drawing
 {
     internal class Image : ImageBase
     {
-        private SKBitmap bmp;
+        private SKBitmap bitmap;
 
         public Image(string filename) : base(filename)
         {
-            bmp = SKBitmap.Decode(filename);
+            bitmap = SKBitmap.Decode(filename);
         }
 
         public override bool HasTransparentBackground
@@ -23,7 +23,7 @@ namespace Mobile.BuildTools.Drawing
                 {
                     for (var y = 0; y < imageHeight; y++)
                     {
-                        if (bmp.GetPixel(x, y).Alpha == 0)
+                        if (bitmap.GetPixel(x, y).Alpha == 0)
                         {
                             return true;
                         }
@@ -35,14 +35,28 @@ namespace Mobile.BuildTools.Drawing
         }
 
         public override Size GetOriginalSize() =>
-            new Size(bmp.Info.Width, bmp.Info.Height);
+            new Size(bitmap.Info.Width, bitmap.Info.Height);
 
-        public override void Draw(SKCanvas canvas, float scale, SKColor backgroundColor) => canvas.DrawBitmap(bmp, 0, 0, Paint);
+        public override void Draw(SKCanvas canvas, Context context)
+        {
+            SKPaint paint = null;
+            if (context.Opacity != 1d)
+            {
+                paint = new SKPaint
+                {
+                    Color = SKColors.Transparent.WithAlpha((byte)(0xFF * context.Opacity))
+                };
+            }
+
+            canvas.DrawBitmap(bitmap, 0, 0, paint);
+
+            paint?.Dispose();
+        }
 
         public override void Dispose()
         {
-            bmp?.Dispose();
-            bmp = null;
+            bitmap?.Dispose();
+            bitmap = null;
         }
     }
 }

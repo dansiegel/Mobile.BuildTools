@@ -92,55 +92,55 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             Assert.Equal(expectedOutput, imageResource.Width);
         }
 
-        //[Theory]
-        //[InlineData("dotnetbot", "example")]
-        //[InlineData("dotnetbot", "beta-version")]
-        //[InlineData("icon", "example")]
-        //[InlineData("icon", "beta-version")]
-        //public void AppliesWatermark(string inputImageName, string watermarkImage)
-        //{
-        //    var config = GetConfiguration();
-        //    var generator = new ImageResizeGenerator(config);
+        [Theory]
+        [InlineData("dotnetbot", "example")]
+        [InlineData("dotnetbot", "beta-version")]
+        [InlineData("icon", "example")]
+        [InlineData("icon", "beta-version")]
+        public void AppliesWatermark(string inputImageName, string watermarkImage)
+        {
+            var config = GetConfiguration();
+            var generator = new ImageResizeGenerator(config);
 
-        //    var image = new OutputImage
-        //    {
-        //        Height = 0,
-        //        Width = 0,
-        //        InputFile = Path.Combine(TestConstants.WatermarkImageDirectory, $"{inputImageName}.png"),
-        //        OutputFile = Path.Combine($"{config.IntermediateOutputPath}-{inputImageName}-{watermarkImage}", $"{inputImageName}.png"),
-        //        OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", $"{inputImageName}.png"),
-        //        RequiresBackgroundColor = false,
-        //        Scale = 1,
-        //        ShouldBeVisible = true,
-        //        Watermark = new WatermarkConfiguration
-        //        {
-        //            SourceFile = Path.Combine(TestConstants.WatermarkImageDirectory, $"{watermarkImage}.png")
-        //        }
-        //    };
+            var image = new OutputImage
+            {
+                Height = 0,
+                Width = 0,
+                InputFile = Path.Combine(TestConstants.WatermarkImageDirectory, $"{inputImageName}.png"),
+                OutputFile = Path.Combine($"{config.IntermediateOutputPath}-{inputImageName}-{watermarkImage}", $"{inputImageName}.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", $"{inputImageName}.png"),
+                RequiresBackgroundColor = false,
+                Scale = 1,
+                ShouldBeVisible = true,
+                Watermark = new WatermarkConfiguration
+                {
+                    SourceFile = Path.Combine(TestConstants.WatermarkImageDirectory, $"{watermarkImage}.png")
+                }
+            };
 
-        //    generator.ProcessImage(image);
+            generator.ProcessImage(image);
 
-        //    using var inputImage = Image.Load(image.InputFile);
-        //    using var outputImage = Image.Load(image.OutputFile);
-        //    using var inputClone = inputImage.CloneAs<Rgba32>();
-        //    using var outputClone = outputImage.CloneAs<Rgba32>();
+            //using var inputImage = Image.Load(image.InputFile);
+            //using var outputImage = Image.Load(image.OutputFile);
+            //using var inputClone = inputImage.CloneAs<Rgba32>();
+            //using var outputClone = outputImage.CloneAs<Rgba32>();
 
-        //    bool appliedWatermark;
-        //    for (var y = 0; y < inputImage.Height; ++y)
-        //    {
-        //        var inputPixelRowSpan = inputClone.GetPixelRowSpan(y);
-        //        var outputPixelRowSpan = outputClone.GetPixelRowSpan(y);
-        //        for (var x = 0; x < inputImage.Width; ++x)
-        //        {
-        //            appliedWatermark = inputPixelRowSpan[x] == outputPixelRowSpan[x];
-        //            if (appliedWatermark)
-        //                return;
-        //        }
-        //    }
+            //bool appliedWatermark;
+            //for (var y = 0; y < inputImage.Height; ++y)
+            //{
+            //    var inputPixelRowSpan = inputClone.GetPixelRowSpan(y);
+            //    var outputPixelRowSpan = outputClone.GetPixelRowSpan(y);
+            //    for (var x = 0; x < inputImage.Width; ++x)
+            //    {
+            //        appliedWatermark = inputPixelRowSpan[x] == outputPixelRowSpan[x];
+            //        if (appliedWatermark)
+            //            return;
+            //    }
+            //}
 
-        //    _testOutputHelper.WriteLine("All pixels are the same in the Input and Output Images");
-        //    Assert.True(false);
-        //}
+            //_testOutputHelper.WriteLine("All pixels are the same in the Input and Output Images");
+            //Assert.True(false);
+        }
 
         [Fact]
         public void SetsDefaultBackground()
@@ -220,31 +220,35 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         //    Assert.True(comparedTransparentPixel);
         //}
 
-        //[Theory]
-        //[InlineData("Dev")]
-        //[InlineData("Stage")]
-        //public void AppliesTextBanner(string text)
-        //{
-        //    var config = GetConfiguration();
-        //    var generator = new ImageResizeGenerator(config);
+        [Theory]
+        [InlineData("Dev", 0.5)]
+        [InlineData("Dev", 1.0)]
+        [InlineData("Stage", 0.5)]
+        [InlineData("Something long", 0.5)]
+        public void AppliesTextBanner(string text, double scale)
+        {
+            var config = GetConfiguration();
+            config.IntermediateOutputPath += text;
+            config.IntermediateOutputPath += scale.ToString();
+            var generator = new ImageResizeGenerator(config);
 
-        //    var image = new OutputImage
-        //    {
-        //        Height = 0,
-        //        Width = 0,
-        //        InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
-        //        OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
-        //        OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
-        //        RequiresBackgroundColor = true,
-        //        Scale = .5,
-        //        ShouldBeVisible = true,
-        //        Watermark = new WatermarkConfiguration
-        //        {
-        //            Text = text
-        //        }
-        //    };
+            var image = new OutputImage
+            {
+                Height = 0,
+                Width = 0,
+                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                RequiresBackgroundColor = true,
+                Scale = scale,
+                ShouldBeVisible = true,
+                Watermark = new WatermarkConfiguration
+                {
+                    Text = text
+                }
+            };
 
-        //    generator.ProcessImage(image);
-        //}
+            generator.ProcessImage(image);
+        }
     }
 }

@@ -1,166 +1,102 @@
-﻿//using System;
-//using System.IO;
-//using System.Linq;
-//using System.Reflection;
-//using SixLabors.ImageSharp;
-//using SixLabors.ImageSharp.PixelFormats;
-//using SixLabors.ImageSharp.Processing;
-//using Mobile.BuildTools.Models.AppIcons;
-//using SixLabors.Fonts;
-//using SixLabors.ImageSharp.Drawing.Processing;
-//using SixLabors.ImageSharp.Drawing;
+﻿using System.Drawing;
+using System.Linq;
+using Mobile.BuildTools.Models.AppIcons;
+using SkiaSharp;
 
-//namespace Mobile.BuildTools.Drawing
-//{
-//    public static class Watermark
-//    {
-//        public static IImageProcessingContext ApplyWatermark(this IImageProcessingContext processingContext, WatermarkConfiguration config)
-//        {
-//            if (config is null)
-//            {
-//                return processingContext;
-//            }
-//            else if (!string.IsNullOrEmpty(config.SourceFile))
-//            {
-//                return processingContext.ApplyWatermark(config.SourceFile, config.Opacity);
-//            }
+namespace Mobile.BuildTools.Drawing
+{
+    internal class Watermark : ImageBase
+    {
+        private readonly WatermarkConfiguration configuration;
+        private readonly PointF originalScale;
+        private readonly ImageBase sourceImage;
 
-//            var settings = WatermarkSettings.FromConfig(config);
-//            var size = processingContext.GetCurrentSize();
-//            // Create a new image for the watermark layer.
-//            using var watermark = new Image<Rgba32>(size.Width, size.Height);
+        public Watermark(WatermarkConfiguration configuration, PointF originalScale) : base(configuration?.SourceFile)
+        {
+            this.configuration = configuration;
+            this.originalScale = originalScale;
+            if (!string.IsNullOrEmpty(configuration?.SourceFile))
+            {
+                sourceImage = ImageBase.Load(configuration.SourceFile);
+            }
+        }
 
-//            var xOffeset = 0;
-//            var yOffeset = 0;
+        public override bool HasTransparentBackground => sourceImage?.HasTransparentBackground ?? true;
 
-//            watermark.Mutate(ctx =>
-//            {
-//                // Draw the watermark.
-//                ctx.DrawWatermark(settings);
+        public override void Draw(SKCanvas canvas, Context context)
+        {
+            if (configuration is null)
+            {
+                return;
+            }
 
-//                var angle = 0.0f;
-//                if ((settings.Position == WatermarkPosition.BottomLeft) || (settings.Position == WatermarkPosition.TopRight))
-//                {
-//                    angle = 45.0f;
-//                    // Calculate the x/y offsets for later when we draw the watermark on top of the source image.
-//                    xOffeset = -(int)((Math.Sin(angle) * (size.Width / 2)) / 2);
-//                    yOffeset = -(int)((Math.Sin(angle) * (size.Height / 2)) / 2);
-//                }
-//                else if ((settings.Position == WatermarkPosition.BottomRight) || (settings.Position == WatermarkPosition.TopLeft))
-//                {
-//                    angle = -45.0f;
-//                    // Calculate the x/y offsets for later when we draw the watermark on top of the source image.
-//                    xOffeset = (int)((Math.Sin(angle) * (size.Width / 2)) / 2);
-//                    yOffeset = (int)((Math.Sin(angle) * (size.Height / 2)) / 2);
-//                }
-//                if (angle != 0)
-//                {
-//                    ctx.Rotate(angle);
-//                }
+            if (sourceImage != null)
+            {
+                if (!context.Scale.X.IsEqualTo(1f) ||
+                    !context.Scale.Y.IsEqualTo(1f))
+                {
+                    context.Log.LogWarning("Watermark image has been scaled to meet output dimensions.");
+                }
 
-//            });
+                canvas.Scale(context.Scale.X, context.Scale.Y);
+                sourceImage.Draw(canvas, context);
+                return;
+            }
 
-//            // Draw the watermark layer on top of the source image.
-//            processingContext.DrawImage(watermark, new Point(xOffeset, yOffeset), 1);
+            DrawTextBanner(canvas, context);
+        }
 
-//            return processingContext;
-//        }
+        public override Size GetOriginalSize() => sourceImage?.GetOriginalSize() ?? Size.Empty;
 
-//        public static IImageProcessingContext ApplyWatermark(this IImageProcessingContext processingContext, string watermarkFile, double? opacity)
-//        {
-//            if (File.Exists(watermarkFile))
-//            {
-//                using var watermarkImage = ImageBase.Load(watermarkFile);
-//                var size = processingContext.GetCurrentSize();
-//                watermarkImage.Mutate(x => x.Resize(size));
-//                processingContext.DrawImage(watermarkImage, PixelColorBlendingMode.Normal, (float)(opacity ?? 0.95));
-//            }
+        public override void Dispose() => sourceImage?.Dispose();
 
-//            return processingContext;
-//        }
-//        // Colors: Red,Blue,Purple,#006666
-//        private static IImageProcessingContext DrawWatermark(this IImageProcessingContext context, WatermarkSettings settings)
-//        {
-//            var imgSize = context.GetCurrentSize();
+        private void DrawTextBanner(SKCanvas canvas, Context context)
+        {
+            // Undo the original scaling factor to simplify the rendering.
+            canvas.Scale(originalScale.X, originalScale.Y);
 
-//            // measure the text size
-//            var size = TextMeasurer.Measure(settings.Text, new RendererOptions(settings.TextFont));
+            var settings = WatermarkSettings.FromConfig(configuration);
+            var bannerHeight = (float)(context.Size.Width / 4.5);
+            var (start, end) = GetBannerLocations(settings.Position, context.Size, (float)bannerHeight);
 
-//            //find out how much we need to scale the text to fill the space (up or down)
-//            var scalingFactor = Math.Min(imgSize.Width / size.Width, imgSize.Height / size.Height) / 3;
+            var shader = SKShader.CreateLinearGradient(
+                start,
+                end,
+                settings.Colors.Select(c => c.WithAlpha((byte)(0xFF * context.Opacity))).ToArray(),
+                null,
+                SKShaderTileMode.Clamp);
+            using var linePaint = new SKPaint
+            {
+                Shader = shader,
+                IsStroke = true,
+                StrokeWidth = bannerHeight,
+                Style = SKPaintStyle.Stroke
+            };
+            var path = new SKPath();
+            path.MoveTo(start);
+            path.LineTo(end);
 
-//            //create a new settings.TextFont
-//            var scaledFont = new Font(settings.TextFont, scalingFactor * settings.TextFont.Size);
-//            var center = settings.Position switch
-//            {
-//                WatermarkPosition.Top => new PointF(imgSize.Width / 2, (imgSize.Height / 9)),
-//                WatermarkPosition.TopLeft => new PointF(imgSize.Width / 2, (imgSize.Height / 9)),
-//                WatermarkPosition.TopRight => new PointF(imgSize.Width / 2, (imgSize.Height / 9)),
-//                _ => new PointF(imgSize.Width / 2, imgSize.Height - (imgSize.Height / 9)),
-//            };
+            canvas.DrawPath(path, linePaint);
+            using var textPaint = new SKPaint
+            {
+                Color = settings.TextColor.WithAlpha((byte)(0xFF * context.Opacity)),
+                TextAlign = SKTextAlign.Center,
+                TextSize = context.Size.Width / 5, // TODO: calculate a more appropriate size.
+                Typeface = settings.Typeface
+            };
+            canvas.DrawTextOnPath(settings.Text, path, 0, 0, textPaint);
+        }
 
-//            var textGraphicOptions = new TextGraphicsOptions
-//            {
-//                GraphicsOptions = new GraphicsOptions
-//                {
-//                    Antialias = true
-//                },
-//                TextOptions = new TextOptions
-//                {
-//                    HorizontalAlignment = HorizontalAlignment.Center,
-//                    VerticalAlignment = VerticalAlignment.Center
-//                }
-//            };
-
-//            // Apply Banner
-//            context.DrawBanner(settings)
-//                .DrawText(textGraphicOptions, settings.Text, scaledFont, settings.TextColor, center);
-
-//            return context;
-//        }
-
-//        private static IImageProcessingContext DrawBanner(this IImageProcessingContext context, WatermarkSettings settings)
-//        {
-//            var imgSize = context.GetCurrentSize();
-//            var options = new ShapeGraphicsOptions
-//            {
-//                GraphicsOptions = new GraphicsOptions
-//                {
-//                    Antialias = true,
-//                    ColorBlendingMode = PixelColorBlendingMode.Normal,
-//                    BlendPercentage = 1,
-//                    AlphaCompositionMode = PixelAlphaCompositionMode.SrcOver
-//                },
-//                ShapeOptions = new ShapeOptions
-//                {
-//                    IntersectionRule = IntersectionRule.Nonzero
-//                }
-//            };
-
-//            var points = new[] { new PointF(0, imgSize.Height), new PointF(imgSize.Width, imgSize.Height) };
-
-//            var stop = 0;
-
-//            IBrush brush = new LinearGradientBrush(
-//                points[0],
-//                points[1],
-//                GradientRepetitionMode.Repeat,
-//                settings.Colors.Select(x => new ColorStop(stop++, x)).ToArray());
-
-//            var thickness = imgSize.Height / 4.5;
-
-//            var center = imgSize.Height - thickness;
-
-//            if ((settings.Position == WatermarkPosition.Top) || (settings.Position == WatermarkPosition.TopLeft) || (settings.Position == WatermarkPosition.TopRight))
-//            {
-//                points = new[] { new PointF(0, 0), new PointF(imgSize.Width, 0) };
-//            }
-
-//            var fullThickness = (float)(thickness * 2);
-//            var pen = new Pen(brush, fullThickness);
-//            var polygon = new Polygon(new LinearLineSegment(points));
-
-//            return context.Draw(options, pen, polygon);
-//        }
-//    }
-//}
+        private static (SKPoint, SKPoint) GetBannerLocations(WatermarkPosition watermarkPosition, Size size, float bannerHeight)
+            => watermarkPosition switch
+            {
+                WatermarkPosition.Top => (new SKPoint(0, 0), new SKPoint(size.Width, 0)),
+                WatermarkPosition.Bottom => (new SKPoint(0, size.Height), new SKPoint(size.Width, size.Height)),
+                WatermarkPosition.TopLeft => (new SKPoint(-bannerHeight, size.Height / 2 + bannerHeight), new SKPoint(size.Width / 2 + bannerHeight, -bannerHeight)),
+                WatermarkPosition.TopRight => (new SKPoint(size.Width / 2 - bannerHeight, -bannerHeight), new SKPoint(size.Width + bannerHeight, size.Height / 2 + bannerHeight)),
+                WatermarkPosition.BottomLeft => (new SKPoint(-bannerHeight, size.Height / 2 - bannerHeight), new SKPoint(size.Width / 2 + bannerHeight, size.Height + bannerHeight)),
+                WatermarkPosition.BottomRight => (new SKPoint(size.Width / 2 - bannerHeight, size.Height + bannerHeight), new SKPoint(size.Width + bannerHeight, size.Height / 2 - bannerHeight)),
+                _ => (new SKPoint(0, 0), new SKPoint(0, 0)),
+            };
+    }
+}
