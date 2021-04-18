@@ -4,6 +4,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Mobile.BuildTools.Models.AppIcons;
 using Mobile.BuildTools.Drawing;
+using SkiaSharp;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Generators
 {
@@ -170,55 +171,52 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             Assert.False(outputImage.HasTransparentBackground);
         }
 
-        //[Fact]
-        //public void SetsCustomBackground()
-        //{
-        //    var config = GetConfiguration();
-        //    var generator = new ImageResizeGenerator(config);
+        [Fact]
+        public void SetsCustomBackground()
+        {
+            var config = GetConfiguration();
+            var generator = new ImageResizeGenerator(config);
 
-        //    var image = new OutputImage
-        //    {
-        //        Height = 0,
-        //        Width = 0,
-        //        InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
-        //        OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
-        //        OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
-        //        RequiresBackgroundColor = true,
-        //        Scale = 1,
-        //        ShouldBeVisible = true,
-        //        Watermark = null,
-        //        BackgroundColor = "#8A2BE2"
-        //    };
+            var image = new OutputImage
+            {
+                Height = 0,
+                Width = 0,
+                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                RequiresBackgroundColor = true,
+                Scale = 1,
+                ShouldBeVisible = true,
+                Watermark = null,
+                BackgroundColor = "#8A2BE2"
+            };
 
-        //    generator.ProcessImage(image);
+            generator.ProcessImage(image);
 
-        //    using var inputImage = Image.Load(image.InputFile);
-        //    using var outputImage = Image.Load(image.OutputFile);
-        //    using var inputClone = inputImage.CloneAs<Rgba32>();
-        //    using var outputClone = outputImage.CloneAs<Rgba32>();
+            using var inputImage = SKBitmap.Decode(image.InputFile);
+            using var outputImage = SKBitmap.Decode(image.OutputFile);
 
-        //    var comparedTransparentPixel = false;
-        //    for (var y = 0; y < inputImage.Height; ++y)
-        //    {
-        //        var inputPixelRowSpan = inputClone.GetPixelRowSpan(y);
-        //        var outputPixelRowSpan = outputClone.GetPixelRowSpan(y);
-        //        for (var x = 0; x < inputImage.Width; ++x)
-        //        {
-        //            var startingPixel = inputPixelRowSpan[x];
-        //            if (startingPixel.A == 0)
-        //            {
-        //                comparedTransparentPixel = true;
-        //                var pixel = outputPixelRowSpan[x];
-        //                Assert.Equal(138, pixel.R);
-        //                Assert.Equal(43, pixel.G);
-        //                Assert.Equal(226, pixel.B);
-        //                Assert.Equal(255, pixel.A);
-        //            }
-        //        }
-        //    }
+            var comparedTransparentPixel = false;
+            for (var y = 0; y < inputImage.Height; ++y)
+            {
+                for (var x = 0; x < inputImage.Width; ++x)
+                {
+                    if (inputImage.GetPixel(x, y).Alpha == 0)
+                    {
+                        comparedTransparentPixel = true;
 
-        //    Assert.True(comparedTransparentPixel);
-        //}
+                        var pixel = outputImage.GetPixel(x, y);
+
+                        Assert.Equal(138, pixel.Red);
+                        Assert.Equal(43, pixel.Green);
+                        Assert.Equal(226, pixel.Blue);
+                        Assert.Equal(255, pixel.Alpha);
+                    }
+                }
+            }
+
+            Assert.True(comparedTransparentPixel);
+        }
 
         [Theory]
         [InlineData("Dev", 0.5)]

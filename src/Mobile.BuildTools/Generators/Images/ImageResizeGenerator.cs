@@ -48,8 +48,8 @@ namespace Mobile.BuildTools.Generators.Images
                     Log.LogWarning("Image aspect ratio is not being maintained.");
                 }
 
-                using var tempBitmap = new SKBitmap(context.Size.Width, context.Size.Height);
-                using var canvas = new SKCanvas(tempBitmap);
+                using var outputBitmap = new SKBitmap(context.Size.Width, context.Size.Height);
+                using var canvas = new SKCanvas(outputBitmap);
 
                 canvas.Clear(backgroundColor);
                 canvas.Save();
@@ -68,7 +68,7 @@ namespace Mobile.BuildTools.Generators.Images
                 // TODO: apply padding.
 
                 using var stream = File.Create(outputImage.OutputFile);
-                tempBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
+                outputBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
             catch (System.Exception ex)
             {
