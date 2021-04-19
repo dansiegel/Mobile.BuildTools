@@ -248,5 +248,44 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
             generator.ProcessImage(image);
         }
+
+        [Theory]
+        [InlineData("dotnetbot.png", "nopadding", 1, 300)]
+        [InlineData("dotnetbot.png", "25% pad", .75, 300)]
+        [InlineData("dotnetbot.png", "50% pad", .5, 300)]
+        [InlineData("dotnetbot.svg", "nopadding", 1, 419)]
+        [InlineData("dotnetbot.svg", "25% pad", .75, 419)]
+        [InlineData("dotnetbot.svg", "50% pad", .5, 419)]
+        public void AppliesPadding(string inputFile, string resourcePath, double paddingFactor, int expectedOutput)
+        {
+            var config = GetConfiguration();
+            config.IntermediateOutputPath += resourcePath;
+            config.IntermediateOutputPath += $"-with-{inputFile}";
+            var generator = new ImageResizeGenerator(config);
+
+            var image = new OutputImage
+            {
+                Height = 0,
+                Width = 0,
+                InputFile = Path.Combine(TestConstants.ImageDirectory, inputFile),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                RequiresBackgroundColor = false,
+                Scale = 1.0,
+                ShouldBeVisible = true,
+                Watermark = null,
+                BackgroundColor = "Red",
+                PaddingColor = "Yellow",
+                PaddingFactor = paddingFactor
+            };
+
+            var ex = Record.Exception(() => generator.ProcessImage(image));
+
+            Assert.Null(ex);
+            Assert.True(File.Exists(image.OutputFile));
+
+            using var imageResource = ImageBase.Load(image.OutputFile);
+            Assert.Equal(expectedOutput, imageResource.Width);
+        }
     }
 }
