@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mobile.BuildTools.Models.AppIcons;
 using SkiaSharp;
 
@@ -11,6 +7,7 @@ namespace Mobile.BuildTools.Drawing
 {
     internal class WatermarkTextBanner : ImageBase
     {
+        private readonly string[] commonDescenders = new[] { "g", "j", "p", "q", "y" };
         private readonly WatermarkConfiguration configuration;
         private readonly PointF originalScale;
 
@@ -69,10 +66,28 @@ namespace Mobile.BuildTools.Drawing
 
             // Find the text bounds 
             var textBounds = new SKRect();
-            textPaint.MeasureText(settings.Text, ref textBounds);
+            // It may well be a Skia bug but it appears the measuring doesn't include the height of the descender characters in the measured height.
+            textPaint.MeasureText(StripDescenders(settings.Text), ref textBounds);
 
             // Text drawn on the centre of the line so we need to bump it down to align the centre of the text.
             canvas.DrawTextOnPath(settings.Text, path, 0, textBounds.Height / 2, textPaint);
+        }
+
+        private string StripDescenders(string text)
+        {
+            // TODO: Surely there must be a better way?
+            var cleansedText = text;
+            foreach (var descender in commonDescenders)
+            {
+                cleansedText = cleansedText.Replace(descender, "");
+            }
+
+            if (cleansedText.Length == 0)
+            {
+                cleansedText = "dev";
+            }
+
+            return cleansedText;
         }
 
         private static (SKPoint, SKPoint) GetBannerLocations(WatermarkPosition watermarkPosition, Size size, float bannerHeight)
