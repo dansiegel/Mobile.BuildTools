@@ -3,7 +3,7 @@ using SkiaSharp;
 
 namespace Mobile.BuildTools.Drawing
 {
-    internal class WatermarkImage : Watermark
+    internal class WatermarkImage : ImageBase
     {
         private readonly ImageBase sourceImage;
 

@@ -58,12 +58,9 @@ namespace Mobile.BuildTools.Generators.Images
                 image.Draw(canvas, context);
 
                 // Apply watermark
-                if (outputImage.Watermark != null)
-                {
-                    using var watermark = Watermark.Create(outputImage.Watermark, new PointF(1 / context.Scale.X, 1 / context.Scale.Y));
-                    var watermarkContext = CreateContext(SKColors.Transparent, Log, outputImage.Watermark.Opacity ?? 1.0, 0, context.Size.Width, context.Size.Height, watermark.GetOriginalSize());
-                    watermark.Draw(canvas, watermarkContext);
-                }
+                using var watermark = Watermark.Create(outputImage.Watermark, new PointF(1 / context.Scale.X, 1 / context.Scale.Y));
+                var watermarkContext = CreateContext(SKColors.Transparent, Log, outputImage.Watermark?.Opacity ?? 1.0, 0, context.Size.Width, context.Size.Height, watermark.GetOriginalSize());
+                watermark.Draw(canvas, watermarkContext);
 
                 // TODO: apply padding.
 

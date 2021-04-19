@@ -9,7 +9,7 @@ using SkiaSharp;
 
 namespace Mobile.BuildTools.Drawing
 {
-    internal class WatermarkTextBanner : Watermark
+    internal class WatermarkTextBanner : ImageBase
     {
         private readonly WatermarkConfiguration configuration;
         private readonly PointF originalScale;
