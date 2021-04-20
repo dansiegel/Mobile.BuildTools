@@ -21,11 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\assets\runtimes\**\libsass.*" Pack="true" PackagePath="$(PrimaryOutputKind)/%(Filename)%(Extension)" />
+    <None Include="..\assets\runtimes\**\libsass.*" Pack="true" PackagePath="$(PrimaryOutputKind)/runtimes/%(RecursiveDir)%(Filename)%(Extension)" />
     <None Include="*.targets;*.props" Pack="true" Kind="$(PrimaryOutputKind)" />
     <None Update="Resources\*" Pack="true" PackagePath="$(PrimaryOutputKind)/resources/%(Filename)%(Extension)" />
     <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
-    <None Update="buildTransitive\*.props;buildTransitive\*.targets" Pack="true" Kind="buildTransitive" />
   </ItemGroup>
 
   <ItemGroup>
