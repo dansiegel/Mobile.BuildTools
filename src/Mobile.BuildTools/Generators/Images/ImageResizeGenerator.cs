@@ -84,7 +84,8 @@ namespace Mobile.BuildTools.Generators.Images
 
         private SKBitmap ApplyPadding(OutputImage outputImage, ImageBase image, Context context, SKBitmap outputBitmap)
         {
-            if (outputImage.PaddingFactor is null)
+            if (outputImage.PaddingFactor is null ||
+                outputImage.PaddingFactor == 0)
             {
                 return outputBitmap;
             }

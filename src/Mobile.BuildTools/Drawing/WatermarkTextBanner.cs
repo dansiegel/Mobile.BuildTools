@@ -93,8 +93,8 @@ namespace Mobile.BuildTools.Drawing
         private static (SKPoint, SKPoint) GetBannerLocations(WatermarkPosition watermarkPosition, Size size, float bannerHeight)
             => watermarkPosition switch
             {
-                WatermarkPosition.Top => (new SKPoint(0, 0), new SKPoint(size.Width, 0)),
-                WatermarkPosition.Bottom => (new SKPoint(0, size.Height), new SKPoint(size.Width, size.Height)),
+                WatermarkPosition.Top => (new SKPoint(0, bannerHeight / 2), new SKPoint(size.Width, bannerHeight / 2)),
+                WatermarkPosition.Bottom => (new SKPoint(0, size.Height - (bannerHeight / 2)), new SKPoint(size.Width, size.Height - (bannerHeight / 2))),
                 WatermarkPosition.TopLeft => (new SKPoint(-bannerHeight, size.Height / 2 + bannerHeight), new SKPoint(size.Width / 2 + bannerHeight, -bannerHeight)),
                 WatermarkPosition.TopRight => (new SKPoint(size.Width / 2 - bannerHeight, -bannerHeight), new SKPoint(size.Width + bannerHeight, size.Height / 2 + bannerHeight)),
                 WatermarkPosition.BottomLeft => (new SKPoint(-bannerHeight, size.Height / 2 - bannerHeight), new SKPoint(size.Width / 2 + bannerHeight, size.Height + bannerHeight)),
