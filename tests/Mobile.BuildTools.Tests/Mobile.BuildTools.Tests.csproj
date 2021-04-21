@@ -22,13 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="SixLabors.Fonts" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="System.Buffers" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="System.Memory" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="System.Numerics.Vectors" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="SkiaSharp" PrivateAssets="all" />
+    <PackageReference Include="System.Memory" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

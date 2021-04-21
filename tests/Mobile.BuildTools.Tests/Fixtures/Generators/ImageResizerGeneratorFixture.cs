@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.Text;
 using Mobile.BuildTools.Generators.Images;
+using Mobile.BuildTools.Models.AppIcons;
+using SkiaSharp;
 using Xunit;
 using Xunit.Abstractions;
-using Mobile.BuildTools.Models.AppIcons;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Advanced;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Generators
 {
@@ -27,22 +22,25 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Theory]
-        [InlineData("xxxhdpi", 1, 300)]
-        [InlineData("xxhdpi", .75, 225)]
-        [InlineData("xhdpi", .5, 150)]
-        public void GeneratesImage(string resourcePath, double scale, int expectedOutput)
+        [InlineData("dotnetbot.png", "xxxhdpi", 1)]
+        [InlineData("dotnetbot.png", "xxhdpi", .75)]
+        [InlineData("dotnetbot.png", "xhdpi", .5)]
+        [InlineData("dotnetbot.svg", "xxxhdpi", 1)]
+        [InlineData("dotnetbot.svg", "xxhdpi", .75)]
+        [InlineData("dotnetbot.svg", "xhdpi", .5)]
+        public void GeneratesImage(string inputFile, string resourcePath, double scale)
         {
             var config = GetConfiguration();
-            config.IntermediateOutputPath += resourcePath;
+            config.IntermediateOutputPath += GetOutputDirectorySuffix((nameof(inputFile), inputFile), (nameof(scale), scale));
             var generator = new ImageResizeGenerator(config);
 
             var image = new OutputImage
             {
                 Height = 0,
                 Width = 0,
-                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                InputFile = Path.Combine(TestConstants.ImageDirectory, inputFile),
                 OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", resourcePath, "dotnetbot.png"),
                 RequiresBackgroundColor = false,
                 Scale = scale,
                 ShouldBeVisible = true,
@@ -52,29 +50,30 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var ex = Record.Exception(() => generator.ProcessImage(image));
 
             Assert.Null(ex);
-            Assert.True(File.Exists(image.OutputFile));
 
-            using var imageResource = Image.Load(image.OutputFile);
-            Assert.Equal(expectedOutput, imageResource.Width);
+            VerifyImageContents(image);
         }
 
         [Theory]
-        [InlineData("xxxhdpi", 300)]
-        [InlineData("xxhdpi", 225)]
-        [InlineData("xhdpi", 150)]
-        public void GeneratesImageWithCustomHeightWidth(string resourcePath, int expectedOutput)
+        [InlineData("dotnetbot.png", "xxxhdpi", 300)]
+        [InlineData("dotnetbot.png", "xxhdpi", 225)]
+        [InlineData("dotnetbot.png", "xhdpi", 150)]
+        [InlineData("dotnetbot.svg", "xxxhdpi", 300)]
+        [InlineData("dotnetbot.svg", "xxhdpi", 225)]
+        [InlineData("dotnetbot.svg", "xhdpi", 150)]
+        public void GeneratesImageWithCustomHeightWidth(string inputFile, string resourcePath, int expectedOutput)
         {
             var config = GetConfiguration();
-            config.IntermediateOutputPath += resourcePath;
+            config.IntermediateOutputPath += GetOutputDirectorySuffix((nameof(inputFile), inputFile), (nameof(expectedOutput), expectedOutput));
             var generator = new ImageResizeGenerator(config);
 
             var image = new OutputImage
             {
                 Height = expectedOutput,
                 Width = expectedOutput,
-                InputFile = Path.Combine(TestConstants.ImageDirectory, "dotnetbot.png"),
+                InputFile = Path.Combine(TestConstants.ImageDirectory, inputFile),
                 OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", resourcePath, "dotnetbot.png"),
                 RequiresBackgroundColor = false,
                 Scale = 0,
                 ShouldBeVisible = true,
@@ -84,10 +83,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var ex = Record.Exception(() => generator.ProcessImage(image));
 
             Assert.Null(ex);
-            Assert.True(File.Exists(image.OutputFile));
 
-            using var imageResource = Image.Load(image.OutputFile);
-            Assert.Equal(expectedOutput, imageResource.Width);
+            VerifyImageContents(image);
         }
 
         [Theory]
@@ -98,6 +95,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void AppliesWatermark(string inputImageName, string watermarkImage)
         {
             var config = GetConfiguration();
+            config.IntermediateOutputPath += GetOutputDirectorySuffix((nameof(inputImageName), inputImageName), (nameof(watermarkImage), watermarkImage));
             var generator = new ImageResizeGenerator(config);
 
             var image = new OutputImage
@@ -105,7 +103,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 Height = 0,
                 Width = 0,
                 InputFile = Path.Combine(TestConstants.WatermarkImageDirectory, $"{inputImageName}.png"),
-                OutputFile = Path.Combine($"{config.IntermediateOutputPath}-{inputImageName}-{watermarkImage}", $"{inputImageName}.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, $"{inputImageName}.png"),
                 OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", $"{inputImageName}.png"),
                 RequiresBackgroundColor = false,
                 Scale = 1,
@@ -118,26 +116,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
             generator.ProcessImage(image);
 
-            using var inputImage = Image.Load(image.InputFile);
-            using var outputImage = Image.Load(image.OutputFile);
-            using var inputClone = inputImage.CloneAs<Rgba32>();
-            using var outputClone = outputImage.CloneAs<Rgba32>();
-
-            bool appliedWatermark;
-            for (var y = 0; y < inputImage.Height; ++y)
-            {
-                var inputPixelRowSpan = inputClone.GetPixelRowSpan(y);
-                var outputPixelRowSpan = outputClone.GetPixelRowSpan(y);
-                for (var x = 0; x < inputImage.Width; ++x)
-                {
-                    appliedWatermark = inputPixelRowSpan[x] == outputPixelRowSpan[x];
-                    if (appliedWatermark)
-                        return;
-                }
-            }
-
-            _testOutputHelper.WriteLine("All pixels are the same in the Input and Output Images");
-            Assert.True(false);
+            VerifyImageContents(image);
         }
 
         [Fact]
@@ -161,32 +140,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
             generator.ProcessImage(image);
 
-            using var inputImage = Image.Load(image.InputFile);
-            using var outputImage = Image.Load(image.OutputFile);
-            using var inputClone = inputImage.CloneAs<Rgba32>();
-            using var outputClone = outputImage.CloneAs<Rgba32>();
-
-            var comparedTransparentPixel = false;
-            for (var y = 0; y < inputImage.Height; ++y)
-            {
-                var inputPixelRowSpan = inputClone.GetPixelRowSpan(y);
-                var outputPixelRowSpan = outputClone.GetPixelRowSpan(y);
-                for (var x = 0; x < inputImage.Width; ++x)
-                {
-                    var startingPixel = inputPixelRowSpan[x];
-                    if (startingPixel.A == 0)
-                    {
-                        comparedTransparentPixel = true;
-                        var pixel = outputPixelRowSpan[x];
-                        Assert.Equal(255, pixel.R);
-                        Assert.Equal(255, pixel.G);
-                        Assert.Equal(255, pixel.B);
-                        Assert.Equal(255, pixel.A);
-                    }
-                }
-            }
-
-            Assert.True(comparedTransparentPixel);
+            VerifyImageContents(image);
         }
 
         [Fact]
@@ -211,40 +165,18 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
             generator.ProcessImage(image);
 
-            using var inputImage = Image.Load(image.InputFile);
-            using var outputImage = Image.Load(image.OutputFile);
-            using var inputClone = inputImage.CloneAs<Rgba32>();
-            using var outputClone = outputImage.CloneAs<Rgba32>();
-
-            var comparedTransparentPixel = false;
-            for (var y = 0; y < inputImage.Height; ++y)
-            {
-                var inputPixelRowSpan = inputClone.GetPixelRowSpan(y);
-                var outputPixelRowSpan = outputClone.GetPixelRowSpan(y);
-                for (var x = 0; x < inputImage.Width; ++x)
-                {
-                    var startingPixel = inputPixelRowSpan[x];
-                    if (startingPixel.A == 0)
-                    {
-                        comparedTransparentPixel = true;
-                        var pixel = outputPixelRowSpan[x];
-                        Assert.Equal(138, pixel.R);
-                        Assert.Equal(43, pixel.G);
-                        Assert.Equal(226, pixel.B);
-                        Assert.Equal(255, pixel.A);
-                    }
-                }
-            }
-
-            Assert.True(comparedTransparentPixel);
+            VerifyImageContents(image);
         }
 
         [Theory]
-        [InlineData("Dev")]
-        [InlineData("Stage")]
-        public void AppliesTextBanner(string text)
+        [InlineData("Dev", 0.5)]
+        [InlineData("Dev", 1.0)]
+        [InlineData("Stage", 0.5)]
+        [InlineData("Something long", 0.5)]
+        public void AppliesTextBanner(string text, double scale)
         {
             var config = GetConfiguration();
+            config.IntermediateOutputPath += GetOutputDirectorySuffix((nameof(text), text), (nameof(scale), scale));
             var generator = new ImageResizeGenerator(config);
 
             var image = new OutputImage
@@ -255,7 +187,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
                 OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
                 RequiresBackgroundColor = true,
-                Scale = .5,
+                Scale = scale,
                 ShouldBeVisible = true,
                 Watermark = new WatermarkConfiguration
                 {
@@ -264,6 +196,85 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             };
 
             generator.ProcessImage(image);
+
+            VerifyImageContents(image);
+        }
+
+        [Theory]
+        [InlineData("dotnetbot.png", 1)]
+        [InlineData("dotnetbot.png", .75)]
+        [InlineData("dotnetbot.png", .5)]
+        [InlineData("dotnetbot.svg", 1)]
+        [InlineData("dotnetbot.svg", .75)]
+        [InlineData("dotnetbot.svg", .5)]
+        public void AppliesPadding(string inputFile, double paddingFactor)
+        {
+            var config = GetConfiguration();
+            config.IntermediateOutputPath += GetOutputDirectorySuffix((nameof(paddingFactor), paddingFactor), (nameof(inputFile), inputFile));
+            var generator = new ImageResizeGenerator(config);
+
+            var image = new OutputImage
+            {
+                Height = 0,
+                Width = 0,
+                InputFile = Path.Combine(TestConstants.ImageDirectory, inputFile),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                RequiresBackgroundColor = false,
+                Scale = 1.0,
+                ShouldBeVisible = true,
+                Watermark = null,
+                BackgroundColor = "Red",
+                PaddingColor = "Yellow",
+                PaddingFactor = paddingFactor
+            };
+
+            var ex = Record.Exception(() => generator.ProcessImage(image));
+
+            Assert.Null(ex);
+
+            VerifyImageContents(image);
+        }
+
+        private static string GetOutputDirectorySuffix(params (string, object)[] values)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var value in values)
+            {
+                var prefix = "and";
+                if (builder.Length == 0)
+                {
+                    prefix = "-with";
+                }
+
+                builder.Append($"{prefix}-{value.Item1}-of-{value.Item2}-");
+            }
+
+            return builder.ToString();
+        }
+
+        private void VerifyImageContents(OutputImage image)
+        {
+            var expectedFilePath = Path.Combine(TestConstants.ExpectedImageDirectory, image.OutputFile);
+            var outputFilePath = image.OutputFile;
+
+            Assert.True(File.Exists(expectedFilePath), $"Expected image file '{expectedFilePath}' does not exist");
+            Assert.True(File.Exists(outputFilePath), $"Resulting image file '{outputFilePath}' does not exist");
+
+            using var expectedImage = SKBitmap.Decode(expectedFilePath);
+            using var outputImage = SKBitmap.Decode(outputFilePath);
+
+            Assert.Equal(expectedImage.Width, outputImage.Width);
+            Assert.Equal(expectedImage.Height, outputImage.Height);
+
+            for (var y = 0; y < expectedImage.Height; ++y)
+            {
+                for (var x = 0; x < expectedImage.Width; ++x)
+                {
+                    Assert.Equal(expectedImage.GetPixel(x, y), outputImage.GetPixel(x, y));
+                }
+            }
         }
     }
 }
