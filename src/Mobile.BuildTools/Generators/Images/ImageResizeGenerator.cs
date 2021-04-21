@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Drawing;
+using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models.AppIcons;
 using Newtonsoft.Json;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
+using SkiaSharp;
 
 namespace Mobile.BuildTools.Generators.Images
 {
@@ -22,7 +23,7 @@ namespace Mobile.BuildTools.Generators.Images
         protected override void ExecuteInternal()
         {
             Outputs = new List<OutputImage>();
-            foreach(var outputImage in OutputImages)
+            foreach (var outputImage in OutputImages)
             {
                 ProcessImage(outputImage);
                 Outputs.Add(outputImage);
@@ -34,12 +35,40 @@ namespace Mobile.BuildTools.Generators.Images
             Log.LogMessage($"Generating file '{outputImage.OutputFile}");
             var fi = new FileInfo(outputImage.OutputFile);
             Directory.CreateDirectory(Path.Combine(Build.IntermediateOutputPath, fi.DirectoryName));
-            using var image = Image.Load(outputImage.InputFile);
-            var requiresBackground = outputImage.RequiresBackgroundColor && image.HasTransparentBackground();
+
+            using var image = ImageBase.Load(outputImage.InputFile);
 
             try
             {
-                image.Mutate(x => MutateImage(x, outputImage, requiresBackground));
+                var context = CreateContext(
+                    GetBackgroundColor(outputImage.BackgroundColor, outputImage.RequiresBackgroundColor, image.HasTransparentBackground),
+                    Log,
+                    1.0,
+                    outputImage.Scale,
+                    outputImage.Width,
+                    outputImage.Height,
+                    image.GetOriginalSize());
+
+                if (!context.Scale.X.IsEqualTo(context.Scale.Y))
+                {
+                    Log.LogWarning("Image aspect ratio is not being maintained.");
+                }
+
+                using var tempBitmap = new SKBitmap(context.Size.Width, context.Size.Height);
+                using var canvas = new SKCanvas(tempBitmap);
+
+                canvas.Clear(context.BackgroundColor);
+                canvas.Save();
+                canvas.Scale(context.Scale.X, context.Scale.Y);
+
+                image.Draw(canvas, context);
+
+                ApplyWatermark(outputImage, context, Log, canvas);
+
+                using var outputBitmap = ApplyPadding(outputImage, image, context, tempBitmap);
+
+                using var stream = File.Create(outputImage.OutputFile);
+                outputBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
             }
             catch (System.Exception ex)
             {
@@ -51,34 +80,84 @@ namespace Mobile.BuildTools.Generators.Images
 {JsonConvert.SerializeObject(outputImage)}");
                 throw;
             }
-
-            using var outputStream = new FileStream(outputImage.OutputFile, FileMode.OpenOrCreate);
-            image.SaveAsPng(outputStream);
         }
 
-        private static IImageProcessingContext MutateImage(IImageProcessingContext ctx, OutputImage outputImage, bool requiresBackground)
+        private SKBitmap ApplyPadding(OutputImage outputImage, ImageBase image, Context context, SKBitmap outputBitmap)
         {
-            var currentSize = ctx.GetCurrentSize();
-            ctx.Resize(GetUpdatedSize(outputImage, currentSize));
-            ctx.ApplyWatermark(outputImage.Watermark);
-
-            if (!string.IsNullOrWhiteSpace(outputImage.BackgroundColor) || requiresBackground)
+            if (outputImage.PaddingFactor is null)
             {
-                ctx.ApplyBackground(outputImage.BackgroundColor);
+                return outputBitmap;
             }
 
-            ctx.ResizeCanvas(outputImage.PaddingFactor, outputImage.PaddingColor);
-            return ctx;
+            var paddedBitmap = new SKBitmap(context.Size.Width, context.Size.Height);
+            using var paddedCanvas = new SKCanvas(paddedBitmap);
+
+            var paddedContext = CreateContext(
+                GetBackgroundColor(outputImage.PaddingColor, outputImage.RequiresBackgroundColor, image.HasTransparentBackground),
+                Log,
+                1.0,
+                outputImage.PaddingFactor.Value,
+                0,
+                0,
+                context.Size);
+
+            paddedCanvas.Clear(paddedContext.BackgroundColor);
+            paddedCanvas.Save();
+
+            using var resizedBitmap = outputBitmap.Resize(new SKImageInfo(paddedContext.Size.Width, paddedContext.Size.Height), SKFilterQuality.High);
+
+            paddedCanvas.DrawBitmap(
+                resizedBitmap,
+                (context.Size.Width - paddedContext.Size.Width) / 2,
+                (context.Size.Height - paddedContext.Size.Height) / 2);
+
+            return paddedBitmap;
         }
 
-        private static Size GetUpdatedSize(OutputImage output, Size currentSize)
+        private static void ApplyWatermark(OutputImage outputImage, Context context, ILog log, SKCanvas canvas)
         {
-            if (output.Scale > 0)
+            using var watermark = Watermark.Create(outputImage.Watermark, new PointF(1 / context.Scale.X, 1 / context.Scale.Y));
+            var watermarkContext = CreateContext(SKColors.Transparent, log, outputImage.Watermark?.Opacity ?? 1.0, 0, context.Size.Width, context.Size.Height, watermark.GetOriginalSize());
+            watermark.Draw(canvas, watermarkContext);
+        }
+
+        private static SKColor GetBackgroundColor(string colorText, bool requiresBackgroundColor, bool hasTransparentBackground)
+        {
+            var requiresBackground = requiresBackgroundColor && hasTransparentBackground;
+            var isExpectedBackgroundDefined = !string.IsNullOrWhiteSpace(colorText);
+
+            if (isExpectedBackgroundDefined || requiresBackground)
             {
-                return new Size((int)(currentSize.Width * output.Scale), (int)(currentSize.Height * output.Scale));
+                if (ColorUtils.TryParse(isExpectedBackgroundDefined ? colorText : Constants.DefaultBackgroundColor, out var color))
+                {
+                    return color;
+                }
             }
 
-            return new Size(output.Width, output.Height);
+            return SKColors.Transparent;
+        }
+
+        private static Context CreateContext(SKColor backgroundColor, Logging.ILog log, double opacity, double scale, int width, int height, Size currentSize)
+        {
+            if (scale > 0)
+            {
+                return new Context(
+                    backgroundColor,
+                    log,
+                    opacity,
+                    (int)(currentSize.Width * scale),
+                    (int)(currentSize.Height * scale),
+                    (float)scale);
+            }
+
+            return new Context(
+                backgroundColor,
+                log,
+                opacity,
+                width,
+                height,
+                (float)width / currentSize.Width,
+                (float)height / currentSize.Height);
         }
     }
 }

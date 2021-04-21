@@ -26,6 +26,8 @@ namespace Mobile.BuildTools.Models.AppIcons
 
         public double? PaddingFactor { get; set; }
 
+        // Possibly add background image.
+
         public string PaddingColor { get; set; }
 
         public WatermarkConfiguration Watermark { get; set; }

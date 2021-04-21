@@ -6,6 +6,7 @@ namespace Mobile.BuildTools.Tests
 {
     internal static class TestConstants
     {
+        public static readonly string ExpectedImageDirectory = Path.Combine("Templates", "Images", "Expected");
         public static readonly string ImageDirectory = Path.Combine("Templates", "Images");
         public static readonly string AndroidImageDirectory = Path.Combine(ImageDirectory, "MonoAndroid");
         public static readonly string AppleImageDirectory = Path.Combine(ImageDirectory, "Xamarin.iOS");

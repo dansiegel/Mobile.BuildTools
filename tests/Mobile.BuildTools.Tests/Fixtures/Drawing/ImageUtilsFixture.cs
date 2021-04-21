@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Mobile.BuildTools.Drawing;
-using SixLabors.ImageSharp;
+using SkiaSharp;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,10 +15,10 @@ namespace Mobile.BuildTools.Tests.Fixtures.Drawing
 
         [Theory]
         [MemberData(nameof(Data))]
-        public void GeneratesExpectedColor(string input, Color color)
+        public void GeneratesExpectedColor(string input, SKColor color)
         {
             bool success = false;
-            Color result = default;
+            SKColor result = default;
             var ex = Record.Exception(() => success = ColorUtils.TryParse(input, out result));
             Assert.Null(ex);
             Assert.True(success);
@@ -32,10 +28,13 @@ namespace Mobile.BuildTools.Tests.Fixtures.Drawing
         public static IEnumerable<object[]> Data =>
         new List<object[]>
         {
-            new object[] { "Red", Color.Red },
-            new object[] { "Blue", Color.Blue },
-            new object[] { "OrangeRed", Color.OrangeRed },
-            new object[] { "#FF88DD", Color.ParseHex("#FF88DD") },
+            new object[] { "Red", SKColors.Red },
+            new object[] { "red", SKColors.Red },
+            new object[] { "Blue", SKColors.Blue },
+            new object[] { "blue", SKColors.Blue },
+            new object[] { "OrangeRed", SKColors.OrangeRed },
+            new object[] { "orangered", SKColors.OrangeRed },
+            new object[] { "#FF88DD", SKColor.Parse("#FF88DD") },
         };
     }
 }
