@@ -1,0 +1,33 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "13:00"
+  open-pull-requests-limit: 3
+  ignore:
+  - dependency-name: Microsoft.Build
+    versions:
+    - "> 16.0.461"
+  - dependency-name: Microsoft.Build.Tasks.Core
+    versions:
+    - "> 16.0.461"
+  - dependency-name: Microsoft.Web.Xdt
+    versions:
+    - "> 3.0.0"
+  - dependency-name: NuGet.Build.Packaging
+    versions:
+    - "> 0.2.5-dev.10"
+  - dependency-name: Xamarin.TestCloud.Agent
+    versions:
+    - "> 0.22.1"
+  - dependency-name: Xamarin.UITest
+    versions:
+    - "> 3.0.14"
+  - dependency-name: Microsoft.Build.NoTargets
+    versions:
+    - 2.0.17
+  - dependency-name: Xamarin.UITest
+    versions:
+    - 3.0.13
