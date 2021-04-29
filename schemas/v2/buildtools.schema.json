@@ -249,6 +249,13 @@
           ],
           "default": "Helpers"
         },
+        "rootNamespace": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "An override to the project root namespace. This may be useful if using a Shared project."
+        },
         "properties": {
           "type": [
             "array",
