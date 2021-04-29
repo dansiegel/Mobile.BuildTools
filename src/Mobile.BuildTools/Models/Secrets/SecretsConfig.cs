@@ -27,6 +27,9 @@ namespace Mobile.BuildTools.Models.Secrets
         public Accessibility Accessibility { get; set; }
 #endif
 
+        [JsonProperty("rootNamespace")]
+        public string RootNamespace { get; set; }
+
         [JsonProperty("namespace")]
         public string Namespace { get; set; }
 
