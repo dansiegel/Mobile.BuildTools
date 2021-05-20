@@ -6,6 +6,11 @@ namespace Mobile.BuildTools.Models.Secrets
 {
     public class SecretsConfig
     {
+        public SecretsConfig()
+        {
+            Properties = new List<ValueConfig>();
+        }
+
         [JsonProperty("disable")]
         public bool Disable { get; set; }
 
