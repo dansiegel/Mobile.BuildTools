@@ -6,6 +6,11 @@ namespace Mobile.BuildTools.Models.Secrets
 {
     public class SecretsConfig
     {
+        public SecretsConfig()
+        {
+            Properties = new List<ValueConfig>();
+        }
+
         [JsonProperty("disable")]
         public bool Disable { get; set; }
 
@@ -26,6 +31,9 @@ namespace Mobile.BuildTools.Models.Secrets
         [JsonProperty("accessibility")]
         public Accessibility Accessibility { get; set; }
 #endif
+
+        [JsonProperty("rootNamespace")]
+        public string RootNamespace { get; set; }
 
         [JsonProperty("namespace")]
         public string Namespace { get; set; }

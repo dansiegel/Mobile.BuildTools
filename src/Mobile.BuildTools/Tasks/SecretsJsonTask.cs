@@ -22,7 +22,8 @@ namespace Mobile.BuildTools.Tasks
         {
             //System.Diagnostics.Debugger.Launch();
 
-            if (config.GetSecretsConfig().Disable)
+            var secretsConfig = config.GetSecretsConfig();
+            if (secretsConfig is null || secretsConfig.Disable)
                 return;
 
             var configJson = string.Format(Constants.SecretsJsonConfigurationFileFormat, config.BuildConfiguration.ToLower());
@@ -39,9 +40,10 @@ namespace Mobile.BuildTools.Tasks
             if (!string.IsNullOrEmpty(JsonSecretsFilePath) && !searchPaths.Contains(JsonSecretsFilePath))
                 searchPaths.Add(JsonSecretsFilePath);
 
+            var rootNamespace = string.IsNullOrEmpty(secretsConfig.RootNamespace) ? RootNamespace : secretsConfig.RootNamespace;
             var generator = new SecretsClassGenerator(config, searchPaths.ToArray())
             {
-                BaseNamespace = RootNamespace,
+                BaseNamespace = rootNamespace,
             };
             generator.Execute();
             _generatedCodeFiles = new[] { generator.Outputs };

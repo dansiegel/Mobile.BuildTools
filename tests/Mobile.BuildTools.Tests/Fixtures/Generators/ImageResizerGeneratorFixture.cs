@@ -169,14 +169,34 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Theory]
-        [InlineData("Dev", 0.5)]
-        [InlineData("Dev", 1.0)]
-        [InlineData("Stage", 0.5)]
-        [InlineData("Something long", 0.5)]
-        public void AppliesTextBanner(string text, double scale)
+        [InlineData("Dev", 0.5, WatermarkPosition.BottomLeft)]
+        [InlineData("Dev", 1.0, WatermarkPosition.BottomLeft)]
+        [InlineData("Stage", 0.5, WatermarkPosition.BottomLeft)]
+        [InlineData("Something long", 1.0, WatermarkPosition.BottomLeft)]
+        [InlineData("Dev", 0.5, WatermarkPosition.BottomRight)]
+        [InlineData("Dev", 1.0, WatermarkPosition.BottomRight)]
+        [InlineData("Stage", 0.5, WatermarkPosition.BottomRight)]
+        [InlineData("Something long", 1.0, WatermarkPosition.BottomRight)]
+        [InlineData("Dev", 0.5, WatermarkPosition.Bottom)]
+        [InlineData("Dev", 1.0, WatermarkPosition.Bottom)]
+        [InlineData("Stage", 0.5, WatermarkPosition.Bottom)]
+        [InlineData("Something long", 1.0, WatermarkPosition.Bottom)]
+        [InlineData("Dev", 0.5, WatermarkPosition.TopLeft)]
+        [InlineData("Dev", 1.0, WatermarkPosition.TopLeft)]
+        [InlineData("Stage", 0.5, WatermarkPosition.TopLeft)]
+        [InlineData("Something long", 1.0, WatermarkPosition.TopLeft)]
+        [InlineData("Dev", 0.5, WatermarkPosition.TopRight)]
+        [InlineData("Dev", 1.0, WatermarkPosition.TopRight)]
+        [InlineData("Stage", 0.5, WatermarkPosition.TopRight)]
+        [InlineData("Something long", 1.0, WatermarkPosition.TopRight)]
+        [InlineData("Dev", 0.5, WatermarkPosition.Top)]
+        [InlineData("Dev", 1.0, WatermarkPosition.Top)]
+        [InlineData("Stage", 0.5, WatermarkPosition.Top)]
+        [InlineData("Something long", 1.0, WatermarkPosition.Top)]
+        public void AppliesTextBanner(string text, double scale, WatermarkPosition position)
         {
             var config = GetConfiguration();
-            config.IntermediateOutputPath += GetOutputDirectorySuffix((nameof(text), text), (nameof(scale), scale));
+            config.IntermediateOutputPath += GetOutputDirectorySuffix((nameof(text), text), (nameof(scale), scale), (nameof(position), position));
             var generator = new ImageResizeGenerator(config);
 
             var image = new OutputImage
@@ -191,7 +211,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 ShouldBeVisible = true,
                 Watermark = new WatermarkConfiguration
                 {
-                    Text = text
+                    Text = text,
+                    Position = position
                 }
             };
 
@@ -248,7 +269,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                     prefix = "-with";
                 }
 
-                builder.Append($"{prefix}-{value.Item1}-of-{value.Item2}-");
+                builder.Append($"-{prefix}-{value.Item1}-of-{value.Item2}");
             }
 
             return builder.ToString();

@@ -6,6 +6,12 @@ namespace Mobile.BuildTools.Models
 {
     public class ImageResize : ToolItem
     {
+        public ImageResize()
+        {
+            Directories = new List<string>();
+            ConditionalDirectories = new Dictionary<string, IEnumerable<string>>();
+        }
+
         [JsonProperty("directories")]
         public List<string> Directories { get; set; }
 
