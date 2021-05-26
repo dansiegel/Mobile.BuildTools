@@ -32,12 +32,11 @@
   </Target>
 
   <PropertyGroup>
-    <HandlePlatformAppConfigBeforeTargets>_CreateDex;Compile</HandlePlatformAppConfigBeforeTargets>
+    <HandlePlatformAppConfigBeforeTargets>_CollectBundleResources;PrepareForBuild</HandlePlatformAppConfigBeforeTargets>
   </PropertyGroup>
 
   <Target Name="HandlePlatformAppConfig"
-          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
-          BeforeTargets="_CreateDex;Compile">
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy">
     <ItemGroup>
       <AndroidAsset Include="@(PlatformAppConfig)"
                     Link="Assets\%(Filename)%(Extension)"/>
