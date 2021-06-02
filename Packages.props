@@ -11,7 +11,7 @@
     <PackageReference Update="HarfBuzzSharp" Version="2.6.1.7" />
     <PackageReference Update="SkiaSharp" Version="2.80.2" />
     <PackageReference Update="SkiaSharp.HarfBuzz" Version="2.80.2" />
-    <PackageReference Update="Svg.Skia" Version="0.4.1" />
+    <PackageReference Update="Svg.Skia" Version="0.5.5.5" />
     <PackageReference Update="Svg.Custom" Version="0.4.1" />
     <PackageReference Update="Svg.Picture" Version="0.4.1" />
     <PackageReference Update="System.Buffers" Version="4.5.1" />
