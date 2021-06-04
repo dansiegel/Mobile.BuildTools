@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Mobile.BuildTools.Models;
@@ -9,11 +10,23 @@ using Xunit.Abstractions;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Tasks
 {
-    public class CollectImageAssetsTaskFixture : FixtureBase
+    public class CollectImageAssetsTaskFixture : FixtureBase, IDisposable
     {
+        private static readonly string ConfigPath = Path.Combine(Path.GetTempPath(), nameof(CollectImageAssetsTaskFixture));
+
         public CollectImageAssetsTaskFixture(ITestOutputHelper testOutputHelper)
             : base(testOutputHelper)
         {
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "debug"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "release"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "sample"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "PlatformSpecific"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "ShouldNotBeIncluded"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "DebugSpecific"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "ReleaseSpecific"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "StoreSpecific"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "NotDebug"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "Sample"));
         }
 
         [Fact]
@@ -43,7 +56,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
 
             var task = new CollectImageAssetsTask
             {
-                ConfigurationPath = Directory.GetCurrentDirectory() 
+                ConfigurationPath = ConfigPath
             };
 
             IEnumerable<string> paths = null;
@@ -67,7 +80,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
 
             var task = new CollectImageAssetsTask
             {
-                ConfigurationPath = Directory.GetCurrentDirectory()
+                ConfigurationPath = ConfigPath
             };
 
             IEnumerable<string> paths = null;
@@ -104,7 +117,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
 
             var task = new CollectImageAssetsTask
             {
-                ConfigurationPath = Directory.GetCurrentDirectory()
+                ConfigurationPath = ConfigPath
             };
 
             IEnumerable<string> paths = null;
@@ -136,7 +149,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
 
             var task = new CollectImageAssetsTask
             {
-                ConfigurationPath = Directory.GetCurrentDirectory()
+                ConfigurationPath = ConfigPath
             };
 
             IEnumerable<string> paths = null;
@@ -167,7 +180,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
 
             var task = new CollectImageAssetsTask
             {
-                ConfigurationPath = Directory.GetCurrentDirectory()
+                ConfigurationPath = ConfigPath
             };
 
             IEnumerable<string> paths = null;
@@ -197,7 +210,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
 
             var task = new CollectImageAssetsTask
             {
-                ConfigurationPath = Directory.GetCurrentDirectory()
+                ConfigurationPath = ConfigPath
             };
 
             IEnumerable<string> paths = null;
@@ -206,6 +219,12 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
             Assert.Null(ex);
             Assert.Single(paths);
             Assert.Equal(Path.Combine(task.ConfigurationPath, "Images"), paths.First());
+        }
+
+        void IDisposable.Dispose()
+        {
+            if (Directory.Exists(ConfigPath))
+                Directory.Delete(ConfigPath, recursive: true);
         }
     }
 }

@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
 
 namespace Mobile.BuildTools.Utils
 {
     internal static class ImageSearchUtil
     {
-        public static IEnumerable<string> GetSearchPaths(BuildToolsConfig config, Platform platform, string buildConfiguration, string buildToolsConfigPath, string additionalSearchPaths = null, bool? ignoreDefaultSearchPaths = null)
+        public static IEnumerable<string> GetSearchPaths(BuildToolsConfig config, Platform platform, string buildConfiguration, string buildToolsConfigPath, string additionalSearchPaths = null, bool? ignoreDefaultSearchPaths = null, ILog logger = null)
         {
             if (string.IsNullOrEmpty(buildToolsConfigPath))
                 return Array.Empty<string>();
@@ -73,7 +72,23 @@ namespace Mobile.BuildTools.Utils
                 searchPaths.AddRange(imageConfig.ConditionalDirectories[validCondition].Select(x => GetSearchPath(x, buildToolsConfigPath)));
             }
 
-            return searchPaths.Where(x => !string.IsNullOrEmpty(x)).Distinct();
+            var outputPaths = new List<string>(searchPaths.Distinct());
+            foreach(var path in searchPaths)
+            {
+                if(string.IsNullOrEmpty(path))
+                {
+                    outputPaths.Remove(path);
+                    continue;
+                }
+
+                if (Directory.Exists(path))
+                    continue;
+
+                logger?.LogWarning($"No directory was found at the path '{path}'. Any images that should have been in this path will not be processed.");
+                outputPaths.Remove(path);
+            }
+
+            return outputPaths;
         }
 
         private static bool IsValidConditionalDirectory(string condition, IEnumerable<string> platformKeys, string buildConfiguration)
