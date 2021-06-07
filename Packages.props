@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Prism.DryIoc.Forms" Version="8.0.0.1909" />
+    <PackageReference Update="Prism.DryIoc.Forms" Version="8.1.97" />
     <PackageReference Update="Xamarin.Forms" Version="4.8.0.1451" />
     <PackageReference Update="Xamarin.Forms.Mocks" Version="4.7.0.1" />
     <PackageReference Update="Xamarin.Essentials" Version="1.6.1" />
