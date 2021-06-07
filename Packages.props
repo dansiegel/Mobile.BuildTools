@@ -36,7 +36,7 @@
     <PackageReference Update="Moq" Version="4.16.1" />
     <PackageReference Update="xunit" Version="2.4.1" />
     <PackageReference Update="xunit.runner.visualstudio" Version="2.4.3" />
-    <PackageReference Update="NUnit" Version="3.13.1" />
+    <PackageReference Update="NUnit" Version="3.13.2" />
     <PackageReference Update="Xamarin.UITest" Version="3.0.14" />
   </ItemGroup>
 
