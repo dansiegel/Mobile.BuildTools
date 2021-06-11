@@ -11,7 +11,7 @@ namespace Mobile.BuildTools.Generators.Images
 {
     internal abstract class ImageCollectionGeneratorBase : GeneratorBase<IReadOnlyList<OutputImage>>
     {
-        private static readonly string[] supportedExtensions = new[] { ".png", ".jpg" };
+        private static readonly string[] supportedExtensions = new[] { ".png", ".jpg", ".svg" };
 
         public ImageCollectionGeneratorBase(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
