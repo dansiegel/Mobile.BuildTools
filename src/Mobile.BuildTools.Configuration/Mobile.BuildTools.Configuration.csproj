@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;MonoAndroid80;MonoAndroid81;MonoAndroid90;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;MonoAndroid81;MonoAndroid90;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40;netcoreapp3.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.16299</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -51,6 +51,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.Xdt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="build\*.props" Pack="true" PackagePath="build" />
   </ItemGroup>
 
 </Project>
