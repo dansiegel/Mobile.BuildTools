@@ -29,6 +29,8 @@ namespace Mobile.BuildTools.Generators.Manifests
 
         public string ManifestOutputPath { get; set; }
 
+        public string PackageId { get; protected set; }
+
         protected override void ExecuteInternal()
         {
             Outputs = ManifestOutputPath;

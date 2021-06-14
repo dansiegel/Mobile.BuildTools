@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
-  <Target Name="_MBTGatherManifests">
+  <Target Name="_MBTGatherManifests"
+          AfterTargets="_GetAndroidPackageName"
+          Condition=" $(_AndroidManifestAbs) != '' ">
     <PropertyGroup>
       <_MBTUpdatedManifest>$(IntermediateOutputPath)mbt\AndroidManifest.xml</_MBTUpdatedManifest>
       <_MBTSourceManifest>$(_AndroidManifestAbs)</_MBTSourceManifest>
@@ -33,7 +35,10 @@
                           ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
                           ManifestPath="$(_MBTUpdatedManifest)"
                           OutputManifestPath="$(_MBTUpdatedManifest)"
-                          Condition="$(BuildToolsEnableTemplateManifests)" />
+                          Condition="$(BuildToolsEnableTemplateManifests)">
+      <Output TaskParameter="PackageId"
+              PropertyName="_AndroidPackage" />
+    </TemplateManifestTask>
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
