@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Models.Configuration;
 using Mobile.BuildTools.Tasks.Generators.AppConfig;
 
 namespace Mobile.BuildTools.Tasks
@@ -58,7 +59,7 @@ namespace Mobile.BuildTools.Tasks
 
             // Get Transform config
             var transformFile = GetTaskItem(InputConfigFiles, $"app.{AppConfigEnvironment}.config");
-            var outputs = GeneratedAppConfig.Select(x => Models.Configuration.ExpectedAppConfig.FromTaskItem(x));
+            var outputs = GeneratedAppConfig.Select(x => x.ToExpectedAppConfig());
             var generator = new ConfigurationManagerTransformationGenerator(config)
             {
                 BaseConfigPath = rootConfigFile.ItemSpec,

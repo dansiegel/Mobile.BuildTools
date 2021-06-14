@@ -5,6 +5,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Images;
+using Mobile.BuildTools.Models.AppIcons;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
@@ -49,18 +50,13 @@ namespace Mobile.BuildTools.Tasks
 
         private ImageCollectionGeneratorBase CreateGenerator(Platform platform, IBuildConfiguration config)
         {
-            switch(platform)
+            return platform switch
             {
-                case Platform.Android:
-                    return new AndroidImageCollectionGenerator(this);
-                case Platform.iOS:
-                case Platform.macOS:
-                case Platform.TVOS:
-                    return new AppleImageCollectionGenerator(this);
-                case Platform.UWP:
-                    return new UwpImageCollectionGenerator(this);
-                default: return null;
-            }
+                Platform.Android => new AndroidImageCollectionGenerator(this),
+                Platform.iOS or Platform.macOS or Platform.TVOS => new AppleImageCollectionGenerator(this),
+                Platform.UWP => new UwpImageCollectionGenerator(this),
+                _ => null,
+            };
         }
 
         internal IEnumerable<string> GetSearchPaths(IBuildConfiguration config)

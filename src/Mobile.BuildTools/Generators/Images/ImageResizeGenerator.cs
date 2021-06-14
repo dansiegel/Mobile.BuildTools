@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Drawing;
 using Mobile.BuildTools.Logging;
@@ -73,8 +74,10 @@ namespace Mobile.BuildTools.Generators.Images
             catch (System.Exception ex)
             {
 #if DEBUG
-                if (!Debugger.IsAttached)
-                    Debugger.Launch();
+                if (System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Break();
+                else if(!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    System.Diagnostics.Debugger.Launch();
 #endif
                 Log.LogWarning(@$"Encountered Fatal error while processing image:
 {JsonConvert.SerializeObject(outputImage)}");

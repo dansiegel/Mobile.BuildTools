@@ -7,56 +7,55 @@ using Mobile.BuildTools.Extensions;
 
 namespace Mobile.BuildTools.Models.AppIcons
 {
-
-    public partial class OutputImage
+    public static class OutputImageExtensions
     {
-        public ITaskItem ToTaskItem()
+        public static ITaskItem ToTaskItem(this OutputImage image)
         {
-            var item = new TaskItem(OutputFile);
-            item.SetMetadata(nameof(InputFile), InputFile);
-            item.SetMetadata(nameof(OutputLink), OutputLink);
-            item.SetMetadata(nameof(Height), Height.ToString());
-            item.SetMetadata(nameof(Width), Width.ToString());
-            item.SetMetadata(nameof(RequiresBackgroundColor), RequiresBackgroundColor.ToString());
-            item.SetMetadata(nameof(Scale), Scale.ToString());
-            item.SetMetadata(nameof(ShouldBeVisible), ShouldBeVisible.ToString());
-            item.SetMetadata(nameof(BackgroundColor), BackgroundColor);
-            item.SetMetadata(nameof(PaddingFactor), PaddingFactor?.ToString());
-            item.SetMetadata(nameof(PaddingColor), PaddingColor);
+            var item = new TaskItem(image.OutputFile);
+            item.SetMetadata(nameof(image.InputFile), image.InputFile);
+            item.SetMetadata(nameof(image.OutputLink), image.OutputLink);
+            item.SetMetadata(nameof(image.Height), image.Height.ToString());
+            item.SetMetadata(nameof(image.Width), image.Width.ToString());
+            item.SetMetadata(nameof(image.RequiresBackgroundColor), image.RequiresBackgroundColor.ToString());
+            item.SetMetadata(nameof(image.Scale), image.Scale.ToString());
+            item.SetMetadata(nameof(image.ShouldBeVisible), image.ShouldBeVisible.ToString());
+            item.SetMetadata(nameof(image.BackgroundColor), image.BackgroundColor);
+            item.SetMetadata(nameof(image.PaddingFactor), image.PaddingFactor?.ToString());
+            item.SetMetadata(nameof(image.PaddingColor), image.PaddingColor);
 
-            if (Watermark != null)
+            if (image.Watermark != null)
             {
-                item.SetMetadata("WatermarkSourceFile", Watermark.SourceFile);
-                item.SetMetadata("WatermarkColors", Watermark.Colors is null || Watermark.Colors?.Count() == 0 ? null : string.Join(",", Watermark.Colors));
-                item.SetMetadata("WatermarkPosition", Watermark.Position?.ToString());
-                item.SetMetadata("WatermarkText", Watermark.Text);
-                item.SetMetadata("WatermarkTextColor", Watermark.TextColor);
-                item.SetMetadata("WatermarkFontFamily", Watermark.FontFamily);
-                item.SetMetadata("WatermarkFontFile", Watermark.FontFile);
-                item.SetMetadata("WatermarkOpacity", Watermark.Opacity?.ToString());
+                item.SetMetadata("WatermarkSourceFile", image.Watermark.SourceFile);
+                item.SetMetadata("WatermarkColors", image.Watermark.Colors is null || image.Watermark.Colors?.Count() == 0 ? null : string.Join(",", image.Watermark.Colors));
+                item.SetMetadata("WatermarkPosition", image.Watermark.Position?.ToString());
+                item.SetMetadata("WatermarkText", image.Watermark.Text);
+                item.SetMetadata("WatermarkTextColor", image.Watermark.TextColor);
+                item.SetMetadata("WatermarkFontFamily", image.Watermark.FontFamily);
+                item.SetMetadata("WatermarkFontFile", image.Watermark.FontFile);
+                item.SetMetadata("WatermarkOpacity", image.Watermark.Opacity?.ToString());
             }
 
             return item;
         }
 
-        public static OutputImage FromTaskItem(ITaskItem item)
+        public static OutputImage ToOutputImage(this ITaskItem item)
         {
-            var paddingString = item.GetMetadata(nameof(PaddingFactor));
+            var paddingString = item.GetMetadata(nameof(OutputImage.PaddingFactor));
             var image = new OutputImage
             {
-                InputFile = item.GetMetadata(nameof(InputFile)),
+                InputFile = item.GetMetadata(nameof(OutputImage.InputFile)),
                 OutputFile = item.ItemSpec,
-                OutputLink = item.GetMetadata(nameof(OutputLink)),
-                BackgroundColor = item.GetMetadata(nameof(BackgroundColor)),
-                PaddingColor = item.GetMetadata(nameof(PaddingColor)),
+                OutputLink = item.GetMetadata(nameof(OutputImage.OutputLink)),
+                BackgroundColor = item.GetMetadata(nameof(OutputImage.BackgroundColor)),
+                PaddingColor = item.GetMetadata(nameof(OutputImage.PaddingColor)),
                 PaddingFactor = !string.IsNullOrEmpty(paddingString) && double.TryParse(paddingString, out var p) ? p : default
             };
 
-            int.TryParse(item.GetMetadata(nameof(Height)), out var height);
-            int.TryParse(item.GetMetadata(nameof(Width)), out var width);
-            bool.TryParse(item.GetMetadata(nameof(RequiresBackgroundColor)), out var requiresBackgroundColor);
-            bool.TryParse(item.GetMetadata(nameof(ShouldBeVisible)), out var shouldBeVisible);
-            if(double.TryParse(item.GetMetadata(nameof(Scale)), out var scale) && (height == 0 || width == 0) && scale == 0)
+            int.TryParse(item.GetMetadata(nameof(OutputImage.Height)), out var height);
+            int.TryParse(item.GetMetadata(nameof(OutputImage.Width)), out var width);
+            bool.TryParse(item.GetMetadata(nameof(OutputImage.RequiresBackgroundColor)), out var requiresBackgroundColor);
+            bool.TryParse(item.GetMetadata(nameof(OutputImage.ShouldBeVisible)), out var shouldBeVisible);
+            if(double.TryParse(item.GetMetadata(nameof(OutputImage.Scale)), out var scale) && (height == 0 || width == 0) && scale == 0)
             {
                 scale = 1;
             }
