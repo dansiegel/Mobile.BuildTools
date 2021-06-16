@@ -4,6 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
+    <PackFolder>build</PackFolder>
+    <PackBuildOutput>false</PackBuildOutput>
+    <IncludeSource>false</IncludeSource>
   </PropertyGroup>
 
   <ItemGroup>

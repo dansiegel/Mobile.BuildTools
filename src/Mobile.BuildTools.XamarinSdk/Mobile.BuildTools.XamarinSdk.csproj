@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsPackable>false</IsPackable>
+    <SignAssembly>true</SignAssembly>
+    <NoWarn>1701;1702;8632</NoWarn>
+    <PackFolder>build</PackFolder>
+    <PackBuildOutput>false</PackBuildOutput>
+    <IncludeSource>false</IncludeSource>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\*.cs" Link="MaciOS\%(Filename)%(Extension)" />
+    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\*.cs" Link="Android\%(Filename)%(Extension)" />
+    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Sdks\*.cs" Link="Android\Sdks\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGetizer" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
