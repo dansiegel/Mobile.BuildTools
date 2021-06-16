@@ -13,8 +13,11 @@
 
   <ItemGroup>
     <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\*.cs" Link="MaciOS\%(Filename)%(Extension)" />
-    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\*.cs" Link="Android\%(Filename)%(Extension)" />
-    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Sdks\*.cs" Link="Android\Sdks\%(Filename)%(Extension)" />
+    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\*.cs" LinkBase="Android" />
+    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Properties\Resources.Designer.cs" LinkBase="Android\Properties" DependentUpon="Resources.resx" />
+    <EmbeddedResource Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Properties\Resources.resx" LinkBase="Android\Properties" />
+    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Jdks\*.cs" LinkBase="Android\Jdks" />
+    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Sdks\*.cs" LinkBase="Android\Sdks" />
   </ItemGroup>
 
   <ItemGroup>
