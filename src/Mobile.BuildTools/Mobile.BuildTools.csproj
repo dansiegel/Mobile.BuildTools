@@ -34,8 +34,8 @@
     <PackageReference Include="HarfBuzzSharp" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build" Pack="false" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
-    <PackageReference Include="Newtonsoft.Json" PrivateAssets="all" />
-    <PackageReference Include="NuGet.Build.Packaging" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" PrivateAssets="all" Pack="false" />
+    <PackageReference Include="NuGetizer" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Web.Xdt" PrivateAssets="all" />
     <PackageReference Include="ShimSkiaSharp" PrivateAssets="all" />
     <PackageReference Include="SkiaSharp" PrivateAssets="all" />
