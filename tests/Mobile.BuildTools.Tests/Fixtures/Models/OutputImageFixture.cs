@@ -33,7 +33,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Models
             };
 
             var taskItem = outputImage.ToTaskItem();
-            var convertedImage = OutputImage.FromTaskItem(taskItem);
+            var convertedImage = taskItem.ToOutputImage();
 
             Assert.NotNull(convertedImage.Watermark);
             Assert.Null(convertedImage.Watermark.Colors);
@@ -57,7 +57,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Models
             };
 
             var taskItem = outputImage.ToTaskItem();
-            var convertedImage = OutputImage.FromTaskItem(taskItem);
+            var convertedImage = taskItem.ToOutputImage();
 
             Assert.NotNull(convertedImage.Watermark);
             Assert.Equal(outputImage.Watermark.Text, convertedImage.Watermark.Text);

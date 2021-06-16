@@ -11,6 +11,7 @@
     <PrimaryOutputKind>build</PrimaryOutputKind>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>
