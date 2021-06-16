@@ -32,12 +32,8 @@ namespace Mobile.BuildTools.Models.AppIcons
         public WatermarkConfiguration Watermark { get; set; }
 
         [JsonProperty("resourceType", DefaultValueHandling = DefaultValueHandling.Ignore)]
-#if SCHEMAGENERATOR
-        [System.ComponentModel.DataAnnotations.EnumDataType(typeof(PlatformResourceType))]
-        public string ResourceType { get; set; }
-#else
         public PlatformResourceType ResourceType { get; set; }
-#endif
+
         [JsonIgnore]
         public string SourceFile { get; set; }
     }

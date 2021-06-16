@@ -1,4 +1,3 @@
-#if !(SCHEMAGENERATOR || CLI_TOOL)
 using System;
 using System.Linq;
 using Microsoft.Build.Framework;
@@ -98,4 +97,3 @@ namespace Mobile.BuildTools.Models.AppIcons
         }
     }
 }
-#endif

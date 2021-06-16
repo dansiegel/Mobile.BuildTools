@@ -6,7 +6,6 @@ namespace Mobile.BuildTools.Models
 {
     public class BuildToolsConfig
     {
-#if !SCHEMAGENERATOR
         private string _schema = "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json";
         [JsonProperty("$schema")]
         public string Schema
@@ -14,7 +13,6 @@ namespace Mobile.BuildTools.Models
             get => _schema;
             set { }
         }
-#endif
 
         [JsonProperty("appConfig")]
         public AppConfig AppConfig { get; set; }

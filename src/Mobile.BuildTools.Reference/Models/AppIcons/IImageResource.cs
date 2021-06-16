@@ -2,9 +2,7 @@
 {
     public interface IUpdatableImageResource
     {
-#if !SCHEMAGENERATOR
         PlatformResourceType ResourceType { get; set; }
-#endif
     }
 
     public interface IImageResource
@@ -16,11 +14,7 @@
         string Name { get; }
         string PaddingColor { get; }
         double? PaddingFactor { get; }
-#if SCHEMAGENERATOR
-        string ResourceType { get; }
-#else
         PlatformResourceType ResourceType { get; }
-#endif
         double Scale { get; }
         WatermarkConfiguration Watermark { get; }
         int? Width { get; }
@@ -35,11 +29,7 @@
         public string Name { get; set; }
         public string PaddingColor { get; set; }
         public double? PaddingFactor { get; set; }
-#if SCHEMAGENERATOR
-        public string ResourceType { get; set; }
-#else
         public PlatformResourceType ResourceType { get; set; }
-#endif
         public double Scale { get; set; }
         public WatermarkConfiguration Watermark { get; set; }
         public int? Width { get; set; }
