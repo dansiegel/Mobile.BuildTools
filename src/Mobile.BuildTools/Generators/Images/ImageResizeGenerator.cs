@@ -41,13 +41,13 @@ namespace Mobile.BuildTools.Generators.Images
             try
             {
                 var context = CreateContext(
-                    GetBackgroundColor(outputImage.BackgroundColor, outputImage.RequiresBackgroundColor, image.HasTransparentBackground),
+                    GetBackgroundColor(outputImage.BackgroundColor, outputImage.RequiresBackgroundColor && image.HasTransparentBackground),
                     Log,
                     1.0,
                     outputImage.Scale,
                     outputImage.Width,
                     outputImage.Height,
-                    image.GetOriginalSize());
+                    image.GetOriginalSize()); 
 
                 if (!context.Scale.X.IsEqualTo(context.Scale.Y))
                 {
@@ -94,7 +94,7 @@ namespace Mobile.BuildTools.Generators.Images
             using var paddedCanvas = new SKCanvas(paddedBitmap);
 
             var paddedContext = CreateContext(
-                GetBackgroundColor(outputImage.PaddingColor, outputImage.RequiresBackgroundColor, image.HasTransparentBackground),
+                GetBackgroundColor(outputImage.PaddingColor, outputImage.RequiresBackgroundColor && image.HasTransparentBackground),
                 Log,
                 1.0,
                 outputImage.PaddingFactor.Value,
@@ -122,12 +122,11 @@ namespace Mobile.BuildTools.Generators.Images
             watermark.Draw(canvas, watermarkContext);
         }
 
-        private static SKColor GetBackgroundColor(string colorText, bool requiresBackgroundColor, bool hasTransparentBackground)
+        private static SKColor GetBackgroundColor(string colorText, bool requiresBackgroundColor)
         {
-            var requiresBackground = requiresBackgroundColor && hasTransparentBackground;
             var isExpectedBackgroundDefined = !string.IsNullOrWhiteSpace(colorText);
 
-            if (isExpectedBackgroundDefined || requiresBackground)
+            if (isExpectedBackgroundDefined || requiresBackgroundColor)
             {
                 if (ColorUtils.TryParse(isExpectedBackgroundDefined ? colorText : Constants.DefaultBackgroundColor, out var color))
                 {
