@@ -57,6 +57,8 @@ stages:
     parameters:
       solution: Mobile.BuildTools.sln
 
+  - template: jobs/build-vsreference.yml
+
 - stage: Test
   displayName: Run Tests
   dependsOn: Build
@@ -150,7 +152,7 @@ stages:
             displayName: NuGet Push
             inputs:
               command: push
-              packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;$(Pipeline.Workspace)/**/*.snupkg'
+              packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;!$(Pipeline.Workspace)/**/*.VSCompatibility.*.nupkg'
               nuGetFeedType: external
               publishFeedCredentials: 'NuGet'
 

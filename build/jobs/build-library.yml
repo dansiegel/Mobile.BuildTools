@@ -1,5 +1,7 @@
 parameters:
-  solution: '**/*.sln'
+- name: solution
+  type: string
+  default: '**/*.sln'
 
 jobs:
 - job: BuildNuGet
@@ -19,12 +21,12 @@ jobs:
 
   - template: ../steps/nuget-restore.yml
     parameters:
-      solution: Mobile.BuildTools.sln
+      solution: ${{ parameters.solution }}
 
   - task: MSBuild@1
-    displayName: 'Build solution Mobile.BuildTools.sln'
+    displayName: 'Build solution ${{ parameters.solution }}'
     inputs:
-      solution: Mobile.BuildTools.sln
+      solution: ${{ parameters.solution }}
       platform: '$(BuildPlatform)'
       configuration: '$(BuildConfiguration)'
       createLogFile: true
