@@ -10,7 +10,6 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <SignAssembly>true</SignAssembly>
     <PackFolder>build</PackFolder>
     <PackBuildOutput>false</PackBuildOutput>
     <IncludeSource>false</IncludeSource>
@@ -18,6 +17,7 @@
 
   <ItemGroup>
     <Compile Include="..\Mobile.BuildTools.Configuration\TransformationHelper.cs" Link="Utils\TransformationHelper.cs" />
+    <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
   </ItemGroup>
 
   <ItemGroup>

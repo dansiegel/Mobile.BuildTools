@@ -1,15 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net472;</TargetFrameworks>
+    <PackageId>Mobile.BuildTools.VSCompatibility</PackageId>
+    <Description>This is a package specifically for 3rd party tooling to provide compatibility with the Mobile.BuildTools image generation.</Description>
     <IsPackable>false</IsPackable>
-    <SignAssembly>true</SignAssembly>
     <PackFolder>build</PackFolder>
     <PackBuildOutput>false</PackBuildOutput>
     <IncludeSource>false</IncludeSource>
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Mobile.BuildTools.Tests" Condition="$(SignAssembly) != 'true' " />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>

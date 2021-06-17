@@ -6,7 +6,6 @@
     <LangVersion>latest</LangVersion>
     <_NativeRuntime>win-x86</_NativeRuntime>
     <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
-    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>
