@@ -18,7 +18,7 @@ namespace Mobile.BuildTools.Tasks
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
             GeneratedImages = Array.Empty<ITaskItem>();
-            var images = Images.Select(x => OutputImage.FromTaskItem(x));
+            var images = Images.Select(x => x.ToOutputImage());
 
             if (!images.Any()) return;
 
