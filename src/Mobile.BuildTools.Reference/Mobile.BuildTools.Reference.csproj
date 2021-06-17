@@ -6,14 +6,13 @@
     <Description>This is a package specifically for 3rd party tooling to provide compatibility with the Mobile.BuildTools image generation.</Description>
     <IsPackable>false</IsPackable>
     <PackFolder>build</PackFolder>
-    <PackBuildOutput>false</PackBuildOutput>
     <IncludeSource>false</IncludeSource>
   </PropertyGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" Condition="$(SignAssembly) != 'true' " />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
-    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Newtonsoft.Json" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
