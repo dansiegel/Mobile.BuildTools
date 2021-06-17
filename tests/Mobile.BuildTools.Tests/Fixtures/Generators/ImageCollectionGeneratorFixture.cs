@@ -15,8 +15,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
     {
         protected string PlatformImageDirectory => GetPlatformImageDirectory(Platform);
 
-        // 2 images with 2 generated configs
-        protected const int ImageCount = 2 + 2;
+        // 4 images with 4 generated configs
+        protected const int ImageCount = 4 + 4;
         protected int PlatformOffset = 0;
         protected abstract Platform Platform { get; }
         protected string PlatformIcon => GetPlatformIconPath(Platform);
