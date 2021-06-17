@@ -1,6 +1,6 @@
 jobs:
-  - job: BuildNuGet
-    displayName: Build NuGet & Run Basic Unit Tests
+  - job: buildVSCompatibility
+    displayName: Build VSCompatibility
     pool:
       vmImage: $(WindowsAgent)
       demands:
