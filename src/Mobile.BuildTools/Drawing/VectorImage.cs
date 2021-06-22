@@ -14,7 +14,23 @@ namespace Mobile.BuildTools.Drawing
             svg.Load(filename);
         }
 
-        public override bool HasTransparentBackground => false;
+        public override bool HasTransparentBackground
+        {
+            get
+            {
+                var size = GetOriginalSize();
+
+                using var tempBitmap = new SKBitmap(size.Width, size.Height);
+                using var canvas = new SKCanvas(tempBitmap);
+
+                canvas.Clear(SKColors.Transparent);
+                canvas.Save();
+
+                canvas.DrawPicture(svg.Picture);
+
+                return tempBitmap.HasTransparentBackground();
+            }
+        }
 
         public override Size GetOriginalSize() =>
             new Size((int)svg.Picture.CullRect.Size.Width, (int)svg.Picture.CullRect.Size.Height);

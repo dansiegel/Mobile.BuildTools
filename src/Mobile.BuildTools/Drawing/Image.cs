@@ -12,27 +12,7 @@ namespace Mobile.BuildTools.Drawing
             bitmap = SKBitmap.Decode(filename);
         }
 
-        public override bool HasTransparentBackground
-        {
-            get
-            {
-                var imageWidth = GetOriginalSize().Width;
-                var imageHeight = GetOriginalSize().Height;
-
-                for (var x = 0; x < imageWidth; x++)
-                {
-                    for (var y = 0; y < imageHeight; y++)
-                    {
-                        if (bitmap.GetPixel(x, y).Alpha == 0)
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            }
-        }
+        public override bool HasTransparentBackground => bitmap.HasTransparentBackground();
 
         public override Size GetOriginalSize() =>
             new Size(bitmap.Info.Width, bitmap.Info.Height);
