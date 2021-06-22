@@ -15,7 +15,7 @@
     <PackageReference Update="SkiaSharp.HarfBuzz" Version="2.80.2" />
     <PackageReference Update="Svg.Skia" Version="0.5.5.5" />
     <PackageReference Update="Svg.Custom" Version="0.5.5.5" />
-    <PackageReference Update="Svg.Model" Version="0.5.5.5" />
+    <PackageReference Update="Svg.Model" Version="0.5.6.1" />
     <PackageReference Update="System.Buffers" Version="4.5.1" />
     <PackageReference Update="System.Drawing.Common" Version="5.0.2" />
     <PackageReference Update="System.IO.UnmanagedMemoryStream" Version="4.3.0" />
@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Update="Prism.DryIoc.Forms" Version="8.1.97" />
-    <PackageReference Update="Xamarin.Forms" Version="4.8.0.1451" />
+    <PackageReference Update="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageReference Update="Xamarin.Forms.Mocks" Version="4.7.0.1" />
     <PackageReference Update="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Update="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.12" />
