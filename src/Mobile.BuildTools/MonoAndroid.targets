@@ -11,7 +11,7 @@
           BeforeTargets="APKCopyToStagingDirectory">
 
     <ItemGroup>
-      <__Generated_APK Include="$(OutputPath)\**\*.apk" />
+      <__Generated_APK Include="$(OutputPath)\**\*.$(AndroidPackageFormat)" />
     </ItemGroup>
 
     <Message Text="@(__Generated_APK)" />
