@@ -222,25 +222,29 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Theory]
+        [InlineData("dotnetbot.png", 1.5)]
         [InlineData("dotnetbot.png", 1)]
-        [InlineData("dotnetbot.png", .75)]
         [InlineData("dotnetbot.png", .5)]
+        [InlineData("dotnetbot.svg", 1.5)]
         [InlineData("dotnetbot.svg", 1)]
-        [InlineData("dotnetbot.svg", .75)]
         [InlineData("dotnetbot.svg", .5)]
+        [InlineData("logo.svg", 1.5)]
+        [InlineData("logo.svg", 1)]
         public void AppliesPadding(string inputFile, double paddingFactor)
         {
             var config = GetConfiguration();
             config.IntermediateOutputPath += GetOutputDirectorySuffix((nameof(paddingFactor), paddingFactor), (nameof(inputFile), inputFile));
             var generator = new ImageResizeGenerator(config);
 
+            var outputFilename = $"{Path.GetFileNameWithoutExtension(inputFile)}.png";
+
             var image = new OutputImage
             {
                 Height = 0,
                 Width = 0,
                 InputFile = Path.Combine(TestConstants.ImageDirectory, inputFile),
-                OutputFile = Path.Combine(config.IntermediateOutputPath, "dotnetbot.png"),
-                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", "dotnetbot.png"),
+                OutputFile = Path.Combine(config.IntermediateOutputPath, outputFilename),
+                OutputLink = Path.Combine("Resources", "drawable-xxxhdpi", outputFilename),
                 RequiresBackgroundColor = false,
                 Scale = 1.0,
                 ShouldBeVisible = true,

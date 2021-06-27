@@ -93,9 +93,6 @@ namespace Mobile.BuildTools.Generators.Images
                 return outputBitmap;
             }
 
-            var paddedBitmap = new SKBitmap(context.Size.Width, context.Size.Height);
-            using var paddedCanvas = new SKCanvas(paddedBitmap);
-
             var paddedContext = CreateContext(
                 GetBackgroundColor(outputImage.PaddingColor, outputImage.RequiresBackgroundColor && image.HasTransparentBackground),
                 Log,
@@ -105,15 +102,17 @@ namespace Mobile.BuildTools.Generators.Images
                 0,
                 context.Size);
 
+            // Build the final canvas including the padding.
+            var paddedBitmap = new SKBitmap(paddedContext.Size.Width, paddedContext.Size.Height);
+            using var paddedCanvas = new SKCanvas(paddedBitmap);
+
             paddedCanvas.Clear(paddedContext.BackgroundColor);
             paddedCanvas.Save();
 
-            using var resizedBitmap = outputBitmap.Resize(new SKImageInfo(paddedContext.Size.Width, paddedContext.Size.Height), SKFilterQuality.High);
-
             paddedCanvas.DrawBitmap(
-                resizedBitmap,
-                (context.Size.Width - paddedContext.Size.Width) / 2,
-                (context.Size.Height - paddedContext.Size.Height) / 2);
+                outputBitmap,
+                (paddedContext.Size.Width - context.Size.Width) / 2,
+                (paddedContext.Size.Height - context.Size.Height) / 2);
 
             return paddedBitmap;
         }
