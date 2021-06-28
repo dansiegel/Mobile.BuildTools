@@ -10,7 +10,8 @@
         "name": "launcher_foreground",
         "resourceType": "Mipmap",
         "scale": 0.28125,
-        "padFactor": 1.5
+        "padFactor": 0.5
+        // "padColor": "Blue"
       },
       {
         "name": "notifications",

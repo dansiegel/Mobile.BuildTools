@@ -76,7 +76,11 @@ namespace Mobile.BuildTools.Generators.Images
                     ShouldBeVisible = true,
                     Watermark = config.Watermark,
                     BackgroundColor = config.BackgroundColor,
-                    BuildAction = "AndroidResource"
+                    BuildAction = "AndroidResource",
+                    PaddingColor = config.PaddingColor,
+                    PaddingFactor = config.PaddingFactor,
+                    Height = config.Height ?? 0,
+                    Width = config.Width ?? 0
                 };
             }
         }

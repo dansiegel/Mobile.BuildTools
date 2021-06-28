@@ -29,9 +29,9 @@ namespace Mobile.BuildTools.Tasks
         {
 // #if DEBUG
 //             if (!System.Diagnostics.Debugger.IsAttached)
-//                 System.Diagnostics.Debugger.Launch();
+//                System.Diagnostics.Debugger.Launch();
 //             else
-//                 System.Diagnostics.Debugger.Break();
+//                System.Diagnostics.Debugger.Break();
 // #endif
 
             GeneratedImages = Array.Empty<ITaskItem>();
