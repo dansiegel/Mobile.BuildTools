@@ -1,44 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
-  <PropertyGroup>
-    <BeforeGenerateAndroidManifest>
-      MobileBuildToolsInit;
-      $(BeforeGenerateAndroidManifest);
-    </BeforeGenerateAndroidManifest>
-    <_OnResolveMonoAndroidSdks>
-      HandleAndroidManifest;
-      AutomaticBuildVersioning;
-      $(_OnResolveMonoAndroidSdks);
-    </_OnResolveMonoAndroidSdks>
-</PropertyGroup>
-
   <Target Name="_MBTGatherManifests"
-          BeforeTargets="HandleAndroidManifest"
-          Condition="$(BuildToolsEnableTemplateManifests)">
+          AfterTargets="_GetAndroidPackageName"
+          Condition=" $(_AndroidManifestAbs) != '' ">
     <PropertyGroup>
-      <TemplateAppManifest>$(IntermediateOutputPath)android\AndroidManifest.xml</TemplateAppManifest>
-      <ProcessedAppManifest>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'templated', 'AndroidManifest.xml'))</ProcessedAppManifest>
-      <VersionedAppManifest>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'versioned', 'AndroidManifest.xml'))</VersionedAppManifest>
-      <InputAndroidManifest>$(AndroidManifest)</InputAndroidManifest>
-      <AndroidManifest>$(ProcessedAppManifest)</AndroidManifest>
+      <_MBTUpdatedManifest>$(IntermediateOutputPath)mbt\AndroidManifest.xml</_MBTUpdatedManifest>
+      <_MBTSourceManifest>$(_AndroidManifestAbs)</_MBTSourceManifest>
+      <_AndroidManifestAbs>$(_MBTUpdatedManifest)</_AndroidManifestAbs>
     </PropertyGroup>
 
     <ItemGroup>
-      <TemplatedManifest Include="$(TemplateAppManifest)" Visible="false" />
-      <TemplatedHandledManifest Include="$(ProcessedAppManifest)" Visible="false" />
-      <VersionedPlist Include="$(VersionedAppManifest)" Visible="false" />
+      <__MBTInputManifest Include="$(_MBTSourceManifest)" />
+      <__MBTOutputManifest Include="$(_MBTUpdatedManifest)" />
     </ItemGroup>
+
+    <Copy SourceFiles="@(__MBTInputManifest)"
+          DestinationFiles="@(__MBTOutputManifest)" />
+
   </Target>
 
   <Target Name="HandleAndroidManifest"
           AfterTargets="_MBTGatherManifests"
+          BeforeTargets="_GenerateJavaStubs"
           DependsOnTargets="MobileBuildToolsInit">
-    <PropertyGroup>
-      <_InputManifestToHandle>$(InputAndroidManifest)</_InputManifestToHandle>
-      <_InputManifestToHandle Condition=" Exists('$(TemplateAppManifest)') ">$(TemplateAppManifest)</_InputManifestToHandle>
-      <ProcessedAppManifest Condition=" $(_InputManifestToHandle) == $(TemplateAppManifest) ">$(ProcessedAppManifest)</ProcessedAppManifest>
-    </PropertyGroup>
+
     <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                           ProjectName="$(MSBuildProjectName)"
                           ProjectDirectory="$(MSBuildProjectDirectory)"
@@ -47,13 +33,17 @@
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                           ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
-                          ManifestPath="$(_InputManifestToHandle)"
-                          OutputManifestPath="$(ProcessedAppManifest)"
-                          Condition="$(BuildToolsEnableTemplateManifests)" />
+                          ManifestPath="$(_MBTUpdatedManifest)"
+                          OutputManifestPath="$(_MBTUpdatedManifest)"
+                          Condition="$(BuildToolsEnableTemplateManifests)">
+      <Output TaskParameter="PackageId"
+              PropertyName="_AndroidPackage" />
+    </TemplateManifestTask>
   </Target>
 
   <Target Name="AutomaticBuildVersioning"
           AfterTargets="HandleAndroidManifest"
+          BeforeTargets="_GenerateJavaStubs"
           DependsOnTargets="MobileBuildToolsInit">
 
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
@@ -63,8 +53,8 @@
                                   Configuration="$(Configuration)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                                  ManifestPath="$(ProcessedAppManifest)"
-                                  OutputManifestPath="$(ProcessedAppManifest)"
+                                  ManifestPath="$(_MBTUpdatedManifest)"
+                                  OutputManifestPath="$(_MBTUpdatedManifest)"
                                   ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
                                   Condition="$(BuildToolsEnableAutomaticVersioning)" />
   </Target>

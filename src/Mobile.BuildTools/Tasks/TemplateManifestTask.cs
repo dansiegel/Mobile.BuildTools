@@ -19,6 +19,9 @@ namespace Mobile.BuildTools.Tasks
         [Output]
         public ITaskItem ProcessedManifest { get; private set; }
 
+        [Output]
+        public string PackageId { get; private set; }
+
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
             if(string.IsNullOrEmpty(ManifestPath))
@@ -38,7 +41,7 @@ namespace Mobile.BuildTools.Tasks
                 OutputManifestPath = ManifestPath;
             }
 
-            IGenerator<string> generator = null;
+            BaseTemplatedManifestGenerator generator = null;
             switch(config.Platform)
             {
                 case Platform.iOS:
@@ -65,6 +68,8 @@ namespace Mobile.BuildTools.Tasks
             {
                 ProcessedManifest = new TaskItem(generator.Outputs);
             }
+
+            PackageId = generator?.GetBundId() ?? string.Empty;
         }
     }
 }

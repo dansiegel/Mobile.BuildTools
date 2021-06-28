@@ -19,6 +19,9 @@ namespace Mobile.BuildTools.Generators.Manifests
             File.WriteAllBytes(ManifestOutputPath, plist.ToByteArray(PropertyListFormat.Xml));
         }
 
+        public override string GetBundId() =>
+            PDictionary.FromFile(ManifestInputPath).GetCFBundleIdentifier();
+
         protected override string SetAppBundleId(string manifest, string packageName)
         {
             var plist = PDictionary.FromString(manifest) as PDictionary;

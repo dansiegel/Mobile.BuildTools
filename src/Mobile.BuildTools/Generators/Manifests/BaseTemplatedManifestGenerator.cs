@@ -60,6 +60,8 @@ namespace Mobile.BuildTools.Generators.Manifests
             SaveManifest(template);
         }
 
+        public abstract string GetBundId();
+
         protected abstract string SetAppBundleId(string manifest, string packageName);
 
         protected abstract string ReadManifest();
