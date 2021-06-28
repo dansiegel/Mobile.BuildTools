@@ -29,8 +29,6 @@ namespace Mobile.BuildTools.Generators.Manifests
 
         public string ManifestOutputPath { get; set; }
 
-        public string PackageId { get; protected set; }
-
         protected override void ExecuteInternal()
         {
             Outputs = ManifestOutputPath;
@@ -61,6 +59,8 @@ namespace Mobile.BuildTools.Generators.Manifests
 
             SaveManifest(template);
         }
+
+        public abstract string GetBundId();
 
         protected abstract string SetAppBundleId(string manifest, string packageName);
 

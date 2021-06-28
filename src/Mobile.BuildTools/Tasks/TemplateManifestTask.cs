@@ -69,7 +69,7 @@ namespace Mobile.BuildTools.Tasks
                 ProcessedManifest = new TaskItem(generator.Outputs);
             }
 
-            PackageId = generator?.PackageId ?? string.Empty;
+            PackageId = generator?.GetBundId() ?? string.Empty;
         }
     }
 }
