@@ -1,6 +1,3 @@
-using Foundation;
-
-[assembly: LinkerSafe]
 namespace Mobile.BuildTools.Configuration
 {
     public partial class ConfigurationManager

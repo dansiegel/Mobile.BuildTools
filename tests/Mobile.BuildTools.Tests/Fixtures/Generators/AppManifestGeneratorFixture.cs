@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -106,7 +106,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             Assert.Equal("$TemplatedParameter$", json.TemplatedParameter);
         }
 
-        //[Fact]
+        [Fact(Skip = "Dunno")]
         public void ProcessingDoesNotCorruptAndroidManifest()
         {
             var config = GetConfiguration();
