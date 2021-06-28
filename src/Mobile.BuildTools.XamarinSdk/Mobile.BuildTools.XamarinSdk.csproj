@@ -1,13 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <IsPackable>false</IsPackable>
-    <SignAssembly>true</SignAssembly>
     <NoWarn>1701;1702;8632</NoWarn>
+    <IsPackable>false</IsPackable>
     <PackFolder>build</PackFolder>
-    <PackBuildOutput>false</PackBuildOutput>
     <IncludeSource>false</IncludeSource>
   </PropertyGroup>
 
