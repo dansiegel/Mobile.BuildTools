@@ -1,8 +1,6 @@
-using Android;
 using Android.App;
 using Android.Content;
 
-[assembly: LinkerSafe]
 namespace Mobile.BuildTools.Configuration
 {
     public partial class ConfigurationManager
