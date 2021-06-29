@@ -2,29 +2,24 @@
 
   <!-- Collect Info.plist -->
   <Target Name="_MBTGatherManifests"
-          BeforeTargets="HandleTokenizedInfoPlist"
-          DependsOnTargets="_DetectAppManifest">
+        BeforeTargets="_DetectAppManifest"
+        DependsOnTargets="MobileBuildToolsInit">
     <PropertyGroup>
-      <TemlateAppManifest>$([System.IO.Path]::Combine('$(_AppBundlePath)', 'Info.plist'))</TemlateAppManifest>
-      <ProcessedInfoPlist>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'templated', 'Info.plist'))</ProcessedInfoPlist>
-      <VersionedInfoPlist>$([System.IO.Path]::Combine('$(IntermediateOutputPath)', 'versioned', 'Info.plist'))</VersionedInfoPlist>
+      <_MBTSourcePlist>$(_AppManifest)</_MBTSourcePlist>
+      <_MBTUpdatedManifest>$(IntermediateOutputPath)mbt\Info.plist</_MBTUpdatedManifest>
     </PropertyGroup>
+
     <ItemGroup>
-      <TemplatedManifest Include="$(_AppManifest)" Visible="false" />
-      <TemplatedHandledManifest Include="$(ProcessedInfoPlist)" Visible="false" />
-      <VersionedPlist Include="$(VersionedInfoPlist)" Visible="false" />
+      <__MBTInputManifest Include="$(_AppManifest)" />
+      <__MBTOutputManifest Include="$(_MBTUpdatedManifest)" />
     </ItemGroup>
 
-    <!-- We only want to delete the Versioned PList so update the version -->
-    <Delete Files="@(VersionedPlist)" />
+    <Copy SourceFiles="@(__MBTInputManifest)"
+          DestinationFiles="@(__MBTOutputManifest)" />
   </Target>
 
   <!-- Process Info.plist -->
-  <Target Name="HandleTokenizedInfoPlist"
-          BeforeTargets="_DetectSigningIdentity;AutomaticBuildVersioning"
-          DependsOnTargets="MobileBuildToolsInit"
-          Inputs="@(TemplatedManifest)"
-          Outputs="@(TemplatedHandledManifest)">
+  <Target Name="HandleTokenizedInfoPlist">
     <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                           ProjectName="$(MSBuildProjectName)"
                           ProjectDirectory="$(MSBuildProjectDirectory)"
@@ -32,8 +27,8 @@
                           Configuration="$(Configuration)"
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                          ManifestPath="$(_AppManifest)"
-                          OutputManifestPath="$(ProcessedInfoPlist)"
+                          ManifestPath="$(_MBTUpdatedManifest)"
+                          OutputManifestPath="$(_MBTUpdatedManifest)"
                           Condition="$(BuildToolsEnableTemplateManifests)">
       <!-- <Output TaskParameter="ProcessedManifest"
               PropertyName="_AppManifest" /> -->
@@ -41,10 +36,7 @@
   </Target>
 
   <!-- Version Info.plist -->
-  <!-- <Target Name="AutomaticBuildVersioning"
-          AfterTargets="HandleTokenizedInfoPlist;MobileBuildToolsInit"
-          Condition="$(BuildToolsEnableAutomaticVersioning) == 'True'">
-
+  <Target Name="AutomaticBuildVersioning">
     <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                                   ProjectName="$(MSBuildProjectName)"
                                   ProjectDirectory="$(MSBuildProjectDirectory)"
@@ -52,12 +44,19 @@
                                   Configuration="$(Configuration)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                                  ManifestPath="$(ProcessedInfoPlist)"
-                                  Condition=" $(BuildToolsEnableAutomaticVersioning) ">
-    </AutomaticBuildVersioningTask>
+                                  ManifestPath="$(_MBTUpdatedManifest)"
+                                  OutputManifestPath="$(_MBTUpdatedManifest)"
+                                  Condition="$(BuildToolsEnableAutomaticVersioning)" />
+  </Target> 
 
-  </Target> -->
-
+  <Target Name="_MBTManifestPostProcess"
+          AfterTargets="_MBTGatherManifests"
+          DependsOnTargets="HandleTokenizedInfoPlist;AutomaticBuildVersioning">
+    <ItemGroup Condition="$(BuildToolsEnableTemplateManifests) == 'True' Or $(BuildToolsEnableAutomaticVersioning) == 'True'">
+      <_PartialAppManifest Include="$(_MBTUpdatedManifest)" />
+      <FileWrites Include="$(_MBTUpdatedManifest)" />
+    </ItemGroup>
+  </Target>
   <!-- Update Includes -->
   <!-- <Target Name="SetProcessedAppManifest"
         AfterTargets="AutomaticBuildVersioning;HandleTokenizedInfoPlist"
