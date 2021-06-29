@@ -3,6 +3,7 @@
 
   <Target Name="_MBTGatherManifests"
           AfterTargets="_GetAndroidPackageName"
+          DependsOnTargets="_GetReferenceAssemblyPaths"
           Condition=" $(_AndroidManifestAbs) != '' ">
     <PropertyGroup>
       <_MBTUpdatedManifest>$(IntermediateOutputPath)mbt\AndroidManifest.xml</_MBTUpdatedManifest>
