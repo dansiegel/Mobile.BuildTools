@@ -404,7 +404,7 @@
       }
     },
     "environment": {
-      "type": [ "object", "null" ]
+      "$ref": "#/definitions/EnvironmentSettings"
     },
     "debug": {
       "type": "boolean"
