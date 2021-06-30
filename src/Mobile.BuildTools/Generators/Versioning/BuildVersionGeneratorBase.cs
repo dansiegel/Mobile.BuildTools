@@ -85,6 +85,9 @@ namespace Mobile.BuildTools.Generators.Versioning
 
         protected string SanitizeVersion(string version)
         {
+            if (string.IsNullOrEmpty(version))
+                return "1.0";
+
             try
             {
                 var parts = version.Split('.');

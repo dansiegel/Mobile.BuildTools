@@ -32,7 +32,6 @@
                           Configuration="$(Configuration)"
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-                          ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
                           ManifestPath="$(_MBTUpdatedManifest)"
                           OutputManifestPath="$(_MBTUpdatedManifest)"
                           Condition="$(BuildToolsEnableTemplateManifests)">
@@ -55,7 +54,6 @@
                                   TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                                   ManifestPath="$(_MBTUpdatedManifest)"
                                   OutputManifestPath="$(_MBTUpdatedManifest)"
-                                  ReferenceAssemblyPaths="$(_XATargetFrameworkDirectories)"
                                   Condition="$(BuildToolsEnableAutomaticVersioning)" />
   </Target>
 

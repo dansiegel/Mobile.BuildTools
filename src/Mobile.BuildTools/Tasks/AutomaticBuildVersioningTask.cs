@@ -9,8 +9,6 @@ namespace Mobile.BuildTools.Tasks
 {
     public class AutomaticBuildVersioningTask : BuildToolsTaskBase
     {
-        public string[] ReferenceAssemblyPaths { get; set; }
-
         [Required]
         public string ManifestPath { get; set; }
 
@@ -50,10 +48,7 @@ namespace Mobile.BuildTools.Tasks
         {
             return platform switch
             {
-                Platform.Android => new AndroidAutomaticBuildVersionGenerator(this, ManifestPath, OutputManifestPath)
-                {
-                    ReferenceAssemblyPaths = ReferenceAssemblyPaths
-                },
+                Platform.Android => new AndroidAutomaticBuildVersionGenerator(this, ManifestPath, OutputManifestPath),
                 Platform.iOS => new iOSAutomaticBuildVersionGenerator(this, ManifestPath, OutputManifestPath),
                 Platform.macOS => new iOSAutomaticBuildVersionGenerator(this, ManifestPath, OutputManifestPath),
                 Platform.TVOS => new iOSAutomaticBuildVersionGenerator(this, ManifestPath, OutputManifestPath),

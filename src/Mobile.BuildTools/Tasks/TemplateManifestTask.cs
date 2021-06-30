@@ -10,8 +10,6 @@ namespace Mobile.BuildTools.Tasks
 {
     public class TemplateManifestTask : BuildToolsTaskBase
     {
-        public string[] ReferenceAssemblyPaths { get; set; }
-
         public string ManifestPath { get; set; }
 
         public string OutputManifestPath { get; set; }
@@ -54,7 +52,7 @@ namespace Mobile.BuildTools.Tasks
                     };
                     break;
                 case Platform.Android:
-                    generator = new TemplatedAndroidAppManifestGenerator(config, ReferenceAssemblyPaths)
+                    generator = new TemplatedAndroidAppManifestGenerator(config)
                     {
                         ManifestInputPath = ManifestPath,
                         ManifestOutputPath = OutputManifestPath

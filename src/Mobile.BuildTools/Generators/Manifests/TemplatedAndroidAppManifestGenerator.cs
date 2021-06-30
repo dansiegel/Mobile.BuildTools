@@ -6,10 +6,10 @@ namespace Mobile.BuildTools.Generators.Manifests
 {
     internal class TemplatedAndroidAppManifestGenerator : BaseTemplatedManifestGenerator
     {
-        public TemplatedAndroidAppManifestGenerator(IBuildConfiguration configuration, string[] referenceAssemblyPaths)
+        public TemplatedAndroidAppManifestGenerator(IBuildConfiguration configuration)
             : base(configuration)
         {
-            AndroidVersions = new AndroidVersions(referenceAssemblyPaths);
+            AndroidVersions = new AndroidVersions(AndroidVersions.KnownVersions);
         }
 
         public AndroidVersions AndroidVersions { get; set; }
