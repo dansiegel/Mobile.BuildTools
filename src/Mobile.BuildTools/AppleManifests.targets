@@ -2,7 +2,7 @@
 
   <!-- Collect Info.plist -->
   <Target Name="_MBTGatherManifests"
-        BeforeTargets="_DetectAppManifest"
+        AfterTargets="_DetectAppManifest"
         DependsOnTargets="MobileBuildToolsInit">
     <PropertyGroup>
       <_MBTSourcePlist>$(_AppManifest)</_MBTSourcePlist>
@@ -57,19 +57,6 @@
       <FileWrites Include="$(_MBTUpdatedManifest)" />
     </ItemGroup>
   </Target>
-  <!-- Update Includes -->
-  <!-- <Target Name="SetProcessedAppManifest"
-        AfterTargets="AutomaticBuildVersioning;HandleTokenizedInfoPlist"
-        BeforeTargets="_DetectAppManifest">
-    <PropertyGroup>
-      <__OutputMBTInfoPlist Condition=" Exists('$(ProcessedInfoPlist)') AND !Exists('$(VersionedInfoPlist)') ">$(ProcessedInfoPlist)</__OutputMBTInfoPlist>
-      <__OutputMBTInfoPlist Condition=" Exists('$(VersionedInfoPlist)') ">$(VersionedInfoPlist)</__OutputMBTInfoPlist>
-    </PropertyGroup>
-    <ItemGroup Condition=" $(__OutputMBTInfoPlist) != '' ">
-      <None Update="Info.plist" LogicalName="RawInfo.plist" />
-      <None Include="$(__OutputMBTInfoPlist)" LogicalName="Info.plist" Visible="false" />
-    </ItemGroup>
-  </Target> -->
 
   <!-- Update APS Environment -->
   <Target Name="SetApsEnvironmentToProduction"
