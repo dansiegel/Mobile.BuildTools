@@ -1,12 +1,10 @@
 # SCSS to Xamarin.Forms CSS
 
-CSS support in Xamarin.Forms is the most revolutionary change to Styling XAML. CSS though is traditionally problematic on larger projects as it can quickly become hard to maintain, and error prone as it lacks reusability of common values which could include setting various properties or reusing the same color from one element to the next. With SCSS you gain the ability to break your stylesheets into logical reusable chunks and you gain the ability to define variables and functions for creating your styles. The Mobile.BuildTools now supports Xamarin.Forms CSS generation as part of the build process.
+While CSS support in Xamarin.Forms has been a highly controversial topic in which you likely either love it or hate it, it has been my view that CSS support in Xamarin.Forms is the most revolutionary change to Styling XAML. CSS though is traditionally problematic on larger projects as it can quickly become hard to maintain, and error prone as it lacks reusability of common values which could include setting various properties or reusing the same color from one element to the next. With SCSS you gain the ability to break your stylesheets into logical reusable chunks and you gain the ability to define variables and functions for creating your styles. For those developers who want to start using CSS in their Xamarin.Forms application, the Mobile.BuildTools empowers you to leverage SCSS which is compiled into Xamarin.Forms compatible CSS at build.
 
 ## Valid Xamarin.Forms CSS
 
-
-!!! note "Note"
-    The Xamarin.Forms CSS spec does not generate valid CSS and as a result SCSS will not support the use of ^.
+Perhaps one of the most frustrating things about Xamarin.Forms CSS is that the spec is NOT compliant with standard CSS linting. Specifically Xamarin.Forms requires the `^` prefix when looking to have a style apply to any inheriting type which you may want to do for instance when styling a Page.
 
 ```css
 ^button {
@@ -17,6 +15,7 @@ CSS support in Xamarin.Forms is the most revolutionary change to Styling XAML. C
   background-color: #78909c;
 }
 ```
+
 The Mobile.BuildTools will post process your SCSS to generate valid CSS for Xamarin.Forms when using the selectors `any` or `all`.
 
 ## Valid SCSS used by the Mobile.BuildTools

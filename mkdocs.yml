@@ -78,6 +78,8 @@ nav:
     - App Manifests:
       - Tokenized Manifests: manifests/index.md
       - Build Versioning: manifests/versioning.md
+    - Configuration: configuration.md
+    - Google Firebase: google/index.md
     - Image Assets:
       - Getting Started: images/index.md
       - Configuring Images: images/configuring-images.md
@@ -92,6 +94,7 @@ nav:
       - Usage Notes: scss-to-css/css-notes.md
       - Supported Properties: scss-to-css/properties.md
       - In Code: scss-to-css/in-code.md
+    - .NET Maui: maui.md
     - F.A.Q.: faq.md
     - Appendix:
       - Upgrading from 1.X: appendix/upgrade.md

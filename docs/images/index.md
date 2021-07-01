@@ -44,8 +44,12 @@ Conditional Directories supercharges your ability deliver customized images for 
 
 **Platform Conditions**
 
+A powerful feature of the Mobile.BuildTools is the ability to customize by Build Platform. This allows to to use the office Target Framework Moniker (TFM) or the more friendly platform name like the following.
+
 - Xamarin.iOS
+- iOS
 - MonoAndroid
+- Android
 
 **Build Configurations**
 
