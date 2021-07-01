@@ -95,6 +95,31 @@
         }
       }
     },
+    "GoogleServices": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "GoogleServices location. This can be a file location or the raw contents.",
+      "properties": {
+        "servicesJson": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "Environment Variable name",
+          "description": "Environment Variable name containing the file contents or file path to the google-services.json"
+        },
+        "infoPlist": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "Environment Variable name",
+          "description": "Environment Variable name containing the file contents or file path to the GoogleService-Info.plist"
+        }
+      }
+    },
     "ImageResize": {
       "type": [
         "object",
@@ -384,6 +409,9 @@
     },
     "css": {
       "$ref": "#/definitions/XamarinCss"
+    },
+    "google": {
+      "$ref": "#/definitions/GoogleServices"
     },
     "images": {
       "$ref": "#/definitions/ImageResize"

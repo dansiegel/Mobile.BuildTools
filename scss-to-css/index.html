@@ -717,18 +717,42 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../google/" class="md-nav__link">
+        Google Firebase
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_4" type="checkbox" id="__nav_5_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_6" type="checkbox" id="__nav_5_6" >
       
-      <label class="md-nav__link" for="__nav_5_4">
+      <label class="md-nav__link" for="__nav_5_6">
         Image Assets
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Image Assets" data-md-level="2">
-        <label class="md-nav__title" for="__nav_5_4">
+        <label class="md-nav__title" for="__nav_5_6">
           <span class="md-nav__icon md-icon"></span>
           Image Assets
         </label>
@@ -808,14 +832,14 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_6" type="checkbox" id="__nav_5_6" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_8" type="checkbox" id="__nav_5_8" >
       
-      <label class="md-nav__link" for="__nav_5_6">
+      <label class="md-nav__link" for="__nav_5_8">
         Continuous Integration
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Continuous Integration" data-md-level="2">
-        <label class="md-nav__title" for="__nav_5_6">
+        <label class="md-nav__title" for="__nav_5_8">
           <span class="md-nav__icon md-icon"></span>
           Continuous Integration
         </label>
@@ -861,14 +885,14 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_7" type="checkbox" id="__nav_5_7" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_9" type="checkbox" id="__nav_5_9" checked>
       
-      <label class="md-nav__link" for="__nav_5_7">
+      <label class="md-nav__link" for="__nav_5_9">
         Xamarin.Forms CSS
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Xamarin.Forms CSS" data-md-level="2">
-        <label class="md-nav__title" for="__nav_5_7">
+        <label class="md-nav__title" for="__nav_5_9">
           <span class="md-nav__icon md-icon"></span>
           Xamarin.Forms CSS
         </label>
@@ -987,6 +1011,18 @@
   
   
     <li class="md-nav__item">
+      <a href="../maui/" class="md-nav__link">
+        .NET Maui
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../faq/" class="md-nav__link">
         F.A.Q.
       </a>
@@ -1002,14 +1038,14 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_9" type="checkbox" id="__nav_5_9" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_12" type="checkbox" id="__nav_5_12" >
       
-      <label class="md-nav__link" for="__nav_5_9">
+      <label class="md-nav__link" for="__nav_5_12">
         Appendix
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Appendix" data-md-level="2">
-        <label class="md-nav__title" for="__nav_5_9">
+        <label class="md-nav__title" for="__nav_5_12">
           <span class="md-nav__icon md-icon"></span>
           Appendix
         </label>
@@ -1147,12 +1183,9 @@
                 
                 
                 <h1 id="scss-to-xamarinforms-css">SCSS to Xamarin.Forms CSS<a class="headerlink" href="#scss-to-xamarinforms-css" title="Permanent link">&para;</a></h1>
-<p>CSS support in Xamarin.Forms is the most revolutionary change to Styling XAML. CSS though is traditionally problematic on larger projects as it can quickly become hard to maintain, and error prone as it lacks reusability of common values which could include setting various properties or reusing the same color from one element to the next. With SCSS you gain the ability to break your stylesheets into logical reusable chunks and you gain the ability to define variables and functions for creating your styles. The Mobile.BuildTools now supports Xamarin.Forms CSS generation as part of the build process.</p>
+<p>While CSS support in Xamarin.Forms has been a highly controversial topic in which you likely either love it or hate it, it has been my view that CSS support in Xamarin.Forms is the most revolutionary change to Styling XAML. CSS though is traditionally problematic on larger projects as it can quickly become hard to maintain, and error prone as it lacks reusability of common values which could include setting various properties or reusing the same color from one element to the next. With SCSS you gain the ability to break your stylesheets into logical reusable chunks and you gain the ability to define variables and functions for creating your styles. For those developers who want to start using CSS in their Xamarin.Forms application, the Mobile.BuildTools empowers you to leverage SCSS which is compiled into Xamarin.Forms compatible CSS at build.</p>
 <h2 id="valid-xamarinforms-css">Valid Xamarin.Forms CSS<a class="headerlink" href="#valid-xamarinforms-css" title="Permanent link">&para;</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The Xamarin.Forms CSS spec does not generate valid CSS and as a result SCSS will not support the use of ^.</p>
-</div>
+<p>Perhaps one of the most frustrating things about Xamarin.Forms CSS is that the spec is NOT compliant with standard CSS linting. Specifically Xamarin.Forms requires the <code>^</code> prefix when looking to have a style apply to any inheriting type which you may want to do for instance when styling a Page.</p>
 <div class="codehilite"><pre><span></span><code><span class="o">^</span><span class="nt">button</span> <span class="p">{</span>
   <span class="k">background-color</span><span class="p">:</span> <span class="kc">transparent</span><span class="p">;</span>
 <span class="p">}</span>
