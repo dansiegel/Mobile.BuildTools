@@ -12,6 +12,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackFolder>build</PackFolder>
     <IncludeSource>false</IncludeSource>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +25,7 @@
     <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
     <None Update="buildTransitive\*.targets;buildTransitive\*.props" Pack="true" PackFolder="buildTransitive" />
     <None Update="Resources\*" Pack="true" PackagePath="$(PackFolder)/resources/%(Filename)%(Extension)" />
-    <None Update="ReadMe.txt" Pack="true" PackagePath="ReadMe.txt" />
+    <None Update="readme.md" Pack="true" PackagePath="readme.md" />
   </ItemGroup>
 
   <ItemGroup>
