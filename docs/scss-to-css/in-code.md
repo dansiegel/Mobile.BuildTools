@@ -31,7 +31,7 @@ stacklayout > * {
 </ContentPage>
 ```
 
-do not abuse of that second syntax.
+do not abuse that second syntax.
 
 ### in C#
 

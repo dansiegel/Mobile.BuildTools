@@ -7,11 +7,18 @@ The Mobile.BuildTools are a collection of MSBuild Tasks that help make MSBuild s
 !!! warning "NOTE"
     The docs on this site are specific to the Mobile.BuildTools v2.0. For those still using v1.4 please refer to the Wiki on GitHub.
 
+## History
+
+The Mobile.BuildTools started out several years ago from powershell scripts I found myself writing from one project to the next to help me decouple app secrets and configuration values from the code base making these instead build time dependencies. Over the years this grew from the scripts I kept re-writing to scripts that I included out of the box with the Prism Quickstart templates. These features had nothing to do with Prism however, and I started looking at how these could be re-used for any Xamarin application. With that the Mobile.BuildTools was born. Over the years it has grown and had so many features added that I ultimately realized I better start writing a docs site as it has a solution for pretty much every problem I encounter when developing mobile apps.
+
 ## Support
 
 This project is maintained by Dan Siegel. If this project has helped you please consider sponsoring Dan on GitHub. Your contributions help make great open source projects possible.
 
 [![GitHub Sponsors](https://github.blog/wp-content/uploads/2019/05/mona-heart-featured.png?fit=600%2C315)][sponsor]
+
+!!! note
+    Enterprise Support is available through [AvantiPoint](https://avantipoint.com). Please reach out if you require support for your apps with the Mobile.BuildTools, Prism or general assistance with your Xamarin, .NET Maui, or Uno Platform apps.
 
 ## Latest NuGet's
 
@@ -21,6 +28,10 @@ This project is maintained by Dan Siegel. If this project has helped you please 
 | [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![Latest NuGet][BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] | [![Latest CI Package][BuildToolsConfigSponsorConnectShield]][BuildToolsConfigSponsorConnect] |
 
 Want to consume the CI packages? Sign up as a [GitHub sponsor][sponsor] and you can access the Sponsor Connect private feed.
+
+## Why Use the Mobile.BuildTools
+
+The Mobile.BuildTools is designed to help you with a variety of tasks that make mobile app development easier and help you to follow best practices keeping app secrets as well as environment configurations out of your source control. Additionally the Mobile.BuildTools has a variety of helpers that can help you manage your image resources, white label apps, or generally make it easier to build your app for side by side installation for different environments like Dev, Stage, and Production.
 
 ## What does it do?
 
