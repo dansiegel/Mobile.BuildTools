@@ -52,9 +52,14 @@ namespace Mobile.BuildTools.Utils
         public static BuildToolsConfig GetConfig(string path)
         {
             var filePath = GetConfigurationPath(path);
-            if(File.GetAttributes(filePath).HasFlag(FileAttributes.Directory))
+            if (File.GetAttributes(filePath).HasFlag(FileAttributes.Directory))
             {
                 filePath = Path.Combine(filePath, "buildtools.json");
+            }
+
+            if (!Exists(filePath))
+            {
+                SaveDefaultConfig(filePath);
             }
 
             var json = string.Empty;
