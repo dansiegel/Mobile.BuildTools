@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
@@ -17,11 +18,11 @@ namespace Mobile.BuildTools.Tasks
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            if (config.Platform == Platform.Android && !string.IsNullOrEmpty(config.Configuration.Google?.ServicesJson))
+            if (config.Platform == Platform.Android)
             {
                 GetGoogleServicesJson(config);
             }
-            else if (config.Platform == Platform.iOS && !string.IsNullOrEmpty(config.Configuration.Google?.InfoPlist))
+            else if (config.Platform == Platform.iOS)
             {
                 GetGoogleInfoPlist(config);
             }
@@ -29,12 +30,11 @@ namespace Mobile.BuildTools.Tasks
 
         private void GetGoogleServicesJson(IBuildConfiguration buildConfig)
         {
-            var json = Environment.GetEnvironmentVariable(buildConfig.Configuration.Google.ServicesJson);
-            if (string.IsNullOrEmpty(json))
+            var path = GetResourcePath(buildConfig.Configuration.Google?.ServicesJson, buildConfig.IntermediateOutputPath, "google-services.json");
+
+            if (string.IsNullOrEmpty(path))
                 return;
 
-            var path = Path.Combine(buildConfig.IntermediateOutputPath, "aritchie-sucks", "google-services.json");
-            File.WriteAllText(path, json);
             // Output to GoogleServicesJson Include="path"
             var item = new TaskItem(path);
             item.SetMetadata("LogicalName", "google-services.json");
@@ -43,16 +43,44 @@ namespace Mobile.BuildTools.Tasks
 
         private void GetGoogleInfoPlist(IBuildConfiguration buildConfig)
         {
-            var json = Environment.GetEnvironmentVariable(buildConfig.Configuration.Google.InfoPlist);
-            if (string.IsNullOrEmpty(json))
+            var path = GetResourcePath(buildConfig.Configuration.Google?.InfoPlist, buildConfig.IntermediateOutputPath, "GoogleService-Info.plist");
+
+            if (string.IsNullOrEmpty(path))
                 return;
 
-            var path = Path.Combine(buildConfig.IntermediateOutputPath, "aritchie-sucks", "GoogleService-Info.plist");
-            File.WriteAllText(path, json);
             // Output to BundleResource Include="path"
             var item = new TaskItem(path);
             item.SetMetadata("LogicalName", "GoogleService-Info.plist");
             _outputs.Add(item);
+        }
+
+        internal static string GetResourcePath(string environmentVariable, string intermediateOutputPath, string logicalName)
+        {
+            if (string.IsNullOrEmpty(environmentVariable))
+                return null;
+
+            var variables = Environment.GetEnvironmentVariables().Keys.Cast<string>();
+            var variableName = variables.FirstOrDefault(x => x.Equals(environmentVariable, StringComparison.InvariantCultureIgnoreCase));
+
+            if (string.IsNullOrEmpty(variableName))
+                return null;
+
+            var value = Environment.GetEnvironmentVariable(variableName);
+            try
+            {
+                if (File.Exists(value))
+                    return new FileInfo(value).FullName;
+            }
+            catch
+            {
+                // Suppress errors
+            }
+
+            var directory = new DirectoryInfo(Path.Combine(intermediateOutputPath, "google-services"));
+            directory.Create();
+            var path = Path.Combine(directory.FullName, logicalName);
+            File.WriteAllText(path, value);
+            return path;
         }
     }
 }

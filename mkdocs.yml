@@ -78,6 +78,7 @@ nav:
     - App Manifests:
       - Tokenized Manifests: manifests/index.md
       - Build Versioning: manifests/versioning.md
+    - Google Firebase: google/index.md
     - Image Assets:
       - Getting Started: images/index.md
       - Configuring Images: images/configuring-images.md
