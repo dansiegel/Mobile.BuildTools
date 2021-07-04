@@ -1,26 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Text;
+using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Utils;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Utils
 {
-    public sealed class BuildToolsConfigFixture : IDisposable
+    public sealed class BuildToolsConfigFixture : FixtureBase
     {
         private static readonly string MockEmptyConfigPath = Path.Combine(Environment.CurrentDirectory, nameof(BuildToolsConfigFixture));
 
-        public BuildToolsConfigFixture()
+        public BuildToolsConfigFixture(ITestOutputHelper testOutputHelper)
+            : base(MockEmptyConfigPath, testOutputHelper)
         {
-            Directory.CreateDirectory(MockEmptyConfigPath);
-            ConfigHelper.SaveDefaultConfig(MockEmptyConfigPath);
         }
 
         [Fact]
         public void AppConfigIsNotNull()
         {
-            var config = ConfigHelper.GetConfig(MockEmptyConfigPath);
+            var config = CreateConfig();
 
             Assert.NotNull(config.AppConfig);
         }
@@ -28,7 +28,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         [Fact]
         public void ArtifactCopyIsNotNull()
         {
-            var config = ConfigHelper.GetConfig(MockEmptyConfigPath);
+            var config = CreateConfig();
 
             Assert.NotNull(config.ArtifactCopy);
         }
@@ -36,7 +36,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         [Fact]
         public void AutomaticVersioningIsNotNull()
         {
-            var config = ConfigHelper.GetConfig(MockEmptyConfigPath);
+            var config = CreateConfig();
 
             Assert.NotNull(config.AutomaticVersioning);
         }
@@ -44,7 +44,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         [Fact]
         public void CssIsNotNull()
         {
-            var config = ConfigHelper.GetConfig(MockEmptyConfigPath);
+            var config = CreateConfig();
 
             Assert.NotNull(config.Css);
         }
@@ -52,7 +52,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         [Fact]
         public void ImagesIsNotNull()
         {
-            var config = ConfigHelper.GetConfig(MockEmptyConfigPath);
+            var config = CreateConfig();
 
             Assert.NotNull(config.Images);
         }
@@ -60,7 +60,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         [Fact]
         public void ManifestsIsNotNull()
         {
-            var config = ConfigHelper.GetConfig(MockEmptyConfigPath);
+            var config = CreateConfig();
 
             Assert.NotNull(config.Manifests);
         }
@@ -68,7 +68,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         [Fact]
         public void ProjectSecretsIsNotNull()
         {
-            var config = ConfigHelper.GetConfig(MockEmptyConfigPath);
+            var config = CreateConfig();
 
             Assert.NotNull(config.ProjectSecrets);
         }
@@ -76,17 +76,20 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         [Fact]
         public void ReleaseNotesIsNotNull()
         {
-            var config = ConfigHelper.GetConfig(MockEmptyConfigPath);
+            var config = CreateConfig();
 
             Assert.NotNull(config.ReleaseNotes);
         }
 
-        public void Dispose()
+        private BuildToolsConfig CreateConfig()
         {
-            if(File.Exists(MockEmptyConfigPath))
-            {
-                File.Delete(MockEmptyConfigPath);
-            }
+            var stackTrace = new StackTrace();
+            var configuration = GetConfiguration(stackTrace.GetFrame(1).GetMethod().Name);
+            CreateDummySolutionFile(configuration.IntermediateOutputPath);
+
+            return ConfigHelper.GetConfig(configuration.IntermediateOutputPath);
         }
+
+        private static void CreateDummySolutionFile(string directory) => File.Create(Path.Combine(directory, "test.sln"));
     }
 }

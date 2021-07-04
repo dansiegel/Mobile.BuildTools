@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -18,7 +19,7 @@ namespace Mobile.BuildTools.Utils
             if (string.IsNullOrEmpty(searchDirectory)) return null;
 
             var rootPath = Path.GetPathRoot(searchDirectory);
-            var configPath = new FileInfo(Path.Combine(searchDirectory, "buildtools.json"));
+            var configPath = new FileInfo(Path.Combine(searchDirectory, Constants.BuildToolsConfigFileName));
             if (configPath.Exists)
             {
                 return searchDirectory;
@@ -52,9 +53,15 @@ namespace Mobile.BuildTools.Utils
         public static BuildToolsConfig GetConfig(string path)
         {
             var filePath = GetConfigurationPath(path);
-            if(File.GetAttributes(filePath).HasFlag(FileAttributes.Directory))
+            var configurationDirectoryPath = filePath;
+            if (File.GetAttributes(filePath).HasFlag(FileAttributes.Directory))
             {
-                filePath = Path.Combine(filePath, "buildtools.json");
+                filePath = Path.Combine(filePath, Constants.BuildToolsConfigFileName);
+            }
+
+            if (!Exists(configurationDirectoryPath))
+            {
+                SaveDefaultConfig(configurationDirectoryPath);
             }
 
             var json = string.Empty;
