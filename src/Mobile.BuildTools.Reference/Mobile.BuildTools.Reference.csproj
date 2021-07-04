@@ -12,7 +12,6 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" Condition="$(SignAssembly) != 'true' " />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
-    <PackageReference Include="Newtonsoft.Json" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json.Schema" PrivateAssets="all" />
     <PackageReference Include="System.ComponentModel.Annotations" PrivateAssets="all" />
   </ItemGroup>

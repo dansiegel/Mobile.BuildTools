@@ -13,7 +13,6 @@
     <PackageReference Include="Moq" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
-    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Microsoft.Build" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" />
     <None Include="..\..\src\assets\runtimes\$(_NativeRuntime)\libsass.*"
@@ -23,8 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" PrivateAssets="all" />
-    <PackageReference Include="System.Memory" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json.Schema" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="System.Memory" />
   </ItemGroup>
 
   <ItemGroup>

@@ -29,26 +29,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fizzler" PrivateAssets="all" />
     <PackageReference Include="HarfBuzzSharp" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build" Pack="false" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
-    <PackageReference Include="Newtonsoft.Json" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json.Schema" PrivateAssets="all" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Web.Xdt" PrivateAssets="all" />
     <PackageReference Include="ShimSkiaSharp" PrivateAssets="all" />
-    <PackageReference Include="SkiaSharp" PrivateAssets="all" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" PrivateAssets="all" />
     <PackageReference Include="Svg.Skia" PrivateAssets="all" />
-    <PackageReference Include="Svg.Custom" PrivateAssets="all" />
-    <PackageReference Include="Svg.Model" PrivateAssets="all" />
     <PackageReference Include="System.Buffers" PrivateAssets="all" />
-    <PackageReference Include="System.Drawing.Common" PrivateAssets="all" />
     <PackageReference Include="System.IO.UnmanagedMemoryStream" PrivateAssets="all" />
-    <PackageReference Include="System.Memory" PrivateAssets="all" />
     <PackageReference Include="System.Numerics.Vectors" PrivateAssets="all" />
-    <PackageReference Include="System.ObjectModel" PrivateAssets="all" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" PrivateAssets="all" />
   </ItemGroup>
 
