@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Mobile.BuildTools.Models.Settings;
 using Newtonsoft.Json;
 
-namespace Mobile.BuildTools.Reference.Models.Settings
+namespace Mobile.BuildTools.Models.Settings
 {
     public class SettingsConfig
     {

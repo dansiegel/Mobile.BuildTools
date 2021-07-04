@@ -11,7 +11,6 @@ using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Settings;
-using Mobile.BuildTools.Reference.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 

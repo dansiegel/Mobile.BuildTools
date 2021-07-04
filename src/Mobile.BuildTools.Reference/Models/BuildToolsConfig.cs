@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Mobile.BuildTools.Models.Secrets;
 using Mobile.BuildTools.Models.Settings;
-using Mobile.BuildTools.Reference.Models.Settings;
 using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models
@@ -22,7 +21,7 @@ namespace Mobile.BuildTools.Models
         [JsonProperty("appConfig", Required = Required.AllowNull)]
         public AppConfig AppConfig { get; set; }
 
-        [Description("Confgures the Mobile.BuildTools to copy the generated APK/AAB or IPA & dSYM to the root directory making it easier to locate and stage the build artifacts.")]
+        [Description("Configures the Mobile.BuildTools to copy the generated APK/AAB or IPA & dSYM to the root directory making it easier to locate and stage the build artifacts.")]
         [JsonProperty("artifactCopy", Required = Required.AllowNull)]
         public ArtifactCopy ArtifactCopy { get; set; }
 

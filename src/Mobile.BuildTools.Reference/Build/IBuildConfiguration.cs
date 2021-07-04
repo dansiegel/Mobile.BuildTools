@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Mobile.BuildTools.Logging;
-using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Models;
+using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
-using Mobile.BuildTools.Reference.Models.Settings;
 
 namespace Mobile.BuildTools.Build
 {

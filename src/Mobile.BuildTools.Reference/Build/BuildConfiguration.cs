@@ -5,7 +5,6 @@ using System.Linq;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Settings;
-using Mobile.BuildTools.Reference.Models.Settings;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Build

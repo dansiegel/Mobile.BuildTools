@@ -9,7 +9,6 @@ using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Handlers;
 using Mobile.BuildTools.Models.Settings;
-using Mobile.BuildTools.Reference.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

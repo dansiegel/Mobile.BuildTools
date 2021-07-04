@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using Mobile.BuildTools.Build;
 using System.Linq;
+using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Settings;
 using Newtonsoft.Json;
-using Mobile.BuildTools.Reference.Models.Settings;
 
 namespace Mobile.BuildTools.Utils
 {

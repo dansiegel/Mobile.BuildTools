@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Models;
-using Mobile.BuildTools.Reference.Models.Settings;
+using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

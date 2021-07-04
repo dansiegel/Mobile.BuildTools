@@ -10,7 +10,6 @@ using Microsoft.CSharp;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Models.Settings;
-using Mobile.BuildTools.Reference.Models.Settings;
 using Xunit;
 using Xunit.Abstractions;
 
