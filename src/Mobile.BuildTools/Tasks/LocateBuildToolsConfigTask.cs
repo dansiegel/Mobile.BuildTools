@@ -159,7 +159,7 @@ namespace Mobile.BuildTools.Tasks
         {
             if (item is null) return true;
 
-            return !item.Disable;
+            return !(item.Disable ?? false);
         }
 
         private bool IsCrossTargeting()

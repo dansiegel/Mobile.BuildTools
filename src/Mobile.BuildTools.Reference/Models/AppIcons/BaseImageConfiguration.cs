@@ -10,8 +10,8 @@ namespace Mobile.BuildTools.Models.AppIcons
         [JsonProperty("ignore", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool Ignore { get; set; }
 
-        [Description("The name of the output image.")]
-        [JsonProperty("name", Required = Required.AllowNull)]
+        [Description("The name of the output image. This will default to the source image name.")]
+        [JsonProperty("name", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
 
         [DefaultValue(1.0)]
@@ -31,7 +31,7 @@ namespace Mobile.BuildTools.Models.AppIcons
         [JsonProperty("height", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? Height { get; set; }
 
-        [Description("The padding factor will resize the canvas size by the specified factor. For example a facor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.")]
+        [Description("The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.")]
         [JsonProperty("padFactor", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public double? PaddingFactor { get; set; }
 

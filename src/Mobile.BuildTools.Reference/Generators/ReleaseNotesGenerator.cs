@@ -23,7 +23,7 @@ namespace Mobile.BuildTools.Generators
         {
             var releaseNotesOptions = Build.Configuration.ReleaseNotes;
 
-            if (releaseNotesOptions.Disable) return;
+            if (releaseNotesOptions.Disable ?? false) return;
 
             var rootDirectory = ConfigHelper.GetConfigurationPath(Build.ProjectDirectory, Build.SolutionDirectory);
             var releaseNotesFilePath = new FileInfo(Path.Combine(releaseNotesOptions.CreateInRoot ? rootDirectory : OutputPath, releaseNotesOptions.FileName ?? "ReleaseNotes.txt"));

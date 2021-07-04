@@ -18,12 +18,14 @@
     <PackageReference Update="Svg.Custom" Version="0.5.5.5" />
     <PackageReference Update="Svg.Model" Version="0.5.5.5" />
     <PackageReference Update="System.Buffers" Version="4.5.1" />
+    <PackageReference Update="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Update="System.Drawing.Common" Version="5.0.2" />
     <PackageReference Update="System.IO.UnmanagedMemoryStream" Version="4.3.0" />
     <PackageReference Update="System.Memory" Version="4.5.4" />
     <PackageReference Update="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Update="System.ObjectModel" Version="4.3.0" />
     <PackageReference Update="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+    <PackageReference Update="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>

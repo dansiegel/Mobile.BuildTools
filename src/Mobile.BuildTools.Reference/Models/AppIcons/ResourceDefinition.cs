@@ -11,7 +11,7 @@ namespace Mobile.BuildTools.Models.AppIcons
 {
     public class ResourceDefinition : PlatformConfiguration
     {
-        [JsonProperty("$schema")]
+        [JsonProperty("$schema", NullValueHandling = NullValueHandling.Ignore)]
         public string Schema
         {
             get => "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json";

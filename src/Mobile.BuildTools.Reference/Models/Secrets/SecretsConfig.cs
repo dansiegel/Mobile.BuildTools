@@ -12,28 +12,28 @@ namespace Mobile.BuildTools.Models.Secrets
             Properties = new List<ValueConfig>();
         }
 
-        [JsonProperty("disable", Required = Required.AllowNull)]
+        [JsonProperty("disable", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public bool Disable { get; set; }
 
-        [JsonProperty("delimiter", Required = Required.AllowNull)]
+        [JsonProperty("delimiter", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public string Delimiter { get; set; }
 
-        [JsonProperty("prefix", Required = Required.AllowNull)]
+        [JsonProperty("prefix", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public string Prefix { get; set; }
 
-        [JsonProperty("className", Required = Required.AllowNull)]
+        [JsonProperty("className", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public string ClassName { get; set; }
 
-        [JsonProperty("accessibility", Required = Required.AllowNull)]
+        [JsonProperty("accessibility", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public Accessibility Accessibility { get; set; }
 
-        [JsonProperty("rootNamespace", Required = Required.AllowNull)]
+        [JsonProperty("rootNamespace", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public string RootNamespace { get; set; }
 
-        [JsonProperty("namespace", Required = Required.AllowNull)]
+        [JsonProperty("namespace", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public string Namespace { get; set; }
 
-        [JsonProperty("properties", Required = Required.AllowNull)]
+        [JsonProperty("properties", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public List<ValueConfig> Properties { get; set; }
 
         public bool ContainsKey(string key) => Properties != null && Properties.Any(x => x.Name == key);
