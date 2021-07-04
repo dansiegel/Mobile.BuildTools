@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
+using Mobile.BuildTools.Reference.Models.Settings;
 using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models
@@ -37,6 +39,9 @@ namespace Mobile.BuildTools.Models
 
         [JsonProperty("projectSecrets")]
         public Dictionary<string, SecretsConfig> ProjectSecrets { get; set; }
+
+        [JsonProperty("appSettings")]
+        public Dictionary<string, IEnumerable<SettingsConfig>> AppSettings { get; set; }
 
         [JsonProperty("environment")]
         public EnvironmentSettings Environment { get; set; }

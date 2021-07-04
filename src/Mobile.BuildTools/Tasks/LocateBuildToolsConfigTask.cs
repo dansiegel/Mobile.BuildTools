@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Models;
+using Mobile.BuildTools.Reference.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 
@@ -60,6 +62,7 @@ namespace Mobile.BuildTools.Tasks
 //#endif
             LocateSolution();
             BuildToolsConfigFilePath = ConfigHelper.GetConfigurationPath(ProjectDir);
+            MigrateSecretsToSettings();
 
             var crossTargetingProject = IsCrossTargeting();
             var platform = TargetFrameworkIdentifier.GetTargetPlatform();
@@ -82,6 +85,46 @@ namespace Mobile.BuildTools.Tasks
             return true;
         }
 
+        internal void MigrateSecretsToSettings()
+        {
+            var config = ConfigHelper.GetConfig(BuildToolsConfigFilePath);
+
+            if(config.ProjectSecrets is not null && config.ProjectSecrets.Any())
+            {
+                config.ProjectSecrets.ForEach(x =>
+                {
+                    var projectName = x.Key;
+                    var secretsConfig = x.Value;
+                    var settings = new SettingsConfig
+                    {
+                        Accessibility = secretsConfig.Accessibility,
+                        ClassName = secretsConfig.ClassName,
+                        Delimiter = secretsConfig.Delimiter,
+                        Namespace = secretsConfig.Namespace,
+                        Prefix = secretsConfig.Prefix,
+                        Properties = secretsConfig.Properties,
+                        RootNamespace = secretsConfig.RootNamespace
+                    };
+
+                    if(config.AppSettings.ContainsKey(projectName))
+                    {
+                        if(!config.AppSettings[projectName].Any(x => x.ClassName == settings.ClassName))
+                        {
+                            var allSettings = new List<SettingsConfig>(config.AppSettings[projectName]);
+                            allSettings.Add(settings);
+                            config.AppSettings[projectName] = allSettings;
+                        }
+                    }
+                    else
+                    {
+                        config.AppSettings[projectName] = new[] { settings };
+                    }
+                });
+                config.ProjectSecrets = null;
+                ConfigHelper.SaveConfig(config, BuildToolsConfigFilePath);
+            }
+        }
+
         public static bool IsEnabled(ToolItem item)
         {
             if (item is null) return true;
@@ -102,16 +145,7 @@ namespace Mobile.BuildTools.Tasks
 
         private bool ShouldEnableSecrets(BuildToolsConfig config)
         {
-            var secretsFileExists = File.Exists(Path.Combine(ProjectDir, Constants.SecretsJsonFileName));
-            var secretsConfig = ConfigHelper.GetSecretsConfig(ProjectName, ProjectDir, config);
-
-            if(secretsConfig is null)
-            {
-                // Intentionally disable this condition in CI incase somebody checked in the secrets.json
-                return secretsFileExists && !CIBuildEnvironmentUtils.IsBuildHost;
-            }
-
-            return !secretsConfig.Disable;
+            return config.AppSettings is not null && config.AppSettings.ContainsKey(ProjectName) && config.AppSettings[ProjectName].Any();
         }
 
         private void LocateSolution()

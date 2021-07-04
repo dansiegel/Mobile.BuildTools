@@ -9,7 +9,8 @@ using System.Reflection;
 using Microsoft.CSharp;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Secrets;
-using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
+using Mobile.BuildTools.Reference.Models.Settings;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -45,7 +46,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = "TestValue";
             var pair = new KeyValuePair<string, string>(TestKey, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Properties = new List<ValueConfig>{ new ValueConfig { Name = TestKey, PropertyType = PropertyType.String } }
             };
@@ -65,7 +66,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = bool.TrueString;
             var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.Bool } }
@@ -86,7 +87,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = "2";
             var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.Int } }
@@ -107,7 +108,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = "2.2";
             var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.Double } }
@@ -128,7 +129,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = "TestValue";
             var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.String } }
@@ -149,11 +150,15 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         {
             var buildConfig = GetConfiguration();
             var generator = GetGenerator(buildConfig);
-            generator.BaseNamespace = "Foo.Bar";
+            generator.RootNamespace = "Foo.Bar";
             buildConfig.ProjectDirectory = "file://Repos/AwesomeProject/Foo";
 
             string @namespace = null;
-            var exception = Record.Exception(() => @namespace = generator.GetNamespace(relativeNamespaceConfig));
+            var settingsConfig = new SettingsConfig
+            {
+                Namespace = relativeNamespaceConfig
+            };
+            var exception = Record.Exception(() => @namespace = generator.GetNamespace(settingsConfig));
             Assert.Null(exception);
 
             Assert.Equal(expectedNamespace, @namespace);
@@ -202,7 +207,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 PropertyType = type,
                 IsArray = isArray
             };
-            var secretsConfig = new SecretsConfig { Properties = new List<ValueConfig> { valueConfig } };
+            var secretsConfig = new SettingsConfig { Properties = new List<ValueConfig> { valueConfig } };
             var output = generator.ProcessSecret(pair, secretsConfig, false);
             Assert.Contains($"{typeDeclaration} {TestKey}", output);
             Assert.Contains(valueDeclaration, output);
@@ -274,7 +279,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 PropertyType = type,
                 IsArray = isArray
             };
-            var secretsConfig = new SecretsConfig { Properties = new List<ValueConfig> { valueConfig } };
+            var secretsConfig = new SettingsConfig { Properties = new List<ValueConfig> { valueConfig } };
             var output = generator.ProcessSecret(pair, secretsConfig, firstRun);
             Assert.Contains($"{typeDeclaration} {TestKey}", output);
             Assert.Contains(valueDeclaration, output);
@@ -322,19 +327,29 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void GeneratesValidClass(string secretsFile, PropertyType propertyType, Type expectedType, bool isArray)
         {
             var config = GetConfiguration($"{nameof(GeneratesValidClass)}-{expectedType.Name}");
-            config.SecretsConfig.Properties.Add(new ValueConfig
-            {
-                Name = "Prop",
-                PropertyType = propertyType,
-                IsArray = isArray
-            });
+            config.SettingsConfig = new List<SettingsConfig>{
+                new SettingsConfig
+                {
+                    Properties = new List<ValueConfig>
+                    {
+                        new ValueConfig
+                        {
+                            Name = "Prop",
+                            PropertyType = propertyType,
+                            IsArray = isArray
+                        }
+                    }
+                }
+            };
             var generator = new SecretsClassGenerator(config, Path.Combine("Templates", "Secrets", secretsFile))
             {
-                BaseNamespace = config.ProjectName
+                RootNamespace = config.ProjectName
             };
             generator.Execute();
 
-            var filePath = generator.Outputs.ItemSpec;
+            Assert.Single(generator.Outputs);
+
+            var filePath = generator.Outputs.First().ItemSpec;
             Assert.True(File.Exists(filePath));
 
             var csc = new CSharpCodeProvider();
@@ -344,7 +359,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
             Assert.Empty(results.Errors);
             Assert.NotNull(results.CompiledAssembly);
-            var secretsClassType = results.CompiledAssembly.DefinedTypes.FirstOrDefault(t => t.Name == config.SecretsConfig.ClassName);
+            var secretsClassType = results.CompiledAssembly.DefinedTypes.FirstOrDefault(t => t.Name == config.SettingsConfig.First().ClassName);
             Assert.NotNull(secretsClassType);
             var propField = secretsClassType.GetField("Prop", BindingFlags.NonPublic | BindingFlags.Static);
             Assert.NotNull(propField);

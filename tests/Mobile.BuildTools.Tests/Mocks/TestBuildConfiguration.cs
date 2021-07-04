@@ -2,7 +2,8 @@
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
-using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
+using Mobile.BuildTools.Reference.Models.Settings;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tests.Mocks
@@ -12,13 +13,16 @@ namespace Mobile.BuildTools.Tests.Mocks
         public TestBuildConfiguration()
         {
             ConfigHelper.SaveDefaultConfig(".");
-            SecretsConfig = new SecretsConfig
+            SettingsConfig = new[]
             {
-                ClassName = "Secrets",
-                Delimiter = ";",
-                Namespace = "Helpers",
-                Prefix = "UNIT_TEST_",
-                Properties = new List<ValueConfig>()
+                new SettingsConfig
+                {
+                    ClassName = "Secrets",
+                    Delimiter = ";",
+                    Namespace = "Helpers",
+                    Prefix = "UNIT_TEST_",
+                    Properties = new List<ValueConfig>()
+                }
             };
         }
 
@@ -39,12 +43,12 @@ namespace Mobile.BuildTools.Tests.Mocks
         public BuildToolsConfig Configuration => configuration ?? (configuration = ConfigHelper.GetConfig("."));
         public Platform Platform { get; set; }
 
-        public SecretsConfig GetSecretsConfig() => SecretsConfig;
+        public IEnumerable<SettingsConfig> GetSettingsConfig() => SettingsConfig;
 
         public void SaveConfiguration()
         {
         }
 
-        public SecretsConfig SecretsConfig { get; }
+        public IEnumerable<SettingsConfig> SettingsConfig { get; set; }
     }
 }

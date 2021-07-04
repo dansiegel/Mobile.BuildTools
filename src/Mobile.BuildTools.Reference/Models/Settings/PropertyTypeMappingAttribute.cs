@@ -1,7 +1,7 @@
 ﻿using System;
 using Mobile.BuildTools.Handlers;
 
-namespace Mobile.BuildTools.Models.Secrets
+namespace Mobile.BuildTools.Models.Settings
 {
     [AttributeUsage(AttributeTargets.Field)]
     public sealed class PropertyTypeMappingAttribute : Attribute

@@ -16,7 +16,7 @@ namespace Mobile.BuildTools.Tasks
             if (!string.IsNullOrEmpty(JsonSecretsFilePath) && File.Exists(JsonSecretsFilePath) && File.GetAttributes(JsonSecretsFilePath).HasFlag(FileAttributes.Normal))
                 return;
 
-            if (config.GetSecretsConfig().Disable || config.BuildingInsideVisualStudio)
+            if (config.BuildingInsideVisualStudio || !CIBuildEnvironmentUtils.IsBuildHost)
                 return;
 
             var secretsFile = Path.Combine(ProjectDirectory, "secrets.json");

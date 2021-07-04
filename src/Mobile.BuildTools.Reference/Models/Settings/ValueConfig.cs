@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mobile.BuildTools.Models.Secrets
+namespace Mobile.BuildTools.Models.Settings
 {
     public class ValueConfig
     {

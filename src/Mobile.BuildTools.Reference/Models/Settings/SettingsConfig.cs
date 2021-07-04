@@ -3,17 +3,14 @@ using System.Linq;
 using Mobile.BuildTools.Models.Settings;
 using Newtonsoft.Json;
 
-namespace Mobile.BuildTools.Models.Secrets
+namespace Mobile.BuildTools.Reference.Models.Settings
 {
-    public class SecretsConfig
+    public class SettingsConfig
     {
-        public SecretsConfig()
+        public SettingsConfig()
         {
             Properties = new List<ValueConfig>();
         }
-
-        [JsonProperty("disable")]
-        public bool Disable { get; set; }
 
         [JsonProperty("delimiter")]
         public string Delimiter { get; set; }

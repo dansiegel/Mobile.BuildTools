@@ -4,7 +4,8 @@ using System.IO;
 using System.Linq;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
-using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
+using Mobile.BuildTools.Reference.Models.Settings;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Build
@@ -37,8 +38,8 @@ namespace Mobile.BuildTools.Build
         public BuildToolsConfig Configuration { get; }
         string IBuildConfiguration.BuildConfiguration { get; }
 
-        public SecretsConfig GetSecretsConfig() =>
-            ConfigHelper.GetSecretsConfig(this);
+        public IEnumerable<SettingsConfig> GetSettingsConfig() =>
+            ConfigHelper.GetSettingsConfig(this);
 
         public void SaveConfiguration() => 
             ConfigHelper.SaveConfig(Configuration, _configPath);

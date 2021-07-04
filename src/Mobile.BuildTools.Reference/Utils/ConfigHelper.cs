@@ -4,8 +4,9 @@ using System.IO;
 using Mobile.BuildTools.Build;
 using System.Linq;
 using Mobile.BuildTools.Models;
-using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
 using Newtonsoft.Json;
+using Mobile.BuildTools.Reference.Models.Settings;
 
 namespace Mobile.BuildTools.Utils
 {
@@ -115,22 +116,15 @@ secrets.*.json
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
 
-        public static SecretsConfig GetSecretsConfig(IBuildConfiguration buildConfiguration) =>
-            GetSecretsConfig(buildConfiguration.ProjectName, buildConfiguration.ProjectDirectory, buildConfiguration.Configuration);
+        public static IEnumerable<SettingsConfig> GetSettingsConfig(IBuildConfiguration buildConfiguration) =>
+            GetSettingsConfig(buildConfiguration.ProjectName, buildConfiguration.Configuration);
 
-        public static SecretsConfig GetSecretsConfig(string projectName, string projectDir, BuildToolsConfig config)
+        public static IEnumerable<SettingsConfig> GetSettingsConfig(string projectName, BuildToolsConfig config)
         {
-            var configPath = Path.Combine(projectDir, Constants.SecretsConfigFileName);
-            if (File.Exists(configPath))
-            {
-                var json = File.ReadAllText(configPath);
-                return JsonConvert.DeserializeObject<SecretsConfig>(json);
-            }
+            if (config.AppSettings != null && config.AppSettings.Any(x => x.Key == projectName))
+                return config.AppSettings[projectName];
 
-            if (config.ProjectSecrets != null && config.ProjectSecrets.Any(x => x.Key == projectName))
-                return config.ProjectSecrets.First(x => x.Key == projectName).Value;
-
-            return new SecretsConfig { Disable = true };
+            return Array.Empty<SettingsConfig>();
         }
     }
 }

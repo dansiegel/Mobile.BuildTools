@@ -1,5 +1,5 @@
 ﻿
-namespace Mobile.BuildTools.Models.Secrets
+namespace Mobile.BuildTools.Models.Settings
 {
     public enum Accessibility
     {

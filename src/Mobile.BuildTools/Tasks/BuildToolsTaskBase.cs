@@ -10,7 +10,8 @@ using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
-using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
+using Mobile.BuildTools.Reference.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 
@@ -95,8 +96,8 @@ namespace Mobile.BuildTools.Tasks
 
         internal abstract void ExecuteInternal(IBuildConfiguration config);
 
-        SecretsConfig IBuildConfiguration.GetSecretsConfig() =>
-            ConfigHelper.GetSecretsConfig(this);
+        IEnumerable<SettingsConfig> IBuildConfiguration.GetSettingsConfig() =>
+            ConfigHelper.GetSettingsConfig(this);
 
         private string GetProperty(string name)
         {

@@ -19,8 +19,15 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         protected override void ExecuteInternal()
         {
-            var config = Build.GetSecretsConfig();
-            var secrets = GetSecrets(config?.Prefix);
+            var configs = Build.GetSettingsConfig();
+            var secrets = new Dictionary<string, string>();
+            foreach(var config in configs)
+            {
+                foreach((var key, var value) in GetSecrets(config?.Prefix))
+                {
+                    secrets.Add(key, value);
+                }
+            }
 
             if (!secrets.Any())
             {

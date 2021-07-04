@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
 using static Mobile.BuildTools.Tests.Fixtures.Generators.SecretsClassGeneratorFixture;
 
 namespace Mobile.BuildTools.Tests.Data

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Secrets;
@@ -31,7 +32,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         private void SetTestVariable()
         {
             var buildConfig = GetConfiguration();
-            var prefix = buildConfig.GetSecretsConfig().Prefix;
+            var prefix = buildConfig.GetSettingsConfig().First().Prefix;
             Environment.SetEnvironmentVariable($"{prefix}Test1", "SomeValue");
         }
 
@@ -56,7 +57,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             SetTestVariable();
             var buildConfig = GetConfiguration();
             var generator = GetGenerator(buildConfig);
-            var secretsConfig = buildConfig.GetSecretsConfig();
+            var secretsConfig = buildConfig.GetSettingsConfig().First();
             var secrets = generator.GetSecrets(secretsConfig.Prefix);
 
             var jsonObject = generator.GetJObjectFromSecrets(secrets);
@@ -73,7 +74,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             SetTestVariable();
             var buildConfig = GetConfiguration();
             var generator = GetGenerator(buildConfig);
-            var secretsConfig = buildConfig.GetSecretsConfig();
+            var secretsConfig = buildConfig.GetSettingsConfig().First();
             var secrets = generator.GetSecrets(secretsConfig.Prefix);
 
             Assert.NotNull(secrets);
