@@ -2,6 +2,10 @@
 {
     public static class Constants
     {
+        public const string AppSettingsJsonFileName = "appsettings.json";
+
+        public const string AppSettingsJsonConfigurationFileFormat = "appsettings.{0}.json";
+
         public const string SecretsJsonFileName = "secrets.json";
 
         public const string SecretsJsonConfigurationFileFormat = "secrets.{0}.json";

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,21 +18,45 @@ namespace Mobile.BuildTools.Utils
         public static IDictionary<string, string> GatherEnvironmentVariables(IBuildConfiguration buildConfiguration = null, bool includeManifest = false)
         {
             var env = new Dictionary<string, string>();
-            foreach(var key in Environment.GetEnvironmentVariables().Keys)
+            if(buildConfiguration is null)
             {
-                env.Add(key.ToString(), Environment.GetEnvironmentVariable(key.ToString()));
+                foreach (var key in Environment.GetEnvironmentVariables().Keys)
+                {
+                    env[key.ToString()] = Environment.GetEnvironmentVariable(key.ToString());
+                }
+
+                return env; 
             }
 
-            if (buildConfiguration is null)
-                return env;
+            LoadConfigurationEnvironment(buildConfiguration, ref env);
+
+            foreach(var key in Environment.GetEnvironmentVariables().Keys)
+            {
+                env[key.ToString()] = Environment.GetEnvironmentVariable(key.ToString());
+            }
 
             var projectDirectory = buildConfiguration.ProjectDirectory;
             var solutionDirectory = buildConfiguration.SolutionDirectory;
             var configuration = buildConfiguration.BuildConfiguration;
-            LoadSecrets(Path.Combine(projectDirectory, Constants.SecretsJsonFileName), ref env);
-            LoadSecrets(Path.Combine(projectDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)), ref env);
-            LoadSecrets(Path.Combine(solutionDirectory, Constants.SecretsJsonFileName), ref env);
-            LoadSecrets(Path.Combine(solutionDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)), ref env);
+            new[]
+            {
+                Path.Combine(projectDirectory, Constants.AppSettingsJsonFileName),
+                Path.Combine(projectDirectory, string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)),
+                Path.Combine(solutionDirectory, Constants.AppSettingsJsonFileName),
+                Path.Combine(solutionDirectory, string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)),
+                // Legacy Support
+                Path.Combine(projectDirectory, Constants.SecretsJsonFileName),
+                Path.Combine(projectDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)),
+                Path.Combine(solutionDirectory, Constants.SecretsJsonFileName),
+                Path.Combine(solutionDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration))
+            }.Distinct()
+            .ForEach(x =>
+            {
+                if (Path.GetFileName(x).StartsWith("secrets") && File.Exists(x))
+                    buildConfiguration.Logger.LogWarning("The secrets.json has been deprecated and will no longer be supported in a future version. Please migrate to appsettings.json");
+
+                LoadSecrets(x, ref env);
+            });
 
             if (includeManifest)
             {
@@ -53,6 +78,23 @@ namespace Mobile.BuildTools.Utils
             }
 
             return env;
+        }
+
+        private static void LoadConfigurationEnvironment(IBuildConfiguration buildConfiguration, ref Dictionary<string, string> env)
+        {
+            var config = buildConfiguration.Configuration;
+            foreach ((var key, var value) in config.Environment.Defaults)
+            {
+                env[key] = value;
+            }
+
+            if(config.Environment.Configuration.ContainsKey(buildConfiguration.BuildConfiguration))
+            {
+                foreach ((var key, var value) in config.Environment.Configuration[buildConfiguration.BuildConfiguration])
+                {
+                    env[key] = value;
+                }
+            }
         }
 
         internal static void UpdateVariables(IDictionary<string, string> settings, ref Dictionary<string, string> output)
