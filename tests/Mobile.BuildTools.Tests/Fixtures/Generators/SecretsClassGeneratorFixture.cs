@@ -325,7 +325,15 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         [InlineData("ushortArray.json", PropertyType.UShort, typeof(ushort[]), true)]
         public void GeneratesValidClass(string secretsFile, PropertyType propertyType, Type expectedType, bool isArray)
         {
+            var testDirectory = Path.Combine("Tests", nameof(SecretsClassGeneratorFixture), nameof(GeneratesValidClass), expectedType.Name);
+            if (Directory.Exists(testDirectory))
+                Directory.Delete(testDirectory, true);
+
+            Directory.CreateDirectory(testDirectory);
+            File.Copy(Path.Combine("Templates", "Secrets", secretsFile), Path.Combine(testDirectory, "secrets.json"));
+
             var config = GetConfiguration($"{nameof(GeneratesValidClass)}-{expectedType.Name}");
+            config.SolutionDirectory = config.ProjectDirectory = testDirectory;
             config.SettingsConfig = new List<SettingsConfig>{
                 new SettingsConfig
                 {
@@ -340,7 +348,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                     }
                 }
             };
-            var generator = new SecretsClassGenerator(config, Path.Combine("Templates", "Secrets", secretsFile))
+            var generator = new SecretsClassGenerator(config)
             {
                 RootNamespace = config.ProjectName
             };

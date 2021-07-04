@@ -19,32 +19,32 @@ namespace Mobile.BuildTools.Models.AppIcons
         }
 
         [Description("Specifies the Android specific configuration for the source image.")]
-        [JsonProperty("android", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("android", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration Android { get; set; }
 
         [Description("Specifies the configuration for all Apple targets if building for iOS, macOS, TVOS, WatchOS.")]
-        [JsonProperty("apple", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("apple", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration Apple { get; set; }
 
         [Description("Specifies the iOS specific configuration for the source image.")]
-        [JsonProperty("ios", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("ios", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Properly named iOS")]
         public PlatformConfiguration iOS { get; set; }
 
         [Description("Specifies the TVOS specific configuration for the source image.")]
-        [JsonProperty("tvos", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("tvos", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration TVOS { get; set; }
 
         [Description("Specifies the macOS specific configuration for the source image.")]
-        [JsonProperty("macos", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("macos", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration MacOS { get; set; }
 
         [Description("Specifies the Tizen specific configuration for the source image.")]
-        [JsonProperty("tizen", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("tizen", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration Tizen { get; set; }
 
         [Description("Specifies the UWP specific configuration for the source image.")]
-        [JsonProperty("uwp", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("uwp", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration UWP { get; set; }
 
         public IEnumerable<IImageResource> GetConfigurations(Platform platform)

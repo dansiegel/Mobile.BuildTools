@@ -20,16 +20,13 @@ namespace Mobile.BuildTools.Generators.Secrets
 #pragma warning disable IDE1006, IDE0040
         private string CompileGeneratedAttribute { get; }
 
-        private string[] SecretsFileLocations { get; }
-
-        public SecretsClassGenerator(IBuildConfiguration buildConfiguration, params string[] secretsFileLocations)
+        public SecretsClassGenerator(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
         {
             var assembly = typeof(SecretsClassGenerator).Assembly;
             var toolVersion = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
             CompileGeneratedAttribute = @$"[GeneratedCodeAttribute(""Mobile.BuildTools.Generators.Secrets.SecretsClassGenerator"", ""{toolVersion}"")]";
 
-            SecretsFileLocations = secretsFileLocations;
             Outputs = new List<ITaskItem>();
         }
 #pragma warning restore IDE1006, IDE0040
@@ -47,33 +44,11 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         private void ProcessSettingsConfig(SettingsConfig settingsConfig)
         {
-            if (!SecretsFileLocations.Any(x => File.Exists(x)))
-            {
-                Log.LogMessage("No secrets.json was found in either the Project or Solution Directory.");
-
-                if (settingsConfig.Properties.Any())
-                {
-                    var jObject = new JObject();
-                    foreach (var propConfig in settingsConfig.Properties)
-                    {
-                        jObject[propConfig.Name] = $"{propConfig.PropertyType}";
-                        Log.LogError($"Missing Secret parameter: {propConfig.Name}");
-                    }
-
-                    Log.LogWarning(@$"To fix the build please add a secrets.json in either the Project or Solution root directory.");
-                    Log.LogMessage(jObject.ToString(Formatting.Indented));
-                }
-
-                return;
-            }
-
-            var secrets = GetMergedSecrets();
-
             var replacement = string.Empty;
             var safeReplacement = string.Empty;
 
             if (string.IsNullOrEmpty(settingsConfig.ClassName))
-                settingsConfig.ClassName = "Secrets";
+                settingsConfig.ClassName = "AppSettings";
 
             if (string.IsNullOrEmpty(settingsConfig.Namespace))
                 settingsConfig.Namespace = "Helpers";
@@ -84,25 +59,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             if (string.IsNullOrEmpty(settingsConfig.Prefix))
                 settingsConfig.Prefix = "BuildTools_";
 
-            foreach (var propConfig in settingsConfig.Properties)
-            {
-                if (string.IsNullOrEmpty(propConfig.DefaultValue))
-                    continue;
-                if (secrets.ContainsKey(propConfig.Name) || secrets.ContainsKey($"{settingsConfig.Prefix}{propConfig.Name}"))
-                    continue;
-
-                secrets.Add(propConfig.Name, propConfig.DefaultValue == "null" || propConfig.DefaultValue == "default" ? null : propConfig.DefaultValue);
-            }
-
-            var hasErrors = false;
-            foreach(var propConfig in settingsConfig.Properties)
-            {
-                if (!secrets.ContainsKey(propConfig.Name) && !secrets.ContainsKey($"{settingsConfig.Prefix}{propConfig.Name}"))
-                {
-                    hasErrors = true;
-                    Log.LogError($"Missing Secret parameter: {propConfig.Name}");
-                }
-            }
+            var secrets = GetMergedSecrets(settingsConfig, out var hasErrors);
 
             if (hasErrors)
                 return;
@@ -136,66 +93,31 @@ namespace Mobile.BuildTools.Generators.Secrets
             File.WriteAllText(intermediateFile, secretsClass);
         }
 
-        internal IDictionary<string, string> GetMergedSecrets()
+        internal IDictionary<string, string> GetMergedSecrets(SettingsConfig settingsConfig, out bool hasErrors)
         {
-            JObject jObject = null;
-            foreach (var file in SecretsFileLocations)
+            var env = EnvironmentAnalyzer.GatherEnvironmentVariables(Build);
+            var secrets = new Dictionary<string, string>();
+            hasErrors = false;
+            foreach(var prop in settingsConfig.Properties)
             {
-                CreateOrMerge(file, ref jObject);
-            }
-
-            if (jObject is null)
-            {
-                throw new Exception("An unexpected error occurred. Could not locate any secrets.");
-            }
-
-            var secrets = jObject.ToObject<Dictionary<string, string>>();
-
-            if (Build?.Configuration?.Environment != null)
-            {
-                var settings = Build.Configuration.Environment;
-                var defaultSettings = settings.Defaults ?? new Dictionary<string, string>();
-                if (settings.Configuration != null && settings.Configuration.ContainsKey(Build.BuildConfiguration))
+                var key = env.Keys.FirstOrDefault(x => x.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase) || x.Equals($"{settingsConfig.Prefix}{prop.Name}", StringComparison.InvariantCultureIgnoreCase));
+                if(string.IsNullOrEmpty(key))
                 {
-                    foreach ((var key, var value) in settings.Configuration[Build.BuildConfiguration])
-                        defaultSettings[key] = value;
-                }
-
-                UpdateVariables(defaultSettings, ref secrets);
-            }
-
-            return secrets;
-        }
-
-        private static void UpdateVariables(IDictionary<string, string> settings, ref Dictionary<string, string> output)
-        {
-            if (settings is null)
-                return;
-
-            foreach ((var key, var value) in settings)
-            {
-                if (!output.ContainsKey(key))
-                    output[key] = value;
-            }
-        }
-
-        internal void CreateOrMerge(string jsonFilePath, ref JObject secrets)
-        {
-            if(!string.IsNullOrEmpty(jsonFilePath) && File.Exists(jsonFilePath))
-            {
-                var json = File.ReadAllText(jsonFilePath);
-                if(secrets is null)
-                {
-                    secrets = JObject.Parse(json);
-                }
-                else
-                {
-                    foreach(var pair in secrets)
+                    if(string.IsNullOrEmpty(prop.DefaultValue))
                     {
-                        secrets[pair.Key] = pair.Value;
+                        Log.LogError($"Missing Settings Key: {prop.Name}");
+                        hasErrors = true;
+                        continue;
                     }
+
+                    secrets[prop.Name] = prop.DefaultValue == "null" || prop.DefaultValue == "default" ? null : prop.DefaultValue;
+                    continue;
                 }
+
+                secrets[prop.Name] = env[key];
             }
+
+            return env;
         }
 
         internal CodeWriter GenerateClass(SettingsConfig settingsConfig, IDictionary<string, string> secrets)

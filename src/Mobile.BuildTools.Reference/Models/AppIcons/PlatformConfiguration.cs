@@ -7,7 +7,7 @@ namespace Mobile.BuildTools.Models.AppIcons
     public class PlatformConfiguration : BaseImageConfiguration
     {
         [Description("Provides additional resource outputs for the specified source image.")]
-        [JsonProperty("additionalOutputs", Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("additionalOutputs", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<BaseImageConfiguration> AdditionalOutputs { get; set; }
     }
 }
