@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
@@ -7,6 +8,9 @@ using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Reference.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
+using Newtonsoft.Json.Schema.Generation;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -63,6 +67,7 @@ namespace Mobile.BuildTools.Tasks
             LocateSolution();
             BuildToolsConfigFilePath = ConfigHelper.GetConfigurationPath(ProjectDir);
             MigrateSecretsToSettings();
+            ValidateConfigSchema();
 
             var crossTargetingProject = IsCrossTargeting();
             var platform = TargetFrameworkIdentifier.GetTargetPlatform();
@@ -85,11 +90,35 @@ namespace Mobile.BuildTools.Tasks
             return true;
         }
 
+        internal void ValidateConfigSchema()
+        {
+            try
+            {
+                var generator = new JSchemaGenerator();
+                var schema = generator.Generate(typeof(BuildToolsConfig));
+                var config = JObject.Parse(File.ReadAllText(BuildToolsConfigFilePath));
+                if(!config.IsValid(schema, out IList<string> errorMessages))
+                {
+                    foreach(var error in errorMessages)
+                    {
+                        Log.LogError("Invalid buildtools.json schema detected..");
+                        Log.LogError(error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError("There was an unhandled exception while attempting to valid the buildtools.json.");
+                Log.LogError(ex.Message);
+            }
+        }
+
+#pragma warning disable CS0612 // Project Secrets is obsolete. This converts to the new AppSettings.
         internal void MigrateSecretsToSettings()
         {
             var config = ConfigHelper.GetConfig(BuildToolsConfigFilePath);
 
-            if(config.ProjectSecrets is not null && config.ProjectSecrets.Any())
+            if (config.ProjectSecrets is not null && config.ProjectSecrets.Any())
             {
                 config.ProjectSecrets.ForEach(x =>
                 {
@@ -98,7 +127,7 @@ namespace Mobile.BuildTools.Tasks
                     var settings = new SettingsConfig
                     {
                         Accessibility = secretsConfig.Accessibility,
-                        ClassName = secretsConfig.ClassName,
+                        ClassName = secretsConfig.ClassName ?? "Secrets",
                         Delimiter = secretsConfig.Delimiter,
                         Namespace = secretsConfig.Namespace,
                         Prefix = secretsConfig.Prefix,
@@ -124,6 +153,7 @@ namespace Mobile.BuildTools.Tasks
                 ConfigHelper.SaveConfig(config, BuildToolsConfigFilePath);
             }
         }
+#pragma warning restore CS0612 // Project Secrets is obsolete. This converts to the new AppSettings.
 
         public static bool IsEnabled(ToolItem item)
         {

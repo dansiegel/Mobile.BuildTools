@@ -7,7 +7,7 @@ namespace Mobile.BuildTools.Models
     {
         [Description("Disables this Mobile.Build.Tools Task")]
         [DefaultValue(false)]
-        [JsonProperty("disable")]
+        [JsonProperty("disable", Required = Required.AllowNull)]
         public bool Disable { get; set; }
     }
 }

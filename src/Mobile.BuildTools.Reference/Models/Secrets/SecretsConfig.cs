@@ -12,28 +12,28 @@ namespace Mobile.BuildTools.Models.Secrets
             Properties = new List<ValueConfig>();
         }
 
-        [JsonProperty("disable")]
+        [JsonProperty("disable", Required = Required.AllowNull)]
         public bool Disable { get; set; }
 
-        [JsonProperty("delimiter")]
+        [JsonProperty("delimiter", Required = Required.AllowNull)]
         public string Delimiter { get; set; }
 
-        [JsonProperty("prefix")]
+        [JsonProperty("prefix", Required = Required.AllowNull)]
         public string Prefix { get; set; }
 
-        [JsonProperty("className")]
+        [JsonProperty("className", Required = Required.AllowNull)]
         public string ClassName { get; set; }
 
-        [JsonProperty("accessibility")]
+        [JsonProperty("accessibility", Required = Required.AllowNull)]
         public Accessibility Accessibility { get; set; }
 
-        [JsonProperty("rootNamespace")]
+        [JsonProperty("rootNamespace", Required = Required.AllowNull)]
         public string RootNamespace { get; set; }
 
-        [JsonProperty("namespace")]
+        [JsonProperty("namespace", Required = Required.AllowNull)]
         public string Namespace { get; set; }
 
-        [JsonProperty("properties")]
+        [JsonProperty("properties", Required = Required.AllowNull)]
         public List<ValueConfig> Properties { get; set; }
 
         public bool ContainsKey(string key) => Properties != null && Properties.Any(x => x.Name == key);

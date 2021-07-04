@@ -12,13 +12,10 @@ namespace Mobile.BuildTools.Models
             ConditionalDirectories = new Dictionary<string, IEnumerable<string>>();
         }
 
-        [JsonProperty("directories")]
+        [JsonProperty("directories", Required = Required.AllowNull)]
         public List<string> Directories { get; set; }
 
-        [JsonProperty("conditionalDirectories")]
+        [JsonProperty("conditionalDirectories", Required = Required.AllowNull)]
         public Dictionary<string, IEnumerable<string>> ConditionalDirectories { get; set; }
-
-        [JsonProperty("watermarkOpacity")]
-        public double? WatermarkOpacity { get; set; }
     }
 }

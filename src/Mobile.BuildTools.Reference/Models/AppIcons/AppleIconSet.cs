@@ -5,7 +5,7 @@ namespace Mobile.BuildTools.Models.AppIcons
 {
     public class AppleIconSet
     {
-        [JsonProperty("images")]
+        [JsonProperty("images", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Include)]
         public List<AppleIconSetImage> Images { get; set; }
     }
 }

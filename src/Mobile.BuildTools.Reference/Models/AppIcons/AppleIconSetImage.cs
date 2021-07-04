@@ -4,16 +4,16 @@ namespace Mobile.BuildTools.Models.AppIcons
 {
     public class AppleIconSetImage
     {
-        [JsonProperty("scale")]
+        [JsonProperty("scale", Required = Required.AllowNull)]
         public string Scale { get; set; }
 
-        [JsonProperty("size")]
+        [JsonProperty("size", Required = Required.AllowNull)]
         public string Size { get; set; }
 
-        [JsonProperty("idiom")]
+        [JsonProperty("idiom", Required = Required.AllowNull)]
         public string Idiom { get; set; }
 
-        [JsonProperty("filename")]
+        [JsonProperty("filename", Required = Required.AllowNull)]
         public string FileName { get; set; }
     }
 }

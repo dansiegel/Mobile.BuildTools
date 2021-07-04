@@ -4,6 +4,7 @@
     <PackageReference Update="Microsoft.Build" Version="16.0.461" />
     <PackageReference Update="Microsoft.Build.Tasks.Core" Version="16.0.461" />
     <PackageReference Update="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Update="Newtonsoft.Json.Schema" Version="3.0.14" />
     <PackageReference Update="NuGet.Build.Packaging" Version="0.2.5-dev.10" />
     <PackageReference Update="NuGetizer" Version="0.7.1" />
     <PackageReference Update="Microsoft.Web.Xdt" Version="3.1.0" />

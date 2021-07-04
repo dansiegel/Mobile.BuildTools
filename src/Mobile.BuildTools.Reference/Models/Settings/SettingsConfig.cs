@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Mobile.BuildTools.Models.Settings;
 using Newtonsoft.Json;
@@ -12,25 +13,37 @@ namespace Mobile.BuildTools.Reference.Models.Settings
             Properties = new List<ValueConfig>();
         }
 
-        [JsonProperty("delimiter")]
+        [DefaultValue(";")]
+        [Description("The delimiter used for arrays. By default this will use a semi-colon.")]
+        [JsonProperty("delimiter", Required = Required.AllowNull)]
         public string Delimiter { get; set; }
 
-        [JsonProperty("prefix")]
+        [DefaultValue("BuildTools_")]
+        [Description("The prefix the Mobile.BuildTools should use to look for variables. Note if a variable exists with the exact name it will be used if one does not exist with the prefix.")]
+        [JsonProperty("prefix", Required = Required.AllowNull)]
         public string Prefix { get; set; }
 
-        [JsonProperty("className")]
+        [DefaultValue("AppSettings")]
+        [Description("The name of the generated class.")]
+        [JsonProperty("className", Required = Required.AllowNull)]
         public string ClassName { get; set; }
 
-        [JsonProperty("accessibility")]
+        [DefaultValue(Accessibility.Internal)]
+        [Description("The default visibility of the generated class, either 'public' or 'internal'.")]
+        [JsonProperty("accessibility", Required = Required.AllowNull)]
         public Accessibility Accessibility { get; set; }
 
-        [JsonProperty("rootNamespace")]
+        [Description("If using a Shared project as is typically the case with an Uno Platform app, be sure to specify the Root Namespace to use as this will change otherwise based on which platform target you are compiling.")]
+        [JsonProperty("rootNamespace", Required = Required.AllowNull)]
         public string RootNamespace { get; set; }
 
-        [JsonProperty("namespace")]
+        [DefaultValue("Helpers")]
+        [Description("The partial relative namespace to generate. By default this will be the Helpers namespace, you may set it to the root namespace by providing a period '.' for the value.")]
+        [JsonProperty("namespace", Required = Required.AllowNull)]
         public string Namespace { get; set; }
 
-        [JsonProperty("properties")]
+        [Description("The properties that should be generated in the generated AppSettings class.")]
+        [JsonProperty("properties", Required = Required.Always)]
         public List<ValueConfig> Properties { get; set; }
 
         public bool ContainsKey(string key) => Properties != null && Properties.Any(x => x.Name == key);

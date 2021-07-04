@@ -11,10 +11,10 @@ namespace Mobile.BuildTools.Models
             Configuration = new Dictionary<string, Dictionary<string, string>>();
         }
 
-        [JsonProperty("defaults")]
+        [JsonProperty("defaults", Required = Required.AllowNull)]
         public Dictionary<string, string> Defaults { get; set; }
 
-        [JsonProperty("configuration")]
+        [JsonProperty("configuration", Required = Required.AllowNull)]
         public Dictionary<string, Dictionary<string, string>> Configuration { get; set; }
     }
 }
