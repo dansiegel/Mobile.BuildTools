@@ -28,6 +28,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.Reference
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BuildTools.XamarinSdk", "src\Mobile.BuildTools.XamarinSdk\Mobile.BuildTools.XamarinSdk.csproj", "{2367403E-8614-4F4A-8627-7FC41995F96D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{D096610B-57C6-476F-99CE-FA949E35F2BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BuildTools.SchemaGenerator", "tools\Mobile.BuildTools.SchemaGenerator\Mobile.BuildTools.SchemaGenerator.csproj", "{91F7409A-B8C5-488B-8E45-2CD368F193C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +114,18 @@ Global
 		{2367403E-8614-4F4A-8627-7FC41995F96D}.Release|x64.Build.0 = Release|Any CPU
 		{2367403E-8614-4F4A-8627-7FC41995F96D}.Release|x86.ActiveCfg = Release|Any CPU
 		{2367403E-8614-4F4A-8627-7FC41995F96D}.Release|x86.Build.0 = Release|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Debug|x64.Build.0 = Debug|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Debug|x86.Build.0 = Debug|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Release|x64.ActiveCfg = Release|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Release|x64.Build.0 = Release|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Release|x86.ActiveCfg = Release|Any CPU
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +137,7 @@ Global
 		{82EF42A8-49A3-4086-A045-5E2C2F094C04} = {2510D213-21AF-4B25-888D-E63163356A4F}
 		{20FB88AB-5FE0-41DC-97B7-4C8772A0D059} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
 		{2367403E-8614-4F4A-8627-7FC41995F96D} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
+		{91F7409A-B8C5-488B-8E45-2CD368F193C3} = {D096610B-57C6-476F-99CE-FA949E35F2BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {429C8CA0-DB8C-4CF5-9627-187B9CC47A99}

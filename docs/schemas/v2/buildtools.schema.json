@@ -1,32 +1,35 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
-  "id": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
-  "title": "Mobile.BuildTools Project Configuration",
-  "description": "Configures the Mobile.BuildTools. This file should generally be located next to the Solution file and be a central configuration for the entire solution.",
+  "description": "Configures the Mobile.BuildTools. This file should be located in the solution root directory next to the solution file.",
   "definitions": {
     "AppConfig": {
+      "description": "Configures the settings for bundling and compiling the app.config for use with the Mobile.BuildTools.Configuration package.",
       "type": [
         "object",
         "null"
       ],
       "properties": {
-        "disable": {
-          "description": "Disables this Mobile.BuildTools Task",
-          "type": [ "boolean", "null" ],
-          "default": false
-        },
         "strategy": {
+          "description": "Configures the bundling strategy for advanced scenarios. By default it will only transform the app.config with the app.{BuildConfiguration}.config. You may optionally bundle all app.*.config or those that do not include Debug, Release, Store.",
+          "type": "string",
+          "default": "TransformOnly",
           "enum": [
             "TransformOnly",
             "BundleAll",
             "BundleNonStandard"
+          ]
+        },
+        "disable": {
+          "description": "Disables this Mobile.BuildTools Task",
+          "type": [
+            "boolean",
+            "null"
           ],
-          "default": "TransformOnly",
-          "description": "Defines how we should determine which app.config's to include. By default we only bundle the transformed app.config"
+          "default": false
         }
       }
     },
     "ArtifactCopy": {
+      "description": "Configures the Mobile.BuildTools to copy the generated APK/AAB or IPA & dSYM to the root directory making it easier to locate and stage the build artifacts.",
       "type": [
         "object",
         "null"
@@ -34,28 +37,35 @@
       "properties": {
         "disable": {
           "description": "Disables this Mobile.BuildTools Task",
-          "type": [ "boolean", "null" ],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         }
       }
     },
     "AutomaticVersioning": {
+      "description": "Configures the Mobile.BuildTools to automatically version the build for Android and iOS targets.",
       "type": [
         "object",
         "null"
       ],
       "properties": {
         "behavior": {
-          "description": "Configures whether the Versioning should prefer to use a Build Number or a Timestamp.",
+          "description": "Sets the default behavior for versioning the app. By default the Mobile.BuildTools will attempt to use a Build number and will fallback to a timestamp.",
+          "type": "string",
           "default": "PreferBuildNumber",
           "enum": [
+            "Off",
             "PreferBuildNumber",
             "Timestamp"
           ]
         },
         "environment": {
-          "description": "Configures whether Versioning should occur only on a CI Host, Local Builds or anywhere.",
-          "default": "All",
+          "description": "Sets the default versioning environment. You can use this locally only, on build hosts only, or everywhere for a unique build number every time.",
+          "type": "string",
+          "default": "BuildHost",
           "enum": [
             "All",
             "BuildHost",
@@ -63,71 +73,87 @@
           ]
         },
         "versionOffset": {
-          "type": [ "integer", "null" ],
-          "default": 0
+          "description": "If you need to offset from your build number, you may want to set the Version Offset to get a version that will work for you.",
+          "type": "integer"
         },
         "disable": {
           "description": "Disables this Mobile.BuildTools Task",
-          "type": [ "boolean", "null" ],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         }
       }
     },
     "EnvironmentSettings": {
+      "description": "Configures the Mobile.BuildTools with default non-sensitive environment values. If the value does not exist in the System Environment, this value will be used.",
       "type": [
         "object",
         "null"
       ],
       "properties": {
-        "default": {
+        "defaults": {
           "type": [
             "object",
             "null"
           ],
-          "default": { }
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
         },
         "configuration": {
           "type": [
             "object",
             "null"
           ],
-          "default": { "Debug": { } }
+          "additionalProperties": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
         }
       }
     },
-    "GoogleServices": {
+    "GoogleConfig": {
+      "description": "Configures the Mobile.BuildTools to automatically generate and include the google-services.json or GoogleService-Info.plist from an Environment variable. This can be either a raw string value or file location if using Secure Files.",
       "type": [
         "object",
         "null"
       ],
-      "description": "GoogleServices location. This can be a file location or the raw contents.",
       "properties": {
         "servicesJson": {
           "type": [
             "string",
             "null"
-          ],
-          "default": "Environment Variable name",
-          "description": "Environment Variable name containing the file contents or file path to the google-services.json"
+          ]
         },
         "infoPlist": {
           "type": [
             "string",
             "null"
-          ],
-          "default": "Environment Variable name",
-          "description": "Environment Variable name containing the file contents or file path to the GoogleService-Info.plist"
+          ]
         }
       }
     },
     "ImageResize": {
+      "description": "Configures the Mobile.BuildTools to intelligently process image sources to be bundled into your Android and iOS application.",
       "type": [
         "object",
         "null"
       ],
       "properties": {
         "directories": {
-          "description": "A list of search directories relative to this file",
           "type": [
             "array",
             "null"
@@ -137,13 +163,9 @@
               "string",
               "null"
             ]
-          },
-          "default": [
-            "Images"
-          ]
+          }
         },
         "conditionalDirectories": {
-          "description": "A list of conditional search directories relative to this file. Supports build Configuration, monoandroid, or xamarin.ios",
           "type": [
             "object",
             "null"
@@ -159,29 +181,20 @@
                 "null"
               ]
             }
-          },
-          "default": {
-            "Xamarin.iOS": [ "Images/iOS" ],
-            "MonoAndroid": [ "Images/Android" ],
-            "Debug": [ "Images/Dev" ]
           }
-        },
-        "watermarkOpacity": {
-          "description": "Configures the opacity to use for any watermark files (0 - 1)",
-          "type": [
-            "number",
-            "null"
-          ],
-          "default": 0.95
         },
         "disable": {
           "description": "Disables this Mobile.BuildTools Task",
-          "type": [ "boolean", "null" ],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         }
       }
     },
     "ReleaseNotesOptions": {
+      "description": "Configures the Mobile.BuildTools to generate Release Notes for your build, based on the Git commit messages.",
       "type": [
         "object",
         "null"
@@ -203,7 +216,7 @@
           "default": 250
         },
         "filename": {
-          "description": "The output filename such as `ReleaseNotes.md` or `ReleaseNotes.txt`",
+          "description": "The output filename such as 'ReleaseNotes.md' or 'ReleaseNotes.txt'",
           "type": [
             "string",
             "null"
@@ -212,12 +225,14 @@
         },
         "createInRoot": {
           "type": "boolean",
-          "description": "If true it will create the Release Notes in the Solution Directory. Otherwise it will be created in the Project Directory.",
           "default": true
         },
         "disable": {
           "description": "Disables this Mobile.BuildTools Task",
-          "type": [ "boolean", "null" ],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         }
       }
@@ -229,57 +244,44 @@
       ],
       "properties": {
         "disable": {
-          "description": "Disables this Mobile.BuildTools Task",
-          "type": "boolean",
-          "default": false
-        },
-        "accessibility": {
-          "description": "Specifies the default class Accessibility.",
-          "type": [
-            "string",
-            "null"
-          ],
-          "enum": [
-            "public",
-            "internal"
-          ],
-          "default": "internal"
+          "type": "boolean"
         },
         "delimiter": {
-          "description": "The delimiter used to separate values into an array. (i.e. ';' value1;value2)",
           "type": [
             "string",
             "null"
-          ],
-          "default": ";"
+          ]
         },
         "prefix": {
           "type": [
             "string",
             "null"
-          ],
-          "default": "BuildTools_"
+          ]
         },
         "className": {
           "type": [
             "string",
             "null"
-          ],
-          "default": "Secrets"
+          ]
         },
-        "namespace": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": "Helpers"
+        "accessibility": {
+          "type": "string",
+          "enum": [
+            "Internal",
+            "Public"
+          ]
         },
         "rootNamespace": {
           "type": [
             "string",
             "null"
-          ],
-          "description": "An override to the project root namespace. This may be useful if using a Shared project."
+          ]
+        },
+        "namespace": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "properties": {
           "type": [
@@ -290,18 +292,83 @@
             "$ref": "#/definitions/ValueConfig"
           }
         }
+      }
+    },
+    "SettingsConfig": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "delimiter": {
+          "description": "The delimiter used for arrays. By default this will use a semi-colon.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": ";"
+        },
+        "prefix": {
+          "description": "The prefix the Mobile.BuildTools should use to look for variables. Note if a variable exists with the exact name it will be used if one does not exist with the prefix.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "BuildTools_"
+        },
+        "className": {
+          "description": "The name of the generated class.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "AppSettings"
+        },
+        "accessibility": {
+          "description": "The default visibility of the generated class, either 'public' or 'internal'.",
+          "type": "string",
+          "default": "Internal",
+          "enum": [
+            "Internal",
+            "Public"
+          ]
+        },
+        "rootNamespace": {
+          "description": "If using a Shared project as is typically the case with an Uno Platform app, be sure to specify the Root Namespace to use as this will change otherwise based on which platform target you are compiling.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "namespace": {
+          "description": "The partial relative namespace to generate. By default this will be the Helpers namespace, you may set it to the root namespace by providing a period '.' for the value.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "Helpers"
+        },
+        "properties": {
+          "description": "The properties that should be generated in the generated AppSettings class.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValueConfig"
+          }
+        }
       },
       "required": [
         "properties"
       ]
     },
     "TemplatedManifest": {
+      "description": "Configures the Mobile.BuildTools to process Tokens within the AndroidManifest.xml and Info.plist, replacing values like $AppName$ with a variable named AppName.",
       "type": [
         "object",
         "null"
       ],
       "properties": {
         "token": {
+          "description": "The Regex escaped value of the Token. '$$' is used by default to look for token matching the pattern $TokenName$.",
           "type": [
             "string",
             "null"
@@ -316,12 +383,16 @@
           "default": "Manifest_"
         },
         "missingTokensAsErrors": {
-          "type": [ "boolean", "null" ],
+          "description": "If set to true, this will generate a build time error if a token is found which does not have a value in the environment or secrets.json.",
+          "type": "boolean",
           "default": false
         },
         "disable": {
           "description": "Disables this Mobile.BuildTools Task",
-          "type": [ "boolean", "null" ],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         }
       }
@@ -333,14 +404,13 @@
       ],
       "properties": {
         "name": {
-          "description": "The name of the Property that will be generated",
           "type": [
             "string",
             "null"
           ]
         },
         "type": {
-          "description": "The property type (i.e. string, int, DateTime)",
+          "type": "string",
           "enum": [
             "String",
             "Bool",
@@ -361,36 +431,40 @@
             "Guid",
             "Uri",
             "TimeSpan"
-          ],
-          "default": "String"
+          ]
+        },
+        "isArray": {
+          "type": "boolean"
         },
         "defaultValue": {
-          "description": "Provides a default value, usually for safe for source control values such as a Dev API or the null/default keywords",
           "type": [
             "string",
             "null"
           ]
-        },
-        "isArray": {
-          "description": "Flag to indicate whether to generate the property as an Array",
-          "type": "boolean",
-          "default": false
         }
-      },
-      "required": [
-        "name",
-        "type"
-      ]
+      }
     },
     "XamarinCss": {
+      "description": "Configures the Mobile.BuildTools to compile SCSS files into Xamarin.Forms compliant CSS for styling your Xamarin.Forms application with CSS.",
       "type": [
         "object",
         "null"
       ],
       "properties": {
+        "minify": {
+          "type": "boolean",
+          "default": false
+        },
+        "bundleScss": {
+          "type": "boolean",
+          "default": false
+        },
         "disable": {
           "description": "Disables this Mobile.BuildTools Task",
-          "type": [ "boolean", "null" ],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         }
       }
@@ -398,6 +472,12 @@
   },
   "type": "object",
   "properties": {
+    "$schema": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "appConfig": {
       "$ref": "#/definitions/AppConfig"
     },
@@ -410,9 +490,6 @@
     "css": {
       "$ref": "#/definitions/XamarinCss"
     },
-    "google": {
-      "$ref": "#/definitions/GoogleServices"
-    },
     "images": {
       "$ref": "#/definitions/ImageResize"
     },
@@ -423,6 +500,7 @@
       "$ref": "#/definitions/ReleaseNotesOptions"
     },
     "projectSecrets": {
+      "description": "Note: This is obsolete, please use `appSettings`.",
       "type": [
         "object",
         "null"
@@ -431,10 +509,30 @@
         "$ref": "#/definitions/SecretsConfig"
       }
     },
+    "appSettings": {
+      "description": "Replaces the former 'Secrets' API, with a newly generated AppSettings class. This will allow you to generate one or more configuration classes.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "$ref": "#/definitions/SettingsConfig"
+        }
+      }
+    },
     "environment": {
       "$ref": "#/definitions/EnvironmentSettings"
     },
+    "google": {
+      "$ref": "#/definitions/GoogleConfig"
+    },
     "debug": {
+      "description": "Having issues with the Mobile.BuildTools. Enable the Debug property to help you get some additional debug output in the build logs to help identify configuration issues.",
       "type": "boolean"
     }
   }
