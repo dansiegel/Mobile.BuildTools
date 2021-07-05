@@ -292,8 +292,9 @@ namespace Mobile.BuildTools.Generators.Secrets
             return $"{rootNamespace}.{relativeNamespace}";
         }
 
-        internal string PropertyBuilder(KeyValuePair<string, string> secret, Type type, IValueHandler valueHandler, bool isArray, bool safeOutput, string accessibility)
+        internal string PropertyBuilder(KeyValuePair<string, string> secret, Type type, IValueHandler valueHandler, bool? isArrayNullable, bool safeOutput, string accessibility)
         {
+            var isArray = isArrayNullable ?? false;
             var output = string.Empty;
             var typeDeclaration = type.GetStandardTypeName();
             var accessModifier = type.FullName == typeDeclaration || isArray ? "static readonly" : "const";

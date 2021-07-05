@@ -404,12 +404,14 @@
       ],
       "properties": {
         "name": {
+          "description": "The property name of the value to generate",
           "type": [
             "string",
             "null"
           ]
         },
         "type": {
+          "description": "The property type of the generated property",
           "type": "string",
           "enum": [
             "String",
@@ -434,9 +436,14 @@
           ]
         },
         "isArray": {
-          "type": "boolean"
+          "description": "Forces the property to be an Array type",
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "defaultValue": {
+          "description": "Sets the default value of the property. Can be `null` or `default` to set the default value of the property type.",
           "type": [
             "string",
             "null"
