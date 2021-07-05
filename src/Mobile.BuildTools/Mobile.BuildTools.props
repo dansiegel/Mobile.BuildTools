@@ -25,12 +25,16 @@
     <IsAzureDevOps Condition=" '$(BUILD_BUILDNUMBER)' != '' ">true</IsAzureDevOps>
     <IsAppVeyor Condition=" '$(IsAppVeyor)' == '' ">false</IsAppVeyor>
     <IsAppVeyor Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">true</IsAppVeyor>
+    <IsGitHubActions Condition=" '$(IsGitHubActions)' == '' ">false</IsGitHubActions>
+    <IsGitHubActions Condition=" '$(GITHUB_WORKFLOW)' != '' ">true</IsGitHubActions>
+    <IsBitBucket Condition=" '$(IsBitBucket)' == '' ">true</IsBitBucket>
+    <IsBitBucket Condition=" '$(BITBUCKET_BUILD_NUMBER)' != '' ">true</IsBitBucket>
     <IsJenkins Condition=" '$(IsJenkins)' == '' ">false</IsJenkins>
     <IsJenkins Condition=" '$(BUILD_NUMBER)' != '' And '$(TEAMCITY_VERSION)' == '' ">true</IsJenkins>
     <IsTeamCity Condition=" '$(IsTeamCity)' == '' ">false</IsTeamCity>
     <IsTeamCity Condition=" '$(BUILD_NUMBER)' != '' And '$(TEAMCITY_VERSION)' != '' ">true</IsTeamCity>
     <IsBuildHost Condition=" '$(IsBuildHost)' == '' ">false</IsBuildHost>
-    <IsBuildHost Condition=" '$(IsAppCenter)' Or '$(IsAzureDevOps)' Or '$(IsAppVeyor)' Or '$(IsJenkins)' Or '$(IsTeamCity)' ">true</IsBuildHost>
+    <IsBuildHost Condition=" '$(IsAppCenter)' Or '$(IsAzureDevOps)' Or '$(IsBitBucket)' Or '$(IsGitHubActions)' Or '$(IsAppVeyor)' Or '$(IsJenkins)' Or '$(IsTeamCity)' ">true</IsBuildHost>
   </PropertyGroup>
 
   <Choose>
