@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models
 {
-    public class AutomaticVersioning : ToolItem
+    public class AutomaticVersioning
     {
         [DefaultValue(VersionBehavior.PreferBuildNumber)]
         [Description("Sets the default behavior for versioning the app. By default the Mobile.BuildTools will attempt to use a Build number and will fallback to a timestamp.")]
