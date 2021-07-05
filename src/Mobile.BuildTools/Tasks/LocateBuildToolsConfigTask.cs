@@ -94,21 +94,23 @@ namespace Mobile.BuildTools.Tasks
         {
             try
             {
+                var path = Path.Combine(BuildToolsConfigFilePath, Constants.BuildToolsConfigFileName);
+                Log.LogMessage($"Validating buildtools.json at the path: {path}");
                 var generator = new JSchemaGenerator();
                 var schema = generator.Generate(typeof(BuildToolsConfig));
-                var config = JObject.Parse(File.ReadAllText(BuildToolsConfigFilePath));
+                var config = JObject.Parse(File.ReadAllText(path));
                 if (!config.IsValid(schema, out IList<string> errorMessages))
                 {
                     foreach(var error in errorMessages)
                     {
-                        Log.LogError("Invalid buildtools.json schema detected..");
+                        Log.LogError("Invalid buildtools.json schema detected...");
                         Log.LogError(error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Log.LogError("There was an unhandled exception while attempting to valid the buildtools.json.");
+                Log.LogError("There was an unhandled exception while attempting to validate the buildtools.json.");
                 Log.LogError(ex.Message);
             }
         }
