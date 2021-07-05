@@ -18,6 +18,7 @@ namespace Mobile.BuildTools.Generators.Images
             { "StoreLogo", 200 }
         };
 
+        private readonly double[] _scales = new[] { 1.0, 0.5, 0.375, 0.3125, 0.25 };
 
         public UwpImageCollectionGenerator(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
@@ -61,7 +62,7 @@ namespace Mobile.BuildTools.Generators.Images
 
         private IEnumerable<OutputImage> GetSmallTileOutputImages(IImageResource config)
         {
-            foreach (var scale in new[] { 1, 0.5, 0.25 })
+            foreach (var scale in _scales)
             {
                 var output = GetOutputImage(config, scale, "SmallTile");
                 output.Height = (int)(284 * scale);
@@ -72,7 +73,7 @@ namespace Mobile.BuildTools.Generators.Images
 
         private IEnumerable<OutputImage> GetSplashScreenOutputImages(IImageResource config)
         {
-            foreach (var scale in new[] { 1, 0.5, 0.25 })
+            foreach (var scale in _scales)
             {
                 var output = GetOutputImage(config, scale, "SplashScreen");
                 output.Height = (int)(1200 * scale);
@@ -88,7 +89,7 @@ namespace Mobile.BuildTools.Generators.Images
                 if (name == "SmallTile")
                     continue;
 
-                foreach (var scale in new[] { 1, 0.5, 0.25 })
+                foreach (var scale in _scales)
                 {
                     var output = GetOutputImage(config, scale, name);
                     output.Height = (int)(size * scale);
@@ -97,7 +98,7 @@ namespace Mobile.BuildTools.Generators.Images
                 }
             }
 
-            foreach (var scale in new[] { 1, 0.5, 0.25 })
+            foreach (var scale in _scales)
             {
                 var size = (int)(256 * scale);
                 var output = GetOutputImage(config, scale, $"Square44x44Logo.altform-unplated_targetsize-{size}");
@@ -106,7 +107,7 @@ namespace Mobile.BuildTools.Generators.Images
                 yield return output;
             }
 
-            foreach (var scale in new[] { 1, 0.5, 0.25 })
+            foreach (var scale in _scales)
             {
                 var size = (int)(256 * scale);
                 var output = GetOutputImage(config, scale, $"Square44x44Logo.targetsize-{size}");
@@ -118,7 +119,7 @@ namespace Mobile.BuildTools.Generators.Images
 
         private IEnumerable<OutputImage> GetWideTileOutputImages(IImageResource config)
         {
-            foreach (var scale in new[] { 1, 0.5, 0.25 })
+            foreach (var scale in _scales)
             {
                 var output = GetOutputImage(config, scale, "Wide310x150Logo");
                 output.Height = (int)(600 * scale);
@@ -129,7 +130,7 @@ namespace Mobile.BuildTools.Generators.Images
 
         private IEnumerable<OutputImage> GetDefaultOutputImages(IImageResource config)
         {
-            foreach(var scale in new[] { 1, 0.5, 0.25 })
+            foreach(var scale in _scales)
             {
                 var output = GetOutputImage(config, scale, Path.GetFileNameWithoutExtension(config.SourceFile));
                 output.Scale = scale;
@@ -143,6 +144,8 @@ namespace Mobile.BuildTools.Generators.Images
             {
                 1.0 => "scale-400",
                 0.5 => "scale-200",
+                0.375 => "scale-150",
+                0.3125 => "scale-125",
                 0.25 => "scale-100",
                 _ => throw new NotImplementedException()
             };
