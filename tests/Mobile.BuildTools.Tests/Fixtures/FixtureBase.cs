@@ -25,7 +25,7 @@ namespace Mobile.BuildTools.Tests.Fixtures
         protected TestBuildConfiguration GetConfiguration(string testName = null)
         {
             var stackTrace = new StackTrace();
-            var testOutput = Path.Combine("Tests", GetType().Name, testName ?? stackTrace.GetFrame(1).GetMethod().Name);
+            var testOutput = Path.Combine("Tests", GetType().Name, testName ?? stackTrace.GetFrame(1).GetMethod().Name, "obj");
             ResetTestOutputDirectory(testOutput);
 
             return new TestBuildConfiguration

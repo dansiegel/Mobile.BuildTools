@@ -10,6 +10,7 @@ using Microsoft.CSharp;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Models.Settings;
+using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -384,6 +385,124 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 Assert.Equal(3, array.Cast<object>().Count());
             }
         }
+
+        [Fact]
+        public void MergedSecretsContainsSingleElement()
+        {
+            var config = GetConfiguration();
+            var settingsConfig = new SettingsConfig
+            {
+                Properties = new List<ValueConfig>
+                {
+                    new ValueConfig
+                    {
+                        Name = "SampleProp",
+                        PropertyType = PropertyType.String,
+                        DefaultValue = "Hello World"
+                    }
+                }
+            };
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
+            config.SolutionDirectory = config.ProjectDirectory = projectDir;
+
+            var generator = new SecretsClassGenerator(config);
+            var mergedSecrets = generator.GetMergedSecrets(settingsConfig, out var hasErrors);
+
+            Assert.False(hasErrors);
+            Assert.Single(mergedSecrets);
+        }
+
+        [Fact]
+        public void GetsDefaultValueFromValueConfig()
+        {
+            var config = GetConfiguration();
+            var settingsConfig = new SettingsConfig
+            {
+                Properties = new List<ValueConfig>
+                {
+                    new ValueConfig
+                    {
+                        Name = "SampleProp",
+                        PropertyType = PropertyType.String,
+                        DefaultValue = "Hello World"
+                    }
+                }
+            };
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
+            config.SolutionDirectory = config.ProjectDirectory = projectDir;
+
+            var generator = new SecretsClassGenerator(config);
+            var mergedSecrets = generator.GetMergedSecrets(settingsConfig, out var hasErrors);
+
+            Assert.False(hasErrors);
+            Assert.True(mergedSecrets.ContainsKey("SampleProp"));
+            Assert.Equal("Hello World", mergedSecrets["SampleProp"]);
+        }
+
+        [Fact]
+        public void GetsValuesFromPrefixedHostEnvironmentVariable()
+        {
+            var config = GetConfiguration();
+            var settingsConfig = new SettingsConfig
+            {
+                Prefix = "SampleTest_",
+                Properties = new List<ValueConfig>
+                {
+                    new ValueConfig
+                    {
+                        Name = "SampleProp1",
+                        PropertyType = PropertyType.String
+                    }
+                }
+            };
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
+            config.SolutionDirectory = config.ProjectDirectory = projectDir;
+            Environment.SetEnvironmentVariable("SampleTest_SampleProp1", nameof(GetsValuesFromPrefixedHostEnvironmentVariable), EnvironmentVariableTarget.Process);
+
+            var generator = new SecretsClassGenerator(config);
+            var mergedSecrets = generator.GetMergedSecrets(settingsConfig, out var hasErrors);
+            Environment.SetEnvironmentVariable("SampleTest_SampleProp1", null, EnvironmentVariableTarget.Process);
+
+            Assert.False(hasErrors);
+            Assert.True(mergedSecrets.ContainsKey("SampleProp1"));
+            Assert.Equal(nameof(GetsValuesFromPrefixedHostEnvironmentVariable), mergedSecrets["SampleProp1"]);
+        }
+
+        [Fact]
+        public void GetsPrefixedValueOverExactMatch()
+        {
+            var config = GetConfiguration();
+            var settingsConfig = new SettingsConfig
+            {
+                Prefix = "SampleTest_",
+                Properties = new List<ValueConfig>
+                {
+                    new ValueConfig
+                    {
+                        Name = "SampleProp2",
+                        PropertyType = PropertyType.String
+                    }
+                }
+            };
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
+            config.SolutionDirectory = config.ProjectDirectory = projectDir;
+            Environment.SetEnvironmentVariable("SampleTest_SampleProp2", nameof(GetsValuesFromPrefixedHostEnvironmentVariable), EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("SampleProp2", "Wrong Value", EnvironmentVariableTarget.Process);
+
+            var generator = new SecretsClassGenerator(config);
+            var mergedSecrets = generator.GetMergedSecrets(settingsConfig, out var hasErrors);
+            Environment.SetEnvironmentVariable("SampleTest_SampleProp2", null, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("SampleProp2", null, EnvironmentVariableTarget.Process);
+
+            Assert.False(hasErrors);
+            Assert.True(mergedSecrets.ContainsKey("SampleProp2"));
+            Assert.Equal(nameof(GetsValuesFromPrefixedHostEnvironmentVariable), mergedSecrets["SampleProp2"]);
+        }
+
 
         public class SecretValue
         {

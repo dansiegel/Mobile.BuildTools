@@ -95,12 +95,31 @@ namespace Mobile.BuildTools.Generators.Secrets
 
         internal IDictionary<string, string> GetMergedSecrets(SettingsConfig settingsConfig, out bool hasErrors)
         {
+            if (string.IsNullOrEmpty(settingsConfig.Prefix))
+                settingsConfig.Prefix = "BuildTools_";
+
             var env = EnvironmentAnalyzer.GatherEnvironmentVariables(Build);
             var secrets = new Dictionary<string, string>();
             hasErrors = false;
             foreach(var prop in settingsConfig.Properties)
             {
-                var key = env.Keys.FirstOrDefault(x => x.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase) || x.Equals($"{settingsConfig.Prefix}{prop.Name}", StringComparison.InvariantCultureIgnoreCase));
+                var searchKeys = new[]
+                {
+                    $"{settingsConfig.Prefix}{prop.Name}",
+                    $"{settingsConfig.Prefix}_{prop.Name}",
+                    prop.Name,
+                };
+
+                string key = null;
+                foreach(var searchKey in searchKeys)
+                {
+                    if (!string.IsNullOrEmpty(key))
+                        break;
+
+                    key = env.Keys.FirstOrDefault(x =>
+                        x.Equals(searchKey, StringComparison.InvariantCultureIgnoreCase));
+                }
+
                 if(string.IsNullOrEmpty(key))
                 {
                     if(string.IsNullOrEmpty(prop.DefaultValue))
@@ -117,7 +136,7 @@ namespace Mobile.BuildTools.Generators.Secrets
                 secrets[prop.Name] = env[key];
             }
 
-            return env;
+            return secrets;
         }
 
         internal CodeWriter GenerateClass(SettingsConfig settingsConfig, IDictionary<string, string> secrets)
