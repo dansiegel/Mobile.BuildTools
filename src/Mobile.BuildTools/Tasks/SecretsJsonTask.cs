@@ -20,33 +20,30 @@ namespace Mobile.BuildTools.Tasks
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
-            //System.Diagnostics.Debugger.Launch();
-
-            var secretsConfig = config.GetSecretsConfig();
-            if (secretsConfig is null || secretsConfig.Disable)
+            // Sanity Check
+            if (!config.Configuration.AppSettings.ContainsKey(ProjectName))
                 return;
 
-            var configJson = string.Format(Constants.SecretsJsonConfigurationFileFormat, config.BuildConfiguration.ToLower());
-            var searchPaths = new[]
-            {
-                SolutionDirectory,
-                ProjectDirectory,
-                ConfigHelper.GetConfigurationPath(ProjectDirectory, SolutionDirectory)
-            }
-            .SelectMany(x => new[] { Path.Combine(x, Constants.SecretsJsonFileName), Path.Combine(x, configJson) })
-            .Where(x => File.Exists(x))
-            .ToList();
+            //var configJson = string.Format(Constants.SecretsJsonConfigurationFileFormat, config.BuildConfiguration.ToLower());
+            //var searchPaths = new[]
+            //{
+            //    SolutionDirectory,
+            //    ProjectDirectory,
+            //    ConfigHelper.GetConfigurationPath(ProjectDirectory, SolutionDirectory)
+            //}
+            //.SelectMany(x => new[] { Path.Combine(x, Constants.SecretsJsonFileName), Path.Combine(x, configJson) })
+            //.Where(x => File.Exists(x))
+            //.ToList();
 
-            if (!string.IsNullOrEmpty(JsonSecretsFilePath) && !searchPaths.Contains(JsonSecretsFilePath))
-                searchPaths.Add(JsonSecretsFilePath);
+            //if (!string.IsNullOrEmpty(JsonSecretsFilePath) && !searchPaths.Contains(JsonSecretsFilePath))
+            //    searchPaths.Add(JsonSecretsFilePath);
 
-            var rootNamespace = string.IsNullOrEmpty(secretsConfig.RootNamespace) ? RootNamespace : secretsConfig.RootNamespace;
-            var generator = new SecretsClassGenerator(config, searchPaths.ToArray())
+            var generator = new SecretsClassGenerator(config)
             {
-                BaseNamespace = rootNamespace,
+                RootNamespace = RootNamespace,
             };
             generator.Execute();
-            _generatedCodeFiles = new[] { generator.Outputs };
+            _generatedCodeFiles = generator.Outputs.ToArray();
         }
     }
 }

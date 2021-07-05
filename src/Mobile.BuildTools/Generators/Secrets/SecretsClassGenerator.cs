@@ -8,125 +8,68 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Handlers;
-using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Generators.Secrets
 {
-    internal class SecretsClassGenerator : GeneratorBase<ITaskItem>
+    internal class SecretsClassGenerator : GeneratorBase<List<ITaskItem>>
     {
 #pragma warning disable IDE1006, IDE0040
         private string CompileGeneratedAttribute { get; }
 
-        private string[] SecretsFileLocations { get; }
-
-        public SecretsClassGenerator(IBuildConfiguration buildConfiguration, params string[] secretsFileLocations)
+        public SecretsClassGenerator(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
         {
             var assembly = typeof(SecretsClassGenerator).Assembly;
             var toolVersion = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
             CompileGeneratedAttribute = @$"[GeneratedCodeAttribute(""Mobile.BuildTools.Generators.Secrets.SecretsClassGenerator"", ""{toolVersion}"")]";
 
-            SecretsFileLocations = secretsFileLocations;
+            Outputs = new List<ITaskItem>();
         }
 #pragma warning restore IDE1006, IDE0040
 
-        public string BaseNamespace { get; set; }
+        public string RootNamespace { get; set; }
 
         protected override void ExecuteInternal()
         {
-            var secretsConfig = Build.GetSecretsConfig();
-
-            if (!SecretsFileLocations.Any(x => File.Exists(x)))
+            var settingsConfig = Build.GetSettingsConfig();
+            foreach(var settings in settingsConfig)
             {
-                Log.LogMessage("No secrets.json was found in either the Project or Solution Directory.");
-
-                if(secretsConfig.Properties.Any())
-                {
-                    var jObject = new JObject();
-                    foreach (var propConfig in secretsConfig.Properties)
-                    {
-                        jObject[propConfig.Name] = $"{propConfig.PropertyType}";
-                        Log.LogError($"Missing Secret parameter: {propConfig.Name}");
-                    }
-
-                    Log.LogWarning(@$"To fix the build please add a secrets.json in either the Project or Solution root directory.");
-                    Log.LogMessage(jObject.ToString(Formatting.Indented));
-                }
-
-                return;
+                ProcessSettingsConfig(settings);
             }
+        }
 
-            var secrets = GetMergedSecrets();
-
+        private void ProcessSettingsConfig(SettingsConfig settingsConfig)
+        {
             var replacement = string.Empty;
             var safeReplacement = string.Empty;
-            var saveConfig = secretsConfig is null;
-            if(saveConfig)
-            {
-                secretsConfig = new SecretsConfig()
-                {
-                    ClassName = "Secrets",
-                    Namespace = "Helpers",
-                    Delimiter = ";",
-                    Prefix = "BuildTools_",
-                    Properties = new List<ValueConfig>()
-                };
-            }
 
-            if (string.IsNullOrEmpty(secretsConfig.ClassName))
-                secretsConfig.ClassName = "Secrets";
+            if (string.IsNullOrEmpty(settingsConfig.ClassName))
+                settingsConfig.ClassName = "AppSettings";
 
-            if (string.IsNullOrEmpty(secretsConfig.Namespace))
-                secretsConfig.Namespace = "Helpers";
+            if (string.IsNullOrEmpty(settingsConfig.Namespace))
+                settingsConfig.Namespace = "Helpers";
 
-            if (string.IsNullOrEmpty(secretsConfig.Delimiter))
-                secretsConfig.Delimiter = ";";
+            if (string.IsNullOrEmpty(settingsConfig.Delimiter))
+                settingsConfig.Delimiter = ";";
 
-            if (string.IsNullOrEmpty(secretsConfig.Prefix))
-                secretsConfig.Prefix = "BuildTools_";
+            if (string.IsNullOrEmpty(settingsConfig.Prefix))
+                settingsConfig.Prefix = "BuildTools_";
 
-            foreach (var propConfig in secretsConfig.Properties)
-            {
-                if (string.IsNullOrEmpty(propConfig.DefaultValue))
-                    continue;
-                if (secrets.ContainsKey(propConfig.Name) || secrets.ContainsKey($"{secretsConfig.Prefix}{propConfig.Name}"))
-                    continue;
-
-                secrets.Add(propConfig.Name, propConfig.DefaultValue == "null" || propConfig.DefaultValue == "default" ? null : propConfig.DefaultValue);
-            }
-
-            var hasErrors = false;
-            foreach(var propConfig in secretsConfig.Properties)
-            {
-                if (!secrets.ContainsKey(propConfig.Name) && !secrets.ContainsKey($"{secretsConfig.Prefix}{propConfig.Name}"))
-                {
-                    hasErrors = true;
-                    Log.LogError($"Missing Secret parameter: {propConfig.Name}");
-                }
-            }
+            var secrets = GetMergedSecrets(settingsConfig, out var hasErrors);
 
             if (hasErrors)
                 return;
 
-            if(saveConfig)
-            {
-                if (Build.Configuration.ProjectSecrets is null)
-                {
-                    Build.Configuration.ProjectSecrets = new Dictionary<string, SecretsConfig>();
-                }
-                Build.Configuration.ProjectSecrets.Add(Build.ProjectName, secretsConfig);
-                Build.SaveConfiguration();
-            }
-
-            var writer = GenerateClass(secretsConfig, secrets);
+            var writer = GenerateClass(settingsConfig, secrets);
             var secretsClass = writer.ToString();
             Log.LogMessage(Build.Configuration.Debug ? secretsClass : writer.SafeOutput);
 
-            var namespacePath = string.Join($"{Path.PathSeparator}", secretsConfig.Namespace.Split('.').Where(x => !string.IsNullOrEmpty(x)));
-            var fileName = $"{secretsConfig.ClassName}.g.cs";
+            var namespacePath = string.Join($"{Path.PathSeparator}", settingsConfig.Namespace.Split('.').Where(x => !string.IsNullOrEmpty(x)));
+            var fileName = $"{settingsConfig.ClassName}.g.cs";
             var projectFile = Path.Combine(namespacePath, fileName);
             var intermediateFile = Path.Combine(Build.IntermediateOutputPath, namespacePath, fileName);
 
@@ -136,10 +79,10 @@ namespace Mobile.BuildTools.Generators.Secrets
             generatedFile.SetMetadata("Link", projectFile);
             if(File.Exists(projectFile))
             {
-                generatedFile.SetMetadata("DependentUpon", $"{secretsConfig.ClassName}.cs");
+                generatedFile.SetMetadata("DependentUpon", $"{settingsConfig.ClassName}.cs");
             }
 
-            Outputs = generatedFile;
+            Outputs.Add(generatedFile);
 
             var parentDirectory = Directory.GetParent(intermediateFile);
             if(!Directory.Exists(parentDirectory.FullName))
@@ -150,69 +93,53 @@ namespace Mobile.BuildTools.Generators.Secrets
             File.WriteAllText(intermediateFile, secretsClass);
         }
 
-        internal IDictionary<string, string> GetMergedSecrets()
+        internal IDictionary<string, string> GetMergedSecrets(SettingsConfig settingsConfig, out bool hasErrors)
         {
-            JObject jObject = null;
-            foreach (var file in SecretsFileLocations)
-            {
-                CreateOrMerge(file, ref jObject);
-            }
+            if (string.IsNullOrEmpty(settingsConfig.Prefix))
+                settingsConfig.Prefix = "BuildTools_";
 
-            if (jObject is null)
+            var env = EnvironmentAnalyzer.GatherEnvironmentVariables(Build);
+            var secrets = new Dictionary<string, string>();
+            hasErrors = false;
+            foreach(var prop in settingsConfig.Properties)
             {
-                throw new Exception("An unexpected error occurred. Could not locate any secrets.");
-            }
-
-            var secrets = jObject.ToObject<Dictionary<string, string>>();
-
-            if (Build?.Configuration?.Environment != null)
-            {
-                var settings = Build.Configuration.Environment;
-                var defaultSettings = settings.Defaults ?? new Dictionary<string, string>();
-                if (settings.Configuration != null && settings.Configuration.ContainsKey(Build.BuildConfiguration))
+                var searchKeys = new[]
                 {
-                    foreach ((var key, var value) in settings.Configuration[Build.BuildConfiguration])
-                        defaultSettings[key] = value;
+                    $"{settingsConfig.Prefix}{prop.Name}",
+                    $"{settingsConfig.Prefix}_{prop.Name}",
+                    prop.Name,
+                };
+
+                string key = null;
+                foreach(var searchKey in searchKeys)
+                {
+                    if (!string.IsNullOrEmpty(key))
+                        break;
+
+                    key = env.Keys.FirstOrDefault(x =>
+                        x.Equals(searchKey, StringComparison.InvariantCultureIgnoreCase));
                 }
 
-                UpdateVariables(defaultSettings, ref secrets);
+                if(string.IsNullOrEmpty(key))
+                {
+                    if(string.IsNullOrEmpty(prop.DefaultValue))
+                    {
+                        Log.LogError($"Missing Settings Key: {prop.Name}");
+                        hasErrors = true;
+                        continue;
+                    }
+
+                    secrets[prop.Name] = prop.DefaultValue == "null" || prop.DefaultValue == "default" ? null : prop.DefaultValue;
+                    continue;
+                }
+
+                secrets[prop.Name] = env[key];
             }
 
             return secrets;
         }
 
-        private static void UpdateVariables(IDictionary<string, string> settings, ref Dictionary<string, string> output)
-        {
-            if (settings is null)
-                return;
-
-            foreach ((var key, var value) in settings)
-            {
-                if (!output.ContainsKey(key))
-                    output[key] = value;
-            }
-        }
-
-        internal void CreateOrMerge(string jsonFilePath, ref JObject secrets)
-        {
-            if(!string.IsNullOrEmpty(jsonFilePath) && File.Exists(jsonFilePath))
-            {
-                var json = File.ReadAllText(jsonFilePath);
-                if(secrets is null)
-                {
-                    secrets = JObject.Parse(json);
-                }
-                else
-                {
-                    foreach(var pair in secrets)
-                    {
-                        secrets[pair.Key] = pair.Value;
-                    }
-                }
-            }
-        }
-
-        internal CodeWriter GenerateClass(SecretsConfig secretsConfig, IDictionary<string, string> secrets)
+        internal CodeWriter GenerateClass(SettingsConfig settingsConfig, IDictionary<string, string> secrets)
         {
             var writer = new CodeWriter();
             writer.AppendLine("// ------------------------------------------------------------------------------");
@@ -233,16 +160,16 @@ namespace Mobile.BuildTools.Generators.Secrets
             writer.AppendLine();
             writer.AppendLine("using System;");
             writer.AppendLine("using GeneratedCodeAttribute = System.CodeDom.Compiler.GeneratedCodeAttribute;");
-            using (writer.Block($"namespace {GetNamespace(secretsConfig.Namespace)}"))
+            using (writer.Block($"namespace {GetNamespace(settingsConfig)}"))
             {
                 writer.AppendAttribute(CompileGeneratedAttribute);
-                using(writer.Block($"{secretsConfig.Accessibility.ToString().ToLower()} static partial class {secretsConfig.ClassName}"))
+                using(writer.Block($"{settingsConfig.Accessibility.ToString().ToLower()} static partial class {settingsConfig.ClassName}"))
                 {
                     foreach (var secret in secrets)
                     {
                         try
                         {
-                            ProcessSecret(secret, secretsConfig, ref writer);
+                            ProcessSecret(secret, settingsConfig, ref writer);
                             writer.AppendLine();
                         }
                         catch (Exception ex)
@@ -256,7 +183,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             return writer;
         }
 
-        private void ProcessSecret(KeyValuePair<string, string> secret, SecretsConfig secretsConfig, ref CodeWriter writer)
+        private void ProcessSecret(KeyValuePair<string, string> secret, SettingsConfig secretsConfig, ref CodeWriter writer)
         {
             if (!secretsConfig.HasKey(secret.Key, out var valueConfig))
             {
@@ -283,7 +210,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             writer.AppendLine(standardOutput, safeOutput);
         }
 
-        internal string ProcessSecret(KeyValuePair<string, string> secret, SecretsConfig secretsConfig, bool saveOutput, bool safeOutput = false)
+        internal string ProcessSecret(KeyValuePair<string, string> secret, SettingsConfig secretsConfig, bool saveOutput, bool safeOutput = false)
         {
             if (!secretsConfig.HasKey(secret.Key, out var valueConfig) && !saveOutput)
             {
@@ -307,7 +234,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             return PropertyBuilder(secret, mapping.Type, mapping.Handler, valueConfig.IsArray, safeOutput, accessibility);
         }
 
-        internal ValueConfig GenerateValueConfig(KeyValuePair<string, string> secret, SecretsConfig config)
+        internal ValueConfig GenerateValueConfig(KeyValuePair<string, string> secret, SettingsConfig config)
         {
             var value = secret.Value.ToString();
             var valueArray = Regex.Split(value, $"(?<!\\\\){config.Delimiter}").Select(x => x.Replace($"\\{config.Delimiter}", config.Delimiter));
@@ -339,8 +266,11 @@ namespace Mobile.BuildTools.Generators.Secrets
             };
         }
 
-        internal string GetNamespace(string relativeNamespace)
+        internal string GetNamespace(SettingsConfig settings)
         {
+            var relativeNamespace = settings.Namespace;
+            var rootNamespace = string.IsNullOrEmpty(settings.RootNamespace) ? RootNamespace : settings.RootNamespace;
+
             if (string.IsNullOrEmpty(relativeNamespace))
                 relativeNamespace = "Helpers";
 
@@ -348,7 +278,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             var count = parts.Count();
             if (count == 0)
             {
-                return BaseNamespace;
+                return rootNamespace;
             }
             else if(count == 1)
             {
@@ -359,11 +289,12 @@ namespace Mobile.BuildTools.Generators.Secrets
                 relativeNamespace = string.Join(".", parts);
             }
 
-            return $"{BaseNamespace}.{relativeNamespace}";
+            return $"{rootNamespace}.{relativeNamespace}";
         }
 
-        internal string PropertyBuilder(KeyValuePair<string, string> secret, Type type, IValueHandler valueHandler, bool isArray, bool safeOutput, string accessibility)
+        internal string PropertyBuilder(KeyValuePair<string, string> secret, Type type, IValueHandler valueHandler, bool? isArrayNullable, bool safeOutput, string accessibility)
         {
+            var isArray = isArrayNullable ?? false;
             var output = string.Empty;
             var typeDeclaration = type.GetStandardTypeName();
             var accessModifier = type.FullName == typeDeclaration || isArray ? "static readonly" : "const";

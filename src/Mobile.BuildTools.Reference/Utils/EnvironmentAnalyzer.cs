@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,21 +18,42 @@ namespace Mobile.BuildTools.Utils
         public static IDictionary<string, string> GatherEnvironmentVariables(IBuildConfiguration buildConfiguration = null, bool includeManifest = false)
         {
             var env = new Dictionary<string, string>();
-            foreach(var key in Environment.GetEnvironmentVariables().Keys)
+            if(buildConfiguration is null)
             {
-                env.Add(key.ToString(), Environment.GetEnvironmentVariable(key.ToString()));
+                foreach (var key in Environment.GetEnvironmentVariables().Keys)
+                {
+                    env[key.ToString()] = Environment.GetEnvironmentVariable(key.ToString());
+                }
+
+                return env; 
             }
 
-            if (buildConfiguration is null)
-                return env;
+            env = GetEnvironmentVariables(buildConfiguration);
 
             var projectDirectory = buildConfiguration.ProjectDirectory;
             var solutionDirectory = buildConfiguration.SolutionDirectory;
             var configuration = buildConfiguration.BuildConfiguration;
-            LoadSecrets(Path.Combine(projectDirectory, Constants.SecretsJsonFileName), ref env);
-            LoadSecrets(Path.Combine(projectDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)), ref env);
-            LoadSecrets(Path.Combine(solutionDirectory, Constants.SecretsJsonFileName), ref env);
-            LoadSecrets(Path.Combine(solutionDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)), ref env);
+            new[]
+            {
+                // Legacy Support
+                Path.Combine(projectDirectory, Constants.SecretsJsonFileName),
+                Path.Combine(projectDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)),
+                Path.Combine(solutionDirectory, Constants.SecretsJsonFileName),
+                Path.Combine(solutionDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)),
+                // End Legacy Support
+
+                Path.Combine(projectDirectory, Constants.AppSettingsJsonFileName),
+                Path.Combine(projectDirectory, string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)),
+                Path.Combine(solutionDirectory, Constants.AppSettingsJsonFileName),
+                Path.Combine(solutionDirectory, string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)),
+            }.Distinct()
+            .ForEach(x =>
+            {
+                if (Path.GetFileName(x).StartsWith("secrets") && File.Exists(x))
+                    buildConfiguration.Logger.LogWarning("The secrets.json has been deprecated and will no longer be supported in a future version. Please migrate to appsettings.json");
+
+                LoadSecrets(x, ref env);
+            });
 
             if (includeManifest)
             {
@@ -50,6 +72,34 @@ namespace Mobile.BuildTools.Utils
                 }
 
                 UpdateVariables(defaultSettings, ref env);
+            }
+
+            return env;
+        }
+
+        private static Dictionary<string, string> GetEnvironmentVariables(IBuildConfiguration buildConfiguration)
+        {
+            var env = new Dictionary<string, string>();
+            foreach((var key, var value) in buildConfiguration.Configuration.Environment.Defaults)
+            {
+                env[key] = value;
+            }
+
+            if(buildConfiguration.Configuration.Environment.Configuration.ContainsKey(buildConfiguration.BuildConfiguration))
+            {
+                var configEnvironment = buildConfiguration.Configuration.Environment.Configuration[buildConfiguration.BuildConfiguration];
+                if(configEnvironment is not null)
+                {
+                    foreach((var key, var value) in configEnvironment)
+                    {
+                        env[key] = value;
+                    }
+                }
+            }
+
+            foreach (var key in Environment.GetEnvironmentVariables().Keys)
+            {
+                env[key.ToString()] = Environment.GetEnvironmentVariable(key.ToString());
             }
 
             return env;
@@ -225,10 +275,7 @@ namespace Mobile.BuildTools.Utils
             var secrets = JObject.Parse(json);
             foreach(var secret in secrets)
             {
-                if (!env.ContainsKey(secret.Key))
-                {
-                    env.Add(secret.Key, secret.Value.ToString());
-                }
+                env[secret.Key] = secret.Value.ToString();
             }
         }
     }

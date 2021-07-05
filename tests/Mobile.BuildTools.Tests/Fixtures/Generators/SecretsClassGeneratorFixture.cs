@@ -9,7 +9,8 @@ using System.Reflection;
 using Microsoft.CSharp;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Secrets;
-using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
+using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -45,7 +46,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = "TestValue";
             var pair = new KeyValuePair<string, string>(TestKey, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Properties = new List<ValueConfig>{ new ValueConfig { Name = TestKey, PropertyType = PropertyType.String } }
             };
@@ -65,7 +66,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = bool.TrueString;
             var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.Bool } }
@@ -86,7 +87,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = "2";
             var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.Int } }
@@ -107,7 +108,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = "2.2";
             var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.Double } }
@@ -128,7 +129,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var value = "TestValue";
             var pair = new KeyValuePair<string, string>(key, value);
             var generator = GetGenerator();
-            var config = new SecretsConfig()
+            var config = new SettingsConfig()
             {
                 Accessibility = accessibility,
                 Properties = new List<ValueConfig> { new ValueConfig { Name = TestKey, PropertyType = PropertyType.String } }
@@ -149,11 +150,15 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         {
             var buildConfig = GetConfiguration();
             var generator = GetGenerator(buildConfig);
-            generator.BaseNamespace = "Foo.Bar";
+            generator.RootNamespace = "Foo.Bar";
             buildConfig.ProjectDirectory = "file://Repos/AwesomeProject/Foo";
 
             string @namespace = null;
-            var exception = Record.Exception(() => @namespace = generator.GetNamespace(relativeNamespaceConfig));
+            var settingsConfig = new SettingsConfig
+            {
+                Namespace = relativeNamespaceConfig
+            };
+            var exception = Record.Exception(() => @namespace = generator.GetNamespace(settingsConfig));
             Assert.Null(exception);
 
             Assert.Equal(expectedNamespace, @namespace);
@@ -202,7 +207,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 PropertyType = type,
                 IsArray = isArray
             };
-            var secretsConfig = new SecretsConfig { Properties = new List<ValueConfig> { valueConfig } };
+            var secretsConfig = new SettingsConfig { Properties = new List<ValueConfig> { valueConfig } };
             var output = generator.ProcessSecret(pair, secretsConfig, false);
             Assert.Contains($"{typeDeclaration} {TestKey}", output);
             Assert.Contains(valueDeclaration, output);
@@ -274,7 +279,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 PropertyType = type,
                 IsArray = isArray
             };
-            var secretsConfig = new SecretsConfig { Properties = new List<ValueConfig> { valueConfig } };
+            var secretsConfig = new SettingsConfig { Properties = new List<ValueConfig> { valueConfig } };
             var output = generator.ProcessSecret(pair, secretsConfig, firstRun);
             Assert.Contains($"{typeDeclaration} {TestKey}", output);
             Assert.Contains(valueDeclaration, output);
@@ -321,20 +326,38 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         [InlineData("ushortArray.json", PropertyType.UShort, typeof(ushort[]), true)]
         public void GeneratesValidClass(string secretsFile, PropertyType propertyType, Type expectedType, bool isArray)
         {
+            var testDirectory = Path.Combine("Tests", nameof(SecretsClassGeneratorFixture), nameof(GeneratesValidClass), expectedType.Name);
+            if (Directory.Exists(testDirectory))
+                Directory.Delete(testDirectory, true);
+
+            Directory.CreateDirectory(testDirectory);
+            File.Copy(Path.Combine("Templates", "Secrets", secretsFile), Path.Combine(testDirectory, "secrets.json"));
+
             var config = GetConfiguration($"{nameof(GeneratesValidClass)}-{expectedType.Name}");
-            config.SecretsConfig.Properties.Add(new ValueConfig
+            config.SolutionDirectory = config.ProjectDirectory = testDirectory;
+            config.SettingsConfig = new List<SettingsConfig>{
+                new SettingsConfig
+                {
+                    Properties = new List<ValueConfig>
+                    {
+                        new ValueConfig
+                        {
+                            Name = "Prop",
+                            PropertyType = propertyType,
+                            IsArray = isArray
+                        }
+                    }
+                }
+            };
+            var generator = new SecretsClassGenerator(config)
             {
-                Name = "Prop",
-                PropertyType = propertyType,
-                IsArray = isArray
-            });
-            var generator = new SecretsClassGenerator(config, Path.Combine("Templates", "Secrets", secretsFile))
-            {
-                BaseNamespace = config.ProjectName
+                RootNamespace = config.ProjectName
             };
             generator.Execute();
 
-            var filePath = generator.Outputs.ItemSpec;
+            Assert.Single(generator.Outputs);
+
+            var filePath = generator.Outputs.First().ItemSpec;
             Assert.True(File.Exists(filePath));
 
             var csc = new CSharpCodeProvider();
@@ -344,7 +367,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
             Assert.Empty(results.Errors);
             Assert.NotNull(results.CompiledAssembly);
-            var secretsClassType = results.CompiledAssembly.DefinedTypes.FirstOrDefault(t => t.Name == config.SecretsConfig.ClassName);
+            var secretsClassType = results.CompiledAssembly.DefinedTypes.FirstOrDefault(t => t.Name == config.SettingsConfig.First().ClassName);
             Assert.NotNull(secretsClassType);
             var propField = secretsClassType.GetField("Prop", BindingFlags.NonPublic | BindingFlags.Static);
             Assert.NotNull(propField);
@@ -362,6 +385,124 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 Assert.Equal(3, array.Cast<object>().Count());
             }
         }
+
+        [Fact]
+        public void MergedSecretsContainsSingleElement()
+        {
+            var config = GetConfiguration();
+            var settingsConfig = new SettingsConfig
+            {
+                Properties = new List<ValueConfig>
+                {
+                    new ValueConfig
+                    {
+                        Name = "SampleProp",
+                        PropertyType = PropertyType.String,
+                        DefaultValue = "Hello World"
+                    }
+                }
+            };
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
+            config.SolutionDirectory = config.ProjectDirectory = projectDir;
+
+            var generator = new SecretsClassGenerator(config);
+            var mergedSecrets = generator.GetMergedSecrets(settingsConfig, out var hasErrors);
+
+            Assert.False(hasErrors);
+            Assert.Single(mergedSecrets);
+        }
+
+        [Fact]
+        public void GetsDefaultValueFromValueConfig()
+        {
+            var config = GetConfiguration();
+            var settingsConfig = new SettingsConfig
+            {
+                Properties = new List<ValueConfig>
+                {
+                    new ValueConfig
+                    {
+                        Name = "SampleProp",
+                        PropertyType = PropertyType.String,
+                        DefaultValue = "Hello World"
+                    }
+                }
+            };
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
+            config.SolutionDirectory = config.ProjectDirectory = projectDir;
+
+            var generator = new SecretsClassGenerator(config);
+            var mergedSecrets = generator.GetMergedSecrets(settingsConfig, out var hasErrors);
+
+            Assert.False(hasErrors);
+            Assert.True(mergedSecrets.ContainsKey("SampleProp"));
+            Assert.Equal("Hello World", mergedSecrets["SampleProp"]);
+        }
+
+        [Fact]
+        public void GetsValuesFromPrefixedHostEnvironmentVariable()
+        {
+            var config = GetConfiguration();
+            var settingsConfig = new SettingsConfig
+            {
+                Prefix = "SampleTest_",
+                Properties = new List<ValueConfig>
+                {
+                    new ValueConfig
+                    {
+                        Name = "SampleProp1",
+                        PropertyType = PropertyType.String
+                    }
+                }
+            };
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
+            config.SolutionDirectory = config.ProjectDirectory = projectDir;
+            Environment.SetEnvironmentVariable("SampleTest_SampleProp1", nameof(GetsValuesFromPrefixedHostEnvironmentVariable), EnvironmentVariableTarget.Process);
+
+            var generator = new SecretsClassGenerator(config);
+            var mergedSecrets = generator.GetMergedSecrets(settingsConfig, out var hasErrors);
+            Environment.SetEnvironmentVariable("SampleTest_SampleProp1", null, EnvironmentVariableTarget.Process);
+
+            Assert.False(hasErrors);
+            Assert.True(mergedSecrets.ContainsKey("SampleProp1"));
+            Assert.Equal(nameof(GetsValuesFromPrefixedHostEnvironmentVariable), mergedSecrets["SampleProp1"]);
+        }
+
+        [Fact]
+        public void GetsPrefixedValueOverExactMatch()
+        {
+            var config = GetConfiguration();
+            var settingsConfig = new SettingsConfig
+            {
+                Prefix = "SampleTest_",
+                Properties = new List<ValueConfig>
+                {
+                    new ValueConfig
+                    {
+                        Name = "SampleProp2",
+                        PropertyType = PropertyType.String
+                    }
+                }
+            };
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
+            config.SolutionDirectory = config.ProjectDirectory = projectDir;
+            Environment.SetEnvironmentVariable("SampleTest_SampleProp2", nameof(GetsValuesFromPrefixedHostEnvironmentVariable), EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("SampleProp2", "Wrong Value", EnvironmentVariableTarget.Process);
+
+            var generator = new SecretsClassGenerator(config);
+            var mergedSecrets = generator.GetMergedSecrets(settingsConfig, out var hasErrors);
+            Environment.SetEnvironmentVariable("SampleTest_SampleProp2", null, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("SampleProp2", null, EnvironmentVariableTarget.Process);
+
+            Assert.False(hasErrors);
+            Assert.True(mergedSecrets.ContainsKey("SampleProp2"));
+            Assert.Equal(nameof(GetsValuesFromPrefixedHostEnvironmentVariable), mergedSecrets["SampleProp2"]);
+        }
+
 
         public class SecretValue
         {

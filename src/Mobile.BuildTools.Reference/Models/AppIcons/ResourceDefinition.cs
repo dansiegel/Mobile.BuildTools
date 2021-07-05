@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -10,32 +11,39 @@ namespace Mobile.BuildTools.Models.AppIcons
 {
     public class ResourceDefinition : PlatformConfiguration
     {
-        [JsonProperty("$schema")]
+        [JsonProperty("$schema", NullValueHandling = NullValueHandling.Ignore)]
         public string Schema
         {
             get => "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json";
             set { }
         }
 
+        [Description("Specifies the Android specific configuration for the source image.")]
         [JsonProperty("android", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration Android { get; set; }
 
+        [Description("Specifies the configuration for all Apple targets if building for iOS, macOS, TVOS, WatchOS.")]
         [JsonProperty("apple", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration Apple { get; set; }
 
+        [Description("Specifies the iOS specific configuration for the source image.")]
         [JsonProperty("ios", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Properly named iOS")]
         public PlatformConfiguration iOS { get; set; }
 
+        [Description("Specifies the TVOS specific configuration for the source image.")]
         [JsonProperty("tvos", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration TVOS { get; set; }
 
+        [Description("Specifies the macOS specific configuration for the source image.")]
         [JsonProperty("macos", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration MacOS { get; set; }
 
+        [Description("Specifies the Tizen specific configuration for the source image.")]
         [JsonProperty("tizen", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration Tizen { get; set; }
 
+        [Description("Specifies the UWP specific configuration for the source image.")]
         [JsonProperty("uwp", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PlatformConfiguration UWP { get; set; }
 

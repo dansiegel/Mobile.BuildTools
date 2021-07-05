@@ -1,158 +1,782 @@
 {
   "definitions": {
-    "WatermarkConfiguration": {
-      "type": [ "object", "null" ],
-      "properties": {
-        "sourceFile": {
-          "type": [ "string", "null" ],
-          "description": "The name of the source file you want to overlay without an extension or folder path"
-        },
-        "colors": {
-          "type": [ "array", "null" ],
-          "items": {
-            "type": "string",
-            "description": "A Color Name such as Red, or OrangeRed... or a Hex String"
-          }
-        },
-        "position": {
-          "type": [ "string", "null" ],
-          "enum": [ "Top", "Bottom", "TopLeft", "TopRight", "BottomLeft", "BottomRight" ],
-          "default": "BottomRight"
-        },
-        "text": {
-          "type": [ "string", "null" ],
-          "description": "The text to be added to the banner. (i.e. Dev, Stage, Lite, Pro)"
-        },
-        "textColor": {
-          "type": [ "string", "null" ],
-          "description": "The color of the text"
-        },
-        "fontFamily": {
-          "type": [ "string", "null" ],
-          "description": "The name of a Font Family installed on the machine. This defaults to Arial"
-        },
-        "fontFile": {
-          "type": [ "string", "null" ],
-          "description": "The relative path to a font file to use."
-        },
-        "opacity": {
-          "type": [ "number", "null" ],
-          "description": "The opacity of the banner over your icon. This is 0.95 by default"
-        }
-      }
-    },
-    "ImageConfiguration": {
+    "BaseImageConfiguration": {
       "type": [
         "object",
         "null"
       ],
       "properties": {
         "ignore": {
-          "type": [ "boolean", "null" ],
+          "description": "Will ignore this image asset. This may be used to ignore an image for a specific platform or in general if using the image as a watermark for other images.",
+          "type": "boolean",
           "default": false
         },
         "name": {
-          "type": [ "string", "null" ],
-          "description": "Defines the name of the output image or iconset without an extension"
+          "description": "The name of the output image. This will default to the source image name.",
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "scale": {
-          "type": [ "number", "null" ],
-          "default": 1,
-          "description": "Sets the scale from size of the source image to the largest output image"
+          "description": "The scale factor to scale the largest output image based on the size of the input image.",
+          "type": "number",
+          "default": 1.0
         },
         "backgroundColor": {
-          "type": [ "string", "null" ],
-          "default": "#FFFFFF",
-          "description": "Sets a background color to use for a transparent image if desired"
+          "description": "A color that should be used to apply as a background for a transparent source image. This is particularly useful for app icons on iOS. By default the AppIcon on iOS will get a White background if the source is transparent and no value is specified here. This can be a hex value or name of a standard color.",
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "width": {
-          "type": [ "integer", "null" ],
-          "description": "Sets the desired width of the largest output image"
+          "description": "A specific override for the width of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "height": {
-          "type": [ "integer", "null" ],
-          "description": "Sets the desired height of the largest output image"
+          "description": "A specific override for the height of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "padFactor": {
-          "type": [ "number", "null" ],
-          "description": "If set will change the largest image output size by changing the canvas size by the set factor. This should be greater than 1, like 1.5."
+          "description": "The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.",
+          "type": [
+            "number",
+            "null"
+          ]
         },
         "padColor": {
-          "type": [ "string", "null" ],
-          "description": "If set this will set a color to use on the background when adding a pad to your image"
-        },
-        "resourceType": {
-          "type": [ "string", "null" ],
-          "enum": [ "Default", "Drawable", "Mipmap", "AllSquareTiles", "SquareTile", "SmallTile", "WideTile", "SplashScreen" ],
-          "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this will by default generate a standard image asset, or you can specify other app resource types."
+          "description": "This will set the background color for the padded area to the specified color. This can be a hex value or name of standard colors.",
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "watermark": {
           "$ref": "#/definitions/WatermarkConfiguration"
+        },
+        "resourceType": {
+          "description": "Specifies the output resource type for the image. This typically should be used within a platform specific configuration.",
+          "type": "string",
+          "enum": [
+            "Default",
+            "Drawable",
+            "Mipmap",
+            "AllSquareTiles",
+            "SquareTile",
+            "SmallTile",
+            "SplashScreen",
+            "WideTile"
+          ]
         }
       }
     },
     "PlatformConfiguration": {
+      "description": "Specifies the Android specific configuration for the source image.",
       "type": [
         "object",
         "null"
       ],
       "properties": {
+        "additionalOutputs": {
+          "description": "Provides additional resource outputs for the specified source image.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/BaseImageConfiguration"
+          }
+        },
         "ignore": {
-          "type": [ "boolean", "null" ],
+          "description": "Will ignore this image asset. This may be used to ignore an image for a specific platform or in general if using the image as a watermark for other images.",
+          "type": "boolean",
           "default": false
         },
         "name": {
-          "type": [ "string", "null" ],
-          "description": "Defines the name of the output image or iconset without an extension"
+          "description": "The name of the output image. This will default to the source image name.",
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "scale": {
-          "type": [ "number", "null" ],
-          "default": 1,
-          "description": "Sets the scale from size of the source image to the largest output image"
+          "description": "The scale factor to scale the largest output image based on the size of the input image.",
+          "type": "number",
+          "default": 1.0
         },
         "backgroundColor": {
-          "type": [ "string", "null" ],
-          "default": "#FFFFFF",
-          "description": "Sets a background color to use for a transparent image if desired"
+          "description": "A color that should be used to apply as a background for a transparent source image. This is particularly useful for app icons on iOS. By default the AppIcon on iOS will get a White background if the source is transparent and no value is specified here. This can be a hex value or name of a standard color.",
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "width": {
-          "type": [ "integer", "null" ],
-          "description": "Sets the desired width of the largest output image"
+          "description": "A specific override for the width of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "height": {
-          "type": [ "integer", "null" ],
-          "description": "Sets the desired height of the largest output image"
+          "description": "A specific override for the height of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "padFactor": {
-          "type": [ "number", "null" ],
-          "description": "If set will change the largest image output size by changing the canvas size by the set factor. This should be greater than 1, like 1.5."
+          "description": "The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.",
+          "type": [
+            "number",
+            "null"
+          ]
         },
         "padColor": {
-          "type": [ "string", "null" ],
-          "description": "If set this will set a color to use on the background when adding a pad to your image"
-        },
-        "resourceType": {
-          "type": [ "string", "null" ],
-          "enum": [ "Default", "Drawable", "Mipmap", "AllSquareTiles", "SquareTile", "SmallTile", "WideTile", "SplashScreen" ],
-          "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this will by default generate a standard image asset, or you can specify other app resource types."
+          "description": "This will set the background color for the padded area to the specified color. This can be a hex value or name of standard colors.",
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "watermark": {
-          "$ref": "#/definitions/WatermarkConfiguration",
-          "description": "A watermark to overlay on the output image"
+          "$ref": "#/definitions/WatermarkConfiguration"
         },
+        "resourceType": {
+          "description": "Specifies the output resource type for the image. This typically should be used within a platform specific configuration.",
+          "type": "string",
+          "enum": [
+            "Default",
+            "Drawable",
+            "Mipmap",
+            "AllSquareTiles",
+            "SquareTile",
+            "SmallTile",
+            "SplashScreen",
+            "WideTile"
+          ]
+        }
+      }
+    },
+    "PlatformConfiguration-1": {
+      "description": "Specifies the configuration for all Apple targets if building for iOS, macOS, TVOS, WatchOS.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
         "additionalOutputs": {
-          "type": [ "array", "null" ],
+          "description": "Provides additional resource outputs for the specified source image.",
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
-            "$ref": "#/definitions/ImageConfiguration"
-          },
-          "description": "Optional additional copies of the input image"
+            "$ref": "#/definitions/BaseImageConfiguration"
+          }
+        },
+        "ignore": {
+          "description": "Will ignore this image asset. This may be used to ignore an image for a specific platform or in general if using the image as a watermark for other images.",
+          "type": "boolean",
+          "default": false
+        },
+        "name": {
+          "description": "The name of the output image. This will default to the source image name.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scale": {
+          "description": "The scale factor to scale the largest output image based on the size of the input image.",
+          "type": "number",
+          "default": 1.0
+        },
+        "backgroundColor": {
+          "description": "A color that should be used to apply as a background for a transparent source image. This is particularly useful for app icons on iOS. By default the AppIcon on iOS will get a White background if the source is transparent and no value is specified here. This can be a hex value or name of a standard color.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "description": "A specific override for the width of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "height": {
+          "description": "A specific override for the height of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "padFactor": {
+          "description": "The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "padColor": {
+          "description": "This will set the background color for the padded area to the specified color. This can be a hex value or name of standard colors.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "watermark": {
+          "$ref": "#/definitions/WatermarkConfiguration"
+        },
+        "resourceType": {
+          "description": "Specifies the output resource type for the image. This typically should be used within a platform specific configuration.",
+          "type": "string",
+          "enum": [
+            "Default",
+            "Drawable",
+            "Mipmap",
+            "AllSquareTiles",
+            "SquareTile",
+            "SmallTile",
+            "SplashScreen",
+            "WideTile"
+          ]
+        }
+      }
+    },
+    "PlatformConfiguration-2": {
+      "description": "Specifies the iOS specific configuration for the source image.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "additionalOutputs": {
+          "description": "Provides additional resource outputs for the specified source image.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/BaseImageConfiguration"
+          }
+        },
+        "ignore": {
+          "description": "Will ignore this image asset. This may be used to ignore an image for a specific platform or in general if using the image as a watermark for other images.",
+          "type": "boolean",
+          "default": false
+        },
+        "name": {
+          "description": "The name of the output image. This will default to the source image name.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scale": {
+          "description": "The scale factor to scale the largest output image based on the size of the input image.",
+          "type": "number",
+          "default": 1.0
+        },
+        "backgroundColor": {
+          "description": "A color that should be used to apply as a background for a transparent source image. This is particularly useful for app icons on iOS. By default the AppIcon on iOS will get a White background if the source is transparent and no value is specified here. This can be a hex value or name of a standard color.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "description": "A specific override for the width of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "height": {
+          "description": "A specific override for the height of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "padFactor": {
+          "description": "The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "padColor": {
+          "description": "This will set the background color for the padded area to the specified color. This can be a hex value or name of standard colors.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "watermark": {
+          "$ref": "#/definitions/WatermarkConfiguration"
+        },
+        "resourceType": {
+          "description": "Specifies the output resource type for the image. This typically should be used within a platform specific configuration.",
+          "type": "string",
+          "enum": [
+            "Default",
+            "Drawable",
+            "Mipmap",
+            "AllSquareTiles",
+            "SquareTile",
+            "SmallTile",
+            "SplashScreen",
+            "WideTile"
+          ]
+        }
+      }
+    },
+    "PlatformConfiguration-3": {
+      "description": "Specifies the TVOS specific configuration for the source image.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "additionalOutputs": {
+          "description": "Provides additional resource outputs for the specified source image.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/BaseImageConfiguration"
+          }
+        },
+        "ignore": {
+          "description": "Will ignore this image asset. This may be used to ignore an image for a specific platform or in general if using the image as a watermark for other images.",
+          "type": "boolean",
+          "default": false
+        },
+        "name": {
+          "description": "The name of the output image. This will default to the source image name.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scale": {
+          "description": "The scale factor to scale the largest output image based on the size of the input image.",
+          "type": "number",
+          "default": 1.0
+        },
+        "backgroundColor": {
+          "description": "A color that should be used to apply as a background for a transparent source image. This is particularly useful for app icons on iOS. By default the AppIcon on iOS will get a White background if the source is transparent and no value is specified here. This can be a hex value or name of a standard color.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "description": "A specific override for the width of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "height": {
+          "description": "A specific override for the height of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "padFactor": {
+          "description": "The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "padColor": {
+          "description": "This will set the background color for the padded area to the specified color. This can be a hex value or name of standard colors.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "watermark": {
+          "$ref": "#/definitions/WatermarkConfiguration"
+        },
+        "resourceType": {
+          "description": "Specifies the output resource type for the image. This typically should be used within a platform specific configuration.",
+          "type": "string",
+          "enum": [
+            "Default",
+            "Drawable",
+            "Mipmap",
+            "AllSquareTiles",
+            "SquareTile",
+            "SmallTile",
+            "SplashScreen",
+            "WideTile"
+          ]
+        }
+      }
+    },
+    "PlatformConfiguration-4": {
+      "description": "Specifies the macOS specific configuration for the source image.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "additionalOutputs": {
+          "description": "Provides additional resource outputs for the specified source image.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/BaseImageConfiguration"
+          }
+        },
+        "ignore": {
+          "description": "Will ignore this image asset. This may be used to ignore an image for a specific platform or in general if using the image as a watermark for other images.",
+          "type": "boolean",
+          "default": false
+        },
+        "name": {
+          "description": "The name of the output image. This will default to the source image name.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scale": {
+          "description": "The scale factor to scale the largest output image based on the size of the input image.",
+          "type": "number",
+          "default": 1.0
+        },
+        "backgroundColor": {
+          "description": "A color that should be used to apply as a background for a transparent source image. This is particularly useful for app icons on iOS. By default the AppIcon on iOS will get a White background if the source is transparent and no value is specified here. This can be a hex value or name of a standard color.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "description": "A specific override for the width of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "height": {
+          "description": "A specific override for the height of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "padFactor": {
+          "description": "The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "padColor": {
+          "description": "This will set the background color for the padded area to the specified color. This can be a hex value or name of standard colors.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "watermark": {
+          "$ref": "#/definitions/WatermarkConfiguration"
+        },
+        "resourceType": {
+          "description": "Specifies the output resource type for the image. This typically should be used within a platform specific configuration.",
+          "type": "string",
+          "enum": [
+            "Default",
+            "Drawable",
+            "Mipmap",
+            "AllSquareTiles",
+            "SquareTile",
+            "SmallTile",
+            "SplashScreen",
+            "WideTile"
+          ]
+        }
+      }
+    },
+    "PlatformConfiguration-5": {
+      "description": "Specifies the Tizen specific configuration for the source image.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "additionalOutputs": {
+          "description": "Provides additional resource outputs for the specified source image.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/BaseImageConfiguration"
+          }
+        },
+        "ignore": {
+          "description": "Will ignore this image asset. This may be used to ignore an image for a specific platform or in general if using the image as a watermark for other images.",
+          "type": "boolean",
+          "default": false
+        },
+        "name": {
+          "description": "The name of the output image. This will default to the source image name.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scale": {
+          "description": "The scale factor to scale the largest output image based on the size of the input image.",
+          "type": "number",
+          "default": 1.0
+        },
+        "backgroundColor": {
+          "description": "A color that should be used to apply as a background for a transparent source image. This is particularly useful for app icons on iOS. By default the AppIcon on iOS will get a White background if the source is transparent and no value is specified here. This can be a hex value or name of a standard color.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "description": "A specific override for the width of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "height": {
+          "description": "A specific override for the height of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "padFactor": {
+          "description": "The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "padColor": {
+          "description": "This will set the background color for the padded area to the specified color. This can be a hex value or name of standard colors.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "watermark": {
+          "$ref": "#/definitions/WatermarkConfiguration"
+        },
+        "resourceType": {
+          "description": "Specifies the output resource type for the image. This typically should be used within a platform specific configuration.",
+          "type": "string",
+          "enum": [
+            "Default",
+            "Drawable",
+            "Mipmap",
+            "AllSquareTiles",
+            "SquareTile",
+            "SmallTile",
+            "SplashScreen",
+            "WideTile"
+          ]
+        }
+      }
+    },
+    "PlatformConfiguration-6": {
+      "description": "Specifies the UWP specific configuration for the source image.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "additionalOutputs": {
+          "description": "Provides additional resource outputs for the specified source image.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/BaseImageConfiguration"
+          }
+        },
+        "ignore": {
+          "description": "Will ignore this image asset. This may be used to ignore an image for a specific platform or in general if using the image as a watermark for other images.",
+          "type": "boolean",
+          "default": false
+        },
+        "name": {
+          "description": "The name of the output image. This will default to the source image name.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scale": {
+          "description": "The scale factor to scale the largest output image based on the size of the input image.",
+          "type": "number",
+          "default": 1.0
+        },
+        "backgroundColor": {
+          "description": "A color that should be used to apply as a background for a transparent source image. This is particularly useful for app icons on iOS. By default the AppIcon on iOS will get a White background if the source is transparent and no value is specified here. This can be a hex value or name of a standard color.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "description": "A specific override for the width of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "height": {
+          "description": "A specific override for the height of the largest output image.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "padFactor": {
+          "description": "The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "padColor": {
+          "description": "This will set the background color for the padded area to the specified color. This can be a hex value or name of standard colors.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "watermark": {
+          "$ref": "#/definitions/WatermarkConfiguration"
+        },
+        "resourceType": {
+          "description": "Specifies the output resource type for the image. This typically should be used within a platform specific configuration.",
+          "type": "string",
+          "enum": [
+            "Default",
+            "Drawable",
+            "Mipmap",
+            "AllSquareTiles",
+            "SquareTile",
+            "SmallTile",
+            "SplashScreen",
+            "WideTile"
+          ]
+        }
+      }
+    },
+    "WatermarkConfiguration": {
+      "description": "Specifies a configuration for adding a watermark or banner on a specified image.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "sourceFile": {
+          "description": "Specifies the watermark source file name.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "colors": {
+          "description": "Specifies the color or colors (for gradients) that should be used for the automatically generated Banner style watermark.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "position": {
+          "description": "Specifies the watermark position.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "Top",
+            "Bottom",
+            "TopLeft",
+            "TopRight",
+            "BottomLeft",
+            "BottomRight"
+          ]
+        },
+        "text": {
+          "description": "Specifies the text for the watermark. For example you may wish to have a banner such as 'Dev' or 'Stage' to signify which environment the app was built for. Other scenarios could include 'Free', 'Pro', 'Lite', etc.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "textColor": {
+          "description": "The hex or name of the color to use for the text.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fontFamily": {
+          "description": "The Font Family name if you want to use a custom font.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fontFile": {
+          "description": "Have a custom font you want to use, you can provide the file path to the Font File.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "opacity": {
+          "description": "The opacity to use for the Watermark or Banner.",
+          "type": [
+            "number",
+            "null"
+          ]
         }
       }
     }
   },
   "type": "object",
   "properties": {
-    "watermarkFile": {
+    "$schema": {
       "type": [
         "string",
         "null"
@@ -162,72 +786,101 @@
       "$ref": "#/definitions/PlatformConfiguration"
     },
     "apple": {
-      "$ref": "#/definitions/PlatformConfiguration"
+      "$ref": "#/definitions/PlatformConfiguration-1"
     },
     "ios": {
-      "$ref": "#/definitions/PlatformConfiguration"
+      "$ref": "#/definitions/PlatformConfiguration-2"
     },
     "tvos": {
-      "$ref": "#/definitions/PlatformConfiguration"
+      "$ref": "#/definitions/PlatformConfiguration-3"
     },
     "macos": {
-      "$ref": "#/definitions/PlatformConfiguration"
+      "$ref": "#/definitions/PlatformConfiguration-4"
     },
     "tizen": {
-      "$ref": "#/definitions/PlatformConfiguration"
+      "$ref": "#/definitions/PlatformConfiguration-5"
     },
     "uwp": {
-      "$ref": "#/definitions/PlatformConfiguration"
+      "$ref": "#/definitions/PlatformConfiguration-6"
+    },
+    "additionalOutputs": {
+      "description": "Provides additional resource outputs for the specified source image.",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/BaseImageConfiguration"
+      }
     },
     "ignore": {
-      "type": [ "boolean", "null" ],
+      "description": "Will ignore this image asset. This may be used to ignore an image for a specific platform or in general if using the image as a watermark for other images.",
+      "type": "boolean",
       "default": false
     },
     "name": {
-      "type": [ "string", "null" ],
-      "description": "Defines the name of the output image or iconset without an extension"
+      "description": "The name of the output image. This will default to the source image name.",
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "scale": {
-      "type": [ "number", "null" ],
-      "default": 1,
-      "description": "Sets the scale from size of the source image to the largest output image"
+      "description": "The scale factor to scale the largest output image based on the size of the input image.",
+      "type": "number",
+      "default": 1.0
     },
     "backgroundColor": {
-      "type": [ "string", "null" ],
-      "default": "#FFFFFF",
-      "description": "Sets a background color to use for a transparent image if desired"
+      "description": "A color that should be used to apply as a background for a transparent source image. This is particularly useful for app icons on iOS. By default the AppIcon on iOS will get a White background if the source is transparent and no value is specified here. This can be a hex value or name of a standard color.",
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "width": {
-      "type": [ "integer", "null" ],
-      "description": "Sets the desired width of the largest output image"
+      "description": "A specific override for the width of the largest output image.",
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "height": {
-      "type": [ "integer", "null" ],
-      "description": "Sets the desired height of the largest output image"
+      "description": "A specific override for the height of the largest output image.",
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "padFactor": {
-      "type": [ "number", "null" ],
-      "description": "If set will change the largest image output size by changing the canvas size by the set factor. This should be greater than 1, like 1.5."
+      "description": "The padding factor will resize the canvas size by the specified factor. For example a factor of 1.5 will increase the overall size of the canvas. This will then be resized back to the original source image size and scaled appropriately. This is useful for Round Icons on Android.",
+      "type": [
+        "number",
+        "null"
+      ]
     },
     "padColor": {
-      "type": [ "string", "null" ],
-      "description": "If set this will set a color to use on the background when adding a pad to your image"
-    },
-    "resourceType": {
-      "type": [ "string", "null" ],
-      "enum": [ "Default", "Drawable", "Mipmap", "AllSquareTiles", "SquareTile", "SmallTile", "WideTile", "SplashScreen" ],
-      "description": "This is used by Android and UWP. This will be Drawable by default on Android. On UWP this will by default generate a standard image asset, or you can specify other app resource types."
+      "description": "This will set the background color for the padded area to the specified color. This can be a hex value or name of standard colors.",
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "watermark": {
-      "$ref": "#/definitions/WatermarkConfiguration",
-      "description": "A watermark to overlay on the output image"
+      "$ref": "#/definitions/WatermarkConfiguration"
     },
-    "additionalOutputs": {
-      "type": [ "array", "null" ],
-      "items": {
-        "$ref": "#/definitions/ImageConfiguration"
-      },
-      "description": "Optional additional copies of the input image"
+    "resourceType": {
+      "description": "Specifies the output resource type for the image. This typically should be used within a platform specific configuration.",
+      "type": "string",
+      "enum": [
+        "Default",
+        "Drawable",
+        "Mipmap",
+        "AllSquareTiles",
+        "SquareTile",
+        "SmallTile",
+        "SplashScreen",
+        "WideTile"
+      ]
     }
   }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 
-namespace Mobile.BuildTools.Models.Secrets
+namespace Mobile.BuildTools.Models.Settings
 {
     public static class PropertyTypeExtensions
     {

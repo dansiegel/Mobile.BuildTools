@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json.Schema.Generation;
 
-namespace Mobile.BuildTools.Models
+namespace Mobile.BuildTools.Models.Settings
 {
     [JSchemaGenerationProvider(typeof(StringEnumGenerationProvider))]
-    public enum VersionEnvironment
+    public enum Accessibility
     {
-        All,
-        BuildHost,
-        Local
+        Internal,
+        Public
     }
 }

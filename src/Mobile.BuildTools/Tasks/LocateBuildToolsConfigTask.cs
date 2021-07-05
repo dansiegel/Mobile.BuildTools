@@ -1,10 +1,16 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Models;
+using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
+using Newtonsoft.Json.Schema.Generation;
 
 namespace Mobile.BuildTools.Tasks
 {
@@ -60,6 +66,8 @@ namespace Mobile.BuildTools.Tasks
 //#endif
             LocateSolution();
             BuildToolsConfigFilePath = ConfigHelper.GetConfigurationPath(ProjectDir);
+            MigrateSecretsToSettings();
+            ValidateConfigSchema();
 
             var crossTargetingProject = IsCrossTargeting();
             var platform = TargetFrameworkIdentifier.GetTargetPlatform();
@@ -68,7 +76,7 @@ namespace Mobile.BuildTools.Tasks
 
             // Only run these tasks for Android and iOS projects if they're not explicitly disabled
             EnableArtifactCopy = !crossTargetingProject && IsEnabled(configuration?.ArtifactCopy) && isPlatformHead;
-            EnableAutomaticVersioning = !crossTargetingProject && IsEnabled(configuration?.AutomaticVersioning) && isPlatformHead;
+            EnableAutomaticVersioning = !crossTargetingProject && configuration.AutomaticVersioning is not null && configuration.AutomaticVersioning.Behavior != VersionBehavior.Off && isPlatformHead;
             EnableImageProcessing = !crossTargetingProject && IsEnabled(configuration?.Images) && (platform == Platform.iOS || platform == Platform.Android);
             EnableTemplateManifests = !crossTargetingProject && IsEnabled(configuration?.Manifests) && isPlatformHead;
             EnableReleaseNotes = IsEnabled(configuration?.ReleaseNotes) && isPlatformHead && EnvironmentAnalyzer.IsInGitRepo(ProjectDir);
@@ -82,11 +90,80 @@ namespace Mobile.BuildTools.Tasks
             return true;
         }
 
+        internal void ValidateConfigSchema()
+        {
+            try
+            {
+                var path = Path.Combine(BuildToolsConfigFilePath, Constants.BuildToolsConfigFileName);
+                Log.LogMessage($"Validating buildtools.json at the path: {path}");
+                var generator = new JSchemaGenerator();
+                var schema = generator.Generate(typeof(BuildToolsConfig));
+                var config = JObject.Parse(File.ReadAllText(path));
+                if (!config.IsValid(schema, out IList<string> errorMessages))
+                {
+                    foreach(var error in errorMessages)
+                    {
+                        Log.LogError("Invalid buildtools.json schema detected...");
+                        Log.LogError(error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError("There was an unhandled exception while attempting to validate the buildtools.json.");
+                Log.LogError(ex.Message);
+            }
+        }
+
+#pragma warning disable CS0612 // Project Secrets is obsolete. This converts to the new AppSettings.
+        internal void MigrateSecretsToSettings()
+        {
+            var config =  ConfigHelper.GetConfig(BuildToolsConfigFilePath, skipActivation: true);
+            if (config.AppSettings is null)
+                config.AppSettings = new Dictionary<string, IEnumerable<SettingsConfig>>();
+
+            if (config.ProjectSecrets is not null && config.ProjectSecrets.Any())
+            {
+                config.ProjectSecrets.ForEach(x =>
+                {
+                    var projectName = x.Key;
+                    var secretsConfig = x.Value;
+                    var settings = new SettingsConfig
+                    {
+                        Accessibility = secretsConfig.Accessibility,
+                        ClassName = secretsConfig.ClassName ?? "Secrets",
+                        Delimiter = secretsConfig.Delimiter,
+                        Namespace = secretsConfig.Namespace,
+                        Prefix = secretsConfig.Prefix,
+                        Properties = secretsConfig.Properties,
+                        RootNamespace = secretsConfig.RootNamespace
+                    };
+
+                    if(config.AppSettings.ContainsKey(projectName))
+                    {
+                        if(!config.AppSettings[projectName].Any(x => x.ClassName == settings.ClassName))
+                        {
+                            var allSettings = new List<SettingsConfig>(config.AppSettings[projectName]);
+                            allSettings.Add(settings);
+                            config.AppSettings[projectName] = allSettings;
+                        }
+                    }
+                    else
+                    {
+                        config.AppSettings[projectName] = new[] { settings };
+                    }
+                });
+                config.ProjectSecrets = null;
+                ConfigHelper.SaveConfig(config, BuildToolsConfigFilePath);
+            }
+        }
+#pragma warning restore CS0612 // Project Secrets is obsolete. This converts to the new AppSettings.
+
         public static bool IsEnabled(ToolItem item)
         {
             if (item is null) return true;
 
-            return !item.Disable;
+            return !(item.Disable ?? false);
         }
 
         private bool IsCrossTargeting()
@@ -102,16 +179,7 @@ namespace Mobile.BuildTools.Tasks
 
         private bool ShouldEnableSecrets(BuildToolsConfig config)
         {
-            var secretsFileExists = File.Exists(Path.Combine(ProjectDir, Constants.SecretsJsonFileName));
-            var secretsConfig = ConfigHelper.GetSecretsConfig(ProjectName, ProjectDir, config);
-
-            if(secretsConfig is null)
-            {
-                // Intentionally disable this condition in CI incase somebody checked in the secrets.json
-                return secretsFileExists && !CIBuildEnvironmentUtils.IsBuildHost;
-            }
-
-            return !secretsConfig.Disable;
+            return config.AppSettings is not null && config.AppSettings.ContainsKey(ProjectName) && config.AppSettings[ProjectName].Any();
         }
 
         private void LocateSolution()

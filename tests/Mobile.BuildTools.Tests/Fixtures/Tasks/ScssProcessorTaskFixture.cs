@@ -9,6 +9,12 @@ using Xunit.Abstractions;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Tasks
 {
+    public class Scss { }
+
+    [CollectionDefinition(nameof(Scss), DisableParallelization = true)]
+    public class ScssCollection : ICollectionFixture<Scss> { }
+
+    [Collection(nameof(Scss))]
     public class ScssProcessorTaskFixture
     {
         private const string OutputFolder = "Generated";

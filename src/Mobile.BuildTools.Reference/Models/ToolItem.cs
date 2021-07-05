@@ -5,9 +5,9 @@ namespace Mobile.BuildTools.Models
 {
     public abstract class ToolItem
     {
-        [Description("Disables this Mobile.Build.Tools Task")]
+        [Description("Disables this Mobile.BuildTools Task")]
         [DefaultValue(false)]
-        [JsonProperty("disable")]
-        public bool Disable { get; set; }
+        [JsonProperty("disable", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Disable { get; set; }
     }
 }

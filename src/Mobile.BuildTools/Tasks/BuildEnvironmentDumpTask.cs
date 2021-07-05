@@ -3,7 +3,7 @@ using System.Linq;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
-using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
@@ -59,7 +59,7 @@ namespace Mobile.BuildTools.Tasks
             public BuildToolsConfig Configuration { get; }
             public Platform Platform { get; }
 
-            public SecretsConfig GetSecretsConfig()
+            public IEnumerable<SettingsConfig> GetSettingsConfig()
             {
                 throw new System.NotImplementedException();
             }

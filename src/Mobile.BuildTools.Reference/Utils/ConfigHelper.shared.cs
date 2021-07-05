@@ -50,7 +50,7 @@ namespace Mobile.BuildTools.Utils
             return File.Exists(filePath);
         }
 
-        public static BuildToolsConfig GetConfig(string path)
+        public static BuildToolsConfig GetConfig(string path, bool skipActivation = false)
         {
             var filePath = GetConfigurationPath(path);
             var configurationDirectoryPath = filePath;
@@ -71,6 +71,8 @@ namespace Mobile.BuildTools.Utils
             }
 
             var config = JsonConvert.DeserializeObject<BuildToolsConfig>(json, GetSerializerSettings());
+            if (skipActivation)
+                return config;
 
             var props = typeof(BuildToolsConfig).GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.PropertyType != typeof(bool) && x.PropertyType != typeof(string));

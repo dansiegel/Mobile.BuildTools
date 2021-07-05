@@ -6,11 +6,11 @@ namespace Mobile.BuildTools.Models
     public class XamarinCss : ToolItem
     {
         [DefaultValue(false)]
-        [JsonProperty("minify")]
+        [JsonProperty("minify", NullValueHandling = NullValueHandling.Ignore)]
         public bool Minify { get; set; }
 
         [DefaultValue(false)]
-        [JsonProperty("bundleScss")]
+        [JsonProperty("bundleScss", NullValueHandling = NullValueHandling.Ignore)]
         public bool BundleScss { get; set; }
     }
 }

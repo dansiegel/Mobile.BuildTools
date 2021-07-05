@@ -66,11 +66,11 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         }
 
         [Fact]
-        public void ProjectSecretsIsNotNull()
+        public void AppSettingsIsNotNull()
         {
             var config = CreateConfig();
 
-            Assert.NotNull(config.ProjectSecrets);
+            Assert.NotNull(config.AppSettings);
         }
 
         [Fact]

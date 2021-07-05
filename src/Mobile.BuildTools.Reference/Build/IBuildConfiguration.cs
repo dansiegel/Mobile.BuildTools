@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Mobile.BuildTools.Logging;
-using Mobile.BuildTools.Models.Secrets;
 using Mobile.BuildTools.Models;
+using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Build
@@ -30,6 +30,6 @@ namespace Mobile.BuildTools.Build
 
         void SaveConfiguration();
 
-        SecretsConfig GetSecretsConfig();
+        IEnumerable<SettingsConfig> GetSettingsConfig();
     }
 }
