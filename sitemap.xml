@@ -2,147 +2,147 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>http://mobilebuildtools.com/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/configuration/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/credits/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/faq/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/maui/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/release-notes/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/appendix/aps/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/appendix/json-schemas/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/appendix/msbuild-props/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/appendix/upgrade/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/config/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/config/app.config/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/config/app.config/in-code/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/config/app.config/transformations/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/config/secrets/basics/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/config/secrets/configuration/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/continuous-integration/platforms/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/continuous-integration/setup/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/google/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/images/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/images/build-customization/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/images/built-in-templates/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/images/configuring-images/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/manifests/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/manifests/versioning/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/scss-to-css/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/scss-to-css/css-notes/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/scss-to-css/in-code/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://mobilebuildtools.com/scss-to-css/properties/</loc>
-         <lastmod>2021-07-01</lastmod>
+         <lastmod>2021-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
