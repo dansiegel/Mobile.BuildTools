@@ -97,7 +97,7 @@ namespace Mobile.BuildTools.Tasks
                 var generator = new JSchemaGenerator();
                 var schema = generator.Generate(typeof(BuildToolsConfig));
                 var config = JObject.Parse(File.ReadAllText(BuildToolsConfigFilePath));
-                if(!config.IsValid(schema, out IList<string> errorMessages))
+                if (!config.IsValid(schema, out IList<string> errorMessages))
                 {
                     foreach(var error in errorMessages)
                     {

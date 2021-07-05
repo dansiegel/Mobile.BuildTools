@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Schema.Generation;
 
 namespace Mobile.BuildTools.Models
 {
@@ -12,6 +13,7 @@ namespace Mobile.BuildTools.Models
         public AppConfigStrategy Strategy { get; set; }
     }
 
+    [JSchemaGenerationProvider(typeof(StringEnumGenerationProvider))]
     public enum AppConfigStrategy
     {
         TransformOnly,
