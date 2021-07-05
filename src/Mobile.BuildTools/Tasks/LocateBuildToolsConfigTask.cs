@@ -118,7 +118,9 @@ namespace Mobile.BuildTools.Tasks
 #pragma warning disable CS0612 // Project Secrets is obsolete. This converts to the new AppSettings.
         internal void MigrateSecretsToSettings()
         {
-            var config = ConfigHelper.GetConfig(BuildToolsConfigFilePath);
+            var config =  ConfigHelper.GetConfig(BuildToolsConfigFilePath, skipActivation: true);
+            if (config.AppSettings is null)
+                config.AppSettings = new Dictionary<string, IEnumerable<SettingsConfig>>();
 
             if (config.ProjectSecrets is not null && config.ProjectSecrets.Any())
             {
