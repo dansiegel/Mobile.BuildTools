@@ -67,7 +67,7 @@ namespace Mobile.BuildTools.Tasks
             LocateSolution();
             BuildToolsConfigFilePath = ConfigHelper.GetConfigurationPath(ProjectDir);
             MigrateSecretsToSettings();
-            ValidateConfigSchema();
+            //ValidateConfigSchema();
 
             var crossTargetingProject = IsCrossTargeting();
             var platform = TargetFrameworkIdentifier.GetTargetPlatform();
@@ -89,7 +89,7 @@ namespace Mobile.BuildTools.Tasks
 
             return true;
         }
-
+        
         internal void ValidateConfigSchema()
         {
             try
