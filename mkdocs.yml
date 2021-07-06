@@ -68,9 +68,10 @@ nav:
     - Getting Started: index.md
     - App Configuration:
       - Intro: config/index.md
-      - Secrets:
-        - Basics: config/secrets/basics.md
-        - Configuration: config/secrets/configuration.md
+      - App Settings:
+        - Intro: config/appsettings/index.md
+        - Configuration: config/appsettings/configuration.md
+        - F.A.Q.: config/appsettings/faq.md
       - App.config:
         - Intro: config/app.config/index.md
         - Transformations: config/app.config/transformations.md

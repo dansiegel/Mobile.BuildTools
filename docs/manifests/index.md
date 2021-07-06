@@ -36,3 +36,13 @@ We can now leave our Info.plist or AndroidManifest.xml checked into source contr
 
 !!! info Info
     In order to work with the tokenized manifest locally without having to update your Environment Variables on your developer machine, you can simply drop in a `manifest.json` in the Project root with the Key/Value pairs for the Mobile.BuildTools to use. If using this file, be sure to add it to the .gitignore so as to not accidentally check it into source control.
+
+## Setting the Variables
+
+The Mobile.BuildTools attempts to locate the values for your Manifest tokens through several sources. In the event that a variable key is duplicated, the Mobile.BuildTools has a precedence that the last one in wins. Variables are loaded from the following sources:
+
+1. buildtools.json Environment Defaults
+1. buildtools.json Environment Configuration (i.e. Debug, Release)
+1. System Environment
+1. Recursively load legacy `secrets.json` from the Project directory to the Solution directory
+1. Recursively load `appsettings.json` from the Project directory to the Solution directory
