@@ -12,7 +12,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
     public class AppleImageCollectionGeneratorFixture : ImageCollectionGeneratorFixture
     {
         public AppleImageCollectionGeneratorFixture(ITestOutputHelper testOutputHelper)
-            : base(Path.Combine("Templates", "Apple"), testOutputHelper)
+            : base(testOutputHelper)
         {
             PlatformOffset = 1;
         }

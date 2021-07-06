@@ -12,28 +12,47 @@ namespace Mobile.BuildTools.Tests.Fixtures
         protected string ProjectDirectory { get; }
 
         protected FixtureBase(ITestOutputHelper testOutputHelper)
+            : this(null, testOutputHelper)
         {
-            _testOutputHelper = testOutputHelper;
         }
 
         protected FixtureBase(string projectDirectory, ITestOutputHelper testOutputHelper)
-            : this(testOutputHelper)
         {
+            _testOutputHelper = testOutputHelper;
             ProjectDirectory = projectDirectory;
         }
 
         protected TestBuildConfiguration GetConfiguration(string testName = null)
         {
-            var stackTrace = new StackTrace();
-            var testOutput = Path.Combine("Tests", GetType().Name, testName ?? stackTrace.GetFrame(1).GetMethod().Name);
+            if(string.IsNullOrEmpty(testName))
+            {
+                var stackTrace = new StackTrace();
+                testName = stackTrace.GetFrame(1).GetMethod().Name;
+            }
+
+            if (testName.Length > 20)
+                testName = System.Guid.NewGuid().ToString();
+
+            var tempDir = Path.GetTempPath();
+            var projectDirectory = ProjectDirectory;
+            var solutionDirectory = ProjectDirectory;
+            if (string.IsNullOrEmpty(projectDirectory))
+            {
+                projectDirectory = Path.Combine(tempDir, "Tests", GetType().Name, testName, "SolutionDir", "src", testName);
+                solutionDirectory = Path.Combine(tempDir, "Tests", GetType().Name, testName, "SolutionDir");
+            }
+
+            var testOutput = Path.Combine(tempDir, "Tests", GetType().Name, testName);
             ResetTestOutputDirectory(testOutput);
+            ResetTestOutputDirectory(projectDirectory);
 
             return new TestBuildConfiguration
             {
                 Logger = new XunitLog(_testOutputHelper),
                 Platform = Platform.Unsupported,
                 IntermediateOutputPath = testOutput,
-                ProjectDirectory = ProjectDirectory,
+                ProjectDirectory = projectDirectory,
+                SolutionDirectory = solutionDirectory,
                 BuildConfiguration = "Debug",
                 ProjectName = "AwesomeApp",
             };

@@ -17,7 +17,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
     public class EnvironmentAnalyzerFixture : FixtureBase, IDisposable
     {
         public EnvironmentAnalyzerFixture(ITestOutputHelper testOutputHelper) 
-            : base(nameof(EnvironmentAnalyzerFixture), testOutputHelper)
+            : base(null, testOutputHelper)
         {
         }
 
@@ -39,13 +39,12 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
                     }
             };
             config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
-            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
-            config.SolutionDirectory = config.ProjectDirectory = projectDir;
+
             var secrets = new
             {
                 SampleProp = "Hello Tests"
             };
-            File.WriteAllText(Path.Combine(projectDir, filename), JsonConvert.SerializeObject(secrets));
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, filename), JsonConvert.SerializeObject(secrets));
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
 
@@ -70,8 +69,6 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             };
             config.Configuration.Environment.Defaults.Add("SampleProp", "Hello Tests");
             config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
-            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
-            config.SolutionDirectory = config.ProjectDirectory = projectDir;
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
 
@@ -100,8 +97,6 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
                 { "SampleProp", "Hello Override" }
             };
             config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
-            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
-            config.SolutionDirectory = config.ProjectDirectory = projectDir;
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
 
@@ -125,8 +120,6 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
                 }
             };
             config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
-            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
-            config.SolutionDirectory = config.ProjectDirectory = projectDir;
             Environment.SetEnvironmentVariable("SampleProp1", nameof(GetsValuesFromHostEnvironment), EnvironmentVariableTarget.Process);
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
@@ -153,8 +146,6 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
                 }
             };
             config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
-            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
-            config.SolutionDirectory = config.ProjectDirectory = projectDir;
             config.Configuration.Environment.Defaults["SampleProp3"] = "Hello Config Environment";
 
             Environment.SetEnvironmentVariable("SampleProp3", nameof(OverridesConfigEnvironmentFromHostEnvironment), EnvironmentVariableTarget.Process);
@@ -183,14 +174,12 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
                 }
             };
             config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
-            var projectDir = new DirectoryInfo(config.IntermediateOutputPath).Parent.FullName;
-            config.SolutionDirectory = config.ProjectDirectory = projectDir;
             config.Configuration.Environment.Defaults["SampleProp"] = "Hello Config Environment";
             var secrets = new
             {
                 SampleProp = "Hello Tests"
             };
-            File.WriteAllText(Path.Combine(projectDir, filename), JsonConvert.SerializeObject(secrets));
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, filename), JsonConvert.SerializeObject(secrets));
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
 
