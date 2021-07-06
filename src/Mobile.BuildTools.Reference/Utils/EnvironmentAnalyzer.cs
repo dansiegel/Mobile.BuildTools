@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,27 +32,48 @@ namespace Mobile.BuildTools.Utils
             var projectDirectory = buildConfiguration.ProjectDirectory;
             var solutionDirectory = buildConfiguration.SolutionDirectory;
             var configuration = buildConfiguration.BuildConfiguration;
-            new[]
-            {
-                // Legacy Support
-                Path.Combine(projectDirectory, Constants.SecretsJsonFileName),
-                Path.Combine(projectDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)),
-                Path.Combine(solutionDirectory, Constants.SecretsJsonFileName),
-                Path.Combine(solutionDirectory, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)),
-                // End Legacy Support
-
-                Path.Combine(projectDirectory, Constants.AppSettingsJsonFileName),
-                Path.Combine(projectDirectory, string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)),
-                Path.Combine(solutionDirectory, Constants.AppSettingsJsonFileName),
-                Path.Combine(solutionDirectory, string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)),
-            }.Distinct()
-            .ForEach(x =>
-            {
-                if (Path.GetFileName(x).StartsWith("secrets") && File.Exists(x))
-                    buildConfiguration.Logger.LogWarning("The secrets.json has been deprecated and will no longer be supported in a future version. Please migrate to appsettings.json");
-
-                LoadSecrets(x, ref env);
+            var directories = new List<string>(new[] {
+                projectDirectory,
             });
+
+            var stoppingDir = new DirectoryInfo(solutionDirectory).Parent.FullName;
+            var lookupDir = projectDirectory;
+            do
+            {
+                lookupDir = new DirectoryInfo(lookupDir).Parent?.FullName;
+                if (lookupDir is null || stoppingDir == lookupDir)
+                {
+                    break;
+                }
+                else if(!directories.Contains(lookupDir))
+                {
+                    directories.Add(lookupDir);
+                }
+            } while (lookupDir != solutionDirectory);
+
+            directories
+                .SelectMany(x => new[]
+                {
+                    // Legacy Support
+                    Path.Combine(x, Constants.SecretsJsonFileName),
+                    Path.Combine(x, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)),
+                })
+                .ForEach(x =>
+                {
+                    if (File.Exists(x))
+                    {
+                        buildConfiguration.Logger.LogWarning($"The secrets.json has been deprecated and will no longer be supported in a future version. Please migrate '{x}' to appsettings.json");
+                        LoadSecrets(x, ref env);
+                    }
+                });
+
+            directories
+                .SelectMany(x => new[]
+                {
+                    Path.Combine(x, Constants.AppSettingsJsonFileName),
+                    Path.Combine(x, string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)),
+                })
+                .ForEach(x => LoadSecrets(x, ref env));
 
             if (includeManifest)
             {

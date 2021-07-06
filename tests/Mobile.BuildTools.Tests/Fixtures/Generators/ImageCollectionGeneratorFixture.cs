@@ -4,6 +4,7 @@ using System.Linq;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Images;
 using Mobile.BuildTools.Models.AppIcons;
+using Mobile.BuildTools.Tests.Mocks;
 using Mobile.BuildTools.Utils;
 using Xunit;
 using Xunit.Abstractions;
@@ -25,12 +26,6 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
         public ImageCollectionGeneratorFixture(ITestOutputHelper testOutputHelper)
             : base(testOutputHelper)
-        {
-            Initialize();
-        }
-
-        protected ImageCollectionGeneratorFixture(string projectDirectory, ITestOutputHelper testOutputHelper)
-            : base(projectDirectory, testOutputHelper)
         {
             Initialize();
         }
@@ -73,6 +68,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void GeneratorLocatesCorrectNumberOfAssetsWithPlatformDirectory()
         {
             var config = GetConfiguration();
+            CopyResources(config);
             var generator = CreateGenerator(config, ImageDirectory, PlatformImageDirectory);
             generator.Execute();
 
@@ -83,6 +79,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void GeneratorLocatesCorrectNumberOfAssetsWithPlatformAndDebugDirectory()
         {
             var config = GetConfiguration();
+            CopyResources(config);
             var generator = CreateGenerator(config, ImageDirectory, DebugImageDirectory, PlatformImageDirectory);
             generator.Execute();
 
@@ -180,6 +177,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         public void StandardImageGeneratesProperOutputs(string file)
         {
             var config = GetConfiguration();
+            CopyResources(config);
+
             var generator = CreateGenerator(config, ImageDirectory, PlatformImageDirectory);
             generator.Execute();
 
@@ -218,6 +217,30 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var generator = CreateGenerator(config, ImageDirectory);
             var ex = Record.Exception(() => generator.Execute());
             Assert.Null(ex);
+        }
+
+        private void CopyResources(TestBuildConfiguration config)
+        {
+            if (Platform != Platform.iOS)
+                return;
+
+            var templates = Path.Combine(System.Environment.CurrentDirectory, "Templates", "Apple");
+            CopyFilesRecursively(templates, config.ProjectDirectory);
+        }
+
+        private static void CopyFilesRecursively(string sourcePath, string targetPath)
+        {
+            //Now Create all of the directories
+            foreach (var dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+            }
+
+            //Copy all the files & Replaces any files with the same name
+            foreach (var newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+            {
+                File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+            }
         }
 
         internal abstract ImageCollectionGeneratorBase CreateGenerator(IBuildConfiguration config, params string[] searchFolders);
