@@ -1,12 +1,12 @@
 # F.A.Q.
 
-#### Should every value in my Secrets be "Secret"?
+#### Should every value in my AppSettings be "Secret"?
 
-The Secrets Class is a great way to prevent security vulnerabilities created from checking into source control things like Client Id's, Consumer Secrets, or Connection Strings. But it really doesn't have to stop there. In fact the Secrets class is a great way of setting the configuration environment for your application at build. Should your build point to the Dev, Stage, or Production API? This is also a great way of being very intentional about it.
+The AppSettings Class is a great way to prevent security vulnerabilities created from checking into source control things like Client Id's, Consumer Secrets, or Connection Strings. But it really doesn't have to stop there. In fact the AppSettings class is a great way of setting the configuration environment for your application at build. Should your build point to the Dev, Stage, or Production API? This is also a great way of being very intentional about it.
 
-#### Does the Secrets class have to be in the Helpers namespace or named Secrets?
+#### Does the AppSettings class have to be in the Helpers namespace or named Secrets?
 
-In short no it does not. This has always been configurable though it is much easier with version 2.0 as you can just update the Configuration for the project. See the [Secrets Configuration](/config/secrets/configuration.md) topic for more information on how to configure this for version 2.
+In short no it does not. This has always been configurable though it is much easier with version 2.0 as you can just update the Configuration for the project. See the [App Settings Configuration](/config/appsettings/configuration.md) topic for more information on how to configure this for version 2.
 
 #### Do all of the things that the Mobile.BuildTools is capable of execute every time I run a build?
 
