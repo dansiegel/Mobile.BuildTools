@@ -13,7 +13,7 @@
         <meta name="author" content="Dan Siegel">
       
       
-        <link rel="canonical" href="http://mobilebuildtools.com/config/secrets/configuration/">
+        <link rel="canonical" href="http://mobilebuildtools.com/config/appsettings/configuration/">
       
       <link rel="icon" href="../../../assets/icon.svg">
       <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#project-configuration" class="md-skip">
+        <a href="#ci-platform-issues" class="md-skip">
           Skip to content
         </a>
       
@@ -557,13 +557,13 @@
         <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2_2" type="checkbox" id="__nav_5_2_2" checked>
       
       <label class="md-nav__link" for="__nav_5_2_2">
-        Secrets
+        App Settings
         <span class="md-nav__icon md-icon"></span>
       </label>
-      <nav class="md-nav" aria-label="Secrets" data-md-level="3">
+      <nav class="md-nav" aria-label="App Settings" data-md-level="3">
         <label class="md-nav__title" for="__nav_5_2_2">
           <span class="md-nav__icon md-icon"></span>
-          Secrets
+          App Settings
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -572,8 +572,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../basics/" class="md-nav__link">
-        Basics
+      <a href="../" class="md-nav__link">
+        Intro
       </a>
     </li>
   
@@ -613,16 +613,52 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#project-configuration" class="md-nav__link">
-    Project Configuration
+  <a href="#ci-platform-issues" class="md-nav__link">
+    CI Platform Issues
   </a>
   
-    <nav class="md-nav" aria-label="Project Configuration">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-the-buildtoolsjson" class="md-nav__link">
+    Configuring the buildtools.json
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring the buildtools.json">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#delimiter" class="md-nav__link">
-    Delimiter
+  <a href="#class-configuration" class="md-nav__link">
+    Class Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#property-configuration" class="md-nav__link">
+    Property Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#providing-a-default-value" class="md-nav__link">
+    Providing a Default Value
+  </a>
+  
+    <nav class="md-nav" aria-label="Providing a Default Value">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-value-for-app-center-app-id" class="md-nav__link">
+    Default value for App Center App Id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-specified-default-value" class="md-nav__link">
+    User specified Default value
   </a>
   
 </li>
@@ -631,11 +667,9 @@
     </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#providing-default-values" class="md-nav__link">
-    Providing Default Values
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -643,6 +677,18 @@
   
 </nav>
       
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        F.A.Q.
+      </a>
     </li>
   
 
@@ -1151,16 +1197,52 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#project-configuration" class="md-nav__link">
-    Project Configuration
+  <a href="#ci-platform-issues" class="md-nav__link">
+    CI Platform Issues
   </a>
   
-    <nav class="md-nav" aria-label="Project Configuration">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-the-buildtoolsjson" class="md-nav__link">
+    Configuring the buildtools.json
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring the buildtools.json">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#delimiter" class="md-nav__link">
-    Delimiter
+  <a href="#class-configuration" class="md-nav__link">
+    Class Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#property-configuration" class="md-nav__link">
+    Property Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#providing-a-default-value" class="md-nav__link">
+    Providing a Default Value
+  </a>
+  
+    <nav class="md-nav" aria-label="Providing a Default Value">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-value-for-app-center-app-id" class="md-nav__link">
+    Default value for App Center App Id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-specified-default-value" class="md-nav__link">
+    User specified Default value
   </a>
   
 </li>
@@ -1169,11 +1251,9 @@
     </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#providing-default-values" class="md-nav__link">
-    Providing Default Values
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1192,86 +1272,114 @@
                 
                   <h1>Configuration</h1>
                 
-                <p>Configuration for Secrets is a little bit different and required for v2. This provides a few benefits.</p>
-<ul>
-<li>It solves the issue of case sensitivity in which some build agents like to run <code>ToUpper()</code> on all variable names making it utterly impossible to properly generate the secrets.json properly without a script.</li>
-<li>It makes things just a little less magical so that other developers can more quickly generate the secrets.json in the appropriate projects to get started.</li>
-<li>It makes it possible to support more property types as v2.X now supports all primitives, Uri, Guid, TimeSpan, DateTime, &amp; DateTimeOffset, plus the option to use an array for any property type.</li>
-</ul>
-<p>We can configure the secrets for all of the projects in our solution by providing a value with the Project name and the appropriate configuration in the <code>buildtools.json</code> which should be located in the same directory as our solution file. Note that the following configuration will enable the Secrets task to run for a project named <code>AwesomeApp</code> in your solution. All other projects in the solution will not run the Secrets tasks.</p>
+                <p>Configuration for App Settings is a little different than for Secrets in Mobile.BuildTools 1.x. While we do provide legacy support for getting values from the secrets.json this has been almost entirely rewritten to provide much more advanced scenarios as well as to solve some issues faced in CI.</p>
+<h2 id="ci-platform-issues">CI Platform Issues<a class="headerlink" href="#ci-platform-issues" title="Permanent link">&para;</a></h2>
+<p>A common problem with some build platforms such as Azure DevOps Windows Agents is that they cast all variables with ToUpper. This means that if you added <code>MyVariable</code>, what the Mobile.BuildTools would actually find was <code>MYVARIABLE</code>. With 1.x we had no way to convert this back to <code>MyVariable</code> for the source generation. This naturally caused a lot of problems. To solve this issue the Mobile.BuildTools now provides a configuration file that describes the projects and classes that it should generate.</p>
+<h2 id="configuring-the-buildtoolsjson">Configuring the buildtools.json<a class="headerlink" href="#configuring-the-buildtoolsjson" title="Permanent link">&para;</a></h2>
+<p>The Mobile.BuildTools 2.0 configuration gives us a lot of flexibility as we can define 1 or MORE classes that should be generated automatically at build. Additionally since we can describe the class in json, we can specify exactly the data type should be rather than relying on the Mobile.BuildTools to make an educated guess.</p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://mobilebuildtools.com/schemas/v2/buildtools.schema.json&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;projectSecrets&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;AwesomeApp&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="err">//</span> <span class="err">App</span> <span class="err">Secre</span><span class="kc">t</span> <span class="err">Co</span><span class="kc">nf</span><span class="err">igura</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span>
-    <span class="p">}</span>
+  <span class="nt">&quot;appSettings&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;AwesomeApp&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="err">//</span> <span class="err">Your</span> <span class="err">co</span><span class="kc">nf</span><span class="err">igura</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span> <span class="err">here</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<h2 id="project-configuration">Project Configuration<a class="headerlink" href="#project-configuration" title="Permanent link">&para;</a></h2>
-<p>Within the Project we can now provide any configuration values we need to either override or explicitly provide:</p>
+<h3 id="class-configuration">Class Configuration<a class="headerlink" href="#class-configuration" title="Permanent link">&para;</a></h3>
+<p>Within the Project we can now provide any configuration values we need to either override or explicitly provide that will control how the class will be generated.</p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://mobilebuildtools.com/schemas/v2/buildtools.schema.json&quot;</span><span class="p">,</span>
   <span class="nt">&quot;projectSecrets&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;AwesomeApp&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;delimiter&quot;</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;disable&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-      <span class="nt">&quot;className&quot;</span><span class="p">:</span> <span class="s2">&quot;Secrets&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;Helpers&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="err">//</span> <span class="err">Proper</span><span class="kc">t</span><span class="err">y</span> <span class="err">De</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">i</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span>
-      <span class="p">]</span>
-    <span class="p">}</span>
+    <span class="nt">&quot;AwesomeApp&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;accessibility&quot;</span><span class="p">:</span> <span class="s2">&quot;Internal&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;className&quot;</span><span class="p">:</span> <span class="s2">&quot;AppSettings&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;delimiter&quot;</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;Helpers&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;rootNamespace&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="err">//</span> <span class="err">Proper</span><span class="kc">t</span><span class="err">y</span> <span class="err">De</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">i</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If we do not provide any of the values shown above they will automatically default as shown.</p>
+<p>If we do not provide any of the values shown above they will automatically default as shown. Only the <code>properties</code> are required.</p>
 </div>
-<h3 id="delimiter">Delimiter<a class="headerlink" href="#delimiter" title="Permanent link">&para;</a></h3>
-<p>The Delimiter is </p>
-<div class="admonition note note">
-<p class="admonition-title">Note</p>
-<p>The configuration shown here is verbose. As long as the Properties are specified with a <code>name</code> and <code>type</code> the rest of the values shown here will default to the values shown.</p>
-</div>
-<div class="admonition info info">
-<p class="admonition-title">Info</p>
-<p>If you wish to entirely disable the build task from even running in the MSBuild pipeline for a particular project you should specify the project name and set <code>disable</code> to <code>true</code>.</p>
-</div>
-<h2 id="providing-default-values">Providing Default Values<a class="headerlink" href="#providing-default-values" title="Permanent link">&para;</a></h2>
-<p>There are some times in which some configuration values may in fact be perfectly safe to check into source control. Such examples could be a Retry Count. Each Property defined can additionally provide a default value as shown here:</p>
+<h3 id="property-configuration">Property Configuration<a class="headerlink" href="#property-configuration" title="Permanent link">&para;</a></h3>
+<p>The Mobile.BuildTools 2.0 added support for every primitive datatype, along with DateTime, DateTimeOffset, Uri, &amp; Guid. Additionally you now have the ability to easily specify that a value should be an array. Note that this only generates arrays, you cannot specify other types such as <code>List</code> or <code>Collection</code>.</p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://mobilebuildtools.com/schemas/v2/buildtools.schema.json&quot;</span><span class="p">,</span>
   <span class="nt">&quot;projectSecrets&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;AwesomeApp&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;RetryCount&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Int&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span>
-        <span class="p">}</span>
-      <span class="p">]</span>
-    <span class="p">}</span>
+    <span class="nt">&quot;AwesomeApp&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;MyProperty&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;String&quot;</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;MyProperty2&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Int&quot;</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;MyProperty3&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;String&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;array&quot;</span><span class="p">:</span> <span class="kc">true</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>Other values may instead be best left with a null or default value. By convention the Mobile.BuildTools will generate all values as <code>default</code> regardless of the property type, except when the property type returns an array. For will always return an empty array. This behavior is consistent regardless of whether you mark the <code>defaultValue</code> as <code>null</code> or <code>default</code>.</p>
+<h3 id="providing-a-default-value">Providing a Default Value<a class="headerlink" href="#providing-a-default-value" title="Permanent link">&para;</a></h3>
+<p>There are a lot of values which either may not be sensitive or a default value would be safe to have in source control. We'll look at two scenarios here.</p>
+<h4 id="default-value-for-app-center-app-id">Default value for App Center App Id<a class="headerlink" href="#default-value-for-app-center-app-id" title="Permanent link">&para;</a></h4>
+<p>It's pretty common for people using the Mobile.BuildTools to inject values such as the App Center App Id to be able to initialize the App Center SDK. It's also pretty common that you may not want to provide a value for local development. The Mobile.BuildTools makes this easy by understanding the reserved values of <code>null</code> and <code>default</code>. It doesn't matter which one you use, the Mobile.BuildTools will actually generate the code using the <code>default</code> keyword as this is safe across all data types, nullable, and non-nullable alike.</p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://mobilebuildtools.com/schemas/v2/buildtools.schema.json&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;projectSecrets&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;AwesomeApp&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AppCenterToken&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;String&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span> <span class="s2">&quot;null&quot;</span>
-        <span class="p">}</span>
-      <span class="p">]</span>
-    <span class="p">}</span>
+  <span class="nt">&quot;appSettings&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;AwesomeApp&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AppCenterAppId&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;String&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span> <span class="s2">&quot;null&quot;</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="user-specified-default-value">User specified Default value<a class="headerlink" href="#user-specified-default-value" title="Permanent link">&para;</a></h4>
+<p>Other times we may have non-sensitive values that we need to configure defaults for. In the following scenario we may be setting up UDP logging with a Syslog Server. We know that the default port for UDP Syslog Servers is port 514. This value can simply be placed as </p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://mobilebuildtools.com/schemas/v2/buildtools.schema.json&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;appSettings&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;AwesomeApp&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;SyslogServerPort&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Int&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span> <span class="s2">&quot;514&quot;</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>

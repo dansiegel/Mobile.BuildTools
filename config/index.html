@@ -546,9 +546,39 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Intro
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Intro
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    See Also
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -565,13 +595,13 @@
         <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2_2" type="checkbox" id="__nav_5_2_2" >
       
       <label class="md-nav__link" for="__nav_5_2_2">
-        Secrets
+        App Settings
         <span class="md-nav__icon md-icon"></span>
       </label>
-      <nav class="md-nav" aria-label="Secrets" data-md-level="3">
+      <nav class="md-nav" aria-label="App Settings" data-md-level="3">
         <label class="md-nav__title" for="__nav_5_2_2">
           <span class="md-nav__icon md-icon"></span>
-          Secrets
+          App Settings
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -580,8 +610,8 @@
   
   
     <li class="md-nav__item">
-      <a href="secrets/basics/" class="md-nav__link">
-        Basics
+      <a href="appsettings/" class="md-nav__link">
+        Intro
       </a>
     </li>
   
@@ -592,8 +622,20 @@
   
   
     <li class="md-nav__item">
-      <a href="secrets/configuration/" class="md-nav__link">
+      <a href="appsettings/configuration/" class="md-nav__link">
         Configuration
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="appsettings/faq/" class="md-nav__link">
+        F.A.Q.
       </a>
     </li>
   
@@ -1098,6 +1140,21 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    See Also
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1112,7 +1169,12 @@
                 <h1 id="app-configuration-for-mobile-projects">App Configuration for Mobile Projects<a class="headerlink" href="#app-configuration-for-mobile-projects" title="Permanent link">&para;</a></h1>
 <p>Mobile Apps unlike traditional Desktop and Web projects are limiting for developers because you must define configuration values at build and not on deployment. The Mobile.BuildTools is here to help you solve this problem and meet you where you are.</p>
 <p>Developers have different needs at different times. For v1.X, the Mobile.BuildTools took the very opinionated idea that configuration values and app secrets should be treaded as something that should be strongly typed. This has a few advantages that come from errors surfacing at build time rather than runtime.</p>
-<p>Sometimes though it may be more desireable to perform quick swaps from one environment to another where you are certain that you are running the same exact tested binary build as you have previously. For this reason starting with v2.0 you will have support for using an app.config to provide you the same sort of configurations support that you may be used to from Desktop development or from the web.config varient with ASP.NET development.</p>
+<p>Sometimes though it may be more desireable to perform quick swaps from one environment to another where you are certain that you are running the same exact tested binary build as you have previously. For this reason starting with v2.0 you will have support for using an app.config to provide you the same sort of configurations support that you may be used to from Desktop development or from the web.config variant with ASP.NET development.</p>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Using <a href="app.config/">app.config</a></li>
+<li>Using <a href="appsettings/">App Settings</a></li>
+</ul>
                 
               
               

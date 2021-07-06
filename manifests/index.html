@@ -553,13 +553,13 @@
         <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2_2" type="checkbox" id="__nav_5_2_2" >
       
       <label class="md-nav__link" for="__nav_5_2_2">
-        Secrets
+        App Settings
         <span class="md-nav__icon md-icon"></span>
       </label>
-      <nav class="md-nav" aria-label="Secrets" data-md-level="3">
+      <nav class="md-nav" aria-label="App Settings" data-md-level="3">
         <label class="md-nav__title" for="__nav_5_2_2">
           <span class="md-nav__icon md-icon"></span>
-          Secrets
+          App Settings
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -568,8 +568,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../config/secrets/basics/" class="md-nav__link">
-        Basics
+      <a href="../config/appsettings/" class="md-nav__link">
+        Intro
       </a>
     </li>
   
@@ -580,8 +580,20 @@
   
   
     <li class="md-nav__item">
-      <a href="../config/secrets/configuration/" class="md-nav__link">
+      <a href="../config/appsettings/configuration/" class="md-nav__link">
         Configuration
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/appsettings/faq/" class="md-nav__link">
+        F.A.Q.
       </a>
     </li>
   
@@ -699,9 +711,39 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Tokenized Manifests
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Tokenized Manifests
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-the-variables" class="md-nav__link">
+    Setting the Variables
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1098,6 +1140,21 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-the-variables" class="md-nav__link">
+    Setting the Variables
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1145,6 +1202,15 @@
 <p class="admonition-title">Info</p>
 <p>In order to work with the tokenized manifest locally without having to update your Environment Variables on your developer machine, you can simply drop in a <code>manifest.json</code> in the Project root with the Key/Value pairs for the Mobile.BuildTools to use. If using this file, be sure to add it to the .gitignore so as to not accidentally check it into source control.</p>
 </div>
+<h2 id="setting-the-variables">Setting the Variables<a class="headerlink" href="#setting-the-variables" title="Permanent link">&para;</a></h2>
+<p>The Mobile.BuildTools attempts to locate the values for your Manifest tokens through several sources. In the event that a variable key is duplicated, the Mobile.BuildTools has a precedence that the last one in wins. Variables are loaded from the following sources:</p>
+<ol>
+<li>buildtools.json Environment Defaults</li>
+<li>buildtools.json Environment Configuration (i.e. Debug, Release)</li>
+<li>System Environment</li>
+<li>Recursively load legacy <code>secrets.json</code> from the Project directory to the Solution directory</li>
+<li>Recursively load <code>appsettings.json</code> from the Project directory to the Solution directory</li>
+</ol>
                 
               
               
