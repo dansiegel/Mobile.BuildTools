@@ -44,7 +44,7 @@ The Mobile.BuildTools is designed to help you with a variety of tasks that make 
 - [Tokenize your Info.plist / AndroidManifest.xml](manifests/index.md) (`$$SomeKey$$`)
     - Tokens replaced at build in obj to protect any against configuration values being checked in
 - [Support for SCSS files to generate Xamarin.Forms CSS files](scss-to-css/index.md)
-- [Generate 'Secrets' class at build that contains any configuration or application secrets](config/secrets/basics.md)
+- [Generate 'AppSettings' class at build that contains any configuration or application secrets](config/appsettings/index.md)
     - Supports all primitive data types + Uri, DateTime, DateTimeOffset, TimeStamp, & Guid
     - Any property can be made an array of values (useful for feature flags or OAuth scopes)
 - [ConfigurationManager with app.config](config/app.config/index.md)
