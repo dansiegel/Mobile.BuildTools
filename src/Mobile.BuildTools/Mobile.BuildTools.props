@@ -33,8 +33,10 @@
     <IsJenkins Condition=" '$(BUILD_NUMBER)' != '' And '$(TEAMCITY_VERSION)' == '' ">true</IsJenkins>
     <IsTeamCity Condition=" '$(IsTeamCity)' == '' ">false</IsTeamCity>
     <IsTeamCity Condition=" '$(BUILD_NUMBER)' != '' And '$(TEAMCITY_VERSION)' != '' ">true</IsTeamCity>
+    <IsTravisCI Condition=" '$(IsTravisCI)' == '' ">false</IsTravisCI>
+    <IsTravisCI Condition=" '$(TRAVIS_BUILD_NUMBER)' != '' ">true</IsTravisCI>
     <IsBuildHost Condition=" '$(IsBuildHost)' == '' ">false</IsBuildHost>
-    <IsBuildHost Condition=" '$(IsAppCenter)' Or '$(IsAzureDevOps)' Or '$(IsBitBucket)' Or '$(IsGitHubActions)' Or '$(IsAppVeyor)' Or '$(IsJenkins)' Or '$(IsTeamCity)' ">true</IsBuildHost>
+    <IsBuildHost Condition=" '$(IsAppCenter)' Or '$(IsAzureDevOps)' Or '$(IsBitBucket)' Or '$(IsGitHubActions)' Or '$(IsAppVeyor)' Or '$(IsJenkins)' Or '$(IsTeamCity)' Or '$(IsTravisCI)' ">true</IsBuildHost>
   </PropertyGroup>
 
   <Choose>
