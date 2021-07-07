@@ -14,7 +14,7 @@ namespace Mobile.BuildTools.Models
         [JsonProperty("variablePrefix", NullValueHandling = NullValueHandling.Ignore)]
         public string VariablePrefix { get; set; }
 
-        [Description("If set to true, this will generate a build time error if a token is found which does not have a value in the environment or secrets.json.")]
+        [Description("If set to true, this will generate a build time error if a token is found which does not have a value in the environment or appsettings.json.")]
         [DefaultValue(false)]
         [JsonProperty("missingTokensAsErrors", NullValueHandling = NullValueHandling.Ignore)]
         public bool MissingTokensAsErrors { get; set; }
