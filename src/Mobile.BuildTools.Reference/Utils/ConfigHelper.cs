@@ -85,21 +85,19 @@ namespace Mobile.BuildTools.Utils
 
 #if !DEBUG // Do not generate .gitignore for local debug builds
             var requiredContents = @"# Mobile.BuildTools
-secrets.json
-secrets.*.json
+appsettings.json
+appsettings.*.json
 ";
             var gitignoreFile = Path.Combine(path, ".gitignore");
-            if (File.Exists(gitignoreFile))
-            {
-                if(!File.ReadAllText(gitignoreFile).Contains(Constants.SecretsJsonFileName))
-                {
-                    File.AppendAllText(gitignoreFile, $"\n\n{requiredContents}");
-                }
-            }
-            else
+            if (!File.Exists(gitignoreFile))
             {
                 File.WriteAllText(gitignoreFile, requiredContents);
             }
+            else if(!File.ReadAllText(gitignoreFile).Contains(Constants.SecretsJsonFileName))
+            {
+                File.AppendAllText(gitignoreFile, $"\n\n{requiredContents}");
+            }
+
 #endif
         }
 
