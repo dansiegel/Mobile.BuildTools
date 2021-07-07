@@ -42,32 +42,38 @@ namespace Mobile.BuildTools.Utils
                                                      .Cast<object>()
                                                      .Any(k => k.ToString() == "GITHUB_WORKFLOW");
 
-        public static bool IsBuildHost => 
+        public static readonly bool IsTravisCI = Environment.GetEnvironmentVariables()
+                                                     .Keys
+                                                     .Cast<object>()
+                                                     .Any(k => k.ToString() == "TRAVIS_BUILD_NUMBER");
+
+        public static bool IsBuildHost =>
             IsCI ||
             IsAppCenter ||
             IsAppVeyor ||
             IsJenkins ||
             IsAzureDevOps ||
             IsBitBucket ||
-            IsGitHubActions;
+            IsGitHubActions ||
+            IsTravisCI;
 
         public static string BuildNumber
         {
             get
             {
-                if(IsAppCenter)
+                if (IsAppCenter)
                 {
                     return Environment.GetEnvironmentVariable("APPCENTER_BUILD_ID");
                 }
-                else if(IsAppVeyor)
+                else if (IsAppVeyor)
                 {
                     return Environment.GetEnvironmentVariable("APPVEYOR_BUILD_NUMBER");
                 }
-                else if(IsBitBucket)
+                else if (IsBitBucket)
                 {
                     return Environment.GetEnvironmentVariable("BITBUCKET_BUILD_NUMBER");
                 }
-                else if(IsJenkins || IsTeamCity)
+                else if (IsJenkins || IsTeamCity)
                 {
                     return Environment.GetEnvironmentVariable("BUILD_NUMBER");
                 }
@@ -75,9 +81,13 @@ namespace Mobile.BuildTools.Utils
                 {
                     return Environment.GetEnvironmentVariable("GITHUB_RUN_ID");
                 }
-                else if(IsAzureDevOps)
+                else if (IsAzureDevOps)
                 {
                     return Environment.GetEnvironmentVariable("BUILD_BUILDNUMBER");
+                }
+                else if (IsTravisCI)
+                {
+                    return Environment.GetEnvironmentVariable("TRAVIS_BUILD_NUMBER");
                 }
 
                 return null;
