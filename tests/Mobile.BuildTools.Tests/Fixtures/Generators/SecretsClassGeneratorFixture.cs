@@ -331,7 +331,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 Directory.Delete(testDirectory, true);
 
             Directory.CreateDirectory(testDirectory);
-            File.Copy(Path.Combine("Templates", "Secrets", secretsFile), Path.Combine(testDirectory, "secrets.json"));
+            File.Copy(Path.Combine("Templates", "Secrets", secretsFile), Path.Combine(testDirectory, "appsettings.json"));
 
             var config = GetConfiguration($"{nameof(GeneratesValidClass)}-{expectedType.Name}");
             config.SolutionDirectory = config.ProjectDirectory = testDirectory;
