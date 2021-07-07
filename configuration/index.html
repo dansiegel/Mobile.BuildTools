@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#secretsjson" class="md-skip">
+        <a href="#appsettingsjson" class="md-skip">
           Skip to content
         </a>
       
@@ -759,8 +759,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#secretsjson" class="md-nav__link">
-    Secrets.json
+  <a href="#appsettingsjson" class="md-nav__link">
+    appsettings.json
   </a>
   
 </li>
@@ -1153,8 +1153,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#secretsjson" class="md-nav__link">
-    Secrets.json
+  <a href="#appsettingsjson" class="md-nav__link">
+    appsettings.json
   </a>
   
 </li>
@@ -1198,7 +1198,7 @@
 </thead>
 <tbody>
 <tr>
-<td align="center">secrets.json</td>
+<td align="center">appsettings.json</td>
 <td align="center">n/a - JSON Dictionary</td>
 </tr>
 <tr>
@@ -1211,8 +1211,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="secretsjson">Secrets.json<a class="headerlink" href="#secretsjson" title="Permanent link">&para;</a></h2>
-<p>Everyone has a different opinion of how they would like to set things up. While the Mobile.BuildTools is opinionated in certain ways, we also try to make efforts to meet developers where their needs are giving you some flexibility in configuration. Within a CI environment, the Mobile.BuildTools relies on Environment Variables to map values you need in your app. However this is a bit of a pain to deal with for local app development. The Mobile.BuildTools has long relied on a <code>secrets.json</code> file containing the dictionary values of the various variables you need for your build. Version 2.0 has added a few benefits to this allowing you to now pick and choose which file directory you would like the secrets.json to live in. This can be any directory from the directory where your Solution file is located up to the Project directory. This can be particularly helpful when you may be using the Mobile.BuildTools to supply values across multiple projects or even where you may be replacing certain values in your AndroidManifest.xml or Info.plist.</p>
+<h2 id="appsettingsjson">appsettings.json<a class="headerlink" href="#appsettingsjson" title="Permanent link">&para;</a></h2>
+<p>Everyone has a different opinion of how they would like to set things up. While the Mobile.BuildTools is opinionated in certain ways, we also try to make efforts to meet developers where their needs are giving you some flexibility in configuration. Within a CI environment, the Mobile.BuildTools relies on Environment Variables to map values you need in your app. However this is a bit of a pain to deal with for local app development. The Mobile.BuildTools has long relied on a <code>secrets.json</code> file containing the dictionary values of the various variables you need for your build. With version 2.0 we have deprecated <code>secrets.json</code> in favor of <code>appsettings.json</code>. Additionally we hav added a few benefits to this allowing you to now pick and choose which file directory you would like the appsettings.json to live in. This can be any directory from the directory where your Solution file is located up to the Project directory. This can be particularly helpful when you may be using the Mobile.BuildTools to supply values across multiple projects or even where you may be replacing certain values in your AndroidManifest.xml or Info.plist.</p>
 <h2 id="buildtoolsjson">BuildTools.json<a class="headerlink" href="#buildtoolsjson" title="Permanent link">&para;</a></h2>
 <p>One of the biggest changes in the Mobile.BuildTools 2.0 is the introduction of the <code>buildtools.json</code>. Because we provide an easy to use json configuration with a Json Schema you have the ability to get intellisense in Visual Studio, Visual Studio Code, as well as many other editors that support Json Schemas. This makes it much easier for you to configure the Mobile.BuildTools rather than relying on MSBuild properties which can confuse many developers. </p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
