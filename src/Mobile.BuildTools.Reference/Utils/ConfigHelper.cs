@@ -43,8 +43,14 @@ namespace Mobile.BuildTools.Utils
                 },
                 Images = new ImageResize
                 {
-                    ConditionalDirectories = null,
-                    Directories = null
+                    ConditionalDirectories = new Dictionary<string, IEnumerable<string>>
+                    {
+                        { "Debug", Array.Empty<string>() },
+                        { "!Debug", Array.Empty<string>() },
+                        { "iOS", Array.Empty<string>() },
+                        { "Android", Array.Empty<string>() },
+                    },
+                    Directories = new List<string>()
                 },
                 Manifests = new TemplatedManifest
                 {
@@ -61,6 +67,14 @@ namespace Mobile.BuildTools.Utils
                     FileName = "ReleaseNotes.txt",
                     MaxCommit = 10,
                     MaxDays = 7
+                },
+                Environment = new EnvironmentSettings
+                {
+                    Configuration = new Dictionary<string, Dictionary<string, string>>
+                    {
+                        { "Debug", new Dictionary<string, string>() }
+                    },
+                    Defaults = new Dictionary<string, string>()
                 }
             };
 
