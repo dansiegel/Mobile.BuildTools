@@ -2,13 +2,13 @@ The Mobile.BuildTools relies a lot on JSON configurations because JSON is easy f
 
 | FileName | Schema Url |
 |:--------:|:----------:|
-| secrets.json | n/a - JSON Dictionary |
+| appsettings.json | n/a - JSON Dictionary |
 | buildtools.json | https://mobilebuildtools.com/schemas/v2/buildtools.schema.json |
 | {imageName}.json | https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json |
 
-## Secrets.json
+## appsettings.json
 
-Everyone has a different opinion of how they would like to set things up. While the Mobile.BuildTools is opinionated in certain ways, we also try to make efforts to meet developers where their needs are giving you some flexibility in configuration. Within a CI environment, the Mobile.BuildTools relies on Environment Variables to map values you need in your app. However this is a bit of a pain to deal with for local app development. The Mobile.BuildTools has long relied on a `secrets.json` file containing the dictionary values of the various variables you need for your build. Version 2.0 has added a few benefits to this allowing you to now pick and choose which file directory you would like the secrets.json to live in. This can be any directory from the directory where your Solution file is located up to the Project directory. This can be particularly helpful when you may be using the Mobile.BuildTools to supply values across multiple projects or even where you may be replacing certain values in your AndroidManifest.xml or Info.plist.
+Everyone has a different opinion of how they would like to set things up. While the Mobile.BuildTools is opinionated in certain ways, we also try to make efforts to meet developers where their needs are giving you some flexibility in configuration. Within a CI environment, the Mobile.BuildTools relies on Environment Variables to map values you need in your app. However this is a bit of a pain to deal with for local app development. The Mobile.BuildTools has long relied on a `secrets.json` file containing the dictionary values of the various variables you need for your build. With version 2.0 we have deprecated `secrets.json` in favor of `appsettings.json`. Additionally we hav added a few benefits to this allowing you to now pick and choose which file directory you would like the appsettings.json to live in. This can be any directory from the directory where your Solution file is located up to the Project directory. This can be particularly helpful when you may be using the Mobile.BuildTools to supply values across multiple projects or even where you may be replacing certain values in your AndroidManifest.xml or Info.plist.
 
 ## BuildTools.json
 
