@@ -12,7 +12,7 @@
     <PackageReference Update="Fizzler" Version="1.3.0" />
     <PackageReference Update="HarfBuzzSharp" Version="2.6.1.7" />
     <PackageReference Update="ShimSkiaSharp" Version="0.5.5.5" />
-    <PackageReference Update="SkiaSharp" Version="2.80.2" />
+    <PackageReference Update="SkiaSharp" Version="2.80.3" />
     <PackageReference Update="SkiaSharp.HarfBuzz" Version="2.80.2" />
     <PackageReference Update="Svg.Skia" Version="0.5.5.5" />
     <PackageReference Update="Svg.Custom" Version="0.5.5.5" />
