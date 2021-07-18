@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+'''***\$._svg_xmlv-version="1.1"/encoding="utf-8"/>
+# Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build #2)  -->
+'DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="2321.52px" height="432.99px" viewBox="0 0 2321.52 432.99" enable-background="new 0 0 2321.52 432.99"
 	 xml:space="preserve">
