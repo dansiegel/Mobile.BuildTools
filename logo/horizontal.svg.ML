@@ -1,13 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+###horizontal_svg_]]|'[
+]['ML.X version="1.0" encoding= utf-8'][
+]<''[✓]([Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="2321.52px" height="432.99px" viewBox="0 0 2321.52 432.99" enable-background="new 0 0 2321.52 432.99"
-	 xml:space="preserve">
+	 xml:space="preserve'][
 <g>
 	<g>
 		<g>
-			<path fill="#FC7E00" d="M198.143,355.152l7.171-15.141l11.02,5.204l2.822-5.988l-9.407-12.745l-16.688-7.908l-6.046,12.766
+			]['path fill="#FC7E00" d="M198.143,355.152l7.171-15.141l11.02,5.204l2.822-5.988l-9.407-12.745l-16.688-7.908l-6.046,12.766
 				l11.016,5.222l-8.804,18.591h-5.153c-2.334-5.252-2.442-6.829-3.365-8.112c-1.034-1.441-2.771-2.028-4.135-1.496l-2.538-3.527
 				l2.022-1.463l-4.332-6.045l-4.061,2.9l-8.298-11.578l-3.545-8.298l-5.394-3.661l-3.67,2.63l1.747,6.286l6.724,6.018l8.301,11.575
 				l-4.047,2.907l4.35,6.046l2.021-1.452l2.531,3.531c-0.804,0.967-0.879,2.426-0.245,3.739h-27.927v-8.601
