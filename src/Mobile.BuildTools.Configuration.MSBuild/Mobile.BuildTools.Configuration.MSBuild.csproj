@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
-    <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
+    <None Include="buildTransitive\**" Pack="true" />
     <Compile Include="..\Mobile.BuildTools.Configuration\TransformationHelper.cs" Link="Utils\TransformationHelper.cs" />
   </ItemGroup>
 
