@@ -7,15 +7,7 @@
   <Import Project="ManifestsShared.targets" />
   -->
 
-  <Target Name="HandlePlatformAppConfig"
-          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
-          Inputs="@(GeneratedAppConfig)"
-          Outputs="@(GeneratedAppConfig)">
-    <ItemGroup>
-      <Content Include="@(GeneratedAppConfig)"
-                      Link="Assets\%(Filename)%(Extension)" />
-    </ItemGroup>
-  </Target>
+  
 
   <Target Name="IncludeUnifiedImageAsset"
           BeforeTargets="_CollectBundleResources"

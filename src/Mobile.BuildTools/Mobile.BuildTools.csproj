@@ -21,7 +21,6 @@
   <ItemGroup>
     
     <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
-    <None Update="buildTransitive\*.targets;buildTransitive\*.props" Pack="true" PackFolder="buildTransitive" />
     <None Update="Resources\*" Pack="true" PackagePath="$(PackFolder)/resources/%(Filename)%(Extension)" />
     <None Update="readme.md" Pack="true" PackagePath="readme.md" />
   </ItemGroup>

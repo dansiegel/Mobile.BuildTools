@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Import Project="..\ConfigurationManager.props" />
+
+  <ItemGroup Condition=" Exists('app.config') ">
+    <None Remove="app.config" />
+    <None Remove="app.*.config" />
+    <MobileBuildToolsConfig Include="app.config" Visible="true" IsRootConfig="true" />
+    <MobileBuildToolsConfig Include="app.*.config" DependentUpon="app.config" Visible="true" />
+  </ItemGroup>
+</Project>

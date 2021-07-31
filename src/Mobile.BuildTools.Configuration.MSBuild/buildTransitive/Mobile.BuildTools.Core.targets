@@ -2,7 +2,7 @@
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.LocateBuildToolsConfigTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+             AssemblyFile="$(_MobileBuildToolsCoreTasksDll)"/>
 
   <!--<Import Project="MonoAndroid.targets"
           Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid'" />

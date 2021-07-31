@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Import Project="..\ConfigurationManager.targets" />
+
+  <Target Name="HandlePlatformAppConfig"
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
+          Inputs="@(GeneratedAppConfig)"
+          Outputs="@(GeneratedAppConfig)">
+    <ItemGroup>
+      <Content Include="@(GeneratedAppConfig)"
+                      Link="Assets\%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+</Project>

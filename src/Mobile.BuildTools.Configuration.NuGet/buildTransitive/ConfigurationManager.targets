@@ -2,9 +2,9 @@
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.AppConfigCopyTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+             AssemblyFile="$(_MobileBuildToolsConfigurationTasksDll)"/>
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ConfigurationManagerHandlerTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+             AssemblyFile="$(_MobileBuildToolsConfigurationTasksDll)"/>
 
   <Target Name="_CollectAppConfigs"
           BeforeTargets="$(HandlePlatformAppConfigBeforeTargets)"

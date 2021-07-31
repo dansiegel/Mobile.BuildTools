@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <PropertyGroup>
+    <_MobileBuildToolsConfigurationTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Configuration.MSBuild.dll'))</_MobileBuildToolsConfigurationTasksDll>
+  </PropertyGroup>
+</Project>

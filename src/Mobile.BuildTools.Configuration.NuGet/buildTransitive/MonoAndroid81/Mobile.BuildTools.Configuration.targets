@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Import Project="..\ConfigurationManager.targets" />
+
+  <PropertyGroup>
+    <HandlePlatformAppConfigBeforeTargets>_CollectBundleResources;PrepareForBuild</HandlePlatformAppConfigBeforeTargets>
+  </PropertyGroup>
+
+  <Target Name="HandlePlatformAppConfig"
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy">
+    <ItemGroup>
+      <AndroidAsset Include="@(PlatformAppConfig)"
+                    Link="Assets\%(Filename)%(Extension)"/>
+    </ItemGroup>
+  </Target>
+</Project>

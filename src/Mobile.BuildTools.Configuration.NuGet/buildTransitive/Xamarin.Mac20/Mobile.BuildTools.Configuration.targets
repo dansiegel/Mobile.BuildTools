@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Import Project="..\ConfigurationManager.targets" />
+
+  <Target Name="HandlePlatformAppConfig"
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy">
+    <ItemGroup>
+      <BundleResource Include="@(PlatformAppConfig)"
+                      Link="Resources\%(Filename)%(Extension)"/>
+    </ItemGroup>
+  </Target>
+
+  <!--<Target Name="HandlePlatformAppConfig"
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
+          Inputs="@(MobileBuildToolsConfig)"
+          Outputs="@(MobileBuildToolsConfig -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
+    <ItemGroup>
+      <BundleResource Include="$(IntermediateOutputPath)configs\**')"
+                      Link="Assets/%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>-->
+</Project>

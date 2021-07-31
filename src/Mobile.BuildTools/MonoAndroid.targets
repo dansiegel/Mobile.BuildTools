@@ -31,17 +31,9 @@
 
   </Target>
 
-  <PropertyGroup>
-    <HandlePlatformAppConfigBeforeTargets>_CollectBundleResources;PrepareForBuild</HandlePlatformAppConfigBeforeTargets>
-  </PropertyGroup>
+  
 
-  <Target Name="HandlePlatformAppConfig"
-          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy">
-    <ItemGroup>
-      <AndroidAsset Include="@(PlatformAppConfig)"
-                    Link="Assets\%(Filename)%(Extension)"/>
-    </ItemGroup>
-  </Target>
+  
 
   <Target Name="IncludeUnifiedImageAsset"
           AfterTargets="UnifiedImageAssetProcessing"

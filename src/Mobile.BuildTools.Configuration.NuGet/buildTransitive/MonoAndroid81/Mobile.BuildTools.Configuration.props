@@ -1,4 +1,7 @@
-﻿<Project>
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Import Project="..\ConfigurationManager.props" />
+
   <ItemGroup Condition=" Exists('app.config') ">
     <None Remove="app.config" />
     <None Remove="app.*.config" />
