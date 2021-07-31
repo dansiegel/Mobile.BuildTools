@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4cdfa93d-8c03-4002-950e-009e1cbd5492</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Mobile.BuildTools.MSBuild.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Build\BuildExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\MetaData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\FileInfoExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ITaskItemExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\BuildHostLoggingHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\BuildToolsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\MSBuildConfigHelper.cs" />
+  </ItemGroup>
+</Project>

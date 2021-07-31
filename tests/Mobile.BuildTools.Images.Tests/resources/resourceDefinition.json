@@ -1,0 +1,16 @@
+{
+  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  // "someWatermarkFileWithoutExtension"
+  "watermarkFile": null,
+  "name": null,
+  "scale": 1,
+  "ignore": false,
+  "apple": {
+    "name": null
+  },
+  "android": {
+    "name": null,
+    // Also available: Mipmap
+    "resourceType": "Drawable"
+  }
+}

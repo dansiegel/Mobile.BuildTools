@@ -10,7 +10,8 @@
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Newtonsoft.Json.Schema" />
-    <ProjectReference Include="../../src/Mobile.BuildTools.Reference/Mobile.BuildTools.Reference.csproj" />
   </ItemGroup>
+
+  <Import Project="..\..\src\Mobile.BuildTools.Shared\Mobile.BuildTools.Shared.projitems" Label="Shared" />
 
 </Project>

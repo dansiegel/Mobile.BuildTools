@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ff6c8b39-557b-4dda-b062-a6996cf8f86e</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Mobile.BuildTools.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Build\IBuildConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DictionaryExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generators\GeneratorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generators\GeneratorBase{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generators\IGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handlers\DecimalValueHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handlers\DefaultValueHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handlers\FloatValueHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handlers\IValueHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handlers\NumericValueHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Handlers\UriValueHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\ILog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\AppleIconSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\AppleIconSetImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\BaseImageConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\IImageResource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\OutputImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\PlatformConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\PlatformResourceType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\ResourceDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\WatermarkConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AppIcons\WatermarkPosition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ArtifactCopy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AutomaticVersioning.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\BuildToolsConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Configuration\ExpectedAppConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\EnvironmentSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GoogleConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ImageResize.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ReleaseNotesOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Secrets\SecretsConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Settings\Accessibility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Settings\PropertyType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Settings\PropertyTypeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Settings\PropertyTypeMappingAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Settings\SettingsConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Settings\ValueConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TemplatedManifest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ToolItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\VersionBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\VersionEnvironment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\XamarinCss.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\CIBuildEnvironmentUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\ConfigHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\ConfigHelper.shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\EnvironmentAnalyzer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\ImageSearchUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Platform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\PrimitivesExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\StringExtensions.cs" />
+  </ItemGroup>
+</Project>

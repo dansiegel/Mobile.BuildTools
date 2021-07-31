@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4b03b3ca-2126-48d0-84c1-c3be58a35fa2</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Mobile.BuildTools.Tests.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Fixtures\FixtureBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mocks\TestBuildConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mocks\XunitLog.cs" />
+  </ItemGroup>
+</Project>

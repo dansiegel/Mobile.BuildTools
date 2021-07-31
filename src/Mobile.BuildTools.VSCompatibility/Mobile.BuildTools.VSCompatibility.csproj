@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net472;</TargetFrameworks>
+    <Description>This is a package specifically for 3rd party tooling to provide compatibility with the Mobile.BuildTools image generation.</Description>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mobile.BuildTools.Tests" Condition="$(SignAssembly) != 'true' " />
+    <PackageReference Include="NuGetizer" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json.Schema" PrivateAssets="all" />
+    <PackageReference Include="System.ComponentModel.Annotations" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Import Project="..\Mobile.BuildTools.Shared\Mobile.BuildTools.Shared.projitems" Label="Shared" />
+
+</Project>

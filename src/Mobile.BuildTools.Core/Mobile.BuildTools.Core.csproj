@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackFolder>buildTransitive</PackFolder>
+    <IncludeSource>false</IncludeSource>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
+    <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Pack="false" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
+    <PackageReference Include="Newtonsoft.Json.Schema" PrivateAssets="all" />
+    <PackageReference Include="NuGetizer" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Import Project="..\Mobile.BuildTools.MSBuild.Shared\Mobile.BuildTools.MSBuild.Shared.projitems" Label="Shared" />
+  <Import Project="..\Mobile.BuildTools.Shared\Mobile.BuildTools.Shared.projitems" Label="Shared" />
+
+</Project>

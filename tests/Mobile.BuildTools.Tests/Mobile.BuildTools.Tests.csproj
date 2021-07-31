@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -15,15 +15,12 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Microsoft.Build" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" />
-    <None Include="..\..\src\assets\runtimes\$(_NativeRuntime)\libsass.*"
-          CopyToOutputDirectory="PreserveNewest"
-          Visible="false" />
-    <EmbeddedResource Include="resources\*" />
+    <None Include="..\..\src\assets\runtimes\$(_NativeRuntime)\libsass.*" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json.Schema" />
-    <PackageReference Include="SkiaSharp" />
+    <!--<PackageReference Include="SkiaSharp" />-->
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 
@@ -34,5 +31,9 @@
   <ItemGroup>
     <None Update="Templates\**\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
+
+  <Import Project="..\Mobile.BuildTools.Tests.Shared\Mobile.BuildTools.Tests.Shared.projitems" Label="Shared" />
+
+  <Import Project="..\..\src\Mobile.BuildTools.Shared\Mobile.BuildTools.Shared.projitems" Label="Shared" />
 
 </Project>
