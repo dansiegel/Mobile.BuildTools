@@ -66,6 +66,7 @@ namespace Mobile.BuildTools.Generators.Images
            else
            {
                 Log.LogMessage($"Found image {config.SourceFile} -> Resources/{config.Name}.png");
+
                 // Generate App Resources
                 return ResourceSizes.Select(x => new OutputImage
                 {
@@ -131,7 +132,6 @@ namespace Mobile.BuildTools.Generators.Images
             Log.LogMessage($"Found App Icon Set image {resource.SourceFile} -> {basePath}{Path.DirectorySeparatorChar}{x.FileName}");
             var outputFile = Path.Combine(Build.IntermediateOutputPath, basePath, x.FileName);
             var outputLink = Path.Combine(basePath, x.FileName);
-            var watermarkFilePath = GetWatermarkFilePath(resource);
             var width = (int)(double.Parse(size[0]) * scale);
             var height = (int)(double.Parse(size[1]) * scale);
             return new OutputImage
@@ -143,7 +143,6 @@ namespace Mobile.BuildTools.Generators.Images
                 Height = height,
                 RequiresBackgroundColor = outputFileName == "AppIcon",
                 ShouldBeVisible = false,
-                //WatermarkFilePath = watermarkFilePath,
                 Watermark = resource.Watermark,
                 BackgroundColor = resource.BackgroundColor,
                 BuildAction = "ImageAsset"
