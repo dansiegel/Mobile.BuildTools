@@ -171,6 +171,18 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             Assert.Equal("example", imageResource.Watermark?.SourceFile);
         }
 
+        [Fact]
+        public void ExecuteFindsValidPathForWatermarkSourceFile()
+        {
+            var config = GetConfiguration();
+            var generator = CreateGenerator(config, ImageDirectory, PlatformImageDirectory, DebugImageDirectory);
+
+            generator.Execute();
+
+            var outputImage = generator.Outputs.Last();
+            Assert.Equal("Templates\\Images\\Debug\\example.png", outputImage.Watermark.SourceFile);
+        }
+
         [Theory]
         [InlineData("dotnetbot")]
         [InlineData("platform")]
