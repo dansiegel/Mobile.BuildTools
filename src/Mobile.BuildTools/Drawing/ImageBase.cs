@@ -25,9 +25,16 @@ namespace Mobile.BuildTools.Drawing
         public abstract void Draw(SKCanvas canvas, Context context);
 
         public static ImageBase Load(string filename)
-            => IsVector(filename)
+        {
+            if (!File.Exists(filename))
+            {
+                throw new FileNotFoundException("Could not load image file.", filename);
+            }
+
+            return IsVector(filename)
                 ? new VectorImage(filename)
                 : new Image(filename);
+        }
 
         private static bool IsVector(string filename) =>
             Path.GetExtension(filename)?.Equals(".svg", StringComparison.OrdinalIgnoreCase) ?? false;

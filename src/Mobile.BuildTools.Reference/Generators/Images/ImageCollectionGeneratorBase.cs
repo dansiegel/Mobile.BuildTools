@@ -48,7 +48,7 @@ namespace Mobile.BuildTools.Generators.Images
                     if (inputFileNames.Any(x => x == fileName))
                     {
                         var originalFile = imageResourcePaths.First(x => Path.GetFileNameWithoutExtension(x) == fileName);
-                        Log.LogWarning($"Found duplicate input image '{fileName}'. Originial input path '{originalFile}', and duplicate file path '{file}'.");
+                        Log.LogWarning($"Found duplicate input image '{fileName}'. Original input path '{originalFile}', and duplicate file path '{file}'.");
                         continue;
                     }
 
@@ -57,7 +57,7 @@ namespace Mobile.BuildTools.Generators.Images
 
                     var jsonConfig = Path.Combine(Path.GetDirectoryName(file), $"{fileName}.json");
 
-                    if(!File.Exists(jsonConfig))
+                    if (!File.Exists(jsonConfig))
                     {
                         var resourceJson = new FileInfo(jsonConfig);
                         using var fs = resourceJson.Create();
@@ -79,13 +79,13 @@ namespace Mobile.BuildTools.Generators.Images
             }
 
             var inputList = imageResourcePaths.ToArray();
-            foreach(var path in inputList)
+            foreach (var path in inputList)
             {
                 // We need to iterate a second time so we can be sure we are
                 // tracking all of the image files
                 var resourceDefinition = GetResourceDefinition(path);
                 var configs = resourceDefinition.GetConfigurations(Build.Platform);
-                foreach(var config in configs)
+                foreach (var config in configs)
                 {
                     if (config.Ignore)
                         continue;
@@ -95,10 +95,15 @@ namespace Mobile.BuildTools.Generators.Images
                     {
                         if (System.Diagnostics.Debugger.IsAttached)
                             System.Diagnostics.Debugger.Break();
-                        else if(!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                             System.Diagnostics.Debugger.Launch();
                     }
 #endif
+
+                    if (config.Watermark != null)
+                    {
+                        config.Watermark.SourceFile = GetWatermarkFilePath(config);
+                    }
 
                     var output = GetOutputImages(config);
                     if (output != null && output.Any())
@@ -164,7 +169,7 @@ namespace Mobile.BuildTools.Generators.Images
             {
                 definition.Scale = 1;
             }
-            else if(definition.Scale > 1)
+            else if (definition.Scale > 1)
             {
                 do
                 {

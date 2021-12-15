@@ -103,13 +103,16 @@ appsettings.json
 appsettings.*.json
 ";
             var gitignoreFile = Path.Combine(path, ".gitignore");
-            if (!File.Exists(gitignoreFile))
+            lock (gitIgnoreLockObject)
             {
-                File.WriteAllText(gitignoreFile, requiredContents);
-            }
-            else if(!File.ReadAllText(gitignoreFile).Contains(Constants.SecretsJsonFileName))
-            {
-                File.AppendAllText(gitignoreFile, $"\n\n{requiredContents}");
+                if (!File.Exists(gitignoreFile))
+                {
+                    File.WriteAllText(gitignoreFile, requiredContents);
+                }
+                else if (!File.ReadAllText(gitignoreFile).Contains(Constants.SecretsJsonFileName))
+                {
+                    File.AppendAllText(gitignoreFile, $"\n\n{requiredContents}");
+                }
             }
 
 #endif

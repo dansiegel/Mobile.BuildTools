@@ -13,6 +13,7 @@ namespace Mobile.BuildTools.Utils
     public static partial class ConfigHelper
     {
         private static readonly object lockObject = new object();
+        private static readonly object gitIgnoreLockObject = new object();
 
         public static string GetConfigurationPath(string searchDirectory, string slnDir = null)
         {
