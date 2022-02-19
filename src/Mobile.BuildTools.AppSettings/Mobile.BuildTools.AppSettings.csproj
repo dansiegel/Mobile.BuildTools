@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <PackageId>$(AssemblyName)</PackageId>
+    <Description>The Mobile.BuildTools.AppSettings is a completely reimagined Roslyn Generator based approach to handling App Settings (formerly Secrets) with the Mobile.BuildTools. With the AppSettings generated with Roslyn this unlocks new possibilities for generating multiple classes which can include settings that implement interfaces. Truthfully I forgot everything it does so we wrote it down. Check out the new for 2.0 docs site at https://mobilebuildtools.com</Description>
+    <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackFolder>analyzers\dotnet\cs</PackFolder>
+    <IncludeSource>false</IncludeSource>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="build\**" Pack="true" PackagePath="build\%(Filename)%(Extension)" />
+    <Compile Include="..\Mobile.BuildTools.Reference\Build\**\*.cs" LinkBase="Reference\Build" />
+    <Compile Include="..\Mobile.BuildTools.Reference\Extensions\**\*.cs" LinkBase="Reference\Extensions" />
+    <Compile Include="..\Mobile.BuildTools.Reference\Handlers\**\*.cs" LinkBase="Reference\Handlers" />
+    <Compile Include="..\Mobile.BuildTools.Reference\Logging\**\*.cs" LinkBase="Reference\Logging" />
+    <Compile Include="..\Mobile.BuildTools.Reference\Models\**\*.cs" LinkBase="Reference\Models" />
+    <Compile Include="..\Mobile.BuildTools.Reference\Utils\**\*.cs" LinkBase="Reference\Utils" />
+    <Compile Include="..\Mobile.BuildTools.Reference\Constants.cs" Link="Reference\Constants.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AvantiPoint.CodeGenHelpers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json.Schema" PrivateAssets="all" />
+    <PackageReference Include="NuGetizer" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

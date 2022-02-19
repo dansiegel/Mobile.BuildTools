@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mobile.BuildTools.Build;
-using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Newtonsoft.Json;

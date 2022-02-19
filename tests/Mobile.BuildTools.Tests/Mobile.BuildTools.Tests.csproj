@@ -22,6 +22,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\SecretsData.cs" />
+    <Compile Remove="Fixtures\Generators\SecretsClassGeneratorFixture.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Data\SecretsData.cs" />
+    <None Include="Fixtures\Generators\SecretsClassGeneratorFixture.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json.Schema" />
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="System.Memory" />

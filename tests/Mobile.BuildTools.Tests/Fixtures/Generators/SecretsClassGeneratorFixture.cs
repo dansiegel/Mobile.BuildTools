@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.CSharp;
 using Mobile.BuildTools.Build;
-using Mobile.BuildTools.Generators.Secrets;
 using Mobile.BuildTools.Models.Settings;
 using Newtonsoft.Json;
 using Xunit;

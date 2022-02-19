@@ -20,7 +20,6 @@
   <Import Project="BuildEnvironmentDump.targets" />
   <Import Project="GitVersioning.targets" />
   <Import Project="ScssToCss.targets" />
-  <Import Project="Secrets.targets" />
 
   <PropertyGroup>
     <MobileBuildToolsInitDependsOn>_LocateBuildToolsConfig</MobileBuildToolsInitDependsOn>
