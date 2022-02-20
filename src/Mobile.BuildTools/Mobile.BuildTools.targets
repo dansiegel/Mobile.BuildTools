@@ -53,8 +53,6 @@
               PropertyName="BuildToolsEnableReleaseNotes" />
       <Output TaskParameter="EnableScssToCss"
               PropertyName="BuildToolsEnableScssToCss" />
-      <Output TaskParameter="EnableSecrets"
-              PropertyName="BuildToolsEnableSecrets" />
       <Output TaskParameter="EnableTemplateManifests"
               PropertyName="BuildToolsEnableTemplateManifests" />
     </LocateBuildToolsConfigTask>
