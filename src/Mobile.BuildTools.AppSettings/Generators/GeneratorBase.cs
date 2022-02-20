@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using CodeGenHelpers;
 using Microsoft.CodeAnalysis;
@@ -16,8 +16,10 @@ namespace Mobile.BuildTools.AppSettings.Generators
         private GeneratorExecutionContext _context;
         private string _configurationPath;
         private string _buildConfiguration;
+        private string _intermediateOutputDir;
         private string _projectName;
         private string _projectDirectory;
+        private string _targetFrameworkAssembly;
         private string _rootNamespace;
         private IDictionary<string, string> _props = new Dictionary<string, string>();
 
@@ -36,18 +38,21 @@ namespace Mobile.BuildTools.AppSettings.Generators
         string IBuildConfiguration.SolutionDirectory => SolutionDirectory;
 
         // This shouldn't be an issue for the Source Generator
-        string IBuildConfiguration.IntermediateOutputPath => Path.Combine(ProjectDirectory, "obj");
+        string IBuildConfiguration.IntermediateOutputPath => _intermediateOutputDir;
         ILog IBuildConfiguration.Logger => new ConsoleLogger();
-        BuildToolsConfig IBuildConfiguration.Configuration { get; }
-        Utils.Platform IBuildConfiguration.Platform { get; }
+        BuildToolsConfig IBuildConfiguration.Configuration => Config;
+        Utils.Platform IBuildConfiguration.Platform => _targetFrameworkAssembly.GetTargetPlatform();
 
         public void Execute(GeneratorExecutionContext context)
         {
             _context = context;
 
-            if (!(TryGet(context, "MSBuildProjectName", ref _projectName) 
-                || TryGet(context, "MSBuildProjectDirectory", ref _projectDirectory)
-                || TryGet(context, "RootNamespace", ref _rootNamespace)))
+            if (!TryGet(context, "MSBuildProjectName", ref _projectName)
+                || !TryGet(context, "MSBuildProjectDirectory", ref _projectDirectory)
+                || !TryGet(context, "RootNamespace", ref _rootNamespace)
+                || !TryGet(context, "Configuration", ref _buildConfiguration)
+                || !TryGet(context, "TargetFrameworkIdentifier", ref _targetFrameworkAssembly)
+                || !TryGet(context, "IntermediateOutputPath", ref _intermediateOutputDir))
                 return;
 
             SolutionDirectory = EnvironmentAnalyzer.LocateSolution(ProjectDirectory);
@@ -61,8 +66,10 @@ namespace Mobile.BuildTools.AppSettings.Generators
 
         private bool TryGet(GeneratorExecutionContext context, string name, ref string value)
         {
-            if (context.AnalyzerConfigOptions.GlobalOptions.TryGetValue($"build_property.{name}", out value))
+            if (context.AnalyzerConfigOptions.GlobalOptions.TryGetValue($"build_property.{name}", out value) && !string.IsNullOrEmpty(value))
+            {
                 return true;
+            }
 
             context.ReportDiagnostic(Diagnostic.Create(Descriptors.MissingMSBuildProperty, null, name));
             return false;

@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using CodeGenHelpers;
 using Microsoft.CodeAnalysis;
 using Mobile.BuildTools.AppSettings.Diagnostics;
+using Mobile.BuildTools.AppSettings.Extensions;
 using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 
@@ -32,8 +33,8 @@ NOTE: This file should be excluded from source control.";
             var settings = ConfigHelper.GetSettingsConfig(this);
             if (settings is null || !settings.Any())
                 return;
-int i = 0;
-
+            
+            int i = 0;
             var assembly = typeof(AppSettingsGenerator).Assembly;
             var toolVersion = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
             var compileGeneratedAttribute = @$"[GeneratedCodeAttribute(""{typeof(AppSettingsGenerator).FullName}"", ""{toolVersion}"")]";
@@ -42,7 +43,11 @@ int i = 0;
                 if (string.IsNullOrEmpty(settingsConfig.ClassName))
                     settingsConfig.ClassName = i++ > 0 ? $"AppSettings{i}" : "AppSettings";
                 else
+                {
                     settingsConfig.ClassName = settingsConfig.ClassName.Trim();
+                    if (settingsConfig.ClassName == "AppSettings")
+                        i++;
+                }
 
                 if (string.IsNullOrEmpty(settingsConfig.Namespace))
                     settingsConfig.Namespace = "Helpers";
@@ -79,6 +84,7 @@ int i = 0;
                     ? CodeBuilder.Create(typeSymbol)
                     : CodeBuilder.Create(fullyQualifiedNamespace)
                                  .AddClass(settingsConfig.ClassName)
+                                 .WithAccessModifier(settingsConfig.Accessibility.ToRoslynAccessibility())
                                  .MakeStaticClass();
 
                 IEnumerable<INamedTypeSymbol> interfaces = Array.Empty<INamedTypeSymbol>();
@@ -111,16 +117,17 @@ int i = 0;
 
             var value = secrets[valueConfig.Name];
             var output = string.Empty;
-            var isArray = (bool)valueConfig.IsArray;
+            var isArray = valueConfig.IsArray.HasValue ? valueConfig.IsArray.Value : false;
             var mapping = valueConfig.PropertyType.GetPropertyTypeMapping();
             var valueHandler = mapping.Handler;
             var typeDeclaration = mapping.Type.GetStandardTypeName();
-            var type = valueConfig.IsArray ?? false ? mapping.Type.MakeArrayType() : mapping.Type;
+            var type = isArray ? mapping.Type.MakeArrayType() : mapping.Type;
             var propBuilder = builder.AddProperty(valueConfig.Name)
                 .SetType(type)
                 .MakePublicProperty();
 
             var symbol = interfaces.SelectMany(x => x.GetMembers())
+                .OfType<IPropertySymbol>()
                 .Where(x => x.Name == valueConfig.Name)
                 .FirstOrDefault();
 

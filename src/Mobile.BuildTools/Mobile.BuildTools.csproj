@@ -52,4 +52,12 @@
                       PackFolder="build" />
   </ItemGroup>
 
+  <Target Name="ExcludeTFM"
+          BeforeTargets="_AddPackageManifest"
+          AfterTargets="InferPackageContents">
+    <PropertyGroup>
+      <IsPackagingProject>true</IsPackagingProject>
+    </PropertyGroup>
+  </Target>
+
 </Project>
