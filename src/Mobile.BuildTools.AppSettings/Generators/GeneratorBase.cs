@@ -59,7 +59,25 @@ namespace Mobile.BuildTools.AppSettings.Generators
             _configurationPath = ConfigHelper.GetConfigurationPath(ProjectDirectory);
             Config = ConfigHelper.GetConfig(_configurationPath);
 
-            Generate();
+            try
+            {
+                Generate();
+            }
+            catch (System.Exception ex)
+            {
+                if(Config.Debug)
+                    context.ReportDiagnostic
+                        (Diagnostic.Create(
+                            new DiagnosticDescriptor(
+                                "MBT500",
+                                "DEBUG - Unhandled Error",
+                                "An Unhandled Generator Error Occurred: {0}",
+                                "DEBUG", 
+                                DiagnosticSeverity.Error,
+                                true),
+                            null,
+                            ex.ToString()));
+            }
         }
 
         protected abstract void Generate();
