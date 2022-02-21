@@ -16,7 +16,7 @@
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
     <None Include="..\assets\runtimes\**\libsass.*" Pack="true" PackagePath="$(PackFolder)/runtimes/%(RecursiveDir)%(Filename)%(Extension)" />
     <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
-    <Compile Include="..\Mobile.BuildTools\Logging\BuildHostLoggingHelper.cs" Link="BuildHostLoggingHelper.cs" />
+    <Compile Include="..\Mobile.BuildTools\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
     <None Update="buildTransitive\*.targets;buildTransitive\*.props" Pack="true" PackFolder="buildTransitive" />
   </ItemGroup>
 

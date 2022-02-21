@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <Description>The Mobile.BuildTools Images is similar to Resizatizer in that it will resize your images. But the similarity ends there. The Mobile.BuildTools is built to help you to provide unmatched power. For images you can customize images with banners, provide customized images for White Labeled apps, or per environment. Really the opportunities are only limited to your imagination. For mor information be sure to check out the docs at https://mobilebuildtools.com</Description>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -13,12 +14,23 @@
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
     <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
     <None Update="buildTransitive\*.targets;buildTransitive\*.props" Pack="true" PackFolder="buildTransitive" />
+    <Compile Include="..\Mobile.BuildTools\Build\BuildExtensions.cs" LinkBase="Build" />
+    <Compile Include="..\Mobile.BuildTools\Extensions\ITaskItemExtensions.cs" LinkBase="Extensions" />
+    <Compile Include="..\Mobile.BuildTools\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
+    <Compile Include="..\Mobile.BuildTools\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Build" Pack="false" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
+    <PackageReference Include="ShimSkiaSharp" PrivateAssets="all" />
+    <PackageReference Include="Svg.Skia" PrivateAssets="all" />
+    <PackageReference Include="System.Text.Json" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" />
   </ItemGroup>
 
 </Project>

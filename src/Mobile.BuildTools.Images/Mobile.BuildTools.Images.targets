@@ -1,9 +1,9 @@
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.CollectImageAssetsTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+             AssemblyFile="$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Images.dll'))"/>
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ImageResizerTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+             AssemblyFile="$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Images.dll'))"/>
 
   <Target Name="_CollectImageAssets"
           BeforeTargets="CoreCompile"
