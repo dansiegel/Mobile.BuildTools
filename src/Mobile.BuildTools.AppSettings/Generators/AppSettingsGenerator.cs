@@ -190,10 +190,12 @@ NOTE: This file should be excluded from source control.";
 
         private CodeGenHelpers.ValueType GetValueType(string value, PropertyType propertyType)
         {
-            switch(value.ToLower())
+            switch(value?.ToLower())
             {
+                case null when propertyType == PropertyType.String:
                 case "null" when propertyType == PropertyType.String:
                     return CodeGenHelpers.ValueType.Null;
+                case null:
                 case "null":
                 case "default":
                     return CodeGenHelpers.ValueType.Default;
