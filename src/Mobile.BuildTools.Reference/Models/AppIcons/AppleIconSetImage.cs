@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models.AppIcons
 {
     public class AppleIconSetImage
     {
-        [JsonProperty("scale", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("scale")]
         public string Scale { get; set; }
 
-        [JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("size")]
         public string Size { get; set; }
 
-        [JsonProperty("idiom", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("idiom")]
         public string Idiom { get; set; }
 
-        [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("filename")]
         public string FileName { get; set; }
     }
 }

@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models
 {
     public class XamarinCss : ToolItem
     {
         [DefaultValue(false)]
-        [JsonProperty("minify", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("minify")]
         public bool Minify { get; set; }
 
         [DefaultValue(false)]
-        [JsonProperty("bundleScss", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("bundleScss")]
         public bool BundleScss { get; set; }
     }
 }

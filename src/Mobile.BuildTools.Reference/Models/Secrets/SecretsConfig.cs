@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Mobile.BuildTools.Models.Settings;
-using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Models.Secrets
 {
@@ -12,28 +12,28 @@ namespace Mobile.BuildTools.Models.Secrets
             Properties = new List<ValueConfig>();
         }
 
-        [JsonProperty("disable", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("disable")]
         public bool Disable { get; set; }
 
-        [JsonProperty("delimiter", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("delimiter")]
         public string Delimiter { get; set; }
 
-        [JsonProperty("prefix", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("prefix")]
         public string Prefix { get; set; }
 
-        [JsonProperty("className", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("className")]
         public string ClassName { get; set; }
 
-        [JsonProperty("accessibility", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("accessibility")]
         public Accessibility Accessibility { get; set; }
 
-        [JsonProperty("rootNamespace", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("rootNamespace")]
         public string RootNamespace { get; set; }
 
-        [JsonProperty("namespace", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("namespace")]
         public string Namespace { get; set; }
 
-        [JsonProperty("properties", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("properties")]
         public List<ValueConfig> Properties { get; set; }
 
         public bool ContainsKey(string key) => Properties != null && Properties.Any(x => x.Name == key);

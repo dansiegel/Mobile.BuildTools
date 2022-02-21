@@ -3,11 +3,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Drawing;
 using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models.AppIcons;
-using Newtonsoft.Json;
 using SkiaSharp;
 
 namespace Mobile.BuildTools.Generators.Images
@@ -80,7 +80,7 @@ namespace Mobile.BuildTools.Generators.Images
                     System.Diagnostics.Debugger.Launch();
 #endif
                 Log.LogWarning(@$"Encountered Fatal error while processing image:
-{JsonConvert.SerializeObject(outputImage)}");
+{JsonSerializer.Serialize(outputImage)}");
                 throw;
             }
         }

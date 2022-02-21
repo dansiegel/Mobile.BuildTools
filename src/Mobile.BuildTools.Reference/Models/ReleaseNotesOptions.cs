@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models
 {
@@ -7,26 +7,26 @@ namespace Mobile.BuildTools.Models
     {
         [DefaultValue(10)]
         [Description("The number of days back to look when generating the Release Notes")]
-        [JsonProperty("maxDays", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("maxDays")]
         public int MaxDays { get; set; }
 
         [DefaultValue(10)]
         [Description("The maximum number of commits to lookup")]
-        [JsonProperty("maxCommit", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("maxCommit")]
         public int MaxCommit { get; set; }
 
         [DefaultValue(250)]
         [Description("The maximum character limit for generated Release Notes")]
-        [JsonProperty("characterLimit", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("characterLimit")]
         public int CharacterLimit { get; set; }
 
         [DefaultValue("releasenotes.txt")]
         [Description("The output filename such as 'ReleaseNotes.md' or 'ReleaseNotes.txt'")]
-        [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("filename")]
         public string FileName { get; set; }
 
         [DefaultValue(true)]
-        [JsonProperty("createInRoot", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("createInRoot")]
         public bool CreateInRoot { get; set; }
     }
 }

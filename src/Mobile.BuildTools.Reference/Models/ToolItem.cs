@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models
 {
@@ -7,7 +7,7 @@ namespace Mobile.BuildTools.Models
     {
         [Description("Disables this Mobile.BuildTools Task")]
         [DefaultValue(false)]
-        [JsonProperty("disable", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("disable")]
         public bool? Disable { get; set; }
     }
 }

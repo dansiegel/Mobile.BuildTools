@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models
 {
@@ -12,10 +11,10 @@ namespace Mobile.BuildTools.Models
             ConditionalDirectories = new Dictionary<string, IEnumerable<string>>();
         }
 
-        [JsonProperty("directories", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("directories")]
         public List<string> Directories { get; set; }
 
-        [JsonProperty("conditionalDirectories", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("conditionalDirectories")]
         public Dictionary<string, IEnumerable<string>> ConditionalDirectories { get; set; }
     }
 }

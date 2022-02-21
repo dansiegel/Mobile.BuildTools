@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Mobile.BuildTools.Extensions
 {
@@ -16,6 +16,6 @@ namespace Mobile.BuildTools.Extensions
         }
 
         public static T ReadJsonFile<T>(this FileInfo fi) =>
-            JsonConvert.DeserializeObject<T>(fi.ReadAllText());
+            JsonSerializer.Deserialize<T>(fi.ReadAllText());
     }
 }
