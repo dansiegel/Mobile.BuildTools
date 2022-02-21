@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Settings;
-using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Utils
 {
@@ -14,7 +14,7 @@ namespace Mobile.BuildTools.Utils
         public static void SaveConfig(BuildToolsConfig config, string path)
         {
             var filePath = GetConfigFilePath(path);
-            var json = JsonConvert.SerializeObject(config, GetSerializerSettings());
+            var json = JsonSerializer.Serialize(config, GetSerializerSettings());
             lock (lockObject)
             {
                 File.WriteAllText(filePath, json);

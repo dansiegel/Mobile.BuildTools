@@ -29,7 +29,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all" Pack="false" />
-    <PackageReference Include="Newtonsoft.Json.Schema" PrivateAssets="all" />
+    <PackageReference Include="System.Text.Json" PrivateAssets="all" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
   </ItemGroup>
 

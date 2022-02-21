@@ -71,12 +71,12 @@ namespace Mobile.BuildTools.AppSettings.Generators
                             new DiagnosticDescriptor(
                                 "MBT500",
                                 "DEBUG - Unhandled Error",
-                                "An Unhandled Generator Error Occurred: {0}",
+                                "An Unhandled Generator Error Occurred: {0} - {1}",
                                 "DEBUG", 
                                 DiagnosticSeverity.Error,
                                 true),
                             null,
-                            ex.ToString()));
+                            ex.Message, ex.StackTrace));
             }
         }
 

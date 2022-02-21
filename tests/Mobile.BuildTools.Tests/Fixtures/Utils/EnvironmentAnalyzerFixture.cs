@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -39,7 +39,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             {
                 SampleProp = "Hello Tests"
             };
-            File.WriteAllText(Path.Combine(config.ProjectDirectory, filename), JsonConvert.SerializeObject(secrets));
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, filename), JsonSerializer.Serialize(secrets));
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
 
@@ -174,7 +174,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             {
                 SampleProp = "Hello Tests"
             };
-            File.WriteAllText(Path.Combine(config.ProjectDirectory, filename), JsonConvert.SerializeObject(secrets));
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, filename), JsonSerializer.Serialize(secrets));
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
 

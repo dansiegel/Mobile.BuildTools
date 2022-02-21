@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json.Schema" />
+    <PackageReference Include="System.Text.Json" />
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="System.Memory" />
   </ItemGroup>

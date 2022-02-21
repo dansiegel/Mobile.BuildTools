@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Mobile.BuildTools.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Mobile.BuildTools.Utils
 {
@@ -71,7 +71,7 @@ namespace Mobile.BuildTools.Utils
                 json = File.ReadAllText(filePath);
             }
 
-            var config = JsonConvert.DeserializeObject<BuildToolsConfig>(json, GetSerializerSettings());
+            var config = JsonSerializer.Deserialize<BuildToolsConfig>(json, GetSerializerSettings());
             if (skipActivation)
                 return config;
 
@@ -109,14 +109,19 @@ namespace Mobile.BuildTools.Utils
             return Path.Combine(path, Constants.BuildToolsConfigFileName);
         }
 
-        public static JsonSerializerSettings GetSerializerSettings()
+        public static JsonSerializerOptions GetSerializerSettings()
         {
-            var serializer = new JsonSerializerSettings
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
-                Formatting = Formatting.Indented,
+                AllowTrailingCommas = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                WriteIndented = true
             };
-            serializer.Converters.Add(new StringEnumConverter());
-            return serializer;
+
+            options.Converters.Add(new JsonStringEnumConverter());
+            return options;
         }
 
         private static readonly Dictionary<string, string> conditionalDefaults = new Dictionary<string, string>

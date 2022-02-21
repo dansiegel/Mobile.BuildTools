@@ -27,6 +27,7 @@
     <PackageReference Update="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Update="System.ObjectModel" Version="4.3.0" />
     <PackageReference Update="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+    <PackageReference Update="System.Text.Json" Version="5.0.0" />
     <PackageReference Update="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
   </ItemGroup>
 
