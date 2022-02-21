@@ -38,6 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Mobile.BuildTools.FormsCss\Mobile.BuildTools.FormsCss.csproj" />
+    <ProjectReference Include="..\..\src\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj" />
     <ProjectReference Include="..\..\src\Mobile.BuildTools\Mobile.BuildTools.csproj" />
   </ItemGroup>
 

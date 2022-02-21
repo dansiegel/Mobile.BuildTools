@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
     <None Include="..\assets\runtimes\**\libsass.*" Pack="true" PackagePath="$(PackFolder)/runtimes/%(RecursiveDir)%(Filename)%(Extension)" />
     <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
     <Compile Include="..\Mobile.BuildTools\Logging\BuildHostLoggingHelper.cs" Link="BuildHostLoggingHelper.cs" />

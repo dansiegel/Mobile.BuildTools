@@ -3,7 +3,6 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageId>$(AssemblyName)</PackageId>
     <Description>The Mobile.BuildTools 2.0 is more powerful than ever before. Whether you're managing your application secrets, environment configurations, using CSS with Xamarin.Forms, or looking for a super powerful API that can enable powerful solutions for all of your App Icons / Images. If you aren't using Mobile.BuildTools with your Xamarin apps, you're working too hard or not following best practices! Truthfully I forgot everything it does so we wrote it down. Check out the new for 2.0 docs site at https://mobilebuildtools.com</Description>
     <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
@@ -21,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\assets\runtimes\**\libsass.*" Pack="true" PackagePath="$(PackFolder)/runtimes/%(RecursiveDir)%(Filename)%(Extension)" />
     <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
     <None Update="buildTransitive\*.targets;buildTransitive\*.props" Pack="true" PackFolder="buildTransitive" />
     <None Update="Resources\*" Pack="true" PackagePath="$(PackFolder)/resources/%(Filename)%(Extension)" />
@@ -46,10 +44,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Mobile.BuildTools.AppSettings\Mobile.BuildTools.AppSettings.csproj" 
                       ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj"
-                      PackFolder="build" />
-    <ProjectReference Include="..\Mobile.BuildTools.XamarinSdk\Mobile.BuildTools.XamarinSdk.csproj"
-                      PackFolder="build" />
+    <ProjectReference Include="..\Mobile.BuildTools.FormsCss\Mobile.BuildTools.FormsCss.csproj" 
+                      ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj" 
+                      ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" />
+    <ProjectReference Include="..\Mobile.BuildTools.XamarinSdk\Mobile.BuildTools.XamarinSdk.csproj" PackFolder="build" />
   </ItemGroup>
 
   <Target Name="ExcludeTFM"

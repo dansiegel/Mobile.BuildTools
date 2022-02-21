@@ -16,7 +16,7 @@ namespace Mobile.BuildTools.Tasks
         private ILog _logger;
         internal ILog Logger
         {
-            get => _logger ?? (BuildHostLoggingHelper)Log;
+            get => _logger ??= (BuildHostLoggingHelper)Log;
             set => _logger = value;
         }
 

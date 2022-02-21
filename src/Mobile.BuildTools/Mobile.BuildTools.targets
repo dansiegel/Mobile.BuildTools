@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.LocateBuildToolsConfigTask"
@@ -19,7 +19,6 @@
 
   <Import Project="BuildEnvironmentDump.targets" />
   <Import Project="GitVersioning.targets" />
-  <Import Project="ScssToCss.targets" />
 
   <PropertyGroup>
     <MobileBuildToolsInitDependsOn>_LocateBuildToolsConfig</MobileBuildToolsInitDependsOn>
