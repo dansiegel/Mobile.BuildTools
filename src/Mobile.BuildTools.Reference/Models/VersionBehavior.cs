@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json.Schema.Generation;
+﻿using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models
 {
-    [JSchemaGenerationProvider(typeof(StringEnumGenerationProvider))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum VersionBehavior
     {
         Off,

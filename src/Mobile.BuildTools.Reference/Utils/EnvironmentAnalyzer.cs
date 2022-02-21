@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Mobile.BuildTools.Build;
-using Newtonsoft.Json.Linq;
+using Mobile.BuildTools.Handlers;
 
 namespace Mobile.BuildTools.Utils
 {
@@ -292,10 +293,10 @@ namespace Mobile.BuildTools.Utils
             if (!File.Exists(path)) return;
 
             var json = File.ReadAllText(path);
-            var secrets = JObject.Parse(json);
-            foreach(var secret in secrets)
+            var document = JsonDocument.Parse(json);
+            foreach(var setting in document.RootElement.EnumerateObject())
             {
-                env[secret.Key] = secret.Value.ToString();
+                env[setting.Name] = setting.GetPropertyValueAsString();
             }
         }
     }

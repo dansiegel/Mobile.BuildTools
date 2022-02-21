@@ -20,7 +20,6 @@
   <Import Project="BuildEnvironmentDump.targets" />
   <Import Project="GitVersioning.targets" />
   <Import Project="ScssToCss.targets" />
-  <Import Project="Secrets.targets" />
 
   <PropertyGroup>
     <MobileBuildToolsInitDependsOn>_LocateBuildToolsConfig</MobileBuildToolsInitDependsOn>
@@ -54,8 +53,6 @@
               PropertyName="BuildToolsEnableReleaseNotes" />
       <Output TaskParameter="EnableScssToCss"
               PropertyName="BuildToolsEnableScssToCss" />
-      <Output TaskParameter="EnableSecrets"
-              PropertyName="BuildToolsEnableSecrets" />
       <Output TaskParameter="EnableTemplateManifests"
               PropertyName="BuildToolsEnableTemplateManifests" />
     </LocateBuildToolsConfigTask>

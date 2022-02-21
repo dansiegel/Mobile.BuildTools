@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;MonoAndroid81;MonoAndroid90;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40;netcoreapp3.1</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.16299</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Provides a Cross Platform implementation of the ConfigurationManager. This allows you to load an app.config from any platform head as well as load custom configs at runtime or transform your configuration at runtime.</Description>

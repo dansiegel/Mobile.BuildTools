@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models.AppIcons;
 using Mobile.BuildTools.Utils;
-using Newtonsoft.Json;
 
 namespace Mobile.BuildTools.Generators.Images
 {
@@ -63,13 +63,13 @@ namespace Mobile.BuildTools.Generators.Images
                         using var fs = resourceJson.Create();
                         using var writer = new StreamWriter(fs);
                         writer.Write(
-                            JsonConvert.SerializeObject(
+                            JsonSerializer.Serialize(
                                 new ResourceDefinition
                                 {
                                     Name = fileName,
                                     Scale = 1
                                 },
-                                Formatting.Indented
+                                ConfigHelper.GetSerializerSettings()
                                 )
                             );
                     }
@@ -153,7 +153,8 @@ namespace Mobile.BuildTools.Generators.Images
 
             var fileName = GetImageConfigurationPath(filePath);
             var json = File.ReadAllText(fileName);
-            var definition = JsonConvert.DeserializeObject<ResourceDefinition>(json, ConfigHelper.GetSerializerSettings());
+            var definition = 
+                JsonSerializer.Deserialize<ResourceDefinition>(json, ConfigHelper.GetSerializerSettings());
 
             if (definition is null)
             {
