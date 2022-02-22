@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Description>The Mobile.BuildTools provides a powerful Build Time API for handling common tasks when developing Cross Platform Mobile apps with .NET. For more information be sure to check out the docs at https://mobilebuildtools.com</Description>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackFolder>build</PackFolder>
+    <IncludeSource>false</IncludeSource>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
+    <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
+    <None Update="buildTransitive\*.targets;buildTransitive\*.props" Pack="true" PackFolder="buildTransitive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Pack="false" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
+    <PackageReference Include="NuGetizer" PrivateAssets="all" />
+    <PackageReference Include="System.Text.Json" PrivateAssets="All" />
+    <PackageReference Include="System.ComponentModel.Annotations" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" />
+  </ItemGroup>
+
+  <Target Name="ExcludeTFM"
+          BeforeTargets="_AddPackageManifest"
+          AfterTargets="InferPackageContents">
+    <PropertyGroup>
+      <IsPackagingProject>true</IsPackagingProject>
+    </PropertyGroup>
+  </Target>
+
+</Project>

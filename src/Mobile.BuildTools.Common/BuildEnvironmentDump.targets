@@ -2,7 +2,7 @@
 <Project>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.BuildEnvironmentDumpTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+             AssemblyFile="$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Common.dll'))"/>
 
   <Target Name="CIEnvironmentDump">
     <BuildEnvironmentDumpTask ProjectDirectory="$(MSBuildProjectDirectory)"
