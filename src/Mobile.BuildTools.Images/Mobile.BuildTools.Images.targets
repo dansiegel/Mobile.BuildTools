@@ -5,6 +5,17 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ImageResizerTask"
              AssemblyFile="$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Images.dll'))"/>
 
+  <Import Project="MonoAndroid.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid'" />
+  <Import Project="iOS.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS'" />
+  <Import Project="iOS.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.TVOS'" />
+  <Import Project="Mac.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'" />
+  <Import Project="UAP.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'UAP'" />
+
   <Target Name="_CollectImageAssets"
           BeforeTargets="CoreCompile"
           AfterTargets="MobileBuildToolsInit"
@@ -43,6 +54,23 @@
       <Output ItemName="FilesWrite"
               TaskParameter="GeneratedImages"/>
     </ImageResizerTask>
+  </Target>
+
+  <Target Name="IncludeUnifiedImageAsset"
+          BeforeTargets="_CollectBundleResources"
+          AfterTargets="UnifiedImageAssetProcessing;_CollectImageAssets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS' OR $(TargetFrameworkIdentifier) == 'Xamarin.TVOS' OR $(TargetFrameworkIdentifier) == 'Xamarin.Mac'">
+    <ItemGroup>
+      <BundleResource Include="@(UnifiedImageAsset)"
+                      Link="%(UnifiedImageAsset.OutputLink)"
+                      Visible="true"
+                      Condition="%(UnifiedImageAsset.ShouldBeVisible) == 'true' " />
+
+      <ImageAsset Include="@(UnifiedImageAsset)"
+                  Link="%(UnifiedImageAsset.OutputLink)"
+                  Visible="false"
+                  Condition="%(UnifiedImageAsset.ShouldBeVisible) != 'true' " />
+    </ItemGroup>
   </Target>
 
 </Project>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <Import Project="PlatformHead.targets" />
+  <Import Project="AppleManifests.targets" />
+
+  <Target Name="_GatherManifests">
+    <PropertyGroup>
+      <TemlateAppManifest>$(_AppBundlePath)Info.plist</TemlateAppManifest>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="AutomaticBuildVersioning"
+          AfterTargets="HandleTokenizedInfoPlist"
+          DependsOnTargets="MobileBuildToolsInit">
+
+    <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                  ProjectName="$(MSBuildProjectName)"
+                                  ProjectDirectory="$(MSBuildProjectDirectory)"
+                                  SolutionDirectory="$(SolutionDir)"
+                                  IntermediateOutputPath="$(IntermediateOutputPath)"
+                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                  Condition="$(BuildToolsEnableAutomaticVersioning)" />
+  </Target>
+
+  <Target Name="HandlePlatformAppConfig"
+          AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy"
+          Inputs="@(MobileBuildToolsConfig)"
+          Outputs="@(MobileBuildToolsConfig -> '$(IntermediateOutputPath)configs\%(Filename)%(Extension)')">
+    <ItemGroup>
+      <BundleResource Include="$(IntermediateOutputPath)configs\**')"
+                      Link="Assets/%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

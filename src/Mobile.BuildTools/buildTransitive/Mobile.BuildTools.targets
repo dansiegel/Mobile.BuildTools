@@ -1,3 +1,0 @@
-<Project>
-  <Import Project="$(MSBuildThisFileDirectory)..\build\Mobile.BuildTools.targets" />
-</Project>

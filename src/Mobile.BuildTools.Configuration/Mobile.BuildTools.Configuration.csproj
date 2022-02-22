@@ -54,7 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="build\*.props" Pack="true" PackagePath="build" />
+    <None Include="build\*.props;build\*.targets" Pack="true" PackagePath="build" />
   </ItemGroup>
 
   <Target Name="_EnsureBuildTasksBuilt" BeforeTargets="PackMSBuildTargets">

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <Target Name="IncludeUnifiedImageAsset"
+          BeforeTargets="_CollectBundleResources"
+          AfterTargets="UnifiedImageAssetProcessing;_CollectImageAssets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS' OR $(TargetFrameworkIdentifier) == 'Xamarin.TVOS' OR $(TargetFrameworkIdentifier) == 'Xamarin.Mac'">
+    <ItemGroup>
+      <BundleResource Include="@(UnifiedImageAsset)"
+                      Link="%(UnifiedImageAsset.OutputLink)"
+                      Visible="true"
+                      Condition="%(UnifiedImageAsset.ShouldBeVisible) == 'true' " />
+
+      <ImageAsset Include="@(UnifiedImageAsset)"
+                  Link="%(UnifiedImageAsset.OutputLink)"
+                  Visible="false"
+                  Condition="%(UnifiedImageAsset.ShouldBeVisible) != 'true' " />
+    </ItemGroup>
+  </Target>
+
+</Project>
