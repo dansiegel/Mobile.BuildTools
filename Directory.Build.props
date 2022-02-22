@@ -23,6 +23,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <DefaultDescription>The Mobile.BuildTools 2.1 is more powerful than ever before. Whether you're managing your application secrets, environment configurations, using CSS with Xamarin.Forms, or looking for a super powerful API that can enable powerful solutions for all of your App Icons / Images. If you aren't using Mobile.BuildTools with your Xamarin apps, you're working too hard or not following best practices! 
+
+Truthfully I forgot everything it does so we wrote it down. Check out the docs site at https://mobilebuildtools.com</DefaultDescription>
+    <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 

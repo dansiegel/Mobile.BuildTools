@@ -4,12 +4,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <PackageId>$(AssemblyName)</PackageId>
-    <Description>The Mobile.BuildTools 2.0 is more powerful than ever before. Whether you're managing your application secrets, environment configurations, using CSS with Xamarin.Forms, or looking for a super powerful API that can enable powerful solutions for all of your App Icons / Images. If you aren't using Mobile.BuildTools with your Xamarin apps, you're working too hard or not following best practices! Truthfully I forgot everything it does so we wrote it down. Check out the new for 2.0 docs site at https://mobilebuildtools.com</Description>
+    <Description>$(DefaultDescription)</Description>
     <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <!--<PackageReadmeFile>readme.md</PackageReadmeFile>-->
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <IsPackagingProject>true</IsPackagingProject>
   </PropertyGroup>
 
@@ -17,11 +17,9 @@
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
   </ItemGroup>
 
-  <!--<ItemGroup>
-    <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
-    <None Update="Resources\*" Pack="true" PackagePath="$(PackFolder)/resources/%(Filename)%(Extension)" />
+  <ItemGroup>
     <None Update="readme.md" Pack="true" PackagePath="readme.md" />
-  </ItemGroup>-->
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
@@ -32,7 +30,6 @@
     <ProjectReference Include="..\Mobile.BuildTools.AppSettings\Mobile.BuildTools.AppSettings.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Mobile.BuildTools.FormsCss\Mobile.BuildTools.FormsCss.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj" ReferenceOutputAssembly="false" />
-    <!--<ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" />-->
   </ItemGroup>
 
   <Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">

@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Description>The Mobile.BuildTools Images is similar to Resizatizer in that it will resize your images. But the similarity ends there. The Mobile.BuildTools is built to help you to provide unmatched power. For images you can customize images with banners, provide customized images for White Labeled apps, or per environment. Really the opportunities are only limited to your imagination. For more information be sure to check out the docs at https://mobilebuildtools.com</Description>
+    <Description>The Mobile.BuildTools Images package is built to bring unparalleled power to your image management for your Mobile apps. While this is similar in concept to the Resizatizer built into .NET MAUI, this provides an easier to use JSON configuration API which is designed to make tasks like conditionally including or modifying images based on build configuration, build platform, or even white labeling concerns. Additionally you can easily add a banner to images such as your app icon to easily distinguish between a production or dev build.
+
+$(DefaultDescription)</Description>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

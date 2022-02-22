@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Description>The Mobile.BuildTools provides a powerful Build Time API for handling common tasks when developing Cross Platform Mobile apps with .NET. For more information be sure to check out the docs at https://mobilebuildtools.com</Description>
+    <Description>The Mobile.BuildTools App Platform package is built for your Platform Targets. This contains MSBuilt targets to help you Tokenize your Info.plist or AndroidManifest, update the app version and generate Release Notes.
+
+$(DefaultDescription)</Description>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

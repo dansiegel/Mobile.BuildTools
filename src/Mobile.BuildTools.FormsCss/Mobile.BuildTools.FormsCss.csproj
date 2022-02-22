@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Description>The Mobile.BuildTools is a collection of build time helpers for building Cross Platform Mobile Applications with .NET. This package is designed to help those using CSS within their Xamarin.Forms application to leverage the power of SCSS. For more information be sure to check out the docs at https://mobilebuildtools.com</Description>
+    <Description>The Mobile.BuildTools Forms CSS package provides you the ability to add the power of SCSS for your Xamarin.Forms applications to compile the SCSS files to valid Xamarin.Forms CSS.
+
+$(DefaultDescription)</Description>
     <PackageId>$(AssemblyName)</PackageId>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>
