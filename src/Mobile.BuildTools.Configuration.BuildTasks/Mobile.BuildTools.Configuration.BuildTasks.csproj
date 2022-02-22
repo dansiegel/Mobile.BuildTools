@@ -2,10 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Description>The Mobile.BuildTools Images is similar to Resizatizer in that it will resize your images. But the similarity ends there. The Mobile.BuildTools is built to help you to provide unmatched power. For images you can customize images with banners, provide customized images for White Labeled apps, or per environment. Really the opportunities are only limited to your imagination. For more information be sure to check out the docs at https://mobilebuildtools.com</Description>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <IsPackable>true</IsPackable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackFolder>build</PackFolder>
     <IncludeSource>false</IncludeSource>
   </PropertyGroup>
@@ -15,31 +12,25 @@
     <None Include="*.targets;*.props" Pack="true" PackFolder="$(PackFolder)" />
     <None Update="buildTransitive\*.targets;buildTransitive\*.props" Pack="true" PackFolder="buildTransitive" />
     <Compile Include="..\Mobile.BuildTools.Common\Build\BuildExtensions.cs" LinkBase="Build" />
-    <Compile Include="..\Mobile.BuildTools\Extensions\ITaskItemExtensions.cs" LinkBase="Extensions" />
     <Compile Include="..\Mobile.BuildTools.Common\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
     <Compile Include="..\Mobile.BuildTools.Common\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
+    <Compile Include="..\Mobile.BuildTools.Configuration\TransformationHelper.cs" Link="Utils\TransformationHelper.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Build" Pack="false" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
+    <PackageReference Include="Microsoft.Web.Xdt" PrivateAssets="all" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
-    <PackageReference Include="ShimSkiaSharp" PrivateAssets="all" />
-    <PackageReference Include="Svg.Skia" PrivateAssets="all" />
     <PackageReference Include="System.Text.Json" PrivateAssets="All" />
     <PackageReference Include="System.ComponentModel.Annotations" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mobile.BuildTools.Common\Mobile.BuildTools.Common.csproj"
-                      ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj"
-                      PackFolder="build" />
+    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" />
   </ItemGroup>
 
-  <Target Name="ExcludeTFM"
-          BeforeTargets="_AddPackageManifest"
-          AfterTargets="InferPackageContents">
+  <Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">
     <PropertyGroup>
       <IsPackagingProject>true</IsPackagingProject>
     </PropertyGroup>
