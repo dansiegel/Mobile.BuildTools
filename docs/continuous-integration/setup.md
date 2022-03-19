@@ -9,4 +9,4 @@ Obviously if we checked in a json file with our secrets it would negate the enti
 | UWP | UWPSecret_ |
 | macOS | MacSecret_ |
 | Tizen | TizenSecret_ |
-| Default | Secret_ |
+| Default | BuildTools_ |
