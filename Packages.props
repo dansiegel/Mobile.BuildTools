@@ -36,7 +36,7 @@
     <PackageReference Update="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageReference Update="Xamarin.Forms.Mocks" Version="4.7.0.1" />
     <PackageReference Update="Xamarin.Essentials" Version="1.6.1" />
-    <PackageReference Update="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.12" />
+    <PackageReference Update="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.13" />
   </ItemGroup>
 
   <ItemGroup>
