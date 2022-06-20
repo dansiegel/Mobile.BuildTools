@@ -15,7 +15,7 @@ on:
 
 jobs:
   build-library:
-    uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml
+    uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
     permissions:
       checks: write
       statuses: write
