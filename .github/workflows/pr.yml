@@ -1,0 +1,25 @@
+name: Mobile.BuildTools PR
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      "E2E/**"
+      "samples/**"
+      "src/**"
+      "tests/**"
+      "Directory.Build.*"
+      "Packages.props"
+      "version.json"
+      "global.json"
+
+jobs:
+  build-library:
+    uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml
+    permissions:
+      checks: write
+      statuses: write
+    with:
+      name: Mobile.BuildTools Library
+      solution-path: Mobile.BuildTools.sln

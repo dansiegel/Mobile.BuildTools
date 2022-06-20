@@ -1,0 +1,51 @@
+name: Mobile.BuildTools CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      "E2E/**"
+      "samples/**"
+      "src/**"
+      "tests/**"
+      "Directory.Build.*"
+      "Packages.props"
+      "version.json"
+      "global.json"
+
+jobs:
+  build-library:
+    uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml
+    permissions:
+      checks: write
+      statuses: write
+    with:
+      name: Mobile.BuildTools Library
+      solution-path: Mobile.BuildTools.sln
+      code-sign: true
+    secrets:
+      codeSignKeyVault: ${{ secrets.CodeSignKeyVault }}
+      codeSignClientId: ${{ secrets.CodeSignClientId }}
+      codeSignTenantId: ${{ secrets.CodeSignTenantId }}
+      codeSignClientSecret: ${{ secrets.CodeSignClientSecret }}
+      codeSignCertificate: ${{ secrets.CodeSignCertificate }}
+
+  deploy-internal:
+    uses: avantipoint/workflow-templates/.github/workflows/deploy-nuget.yml@master
+    needs: build-library
+    with:
+      name: Deploy Internal
+    secrets:
+      feedUrl: ${{ secrets.IN_HOUSE_NUGET_FEED }}
+      apiKey: ${{ secrets.IN_HOUSE_API_KEY }}
+
+  deploy-sponsors:
+    uses: avantipoint/workflow-templates/.github/workflows/deploy-nuget.yml@master
+    needs: build-library
+    with:
+      name: Deploy Sponsor Connect
+    secrets:
+      feedUrl: ${{ secrets.SPONSOR_CONNECT_NUGET_FEED }}
+      apiKey: ${{ secrets.SPONSOR_CONNECT_TOKEN }}
+
