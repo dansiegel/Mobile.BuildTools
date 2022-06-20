@@ -2,17 +2,17 @@ name: Mobile.BuildTools CI
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
     paths:
-      "E2E/**"
-      "samples/**"
-      "src/**"
-      "tests/**"
-      "Directory.Build.*"
-      "Packages.props"
-      "version.json"
-      "global.json"
+      - "E2E/**"
+      - "samples/**"
+      - "src/**"
+      - "tests/**"
+      - "Directory.Build.*"
+      - "Packages.props"
+      - "version.json"
+      - "global.json"
+  workflow_dispatch:
 
 jobs:
   build-library:

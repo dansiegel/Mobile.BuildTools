@@ -1,18 +1,17 @@
 name: Mobile.BuildTools PR
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    branches: [ master ]
     paths:
-      "E2E/**"
-      "samples/**"
-      "src/**"
-      "tests/**"
-      "Directory.Build.*"
-      "Packages.props"
-      "version.json"
-      "global.json"
+      - "E2E/**"
+      - "samples/**"
+      - "src/**"
+      - "tests/**"
+      - "Directory.Build.*"
+      - "Packages.props"
+      - "version.json"
+      - "global.json"
 
 jobs:
   build-library:
