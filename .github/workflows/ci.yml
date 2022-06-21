@@ -22,6 +22,7 @@ jobs:
       statuses: write
     with:
       name: Mobile.BuildTools Library
+      submodules: true
       solution-path: Mobile.BuildTools.sln
       code-sign: true
     secrets:
