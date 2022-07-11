@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.AppSettin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BuildTools.Images", "src\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj", "{51B08FF2-DF60-4105-9D89-06E612B03E92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BuildTools.Core", "src\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj", "{A5578B7E-63D4-4532-8094-09BDE2B5574A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,18 @@ Global
 		{51B08FF2-DF60-4105-9D89-06E612B03E92}.Release|x64.Build.0 = Release|Any CPU
 		{51B08FF2-DF60-4105-9D89-06E612B03E92}.Release|x86.ActiveCfg = Release|Any CPU
 		{51B08FF2-DF60-4105-9D89-06E612B03E92}.Release|x86.Build.0 = Release|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Debug|x64.Build.0 = Debug|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Debug|x86.Build.0 = Debug|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Release|x64.ActiveCfg = Release|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Release|x64.Build.0 = Release|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Release|x86.ActiveCfg = Release|Any CPU
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -168,6 +182,7 @@ Global
 		{91F7409A-B8C5-488B-8E45-2CD368F193C3} = {D096610B-57C6-476F-99CE-FA949E35F2BE}
 		{800F5E43-702F-4309-BA56-411CB20CA595} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
 		{51B08FF2-DF60-4105-9D89-06E612B03E92} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
+		{A5578B7E-63D4-4532-8094-09BDE2B5574A} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {429C8CA0-DB8C-4CF5-9627-187B9CC47A99}
