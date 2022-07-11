@@ -64,10 +64,19 @@ namespace Mobile.BuildTools.Tasks
 
         internal IEnumerable<string> GetSearchPaths(IBuildConfiguration config)
         {
-            var singleProjectImagesDirectory = Path.Combine(ProjectDirectory, "Resources", "Images");
-            var basePath = SingleProject && Directory.Exists(singleProjectImagesDirectory) ? singleProjectImagesDirectory : ConfigurationPath;
+            var basePath = UseSingleProjectBase(out var path) ? path : ConfigurationPath;
 
             return ImageSearchUtil.GetSearchPaths(config.Configuration, config.Platform, config.BuildConfiguration, basePath, AdditionalSearchPaths, IgnoreDefaultSearchPaths);
+        }
+
+        private bool UseSingleProjectBase(out string path)
+        {
+            path = string.Empty;
+            if (!SingleProject)
+                return false;
+
+            path = Path.Combine(ProjectDirectory, "Resources", "Images");
+            return Directory.Exists(path);
         }
     }
 }
