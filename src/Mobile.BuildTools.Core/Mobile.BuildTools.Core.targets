@@ -1,0 +1,42 @@
+<Project>
+  <PropertyGroup>
+    <MobileBuildToolsInitDependsOn>_LocateBuildToolsConfig</MobileBuildToolsInitDependsOn>
+    <_MobileBuildToolsCoreParentBuildTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Core.dll'))</_MobileBuildToolsCoreParentBuildTasksDll>
+  </PropertyGroup>
+
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.LocateBuildToolsConfigTask"
+             AssemblyFile="$(_MobileBuildToolsCoreParentBuildTasksDll)"/>
+
+  <Target Name="MobileBuildToolsInit"
+          BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build;"
+          AfterTargets="ResolveAssemblyReferences"
+          DependsOnTargets="$(MobileBuildToolsInitDependsOn)">
+  </Target>
+
+  <Target Name="_LocateBuildToolsConfig"
+          BeforeTargets="CoreCompile">
+    <LocateBuildToolsConfigTask ProjectDir="$(MSBuildProjectDirectory)"
+                                ProjectName="$(MSBuildProjectName)"
+                                SolutionDir="$(SolutionDir)"
+                                TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
+                                IsCrossTargetingBuild="$(IsCrossTargetingBuild)">
+      <Output TaskParameter="BuildToolsConfigFilePath"
+              PropertyName="BuildToolsConfigFilePath" />
+      <Output TaskParameter="LocatedSolutionDirectory"
+              PropertyName="SolutionDir" />
+      <Output TaskParameter="EnableArtifactCopy"
+              PropertyName="BuildToolsEnableArtifactCopy" />
+      <Output TaskParameter="EnableAutomaticVersioning"
+              PropertyName="BuildToolsEnableAutomaticVersioning" />
+      <Output TaskParameter="EnableImageProcessing"
+              PropertyName="BuildToolsEnableImageProcessing" />
+      <Output TaskParameter="EnableReleaseNotes"
+              PropertyName="BuildToolsEnableReleaseNotes" />
+      <Output TaskParameter="EnableScssToCss"
+              PropertyName="BuildToolsEnableScssToCss" />
+      <Output TaskParameter="EnableTemplateManifests"
+              PropertyName="BuildToolsEnableTemplateManifests" />
+    </LocateBuildToolsConfigTask>
+  </Target>
+</Project>
