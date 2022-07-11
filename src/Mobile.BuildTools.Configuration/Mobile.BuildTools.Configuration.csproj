@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;MonoAndroid81;MonoAndroid90;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;MonoAndroid90;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40;netcoreapp3.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -23,14 +23,29 @@
     <Compile Include="**/*.netstandard.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition=" $(TargetFramework) == 'net6.0' ">
+    <None Remove="**/*.netstandard.cs" />
+    <Compile Include="**/*.netstandard.cs" />
+  </ItemGroup>
+
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <Reference Include="System.Xml.Linq" />
     <None Remove="**/*.android.cs" />
     <Compile Include="**/*.android.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition=" $(TargetFramework.Contains('-android')) ">
+    <None Remove="**/*.android.cs" />
+    <Compile Include="**/*.android.cs" />
+  </ItemGroup>
+
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) Or $(TargetFramework.StartsWith('Xamarin.Mac')) Or $(TargetFramework.StartsWith('Xamarin.TVOS')) ">
     <Reference Include="System.Xml.Linq" />
+    <None Remove="**/*.apple.cs" />
+    <Compile Include="**/*.apple.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.Contains('-ios')) ">
     <None Remove="**/*.apple.cs" />
     <Compile Include="**/*.apple.cs" />
   </ItemGroup>

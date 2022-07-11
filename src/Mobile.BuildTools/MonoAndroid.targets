@@ -43,17 +43,6 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="IncludeUnifiedImageAsset"
-          AfterTargets="UnifiedImageAssetProcessing"
-          BeforeTargets="UpdateAndroidResources"
-          Condition=" $(BuildToolsBundleUnifiedImages) == 'true' ">
-    <ItemGroup>
-      <AndroidResource Include="@(UnifiedImageAsset)"
-                       Link="%(UnifiedImageAsset.OutputLink)"
-                       Visible="%(UnifiedImageAsset.ShouldBeVisible)" />
-    </ItemGroup>
-  </Target>
-
   <Target Name="MBTBundleGoogleServices"
           BeforeTargets="Compile;CoreCompile">
     <GoogleTask ConfigurationPath="$(BuildToolsConfigFilePath)"

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -15,6 +16,8 @@ namespace Mobile.BuildTools.Tasks
         public string AdditionalSearchPaths { get; set; }
 
         public bool? IgnoreDefaultSearchPaths { get; set; }
+
+        public bool SingleProject { get; set; }
 
         [Output]
         public ITaskItem[] GeneratedImages { get; private set; }
@@ -61,7 +64,10 @@ namespace Mobile.BuildTools.Tasks
 
         internal IEnumerable<string> GetSearchPaths(IBuildConfiguration config)
         {
-            return ImageSearchUtil.GetSearchPaths(config.Configuration, config.Platform, config.BuildConfiguration, ConfigurationPath, AdditionalSearchPaths, IgnoreDefaultSearchPaths);
+            var singleProjectImagesDirectory = Path.Combine(ProjectDirectory, "Resources", "Images");
+            var basePath = SingleProject && Directory.Exists(singleProjectImagesDirectory) ? singleProjectImagesDirectory : ConfigurationPath;
+
+            return ImageSearchUtil.GetSearchPaths(config.Configuration, config.Platform, config.BuildConfiguration, basePath, AdditionalSearchPaths, IgnoreDefaultSearchPaths);
         }
     }
 }

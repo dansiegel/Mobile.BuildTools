@@ -1,14 +1,38 @@
 <Project>
 
+  <PropertyGroup>
+    <_MobileBuildToolsImagesParentBuildTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Images.dll'))</_MobileBuildToolsImagesParentBuildTasksDll>
+  </PropertyGroup>
+
   <UsingTask TaskName="Mobile.BuildTools.Tasks.CollectImageAssetsTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+             AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)"/>
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ImageResizerTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
+             AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)"/>
+
+  <Import Project="Android.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid'" />
+  <Import Project="Android.targets"
+          Condition="$(TargetFramework.EndsWith('-android'))" />
+  <Import Project="Apple.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS'" />
+  <Import Project="Apple.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.TVOS'" />
+  <Import Project="Apple.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'" />
+  <Import Project="Apple.targets"
+          Condition="$(TargetFramework.EndsWith('-ios'))" />
+  <Import Project="Apple.targets"
+          Condition="$(TargetFramework.EndsWith('-maccatalyst'))" />
+  <Import Project="Windows.targets"
+          Condition="$(TargetFrameworkIdentifier) == 'UAP'" />
 
   <Target Name="_CollectImageAssets"
           BeforeTargets="CoreCompile"
           AfterTargets="MobileBuildToolsInit"
           Condition=" $(BuildToolsEnableImageProcessing) ">
+    <PropertyGroup>
+      <SingleProject Condition=" '$(SingleProject)' == '' ">False</SingleProject>
+    </PropertyGroup>
     <CollectImageAssetsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                             ProjectName="$(MSBuildProjectName)"
                             ProjectDirectory="$(MSBuildProjectDirectory)"
@@ -16,7 +40,8 @@
                             IntermediateOutputPath="$(IntermediateOutputPath)"
                             TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
                             AdditionalSearchPaths="$(BuildToolsImageSearchPath)"
-                            IgnoreDefaultSearchPaths="$(BuildToolsIgnoreDefaultSearchPath)">
+                            IgnoreDefaultSearchPaths="$(BuildToolsIgnoreDefaultSearchPath)"
+                            SingleProject="$(SingleProject)">
       <Output ItemName="UnifiedImageAsset"
               TaskParameter="GeneratedImages" />
       <Output ItemName="UnifiedImageAssetSource"

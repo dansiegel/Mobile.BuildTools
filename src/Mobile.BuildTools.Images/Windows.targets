@@ -1,0 +1,13 @@
+<Project>
+
+  <Target Name="IncludeUnifiedImageAsset"
+          BeforeTargets="_CollectBundleResources"
+          AfterTargets="UnifiedImageAssetProcessing;_CollectImageAssets">
+    <ItemGroup>
+      <Content Include="@(UnifiedImageAsset)"
+               Link="%(UnifiedImageAsset.OutputLink)"
+               Visible="true" />
+    </ItemGroup>
+  </Target>
+
+</Project>
