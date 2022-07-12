@@ -38,7 +38,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
             ResetOutputFolder();
         }
 
-        [Fact]
+        [Fact(Skip = "Deprecating")]
         public void Generates_Two_CssFiles_FromScss()
         {
             ResetOutputFolder();
@@ -156,7 +156,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
         //    Assert.Equal(File.ReadAllText(ExpectedCssPath), File.ReadAllText(generatedFile));
         //}
 
-        [Theory]
+        [Theory(Skip = "Deprecating")]
         [InlineData("style.css", "style.min.css")]
         [InlineData("style2.css", "style2.min.css")]
         public void GeneratedExpectedCss_FromScss(string fileName, string expectedFileName)
