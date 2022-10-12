@@ -10,12 +10,14 @@ var foo = ConfigurationManager.AppSettings["Foo"];
 
 Before using the ConfigurationManager you must initialize it.
 
+ConfigurationManager accepts a `bool` to enable runtime environments, this must be set to `true` if you want to use configuration transforms.
+
 AppDelegate.cs
 
 ```csharp
 public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 {
-    ConfigurationManager.Init();
+    ConfigurationManager.Init(true);
     global::Xamarin.Forms.Forms.Init();
     LoadApplication(new App());
 
@@ -33,7 +35,7 @@ protected override void OnCreate(Bundle bundle)
 
     base.OnCreate(bundle);
 
-    ConfigurationManager.Init(this);
+    ConfigurationManager.Init(true, this);
 
     global::Xamarin.Forms.Forms.Init(this, bundle);
     LoadApplication(new App());
