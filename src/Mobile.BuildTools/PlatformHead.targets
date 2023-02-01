@@ -1,6 +1,5 @@
 <Project>
 
   <Import Project="ConfigurationManager.targets" />
-  <Import Project="ManifestsShared.targets" />
 
 </Project>

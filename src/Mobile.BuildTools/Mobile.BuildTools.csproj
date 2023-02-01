@@ -44,6 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Mobile.BuildTools.AppManifests\Mobile.BuildTools.AppManifests.csproj" />
     <ProjectReference Include="..\Mobile.BuildTools.AppSettings\Mobile.BuildTools.AppSettings.csproj" 
                       ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj"

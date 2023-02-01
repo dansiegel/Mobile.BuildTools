@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackFolder>build</PackFolder>
+    <IncludeSource>false</IncludeSource>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Mobile.BuildTools\Build\BuildExtensions.cs" LinkBase="Build" />
+    <Compile Include="..\Mobile.BuildTools\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
+    <Compile Include="..\Mobile.BuildTools\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
+    <None Update="buildTransitive\$(MSBuildProjectName).props;buildTransitive\$(MSBuildProjectName).targets" Pack="True" PackFolder="buildTransitive" />
+    <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Pack="false" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
+    <PackageReference Include="NuGetizer" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" />
+    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" />
+    <ProjectReference Include="..\Mobile.BuildTools.XamarinSdk\Mobile.BuildTools.XamarinSdk.csproj" PackFolder="build" />
+  </ItemGroup>
+
+</Project>
