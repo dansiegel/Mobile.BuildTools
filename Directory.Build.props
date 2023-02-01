@@ -20,6 +20,8 @@
     <RepositoryUrl>https://github.com/dansiegel/Mobile.BuildTools.git</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <NoWarn>$(NoWarn);NU1009;NU1012;NU1507</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -39,6 +41,7 @@
 
   <ItemGroup>
     <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
+    <PackageReference Include="Nerdbank.GitVersioning" />
   </ItemGroup>
 
 </Project>
