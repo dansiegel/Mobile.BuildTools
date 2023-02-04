@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -7,6 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackFolder>build</PackFolder>
     <IncludeSource>false</IncludeSource>
+    <Description>This package contains core Build Tasks used by the Mobile.BuildTools suite of packages.</Description>
   </PropertyGroup>
 
   <ItemGroup>

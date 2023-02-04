@@ -4,7 +4,7 @@
     <TargetFramework>net472</TargetFramework>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
-    <_NativeRuntime>win-x86</_NativeRuntime>
+    <_NativeRuntime>win-x64</_NativeRuntime>
     <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
   </PropertyGroup>
 
