@@ -1,4 +1,4 @@
-<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40;net7.0;net7.0-android;net7.0-ios;net7.0-macos;net7.0-maccatalyst</TargetFrameworks>
@@ -7,6 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Provides a Cross Platform implementation of the ConfigurationManager. This allows you to load an app.config from any platform head as well as load custom configs at runtime or transform your configuration at runtime.</Description>
     <LangVersion>Latest</LangVersion>
+    <PackageTags>mobile;configuration;appconfig;appconfig.xml</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -58,10 +59,6 @@
   <ItemGroup Condition=" $(TargetFramework.StartsWith('tizen')) ">
     <None Remove="**/*.tizen.cs" />
     <Compile Include="**/*.tizen.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Web.Xdt" />
   </ItemGroup>
 
   <ItemGroup>
