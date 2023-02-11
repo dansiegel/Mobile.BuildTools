@@ -35,7 +35,7 @@
     <PackageVersion Include="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageVersion Include="Xamarin.Forms.Mocks" Version="4.7.0.1" />
     <PackageVersion Include="Xamarin.Essentials" Version="1.6.1" />
-    <PackageVersion Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.12" />
+    <PackageVersion Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
