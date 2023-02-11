@@ -29,10 +29,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup .NET 6.0.x
+      - name: Setup .NET 7.0.x
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
 
       - name: Install .NET Workload
         run: dotnet workload install maui
@@ -46,7 +46,7 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
         with:
-          vs-version: 17.2
+          vs-version: 17.4
           
       - name: Build Packages
         run: msbuild /p:Configuration=Release
