@@ -1,7 +1,7 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40;net7.0;net7.0-android;net7.0-ios;net7.0-macos;net7.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks>net7.0;net7.0-android;net7.0-ios;net7.0-macos;net7.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition=" $([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true' ">$(TargetFrameworks);net7.0-windows10.0.18362</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

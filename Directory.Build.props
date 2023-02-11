@@ -21,7 +21,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <NoWarn>$(NoWarn);NU1009;NU1012;NU1507</NoWarn>
+    <NoWarn>$(NoWarn);NU1009;NU1012;NU1507;NU1012</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -41,29 +41,37 @@
 
   <ItemGroup>
     <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
-    <PackageReference Include="Nerdbank.GitVersioning" />
+    <PackageReference Include="Nerdbank.GitVersioning">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
       <PropertyGroup>
         <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion>21.0</TargetPlatformMinVersion>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
       <PropertyGroup>
+        <!-- <TargetPlatformVersion>16.0</TargetPlatformVersion> -->
+        <TargetPlatformMinVersion>14.2</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
         <RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">iossimulator-x64</RuntimeIdentifier>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
       <PropertyGroup>
+        <TargetPlatformMinVersion>10.14</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
         <RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">osx-x64</RuntimeIdentifier>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
       <PropertyGroup>
+        <TargetPlatformMinVersion>14.0</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
         <RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">maccatalyst-x64</RuntimeIdentifier>
       </PropertyGroup>

@@ -95,9 +95,11 @@ internal class XmlFileInfoDocument : XmlDocument, IDisposable
             else if (buffer[0] == 0xFF && buffer[1] == 0xFE)
                 encoding = Encoding.Unicode;
             else if (buffer[0] == 0x2B && buffer[1] == 0x2F && buffer[2] == 0x76)
+#pragma warning disable SYSLIB0001 // Type or member is obsolete
                 encoding = Encoding.UTF7;
+#pragma warning restore SYSLIB0001 // Type or member is obsolete
 
-            // Reset the stream
+                // Reset the stream
             stream.Seek(0, SeekOrigin.Begin);
         }
 
