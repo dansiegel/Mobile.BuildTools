@@ -1,0 +1,20 @@
+name: PR
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+    - 'src/**'
+    - 'E2E/**'
+    - 'tests/**'
+
+jobs:
+  build:
+    uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
+    with:
+      name: Build Mobile.BuildTools
+      solution-path: Mobile.BuildTools.sln
+      submodules: true
+      install-workload: 'maui macos maui-tizen'
+      uno-check: true
+      vs-version: 17.4

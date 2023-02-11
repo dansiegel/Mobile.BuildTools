@@ -7,83 +7,41 @@ on:
     - 'src/**'
     - 'E2E/**'
     - 'tests/**'
-  pull_request:
-    branches: [master]
-    paths:
-    - 'src/**'
-    - 'E2E/**'
-    - 'tests/**'
 
 jobs:
   build:
-    name: Build Library
-    runs-on: windows-latest
-    env:
-      DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: true
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      DOTNET_NOLOGO: true
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: recursive
+    uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
+    with:
+      name: Build Mobile.BuildTools
+      solution-path: Mobile.BuildTools.sln
+      submodules: true
+      install-workload: 'maui macos maui-tizen'
+      uno-check: true
+      vs-version: 17.4
+      code-sign: true
+    secrets:
+      codeSignKeyVault: ${{ secrets.CodeSignKeyVault }}
+      codeSignClientId: ${{ secrets.CodeSignClientId }}
+      codeSignTenantId: ${{ secrets.CodeSignTenantId }}
+      codeSignClientSecret: ${{ secrets.CodeSignClientSecret }}
+      codeSignCertificate: ${{ secrets.CodeSignCertificate }}
 
-      - name: Setup .NET 7.0.x
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 7.0.x
+  deploy-internal:
+    uses: avantipoint/workflow-templates/.github/workflows/deploy-nuget.yml@master
+    needs: build
+    if: ${{ github.event_name == 'push' }}
+    with:
+      name: Deploy Internal
+    secrets:
+      feedUrl: ${{ secrets.IN_HOUSE_NUGET_FEED }}
+      apiKey: ${{ secrets.IN_HOUSE_API_KEY }}
 
-      - name: Install .NET Workload
-        run: dotnet workload install maui macos maui-tizen
-
-      - name: Download Latest NuGet.exe
-        run: curl -L -o nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-
-      - name: NuGet Restore
-        run: nuget restore
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.1
-        with:
-          vs-version: 17.4
-          
-      - name: Build Packages
-        run: msbuild /p:Configuration=Release
-
-      - name: Run Tests
-        run: dotnet test --configuration Release --logger GitHubActions --blame-crash --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --no-build
-
-      - name: Sign NuGet Packages
-        shell: pwsh
-        working-directory: Artifacts/
-        run: |
-          dotnet tool install --global NuGetKeyVaultSignTool
-          $timestampUrl = "${{ secrets.codeSignTimestampUrl }}"
-          if ($timestampUrl -eq '') {
-            $timestampUrl = 'http://timestamp.digicert.com'
-          }
-          NuGetKeyVaultSignTool sign *.nupkg `
-            --file-digest sha256 `
-            --timestamp-rfc3161 $timestampUrl `
-            --timestamp-digest sha256 `
-            --azure-key-vault-url '${{ secrets.codeSignKeyVault }}' `
-            --azure-key-vault-client-id '${{ secrets.codeSignClientId }}' `
-            --azure-key-vault-tenant-id '${{ secrets.codeSignTenantId }}' `
-            --azure-key-vault-client-secret '${{ secrets.codeSignClientSecret }}' `
-            --azure-key-vault-certificate '${{ secrets.codeSignCertificate }}'
-          NuGetKeyVaultSignTool sign *.snupkg `
-            --file-digest sha256 `
-            --timestamp-rfc3161 $timestampUrl `
-            --timestamp-digest sha256 `
-            --azure-key-vault-url '${{ secrets.codeSignKeyVault }}' `
-            --azure-key-vault-client-id '${{ secrets.codeSignClientId }}' `
-            --azure-key-vault-tenant-id '${{ secrets.codeSignTenantId }}' `
-            --azure-key-vault-client-secret '${{ secrets.codeSignClientSecret }}' `
-            --azure-key-vault-certificate '${{ secrets.codeSignCertificate }}'
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: nuget
-          path: Artifacts/
+  deploy-sponsors:
+    uses: avantipoint/workflow-templates/.github/workflows/deploy-nuget.yml@master
+    needs: build
+    if: ${{ github.event_name == 'push' }}
+    with:
+      name: Deploy Sponsor Connect
+    secrets:
+      feedUrl: ${{ secrets.SPONSOR_CONNECT_NUGET_FEED }}
+      apiKey: ${{ secrets.SPONSOR_CONNECT_TOKEN }}

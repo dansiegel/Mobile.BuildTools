@@ -1,0 +1,31 @@
+name: Start NuGet Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
+    with:
+      name: Build Mobile.BuildTools
+      solution-path: Mobile.BuildTools.sln
+      submodules: true
+      install-workload: 'maui macos maui-tizen'
+      uno-check: true
+      vs-version: 17.4
+      code-sign: true
+    secrets:
+      codeSignKeyVault: ${{ secrets.CodeSignKeyVault }}
+      codeSignClientId: ${{ secrets.CodeSignClientId }}
+      codeSignTenantId: ${{ secrets.CodeSignTenantId }}
+      codeSignClientSecret: ${{ secrets.CodeSignClientSecret }}
+      codeSignCertificate: ${{ secrets.CodeSignCertificate }}
+
+  release:
+    uses: avantipoint/workflow-templates/.github/workflows/generate-release.yml@master
+    needs: [build]
+    permissions:
+      contents: write
+    with:
+      package-name: Mobile.BuildTools
+      artifacts: "Artifacts/*.nupkg,Artifacts/*.snupkg,Artifacts/*.zip"
