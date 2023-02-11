@@ -29,22 +29,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HarfBuzzSharp" PrivateAssets="all" />
+    <!--<PackageReference Include="HarfBuzzSharp" PrivateAssets="all" />-->
     <PackageReference Include="Microsoft.Build" Pack="false" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Web.Xdt" PrivateAssets="all" />
-    <PackageReference Include="ShimSkiaSharp" PrivateAssets="all" />
-    <PackageReference Include="Svg.Skia" PrivateAssets="all" />
-    <PackageReference Include="System.Buffers" PrivateAssets="all" />
-    <PackageReference Include="System.IO.UnmanagedMemoryStream" PrivateAssets="all" />
-    <PackageReference Include="System.Numerics.Vectors" PrivateAssets="all" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" PrivateAssets="all" />
+    <!--<PackageReference Include="ShimSkiaSharp" PrivateAssets="all" />-->
+    <!--<PackageReference Include="Svg.Skia" PrivateAssets="all" />-->
+    <!--<PackageReference Include="System.Buffers" PrivateAssets="all" />-->
+    <!--<PackageReference Include="System.IO.UnmanagedMemoryStream" PrivateAssets="all" />-->
+    <!--<PackageReference Include="System.Numerics.Vectors" PrivateAssets="all" />-->
+    <!--<PackageReference Include="System.Runtime.CompilerServices.Unsafe" PrivateAssets="all" />-->
     <PackageReference Include="System.Text.Json" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Mobile.BuildTools.AppManifests\Mobile.BuildTools.AppManifests.csproj" />
     <ProjectReference Include="..\Mobile.BuildTools.AppSettings\Mobile.BuildTools.AppSettings.csproj" 
+                      ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj"
                       ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj"
                       PackFolder="build" />

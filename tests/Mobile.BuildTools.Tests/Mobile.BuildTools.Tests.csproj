@@ -4,11 +4,15 @@
     <TargetFramework>net472</TargetFramework>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
-    <_NativeRuntime>win-x86</_NativeRuntime>
+    <_NativeRuntime>win-x64</_NativeRuntime>
     <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GitHubActionsTestLogger">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Moq" />
     <PackageReference Include="xunit" />
@@ -38,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj" />
     <ProjectReference Include="..\..\src\Mobile.BuildTools\Mobile.BuildTools.csproj" />
   </ItemGroup>
 

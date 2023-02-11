@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -176,7 +176,7 @@ NOTE: This file should be excluded from source control.";
             else
             {
                 propBuilder.MakeStatic()
-                    .WithReadonlyValue(output, output, valueType: valueType);
+                    .WithReadonlyValue(output, valueType: valueType);
             }
         }
 
