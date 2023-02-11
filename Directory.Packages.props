@@ -2,6 +2,7 @@
 <Project>
   <ItemGroup>
     <PackageVersion Include="AvantiPoint.CodeGenHelpers" Version="1.5.6" />
+    <PackageVersion Include="GitHubActionsTestLogger" Version="2.0.1" />
     <PackageVersion Include="Microsoft.Build" Version="17.0.0" />
     <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.2.0" />
