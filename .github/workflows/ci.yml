@@ -35,7 +35,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Install .NET Workload
-        run: dotnet workload install maui
+        run: dotnet workload install maui macos maui-tizen
 
       - name: Download Latest NuGet.exe
         run: curl -L -o nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
