@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <None Update="buildTransitive\$(MSBuildProjectName).props;buildTransitive\$(MSBuildProjectName).targets" Pack="True" PackFolder="buildTransitive" />
+    <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
   </ItemGroup>
 
   <ItemGroup>
