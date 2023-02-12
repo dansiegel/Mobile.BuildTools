@@ -1,8 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net7.0;net7.0-android;net7.0-ios;net7.0-macos;net7.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition=" $([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true' ">$(TargetFrameworks);net7.0-windows10.0.18362</TargetFrameworks>
+    <PackNone>false</PackNone>
+    <PackCompile>false</PackCompile>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Provides a Cross Platform implementation of the ConfigurationManager. This allows you to load an app.config from any platform head as well as load custom configs at runtime or transform your configuration at runtime.</Description>
@@ -66,11 +68,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NuGetizer" PrivateAssets="all" />
     <ProjectReference Include="..\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj"
                       ReferenceOutputAssembly="false"/>
     <ProjectReference Include="..\Mobile.BuildTools.Configuration.MSBuild\Mobile.BuildTools.Configuration.MSBuild.csproj"
                       ReferenceOutputAssembly="false"
-                      Pack="true"
                       PackFolder="build"/>
   </ItemGroup>
 

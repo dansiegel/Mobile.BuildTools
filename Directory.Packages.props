@@ -46,9 +46,6 @@
     <PackageVersion Include="Xamarin.UITest" Version="3.0.14" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Newtonsoft.Json.Schema" Version="3.0.14" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.4.255" />
   </ItemGroup>
 </Project>
