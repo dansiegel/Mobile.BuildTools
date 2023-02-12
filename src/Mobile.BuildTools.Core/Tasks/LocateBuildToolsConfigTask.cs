@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
+﻿using Microsoft.Build.Framework;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
 {
-    public class LocateBuildToolsConfigTask : Task
+    public class LocateBuildToolsConfigTask : Microsoft.Build.Utilities.Task
     {
         public string IsCrossTargetingBuild { get; set; }
 

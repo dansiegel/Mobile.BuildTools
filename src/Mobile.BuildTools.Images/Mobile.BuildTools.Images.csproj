@@ -10,10 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Mobile.BuildTools\Build\BuildExtensions.cs" LinkBase="Build" />
+    <Compile Include="..\Mobile.BuildTools.Core\Build\BuildExtensions.cs" LinkBase="Build" />
     <Compile Include="..\Mobile.BuildTools\Extensions\ITaskItemExtensions.cs" LinkBase="Extensions" />
-    <Compile Include="..\Mobile.BuildTools\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
-    <Compile Include="..\Mobile.BuildTools\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
+    <Compile Include="..\Mobile.BuildTools.Core\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
+    <Compile Include="..\Mobile.BuildTools.Core\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
     <None Include="*.targets" Pack="true" PackFolder="build" />
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
   </ItemGroup>

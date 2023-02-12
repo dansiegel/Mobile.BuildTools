@@ -14,7 +14,6 @@
   <Import Project="NetStandard.targets"
           Condition="$(TargetFrameworkIdentifier) == '.NETStandard'" />
 
-  <Import Project="BuildEnvironmentDump.targets" />
   <Import Project="GitVersioning.targets" />
   <Import Project="ScssToCss.targets" />
 

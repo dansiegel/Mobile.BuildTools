@@ -6,6 +6,10 @@
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.LocateBuildToolsConfigTask"
              AssemblyFile="$(_MobileBuildToolsCoreParentBuildTasksDll)"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.BuildEnvironmentDumpTask"
+             AssemblyFile="$(_MobileBuildToolsCoreParentBuildTasksDll)"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.GoogleTask"
+             AssemblyFile="$(_MobileBuildToolsCoreParentBuildTasksDll)"/>
 
   <Target Name="MobileBuildToolsInit"
           BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build;"
@@ -38,5 +42,35 @@
       <Output TaskParameter="EnableTemplateManifests"
               PropertyName="BuildToolsEnableTemplateManifests" />
     </LocateBuildToolsConfigTask>
+  </Target>
+
+  <Target Name="CIEnvironmentDump">
+    <BuildEnvironmentDumpTask ProjectDirectory="$(MSBuildProjectDirectory)"
+                              Configuration="$(Configuration)" />
+  </Target>
+
+
+  <Target Name="MBTBundleGoogleServices"
+          AfterTargets="_LocateBuildToolsConfig"
+          BeforeTargets="Compile;CoreCompile"
+          Condition="$(IsAppleTarget) OR $(IsAndroidProject)">
+    <GoogleTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                ProjectName="$(MSBuildProjectName)"
+                ProjectDirectory="$(MSBuildProjectDirectory)"
+                SolutionDirectory="$(SolutionDir)"
+                Configuration="$(Configuration)"
+                IntermediateOutputPath="$(IntermediateOutputPath)"
+                TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)">
+      <Output ItemName="GeneratedFile"
+              TaskParameter="GoogleOutput"/>
+      <Output ItemName="FilesWrite"
+              TaskParameter="GoogleOutput"/>
+      <Output ItemName="GoogleServicesJson"
+              TaskParameter="GoogleOutput"
+              Condition="$(IsAndroidProject) == 'true'"/>
+      <Output ItemName="BundleResource"
+              TaskParameter="GoogleOutput"
+              Condition="$(IsAppleTarget) == 'true'"/>
+    </GoogleTask>
   </Target>
 </Project>

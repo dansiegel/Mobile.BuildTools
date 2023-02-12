@@ -16,6 +16,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\Mobile.BuildTools.Core\Build\BuildExtensions.cs" LinkBase="Build" />
+    <Compile Include="..\Mobile.BuildTools.Core\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
+    <Compile Include="..\Mobile.BuildTools.Core\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
     <Compile Include="..\Mobile.BuildTools.Configuration\TransformationHelper.cs" Link="Utils\TransformationHelper.cs" />
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
   </ItemGroup>
@@ -44,7 +47,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mobile.BuildTools.AppManifests\Mobile.BuildTools.AppManifests.csproj" />
+    <ProjectReference Include="..\Mobile.BuildTools.AppManifests\Mobile.BuildTools.AppManifests.csproj"
+                      ReferenceOutputAssembly="false"/>
     <ProjectReference Include="..\Mobile.BuildTools.AppSettings\Mobile.BuildTools.AppSettings.csproj" 
                       ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj"
