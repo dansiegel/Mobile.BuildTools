@@ -65,4 +65,13 @@
     <None Include="build\*.props" Pack="true" PackagePath="build" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj"
+                      ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\Mobile.BuildTools.Configuration.MSBuild\Mobile.BuildTools.Configuration.MSBuild.csproj"
+                      ReferenceOutputAssembly="false"
+                      Pack="true"
+                      PackFolder="build"/>
+  </ItemGroup>
+
 </Project>
