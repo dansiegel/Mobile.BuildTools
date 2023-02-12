@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Mobile.BuildTools.Configuration
+﻿namespace Mobile.BuildTools.Configuration
 {
     public interface IConfigurationManager
     {
@@ -9,6 +7,7 @@ namespace Mobile.BuildTools.Configuration
 
         bool EnvironmentExists(string name);
         IReadOnlyList<string> Environments { get; }
+        event EventHandler SettingsChanged;
         void Reset();
         void Transform(string name);
     }
