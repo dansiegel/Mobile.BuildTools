@@ -12,6 +12,8 @@
     <IsAndroidProject>false</IsAndroidProject>
     <IsiOSProject>false</IsiOSProject>
     <IsUWPProject>false</IsUWPProject>
+    <IsWindowProject>false</IsWindowProject>
+    <IsMacCatalystProject>false</IsMacCatalystProject>
     <IsMacOSProject>false</IsMacOSProject>
     <IsTizenProject>false</IsTizenProject>
     <IsAppCenter Condition=" '$(IsAppCenter)' == '' ">false</IsAppCenter>
@@ -35,6 +37,43 @@
   </PropertyGroup>
 
   <Choose>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+      <PropertyGroup>
+        <IsAndroidProject>true</IsAndroidProject>
+        <BuildHostSecretPrefix Condition="$(BuildHostSecretPrefix) == ''">DroidSecret_</BuildHostSecretPrefix>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+      <PropertyGroup>
+        <IsiOSProject>true</IsiOSProject>
+        <BuildHostSecretPrefix Condition="$(BuildHostSecretPrefix) == ''">iOSSecret_</BuildHostSecretPrefix>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+      <PropertyGroup>
+        <IsMacCatalystProject>true</IsMacCatalystProject>
+        <BuildHostSecretPrefix Condition="$(BuildHostSecretPrefix) == ''">MacCatalystSecret_</BuildHostSecretPrefix>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
+      <PropertyGroup>
+        <IsMacOSProject>true</IsMacOSProject>
+        <BuildHostSecretPrefix Condition="$(BuildHostSecretPrefix) == ''">MacOSSecret_</BuildHostSecretPrefix>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+      <PropertyGroup>
+        <IsWindowProject>true</IsWindowProject>
+        <BuildHostSecretPrefix Condition="$(BuildHostSecretPrefix) == ''">WindowsSecret_</BuildHostSecretPrefix>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">
+      <PropertyGroup>
+        <IsTizenProject>true</IsTizenProject>
+        <BuildHostSecretPrefix Condition="$(BuildHostSecretPrefix) == ''">TizenSecret</BuildHostSecretPrefix>
+      </PropertyGroup>
+    </When>
+    <!-- Legacy Targets -->
     <When Condition=" '$(TargetFrameworkIdentifier)' == 'MonoAndroid' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Android' ">
       <PropertyGroup>
         <IsAndroidProject>true</IsAndroidProject>
@@ -43,18 +82,14 @@
     </When>
     <When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' ">
       <PropertyGroup>
+        <IsAppleTarget>true</IsAppleTarget>
         <IsiOSProject>true</IsiOSProject>
         <BuildHostSecretPrefix>iOSSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
-    <When Condition=" '$(TargetFrameworkIdentifier)' == '.NETCore' ">
+    <When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
       <PropertyGroup>
-        <IsUWPProject>true</IsUWPProject>
-        <BuildHostSecretPrefix>UWPSecret_</BuildHostSecretPrefix>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' ">
-      <PropertyGroup>
+        <IsAppleTarget>true</IsAppleTarget>
         <IsMacOSProject>true</IsMacOSProject>
         <BuildHostSecretPrefix>MacSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
@@ -73,6 +108,7 @@
     </When>
     <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'xamarinios' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarin.ios' ">
       <PropertyGroup>
+        <IsAppleTarget>true</IsAppleTarget>
         <IsiOSProject>true</IsiOSProject>
         <BuildHostSecretPrefix>iOSSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
@@ -85,6 +121,7 @@
     </When>
     <When Condition=" '$(_SdkShortFrameworkIdentifier)' == 'xamarinmac' Or '$(_SdkShortFrameworkIdentifier)' == 'xamarin.mac' ">
       <PropertyGroup>
+        <IsAppleTarget>true</IsAppleTarget>
         <IsMacOSProject>true</IsMacOSProject>
         <BuildHostSecretPrefix>MacSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
@@ -107,7 +144,9 @@
     <IsPlatformProject Condition=" $(IsAndroidProject) ">true</IsPlatformProject>
     <IsPlatformProject Condition=" $(IsiOSProject) ">true</IsPlatformProject>
     <IsPlatformProject Condition=" $(IsUWPProject) ">true</IsPlatformProject>
+    <IsPlatformProject Condition=" $(IsWindowsProject) ">true</IsPlatformProject>
     <IsPlatformProject Condition=" $(IsMacOSProject) ">true</IsPlatformProject>
+    <IsPlatformProject Condition=" $(IsMacCatalystProject) ">true</IsPlatformProject>
     <IsPlatformProject Condition=" $(IsTizenProject) ">true</IsPlatformProject>
   </PropertyGroup>
 

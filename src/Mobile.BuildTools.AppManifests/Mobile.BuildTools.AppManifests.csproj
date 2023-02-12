@@ -11,9 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Mobile.BuildTools\Build\BuildExtensions.cs" LinkBase="Build" />
-    <Compile Include="..\Mobile.BuildTools\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
-    <Compile Include="..\Mobile.BuildTools\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
+    <Compile Include="..\Mobile.BuildTools.Core\Build\BuildExtensions.cs" LinkBase="Build" />
+    <Compile Include="..\Mobile.BuildTools.Core\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
+    <Compile Include="..\Mobile.BuildTools.Core\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
     <None Update="buildTransitive\$(MSBuildProjectName).props;buildTransitive\$(MSBuildProjectName).targets" Pack="True" PackFolder="buildTransitive" />
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
   </ItemGroup>
@@ -29,5 +29,11 @@
     <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" />
     <ProjectReference Include="..\Mobile.BuildTools.XamarinSdk\Mobile.BuildTools.XamarinSdk.csproj" PackFolder="build" />
   </ItemGroup>
+
+  <Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">
+    <PropertyGroup>
+      <IsPackagingProject>true</IsPackagingProject>
+    </PropertyGroup>
+  </Target>
 
 </Project>

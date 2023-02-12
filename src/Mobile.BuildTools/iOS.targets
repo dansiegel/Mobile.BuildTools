@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
-  <UsingTask TaskName="Mobile.BuildTools.Tasks.GoogleTask"
-             AssemblyFile="$(_MobileBuildToolsParentBuildTasksDll)"/>
-
   <Import Project="PlatformHead.targets" />
   <Import Project="AppleManifests.targets" />
 
@@ -54,24 +51,6 @@
           DestinationFiles="$(BuildToolsArtifactOutputPath)\$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))"
           Condition=" '$(IpaPackagePath)' != '' " />
 
-  </Target>
-
-  <Target Name="MBTBundleGoogleServices"
-          BeforeTargets="Compile;CoreCompile">
-    <GoogleTask ConfigurationPath="$(BuildToolsConfigFilePath)"
-                ProjectName="$(MSBuildProjectName)"
-                ProjectDirectory="$(MSBuildProjectDirectory)"
-                SolutionDirectory="$(SolutionDir)"
-                Configuration="$(Configuration)"
-                IntermediateOutputPath="$(IntermediateOutputPath)"
-                TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)">
-      <Output ItemName="GeneratedFile"
-              TaskParameter="GoogleOutput"/>
-      <Output ItemName="FilesWrite"
-              TaskParameter="GoogleOutput"/>
-      <Output ItemName="BundleResource"
-              TaskParameter="GoogleOutput" />
-    </GoogleTask>
   </Target>
 
 </Project>

@@ -1,36 +1,22 @@
-﻿namespace Mobile.BuildTools.Utils
+﻿using System.Text.RegularExpressions;
+
+namespace Mobile.BuildTools.Utils
 {
     public static class StringExtensions
     {
         public static Platform GetTargetPlatform(this string framework)
         {
-            switch (framework?.ToLower())
+            // convert net6.0-ios or net7.0-ios to ios to ensure support accross all .NET versions
+            var targetPlatform = Regex.Replace(framework?.ToLower(), @"(net\d\d?\.\d\-)", string.Empty);
+            return (targetPlatform?.ToLower()) switch
             {
-                case "monoandroid":
-                case "xamarin.android":
-                case "xamarinandroid":
-                case "net6.0-android":
-                    return Platform.Android;
-                case "xamarinios":
-                case "xamarin.ios":
-                case "net6.0-ios":
-                    return Platform.iOS;
-                case "win":
-                case "uap":
-                case "net6.0-windows":
-                    return Platform.UWP;
-                case "xamarinmac":
-                case "xamarin.mac":
-                case "net6.0-maccatalyst":
-                case "net6.0-macos":
-                    return Platform.macOS;
-                case "tizen":
-                case "net6.0-tizen":
-                    return Platform.Tizen;
-                default:
-                    return Platform.Unsupported;
-
-            }
+                "monoandroid" or "xamarin.android" or "xamarinandroid" or "android" => Platform.Android,
+                "xamarinios" or "xamarin.ios" or "ios" => Platform.iOS,
+                "win" or "uap" or "windows" => Platform.UWP,
+                "xamarinmac" or "xamarin.mac" or "maccatalyst" or "macos" => Platform.macOS,
+                "tizen" => Platform.Tizen,
+                _ => Platform.Unsupported,
+            };
         }
     }
 }

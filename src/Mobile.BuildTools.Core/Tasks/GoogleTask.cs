@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
-using Mobile.BuildTools.Configuration;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks
