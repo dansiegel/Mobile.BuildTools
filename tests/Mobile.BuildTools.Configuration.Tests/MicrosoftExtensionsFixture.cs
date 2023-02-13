@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Xunit;
@@ -36,6 +36,19 @@ public class MicrosoftExtensionsFixture
         var oauth = configuration.GetSection("OAuth").Get<OAuth>();
         Assert.Equal("testClientId", oauth.ClientId);
         Assert.Equal("testClientSecret", oauth.ClientSecret);
+    }
+
+    [Fact]
+    public void LoadsConnectionStrings()
+    {
+        var host = new HostBuilder()
+           .ConfigureHostConfiguration(configuration => configuration.AddAppConfig(false))
+           .Build();
+
+        var configuration = host.Services.GetService<IConfiguration>();
+        Assert.NotNull(configuration);
+
+        Assert.Equal("my connection string", configuration.GetConnectionString("test"));
     }
 
     private record OAuth(string ClientId, string ClientSecret);
