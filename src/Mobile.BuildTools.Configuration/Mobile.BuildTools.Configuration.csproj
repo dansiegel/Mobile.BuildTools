@@ -10,6 +10,7 @@
     <Description>Provides a Cross Platform implementation of the ConfigurationManager. This allows you to load an app.config from any platform head as well as load custom configs at runtime or transform your configuration at runtime.</Description>
     <LangVersion>Latest</LangVersion>
     <PackageTags>mobile;configuration;appconfig;appconfig.xml</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
