@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <Authors>Dan Siegel</Authors>
-    <Copyright>© Dan Siegel</Copyright>
+    <Copyright>© 2016-$([System.DateTime]::Now.ToString(`yyyy`)) Dan Siegel</Copyright>
+    <MinVerMinimumMajorMinor>2.1</MinVerMinimumMajorMinor>
+    <MinVerDefaultPreReleaseIdentifiers>pre</MinVerDefaultPreReleaseIdentifiers>
     <PackageIconUrl>https://raw.githubusercontent.com/dansiegel/Mobile.BuildTools/master/logo/icon.png</PackageIconUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

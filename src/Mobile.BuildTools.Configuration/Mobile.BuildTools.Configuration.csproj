@@ -65,7 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="build\*.props" Pack="true" PackagePath="build" />
+    <None Include="buildTransitive\*.props" Pack="true" PackagePath="buildTransitive\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
