@@ -15,4 +15,6 @@
           Condition="Exists('$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())') And '$(OS)' != 'Windows_NT'" />
   </Target>
 
+  <Import Project="Directory.Build.targets.user" Condition="Exists('Directory.Build.targets.user')"/>
+
 </Project>
