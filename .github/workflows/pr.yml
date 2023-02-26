@@ -2,8 +2,8 @@ name: PR
 
 on:
   pull_request:
-    branches: [master]
     paths:
+    - 'Directory.*'
     - 'src/**'
     - 'E2E/**'
     - 'tests/**'
