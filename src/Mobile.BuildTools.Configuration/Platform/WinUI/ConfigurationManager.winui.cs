@@ -5,6 +5,6 @@ namespace Mobile.BuildTools.Configuration
         public static void Init() => Init(false);
 
         public static void Init(bool enableRuntimeEnvironments) =>
-            InitInternal(enableRuntimeEnvironments, new UWPConfigManager());
+            InitInternal(enableRuntimeEnvironments, new WinUIConfigManager());
     }
 }

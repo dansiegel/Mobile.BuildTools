@@ -55,8 +55,8 @@
   </ItemGroup>
 
   <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' ">
-    <None Remove="**/*.uwp.cs" />
-    <Compile Include="**/*.uwp.cs" />
+    <None Remove="**/*.winui.cs" />
+    <Compile Include="**/*.winui.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('tizen')) ">
