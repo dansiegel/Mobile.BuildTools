@@ -28,10 +28,10 @@ namespace Mobile.BuildTools.Configuration
 
         public static void Transform(string name) => Current.Transform(name);
 
-        private static void InitInternal(bool enableEnvironments, IPlatformConfigManager platformConfig)
+        private static IConfigurationManager InitInternal(bool enableEnvironments, IPlatformConfigManager platformConfig)
         {
             var configManager = new ConfigurationManagerImplementation(enableEnvironments, platformConfig);
-            _current = configManager;
+            return _current = configManager;
         }
     }
 }
