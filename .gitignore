@@ -6,7 +6,7 @@ obj
 .mfractor
 *.userprefs
 *.binlog
-*.csproj.user
+*.user
 
 
 Artifacts/

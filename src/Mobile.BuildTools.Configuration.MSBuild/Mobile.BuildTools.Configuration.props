@@ -1,4 +1,8 @@
 ﻿<Project>
+  <PropertyGroup>
+    <_MobileBuildToolsConfigurationTaskDll>$(MSBuildThisFileDirectory)Mobile.BuildTools.Configuration.MSBuild.dll</_MobileBuildToolsConfigurationTaskDll>
+  </PropertyGroup>
+
   <ItemGroup Condition=" Exists('app.config') ">
     <None Remove="app.config" />
     <None Remove="app.*.config" />

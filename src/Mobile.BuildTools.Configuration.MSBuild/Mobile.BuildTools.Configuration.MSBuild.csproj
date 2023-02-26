@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <PackFolder>build</PackFolder>
+    <IncludeSource>false</IncludeSource>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Mobile.BuildTools.Core\Build\BuildExtensions.cs" LinkBase="Build" />
+    <Compile Include="..\Mobile.BuildTools\Extensions\ITaskItemExtensions.cs" LinkBase="Extensions" />
+    <Compile Include="..\Mobile.BuildTools.Core\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
+    <Compile Include="..\Mobile.BuildTools.Core\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
+    <None Include="*.targets" Pack="true" PackFolder="build" />
+    <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
+    <Compile Include="..\Mobile.BuildTools.Configuration\TransformationHelper.cs" Link="Utils\TransformationHelper.cs" />
+    <Compile Include="..\Mobile.BuildTools.Configuration\Xdt\**\*.cs" LinkBase="Xdt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Pack="false" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
+    <PackageReference Include="NuGetizer" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" />
+  </ItemGroup>
+
+  <!--<Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">
+    <PropertyGroup>
+      <IsPackagingProject>true</IsPackagingProject>
+    </PropertyGroup>
+  </Target>-->
+
+</Project>
