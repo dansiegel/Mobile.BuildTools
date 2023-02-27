@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -10,9 +6,11 @@ namespace Mobile.BuildTools.Configuration
 {
     internal class ConfigurationManagerImplementation : IConfigurationManager
     {
-        private const string DefaultAppConfigName = "app.config";
+        private const string defaultAppConfigName = "app.config";
         private IPlatformConfigManager _platformConfig { get; }
         private bool _environmentsEnabled = false;
+
+        public event EventHandler SettingsChanged;
 
         public ConfigurationManagerImplementation(bool enableEnvironments, IPlatformConfigManager platformConfig)
         {
@@ -48,7 +46,7 @@ namespace Mobile.BuildTools.Configuration
 
         public void Reset()
         {
-            using var streamReader = _platformConfig.GetStreamReader(DefaultAppConfigName);
+            using var streamReader = _platformConfig.GetStreamReader(defaultAppConfigName);
             using var reader = XmlReader.Create(streamReader);
             var xDocument = XDocument.Load(reader);
             InitInternal(xDocument);
@@ -61,7 +59,7 @@ namespace Mobile.BuildTools.Configuration
 
             if(EnvironmentExists(name, out var actualEnvironmentName))
             {
-                using var configStream = _platformConfig.GetStreamReader(DefaultAppConfigName);
+                using var configStream = _platformConfig.GetStreamReader(defaultAppConfigName);
                 using var environmentStream = _platformConfig.GetStreamReader($"app.{actualEnvironmentName}.config");
                 var xDocument = TransformationHelper.Transform(configStream.ReadToEnd(), environmentStream.ReadToEnd());
                 InitInternal(xDocument);
@@ -99,6 +97,7 @@ namespace Mobile.BuildTools.Configuration
 
                 AppSettings = appSettings;
                 ConnectionStrings = connectionStrings;
+                SettingsChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
