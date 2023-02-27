@@ -13,7 +13,7 @@ public class MicrosoftExtensionsFixture
     public void LoadsConfiguration(string key, string expectedValue)
     {
         var host = new HostBuilder()
-            .ConfigureHostConfiguration(configuration => configuration.AddAppConfig(false))
+            .ConfigureHostConfiguration(configuration => configuration.AddBuildToolsConfiguration(false))
             .Build();
 
         var configuration = host.Services.GetService<IConfiguration>();
@@ -27,7 +27,7 @@ public class MicrosoftExtensionsFixture
     public void WorksWithSection()
     {
         var host = new HostBuilder()
-            .ConfigureHostConfiguration(configuration => configuration.AddAppConfig(false))
+            .ConfigureHostConfiguration(configuration => configuration.AddBuildToolsConfiguration(false))
             .Build();
 
         var configuration = host.Services.GetService<IConfiguration>();
@@ -42,7 +42,7 @@ public class MicrosoftExtensionsFixture
     public void LoadsConnectionStrings()
     {
         var host = new HostBuilder()
-           .ConfigureHostConfiguration(configuration => configuration.AddAppConfig(false))
+           .ConfigureHostConfiguration(configuration => configuration.AddBuildToolsConfiguration(false))
            .Build();
 
         var configuration = host.Services.GetService<IConfiguration>();

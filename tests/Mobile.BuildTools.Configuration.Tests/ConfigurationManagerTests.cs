@@ -7,16 +7,16 @@ namespace Mobile.BuildTools.Configuration.Tests
         [Fact]
         public void ShouldGetValuesForAppSettings()
         {
-            ConfigurationManager.Init();
+            var manager = ConfigurationManager.Init();
 
             // setup
             const string expectedFoo = "my foo";
             const string expectedBar = "my bar";
 
             // assert
-            Assert.Equal(expectedFoo, ConfigurationManager.AppSettings["foo"]);
-            Assert.Equal(expectedBar, ConfigurationManager.AppSettings["bar"]);
-            Assert.Equal(2, ConfigurationManager.AppSettings.Count);
+            Assert.Equal(expectedFoo, manager.AppSettings["foo"]);
+            Assert.Equal(expectedBar, manager.AppSettings["bar"]);
+            Assert.Equal(4, manager.AppSettings.Count);
         }
 
         [Fact]
@@ -63,27 +63,27 @@ namespace Mobile.BuildTools.Configuration.Tests
         [Fact]
         public void ResetTransformsBackToDefault()
         {
-            ConfigurationManager.Init(true);
+            var manager = ConfigurationManager.Init(true);
 
-            Assert.Equal("my foo", ConfigurationManager.AppSettings["foo"]);
-            ConfigurationManager.Transform("foo");
-            Assert.Equal("transformed", ConfigurationManager.AppSettings["foo"]);
-            ConfigurationManager.Reset();
-            Assert.Equal("my foo", ConfigurationManager.AppSettings["foo"]);
+            Assert.Equal("my foo", manager.AppSettings["foo"]);
+            manager.Transform("foo");
+            Assert.Equal("transformed", manager.AppSettings["foo"]);
+            manager.Reset();
+            Assert.Equal("my foo", manager.AppSettings["foo"]);
         }
 
         [Fact]
         public void SingleEnvironmentListed()
         {
-            ConfigurationManager.Init(true);
-            Assert.Single(ConfigurationManager.Environments);
+            var manager = ConfigurationManager.Init(true);
+            Assert.Single(manager.Environments);
         }
 
         [Fact]
         public void NoEnvironmentListedIfNotEnabled()
         {
-            ConfigurationManager.Init();
-            Assert.Empty(ConfigurationManager.Environments);
+            var manager =ConfigurationManager.Init();
+            Assert.Empty(manager.Environments);
         }
 
         [Theory]
@@ -93,36 +93,36 @@ namespace Mobile.BuildTools.Configuration.Tests
         [InlineData("app.Foo.config")]
         public void EnvironmentExists(string environment)
         {
-            ConfigurationManager.Init(true);
-            Assert.True(ConfigurationManager.EnvironmentExists(environment));
+            var manager = ConfigurationManager.Init(true);
+            Assert.True(manager.EnvironmentExists(environment));
         }
 
         [Fact]
         public void EnvironmentDoesNotExist()
         {
-            ConfigurationManager.Init(true);
-            Assert.False(ConfigurationManager.EnvironmentExists("notValid"));
+            var manager = ConfigurationManager.Init(true);
+            Assert.False(manager.EnvironmentExists("notValid"));
         }
 
         [Fact]
         public void EnvironmentDoesNotExistWhenEnvironmentsNotEnabled()
         {
-            ConfigurationManager.Init();
-            Assert.False(ConfigurationManager.EnvironmentExists("foo"));
+            var manager = ConfigurationManager.Init();
+            Assert.False(manager.EnvironmentExists("foo"));
         }
 
         [Fact]
         public void AppConfigTransformsForEnvironment()
         {
-            ConfigurationManager.Init(true);
-            Assert.Equal("my foo", ConfigurationManager.AppSettings["foo"]);
-            Assert.DoesNotContain("Environment", ConfigurationManager.AppSettings.AllKeys);
-            ConfigurationManager.Transform("foo");
+            var manager = ConfigurationManager.Init(true);
+            Assert.Equal("my foo", manager.AppSettings["foo"]);
+            Assert.DoesNotContain("Environment", manager.AppSettings.AllKeys);
+            manager.Transform("foo");
 
-            Assert.Equal(3, ConfigurationManager.AppSettings.Count);
-            Assert.Contains("Environment", ConfigurationManager.AppSettings.AllKeys);
-            Assert.Equal("Debug", ConfigurationManager.AppSettings["Environment"]);
-            Assert.Equal("transformed", ConfigurationManager.AppSettings["foo"]);
+            Assert.Equal(5, manager.AppSettings.Count);
+            Assert.Contains("Environment", manager.AppSettings.AllKeys);
+            Assert.Equal("Debug", manager.AppSettings["Environment"]);
+            Assert.Equal("transformed", manager.AppSettings["foo"]);
         }
     }
 }

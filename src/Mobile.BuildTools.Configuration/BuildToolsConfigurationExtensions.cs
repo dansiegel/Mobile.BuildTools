@@ -1,24 +1,40 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Mobile.BuildTools.Configuration;
 
 public static class BuildToolsConfigurationExtensions
 {
-    public static IConfigurationBuilder AddAppConfig(this IConfigurationBuilder builder, bool enableRuntimeEnvironments)
+    public static IHostBuilder AddBuildToolsConfiguration(this IHostBuilder host, bool enableRuntimeEnvironments)
     {
-        ConfigurationManager.Init(enableRuntimeEnvironments);
-        return AddAppConfig(builder, ConfigurationManager.Current);
+        var manager = ConfigurationManager.Init(enableRuntimeEnvironments);
+        return host.ConfigureHostConfiguration(c => c.AddBuildToolsConfiguration(manager))
+            .ConfigureServices((_, s) => s.AddSingleton<IConfigurationManager>(manager));
+    }
+
+    public static IConfigurationBuilder AddBuildToolsConfiguration(this IConfigurationBuilder builder, bool enableRuntimeEnvironments)
+    {
+        var manager = ConfigurationManager.Init(enableRuntimeEnvironments);
+        return AddBuildToolsConfiguration(builder, manager);
     }
 
 #if ANDROID
-    public static IConfigurationBuilder AddAppConfig(this IConfigurationBuilder builder, bool enableRuntimeEnvironments, Android.Content.Context context)
+    public static IHostBuilder AddBuildToolsConfiguration(this IHostBuilder host, bool enableRuntimeEnvironments, Android.Content.Context context)
     {
-        ConfigurationManager.Init(enableRuntimeEnvironments, context);
-        return AddAppConfig(builder, ConfigurationManager.Current);
+        var manager = ConfigurationManager.Init(enableRuntimeEnvironments, context);
+        return host.ConfigureHostConfiguration(c => c.AddBuildToolsConfiguration(manager))
+            .ConfigureServices((_, s) => s.AddSingleton<IConfigurationManager>(manager));
+    }
+
+    public static IConfigurationBuilder AddBuildToolsConfiguration(this IConfigurationBuilder builder, bool enableRuntimeEnvironments, Android.Content.Context context)
+    {
+        var manager = ConfigurationManager.Init(enableRuntimeEnvironments, context);
+        return AddBuildToolsConfiguration(builder, manager);
     }
 #endif
 
-    public static IConfigurationBuilder AddAppConfig(this IConfigurationBuilder builder, IConfigurationManager manager)
+    public static IConfigurationBuilder AddBuildToolsConfiguration(this IConfigurationBuilder builder, IConfigurationManager manager)
     {
         return builder.Add(new AppConfigSource(manager));
     }
