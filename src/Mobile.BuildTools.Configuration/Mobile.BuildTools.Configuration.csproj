@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;MonoAndroid81;MonoAndroid90;MonoAndroid10.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;tizen40;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net7.0;net7.0-android;net7.0-ios;net7.0-macos;net7.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.16299</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -18,7 +18,7 @@
     <Compile Include="**/*.netstandard.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
+  <ItemGroup Condition=" $(TargetFramework) == 'net7.0' ">
     <None Remove="**/*.netstandard.cs" />
     <Compile Include="**/*.netstandard.cs" />
   </ItemGroup>
@@ -29,8 +29,18 @@
     <Compile Include="**/*.android.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' ">
+    <None Remove="**/*.android.cs" />
+    <Compile Include="**/*.android.cs" />
+  </ItemGroup>
+
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) Or $(TargetFramework.StartsWith('Xamarin.Mac')) Or $(TargetFramework.StartsWith('Xamarin.TVOS')) ">
     <Reference Include="System.Xml.Linq" />
+    <None Remove="**/*.apple.cs" />
+    <Compile Include="**/*.apple.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos' ">
     <None Remove="**/*.apple.cs" />
     <Compile Include="**/*.apple.cs" />
   </ItemGroup>
@@ -39,9 +49,9 @@
     <Reference Include="netstandard" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
-    <None Remove="**/*.uwp.cs" />
-    <Compile Include="**/*.uwp.cs" />
+  <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' ">
+    <None Remove="**/*.winui.cs" />
+    <Compile Include="**/*.winui.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('tizen')) ">

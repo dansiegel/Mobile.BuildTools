@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net472;</TargetFrameworks>
+    <TargetFramework>net7.0</TargetFramework>
     <PackageId>Mobile.BuildTools.VSCompatibility</PackageId>
     <Description>This is a package specifically for 3rd party tooling to provide compatibility with the Mobile.BuildTools image generation.</Description>
     <IsPackable>false</IsPackable>

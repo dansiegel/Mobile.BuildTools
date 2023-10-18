@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -10,8 +11,6 @@ using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Handlers;
 using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Mobile.BuildTools.Generators.Secrets
 {
@@ -317,7 +316,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             else if (isArray)
             {
                 typeDeclaration += "[]";
-                var valueArray = GetValueArray(secret.Value).Select(x => valueHandler.Format(x, safeOutput));
+                var valueArray = GetValueArray(secret.Value.ToString()).Select(x => valueHandler.Format(x, safeOutput));
                 output = "new " + typeDeclaration + " { " + string.Join(", ", valueArray) + " }";
                 if (type == typeof(bool))
                 {
@@ -336,7 +335,7 @@ namespace Mobile.BuildTools.Generators.Secrets
             return $"{accessibility} {accessModifier} {typeDeclaration} {secret.Key} = {output};";
         }
 
-        internal static IEnumerable<string> GetValueArray(JToken token) =>
+        internal static IEnumerable<string> GetValueArray(JsonNode token) =>
             Regex.Split(token.ToString(), "(?<!\\\\);").Select(x => x.Replace("\\;", ";"));
     }
 }
