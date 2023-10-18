@@ -22,3 +22,8 @@ Thumbs.db
 **/Images/**/Thumbs.db
 
 AppPackages/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
