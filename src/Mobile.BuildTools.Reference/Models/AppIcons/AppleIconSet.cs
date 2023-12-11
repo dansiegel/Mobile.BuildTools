@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models.AppIcons
 {
     public class AppleIconSet
     {
-        [JsonProperty("images", NullValueHandling = NullValueHandling.Include)]
+        [JsonPropertyName("images")]
         public List<AppleIconSetImage> Images { get; set; }
     }
 }

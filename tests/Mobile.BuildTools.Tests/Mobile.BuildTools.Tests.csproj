@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
     <_NativeRuntime>win-x86</_NativeRuntime>
@@ -22,7 +22,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json.Schema" />
+    <Compile Remove="Data\SecretsData.cs" />
+    <Compile Remove="Fixtures\Generators\SecretsClassGeneratorFixture.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Data\SecretsData.cs" />
+    <None Include="Fixtures\Generators\SecretsClassGeneratorFixture.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" />
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="System.Memory" />
   </ItemGroup>

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models
 {
@@ -11,10 +11,10 @@ namespace Mobile.BuildTools.Models
             Configuration = new Dictionary<string, Dictionary<string, string>>();
         }
 
-        [JsonProperty("defaults", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("defaults")]
         public Dictionary<string, string> Defaults { get; set; }
 
-        [JsonProperty("configuration", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("configuration")]
         public Dictionary<string, Dictionary<string, string>> Configuration { get; set; }
     }
 }

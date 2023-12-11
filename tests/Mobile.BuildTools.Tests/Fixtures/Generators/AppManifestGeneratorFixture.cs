@@ -1,14 +1,13 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Manifests;
 using Mobile.BuildTools.Tests.Mocks;
 using Mobile.BuildTools.Utils;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -73,11 +72,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 _testOutputHelper.WriteLine($"  - {variable.Key}: {variable.Value}");
             }
             var processedTemplate = generator.ProcessMatch(template, match, variables);
-            var json = JsonConvert.DeserializeAnonymousType(processedTemplate, new
-            {
-                TemplatedParameter = "",
-                CustomTokenParameter = ""
-            });
+            var json = JsonSerializer.Deserialize<TestManifest>(processedTemplate);
 
             Assert.Equal("%%CustomTokenParameter%%", json.CustomTokenParameter);
             Assert.Equal(nameof(AppManifestGeneratorFixture), json.TemplatedParameter);
@@ -96,11 +91,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             var match = generator.GetMatches(template).Cast<Match>().FirstOrDefault();
             var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(config, true);
             var processedTemplate = generator.ProcessMatch(template, match, variables);
-            var json = JsonConvert.DeserializeAnonymousType(processedTemplate, new
-            {
-                TemplatedParameter = "",
-                CustomTokenParameter = ""
-            });
+            var json = JsonSerializer.Deserialize<TestManifest>(processedTemplate);
 
             Assert.Equal(nameof(AppManifestGeneratorFixture), json.CustomTokenParameter);
             Assert.Equal("$TemplatedParameter$", json.TemplatedParameter);
@@ -136,6 +127,13 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
             Assert.DoesNotContain("msal$$AADClientId$$", generatedTemplate);
             Assert.Contains($"msal{guid}", generatedTemplate);
+        }
+
+        private class TestManifest
+        {
+            public string TemplatedParameter { get; set; }
+
+            public string CustomTokenParameter { get; set; }
         }
     }
 }

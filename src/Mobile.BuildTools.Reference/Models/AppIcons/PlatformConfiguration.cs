@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models.AppIcons
 {
     public class PlatformConfiguration : BaseImageConfiguration
     {
         [Description("Provides additional resource outputs for the specified source image.")]
-        [JsonProperty("additionalOutputs", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonPropertyName("additionalOutputs")]
         public List<BaseImageConfiguration> AdditionalOutputs { get; set; }
     }
 }

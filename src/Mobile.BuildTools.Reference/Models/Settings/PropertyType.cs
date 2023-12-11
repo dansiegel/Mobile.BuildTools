@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Mobile.BuildTools.Handlers;
-using Newtonsoft.Json.Schema.Generation;
 
 namespace Mobile.BuildTools.Models.Settings
 {
-    [JSchemaGenerationProvider(typeof(StringEnumGenerationProvider))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum PropertyType
     {
         [PropertyTypeMapping(typeof(string), "\"{0}\"")]

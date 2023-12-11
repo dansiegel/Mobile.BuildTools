@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models.AppIcons;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Mobile.BuildTools.Generators.Images
 {
@@ -105,7 +105,7 @@ namespace Mobile.BuildTools.Generators.Images
             var contentsJson = Path.Combine(Build.ProjectDirectory, basePath, "Contents.json");
             if (!imageResourcePaths.Any(x => x == contentsJson))
                 imageResourcePaths.Add(contentsJson);
-            var iconset = JsonConvert.DeserializeObject<AppleIconSet>(
+            var iconset = JsonSerializer.Deserialize<AppleIconSet>(
                 File.ReadAllText(contentsJson));
 
             var iconsetImages = new List<AppleIconSetImage>();

@@ -1,13 +1,13 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models
 {
     public class GoogleConfig
     {
-        [JsonProperty("servicesJson", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("servicesJson")]
         public string ServicesJson { get; set; }
         
-        [JsonProperty("infoPlist", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("infoPlist")]
         public string InfoPlist { get; set; }
     }
 }
