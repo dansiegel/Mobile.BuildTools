@@ -6,6 +6,7 @@
     "precision": "revision"
   },
   "publicReleaseRefSpec": [
-    "^refs/heads/release$"
+    "^refs/heads/master$",
+    "^refs/heads/release/stable/\\d+\\.\\d+$"
   ]
 }
