@@ -17,4 +17,4 @@ jobs:
       submodules: true
       install-workload: 'maui macos maui-tizen'
       uno-check: true
-      vs-version: 17.4
+      vs-version: 17.8

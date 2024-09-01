@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0;net7.0-android;net7.0-ios;net7.0-macos;net7.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition=" $([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true' ">$(TargetFrameworks);net7.0-windows10.0.18362</TargetFrameworks>
+    <TargetFrameworks>net8.0;net8.0-android;net8.0-ios;net8.0-macos;net8.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition=" $([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true' ">$(TargetFrameworks);net8.0-windows10.0.18362</TargetFrameworks>
     <PackNone>false</PackNone>
     <PackCompile>false</PackCompile>
     <IsPackable>true</IsPackable>
@@ -28,7 +28,7 @@
     <Compile Include="**/*.netstandard.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework) == 'net7.0' ">
+  <ItemGroup Condition=" $(TargetFramework) == 'net8.0' ">
     <None Remove="**/*.netstandard.cs" />
     <Compile Include="**/*.netstandard.cs" />
   </ItemGroup>
