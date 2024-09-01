@@ -15,6 +15,7 @@ namespace Mobile.BuildTools.Utils
         private static readonly object lockObject = new object();
         private static readonly object gitIgnoreLockObject = new object();
 
+#if !ANALYZERS
         public static string GetConfigurationPath(string searchDirectory, string slnDir = null)
         {
             if (string.IsNullOrEmpty(searchDirectory)) return null;
@@ -108,6 +109,7 @@ namespace Mobile.BuildTools.Utils
 
             return Path.Combine(path, Constants.BuildToolsConfigFileName);
         }
+#endif
 
         public static JsonSerializerOptions GetSerializerSettings()
         {

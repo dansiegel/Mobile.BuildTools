@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -11,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="buildTransitive\$(MSBuildProjectName).props;buildTransitive\$(MSBuildProjectName).targets" Pack="True" PackFolder="buildTransitive" />
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
   </ItemGroup>
 
@@ -19,6 +18,10 @@
     <PackageReference Include="Microsoft.Build" Pack="false" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
+    <PackageReference Include="PolySharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

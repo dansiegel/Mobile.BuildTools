@@ -13,7 +13,11 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" Condition="$(SignAssembly) != 'true' " />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
-    <PackageReference Include="System.Text.Json" PrivateAssets="All" />
+    <PackageReference Include="PolySharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json" PrivateAssets="All" NoWarn="NU1903" />
     <PackageReference Include="System.ComponentModel.Annotations" PrivateAssets="all" />
   </ItemGroup>
 

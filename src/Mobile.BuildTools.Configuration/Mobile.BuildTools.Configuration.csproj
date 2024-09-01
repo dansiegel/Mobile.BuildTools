@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net8.0-android;net8.0-ios;net8.0-macos;net8.0-maccatalyst</TargetFrameworks>
@@ -67,10 +67,6 @@
   <ItemGroup Condition=" $(TargetFramework.StartsWith('tizen')) ">
     <None Remove="**/*.tizen.cs" />
     <Compile Include="**/*.tizen.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="buildTransitive\*.props" Pack="true" PackagePath="buildTransitive\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

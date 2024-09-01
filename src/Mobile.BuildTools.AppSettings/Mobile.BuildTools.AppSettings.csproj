@@ -10,16 +10,20 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackFolder>analyzers\dotnet\cs</PackFolder>
     <IncludeSource>false</IncludeSource>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <DefineConstants>$(DefineConstants);ANALYZERS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="build\**" Pack="true" PackagePath="build\%(Filename)%(Extension)" />
-    <Compile Include="..\Mobile.BuildTools.Reference\Build\**\*.cs" LinkBase="Reference\Build" />
+    <MBTReferenceExclude Include="..\Mobile.BuildTools.Reference\Utils\CIBuildEnvironmentUtils.cs" Visible="false" />
+    <MBTReferenceExclude Include="..\Mobile.BuildTools.Reference\Utils\EnvironmentAnalyzer.cs" Visible="false" />
+    <MBTReferenceExclude Include="..\Mobile.BuildTools.Reference\Utils\ImageSearchUtil.cs" Visible="false" />
+
     <Compile Include="..\Mobile.BuildTools.Reference\Extensions\**\*.cs" LinkBase="Reference\Extensions" />
     <Compile Include="..\Mobile.BuildTools.Reference\Handlers\**\*.cs" LinkBase="Reference\Handlers" />
     <Compile Include="..\Mobile.BuildTools.Reference\Logging\**\*.cs" LinkBase="Reference\Logging" />
     <Compile Include="..\Mobile.BuildTools.Reference\Models\**\*.cs" LinkBase="Reference\Models" />
-    <Compile Include="..\Mobile.BuildTools.Reference\Utils\**\*.cs" LinkBase="Reference\Utils" />
+    <Compile Include="..\Mobile.BuildTools.Reference\Utils\**\*.cs" LinkBase="Reference\Utils" Exclude="@(MBTReferenceExclude)" />
     <Compile Include="..\Mobile.BuildTools.Reference\Constants.cs" Link="Reference\Constants.cs" />
   </ItemGroup>
 
@@ -29,13 +33,19 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all" Pack="false" />
-    <PackageReference Include="System.Text.Json" PrivateAssets="all" />
+    <PackageReference Include="PolySharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json" PrivateAssets="all" NoWarn="NU1903" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
   </ItemGroup>
 
-  <Target Name="ExcludeTFM"
-          BeforeTargets="_AddPackageManifest"
-          AfterTargets="InferPackageContents">
+  <ItemGroup>
+    <ProjectReference Include="..\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" ReferenceOutputAssembly="False" />
+  </ItemGroup>
+
+  <Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">
     <PropertyGroup>
       <IsPackagingProject>true</IsPackagingProject>
     </PropertyGroup>
