@@ -3,6 +3,50 @@
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
   </PropertyGroup>
 
+  <Target Name="BundlePackageBuildPropsAndTargets"
+          BeforeTargets="Build">
+
+    <PropertyGroup>
+      <_SourcePackagePropsFile Condition="Exists('build\Package.props')">build\Package.props</_SourcePackagePropsFile>
+      <_SourcePackagePropsFile Condition="$(_SourcePackagePropsFile) == '' AND Exists('Package.props')">Package.props</_SourcePackagePropsFile>
+      <_SourcePackageTargetsFile Condition="Exists('build\Package.targets')">build\Package.targets</_SourcePackageTargetsFile>
+      <_SourcePackageTargetsFile Condition="$(_SourcePackageTargetsFile) == '' AND Exists('Package.targets')">Package.targets</_SourcePackageTargetsFile>
+    </PropertyGroup>
+
+     <ItemGroup>
+      <None Remove="$(_SourcePackagePropsFile);$(_SourcePackageTargetsFile)" />
+      <None Include="$(_SourcePackagePropsFile)" Pack="true" PackagePath="build\$(PackageId).props" Condition="$(_SourcePackagePropsFile) != ''"/>
+      <None Include="$(_SourcePackageTargetsFile)" Pack="true" PackagePath="build\$(PackageId).targets" Condition="$(_SourcePackageTargetsFile) != ''"/>
+    </ItemGroup> 
+
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)Package.Transitive.props"
+          DestinationFolder="$(IntermediateOutputPath)\buildTransitive"
+          Condition="$(_SourcePackagePropsFile) != ''" />
+
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)Package.Transitive.targets"
+          DestinationFolder="$(IntermediateOutputPath)\buildTransitive"
+          Condition="$(_SourcePackageTargetsFile) != ''" />
+
+    <ReplaceFileText Filename="$(IntermediateOutputPath)\buildTransitive\Package.Transitive.props"
+                    MatchExpression="PackageId"
+                    ReplacementText="$(PackageId)"
+                    Condition="$(_SourcePackagePropsFile) != ''" />
+
+    <ReplaceFileText Filename="$(IntermediateOutputPath)\buildTransitive\Package.Transitive.targets"
+                    MatchExpression="PackageId"
+                    ReplacementText="$(PackageId)"
+                    Condition="$(_SourcePackageTargetsFile) != ''" />
+
+    <ItemGroup>
+      <None Include="$(IntermediateOutputPath)\buildTransitive\Package.Transitive.props" Pack="true" 
+            PackagePath="buildTransitive\$(PackageId).props" 
+            Condition="$(_SourcePackagePropsFile) != ''" />
+      <None Include="$(IntermediateOutputPath)\buildTransitive\Package.Transitive.targets" Pack="true" 
+            PackagePath="buildTransitive\$(PackageId).targets" 
+            Condition="$(_SourcePackageTargetsFile) != ''" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="DeleteCachedPackage" Condition="'$(CI)' != 'true'" BeforeTargets="Pack">
     <ItemGroup>
       <ToDelete Include="$(PackageOutputPath)\$(PackageId).$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)*.*" />
@@ -16,5 +60,27 @@
   </Target>
 
   <Import Project="Directory.Build.targets.user" Condition="Exists('Directory.Build.targets.user')"/>
+
+  <!-- Using Regex Replace prevents XmlPoke from replacing Tabs with Spaces -->
+  <UsingTask TaskName="ReplaceFileText" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Filename ParameterType="System.String" Required="true" />
+      <MatchExpression ParameterType="System.String" Required="true" />
+      <ReplacementText ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          File.WriteAllText(
+            Filename,
+            Regex.Replace(File.ReadAllText(Filename), Regex.Escape(MatchExpression), ReplacementText)
+            );
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
 
 </Project>
