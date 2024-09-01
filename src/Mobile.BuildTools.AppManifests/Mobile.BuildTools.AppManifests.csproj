@@ -14,7 +14,6 @@
     <Compile Include="..\Mobile.BuildTools.Core\Build\BuildExtensions.cs" LinkBase="Build" />
     <Compile Include="..\Mobile.BuildTools.Core\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />
     <Compile Include="..\Mobile.BuildTools.Core\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
-    <None Update="buildTransitive\$(MSBuildProjectName).props;buildTransitive\$(MSBuildProjectName).targets" Pack="True" PackFolder="buildTransitive" />
     <InternalsVisibleTo Include="Mobile.BuildTools.Tests" />
   </ItemGroup>
 
