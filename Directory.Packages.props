@@ -31,7 +31,7 @@
     <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageVersion Include="System.ObjectModel" Version="4.3.0" />
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-    <PackageVersion Include="System.Text.Json" Version="8.0.4" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.0" />
     <PackageVersion Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
   </ItemGroup>
   <ItemGroup>

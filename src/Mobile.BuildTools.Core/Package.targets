@@ -10,6 +10,8 @@
              AssemblyFile="$(_MobileBuildToolsCoreParentBuildTasksDll)"/>
   <UsingTask TaskName="Mobile.BuildTools.Tasks.GoogleTask"
              AssemblyFile="$(_MobileBuildToolsCoreParentBuildTasksDll)"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.EnvironmentSettingsTask"
+             AssemblyFile="$(_MobileBuildToolsCoreParentBuildTasksDll)"/>
 
   <Target Name="MobileBuildToolsInit"
           BeforeTargets="CoreCompile;_CoreXamlG;XamlG;XamlC;Build;"
@@ -18,7 +20,7 @@
   </Target>
 
   <Target Name="_LocateBuildToolsConfig"
-          BeforeTargets="CoreCompile">
+          BeforeTargets="CoreCompile;GenerateMSBuildEditorConfigFileShouldRun;GenerateMSBuildEditorConfigFileCore">
     <LocateBuildToolsConfigTask ProjectDir="$(MSBuildProjectDirectory)"
                                 ProjectName="$(MSBuildProjectName)"
                                 SolutionDir="$(SolutionDir)"
@@ -42,6 +44,29 @@
       <Output TaskParameter="EnableTemplateManifests"
               PropertyName="BuildToolsEnableTemplateManifests" />
     </LocateBuildToolsConfigTask>
+
+    <ItemGroup>
+      <AdditionalFiles Include="$(BuildToolsConfigFilePath)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_ConfigureBuildToolsAppSettingsEnvironment"
+          AfterTargets="_LocateBuildToolsConfig"
+          BeforeTargets="CoreCompile;GenerateMSBuildEditorConfigFileShouldRun;GenerateMSBuildEditorConfigFileCore">
+    <EnvironmentSettingsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                ProjectName="$(MSBuildProjectName)"
+                ProjectDirectory="$(MSBuildProjectDirectory)"
+                SolutionDirectory="$(SolutionDir)"
+                Configuration="$(Configuration)"
+                IntermediateOutputPath="$(IntermediateOutputPath)"
+                TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)">
+      <Output TaskParameter="EnvironmentSettings"
+              ItemName="BuildToolsEnvironmentSettings" />
+    </EnvironmentSettingsTask>
+
+    <ItemGroup>
+      <AdditionalFiles Include="$(BuildToolsEnvironmentSettings)" />
+    </ItemGroup>
   </Target>
 
   <Target Name="CIEnvironmentDump">

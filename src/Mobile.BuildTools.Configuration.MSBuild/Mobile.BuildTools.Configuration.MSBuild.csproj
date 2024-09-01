@@ -23,6 +23,10 @@
     <PackageReference Include="Microsoft.Build" Pack="false" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
+    <PackageReference Include="PolySharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

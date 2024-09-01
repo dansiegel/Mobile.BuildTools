@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+#if !ANALYZERS
 using Mobile.BuildTools.Build;
+#endif
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Settings;
 
@@ -11,6 +13,7 @@ namespace Mobile.BuildTools.Utils
 {
     public static partial class ConfigHelper
     {
+#if !ANALYZERS
         public static void SaveConfig(BuildToolsConfig config, string path)
         {
             var filePath = GetConfigFilePath(path);
@@ -132,6 +135,7 @@ appsettings.*.json
 
         public static IEnumerable<SettingsConfig> GetSettingsConfig(IBuildConfiguration buildConfiguration) =>
             GetSettingsConfig(buildConfiguration.ProjectName, buildConfiguration.Configuration);
+#endif
 
         public static IEnumerable<SettingsConfig> GetSettingsConfig(string projectName, BuildToolsConfig config)
         {

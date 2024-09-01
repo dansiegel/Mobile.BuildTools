@@ -6,6 +6,8 @@
 
         public const string AppSettingsJsonConfigurationFileFormat = "appsettings.{0}.json";
 
+        public const string BuildToolsEnvironmentSettings = "buildtools.env";
+
         public const string SecretsJsonFileName = "secrets.json";
 
         public const string SecretsJsonConfigurationFileFormat = "secrets.{0}.json";

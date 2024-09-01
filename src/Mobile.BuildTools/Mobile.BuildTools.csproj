@@ -36,13 +36,17 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Web.Xdt" PrivateAssets="all" />
+    <PackageReference Include="PolySharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <!--<PackageReference Include="ShimSkiaSharp" PrivateAssets="all" />-->
     <!--<PackageReference Include="Svg.Skia" PrivateAssets="all" />-->
     <!--<PackageReference Include="System.Buffers" PrivateAssets="all" />-->
     <!--<PackageReference Include="System.IO.UnmanagedMemoryStream" PrivateAssets="all" />-->
     <!--<PackageReference Include="System.Numerics.Vectors" PrivateAssets="all" />-->
     <!--<PackageReference Include="System.Runtime.CompilerServices.Unsafe" PrivateAssets="all" />-->
-    <PackageReference Include="System.Text.Json" PrivateAssets="all" />
+    <PackageReference Include="System.Text.Json" PrivateAssets="all" NoWarn="NU1903" />
   </ItemGroup>
 
   <ItemGroup>

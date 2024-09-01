@@ -1,19 +1,15 @@
-using System.Collections.Generic;
-using System.IO;
+using System.Text.Json;
 using CodeGenHelpers;
 using Microsoft.CodeAnalysis;
 using Mobile.BuildTools.AppSettings.Diagnostics;
-using Mobile.BuildTools.Build;
-using Mobile.BuildTools.Logging;
 using Mobile.BuildTools.Models;
-using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.AppSettings.Generators
 {
-    public abstract class GeneratorBase : ISourceGenerator, IBuildConfiguration
+    public abstract class GeneratorBase : ISourceGenerator
     {
-        private GeneratorExecutionContext _context;
+        protected GeneratorExecutionContext GeneratorContext { get; private set; }
         private string _configurationPath;
         private string _buildConfiguration;
         private string _intermediateOutputDir;
@@ -28,24 +24,10 @@ namespace Mobile.BuildTools.AppSettings.Generators
         protected string ProjectDirectory => _projectDirectory;
         protected string SolutionDirectory { get; private set; }
         protected BuildToolsConfig Config { get; private set; }
-        protected IBuildConfiguration BuildConfiguration => this;
-
-        string IBuildConfiguration.BuildConfiguration => _buildConfiguration;
-        bool IBuildConfiguration.BuildingInsideVisualStudio { get; }
-        IDictionary<string, string> IBuildConfiguration.GlobalProperties => _props;
-        string IBuildConfiguration.ProjectName => ProjectName;
-        string IBuildConfiguration.ProjectDirectory => ProjectDirectory;
-        string IBuildConfiguration.SolutionDirectory => SolutionDirectory;
-
-        // This shouldn't be an issue for the Source Generator
-        string IBuildConfiguration.IntermediateOutputPath => _intermediateOutputDir;
-        ILog IBuildConfiguration.Logger => new ConsoleLogger();
-        BuildToolsConfig IBuildConfiguration.Configuration => Config;
-        Utils.Platform IBuildConfiguration.Platform => _targetFrameworkAssembly.GetTargetPlatform();
 
         public void Execute(GeneratorExecutionContext context)
         {
-            _context = context;
+            GeneratorContext = context;
 
             if (!TryGet(context, "MSBuildProjectName", ref _projectName)
                 || !TryGet(context, "MSBuildProjectDirectory", ref _projectDirectory)
@@ -55,9 +37,14 @@ namespace Mobile.BuildTools.AppSettings.Generators
                 || !TryGet(context, "IntermediateOutputPath", ref _intermediateOutputDir))
                 return;
 
-            SolutionDirectory = EnvironmentAnalyzer.LocateSolution(ProjectDirectory);
-            _configurationPath = ConfigHelper.GetConfigurationPath(ProjectDirectory);
-            Config = ConfigHelper.GetConfig(_configurationPath);
+            //SolutionDirectory = EnvironmentAnalyzer.LocateSolution(ProjectDirectory);
+            //_configurationPath = ConfigHelper.GetConfigurationPath(ProjectDirectory);
+            var buildToolsConfig = context.AdditionalFiles.FirstOrDefault(x => Path.GetFileName(x.Path) == Constants.BuildToolsConfigFileName);
+            if (buildToolsConfig is null)
+                return;
+
+            var json = buildToolsConfig.GetText().ToString();
+            Config = JsonSerializer.Deserialize<BuildToolsConfig>(json, ConfigHelper.GetSerializerSettings());
 
             try
             {
@@ -100,25 +87,19 @@ namespace Mobile.BuildTools.AppSettings.Generators
 
         protected bool TryGetTypeSymbol(string fullyQualifiedTypeName, out INamedTypeSymbol typeSymbol)
         {
-            typeSymbol = _context.Compilation.GetTypeByMetadataName(fullyQualifiedTypeName);
+            typeSymbol = GeneratorContext.Compilation.GetTypeByMetadataName(fullyQualifiedTypeName);
             return typeSymbol != null;
         }
 
         protected void AddSource(ClassBuilder builder)
         {
-            _context.ReportDiagnostic(Diagnostic.Create(Descriptors.CreatedClass, null, builder.FullyQualifiedName));
-            _context.AddSource(builder.FullyQualifiedName, builder.Build());
+            GeneratorContext.ReportDiagnostic(Diagnostic.Create(Descriptors.CreatedClass, null, builder.FullyQualifiedName));
+            GeneratorContext.AddSource(builder.FullyQualifiedName, builder.Build());
         }
 
         protected void ReportDiagnostic(DiagnosticDescriptor descriptor, params string[] messageArgs)
         {
-            _context.ReportDiagnostic(Diagnostic.Create(descriptor, null, messageArgs));
+            GeneratorContext.ReportDiagnostic(Diagnostic.Create(descriptor, null, messageArgs));
         }
-
-        void IBuildConfiguration.SaveConfiguration() =>
-            ConfigHelper.SaveConfig(Config, _configurationPath);
-
-        IEnumerable<SettingsConfig> IBuildConfiguration.GetSettingsConfig() =>
-            ConfigHelper.GetSettingsConfig(this);
     }
 }
