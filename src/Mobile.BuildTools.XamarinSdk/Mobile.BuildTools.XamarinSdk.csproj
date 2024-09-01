@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -11,8 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\*.cs" Link="MaciOS\%(Filename)%(Extension)" />
-    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\*.cs" LinkBase="Android" />
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\*.cs" LinkBase="MaciOS" 
+        Exclude="..\..\external\Xamarin.MacDev\Xamarin.MacDev\**\NullableAttribute.cs" />
+    <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\*.cs" 
+        LinkBase="Android" Exclude="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\NullableAttributes.cs" />
     <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Properties\Resources.Designer.cs" LinkBase="Android\Properties" DependentUpon="Resources.resx" />
     <EmbeddedResource Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Properties\Resources.resx" LinkBase="Android\Properties" />
     <Compile Include="..\..\external\xamarin-android-tools\src\Xamarin.Android.Tools.AndroidSdk\Jdks\*.cs" LinkBase="Android\Jdks" />
@@ -21,6 +23,10 @@
 
   <ItemGroup>
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
+    <PackageReference Include="PolySharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

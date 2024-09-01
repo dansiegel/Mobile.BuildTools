@@ -16,6 +16,7 @@
     <PackageVersion Include="Microsoft.Web.Xdt" Version="3.1.0" />
     <PackageVersion Include="Fizzler" Version="1.3.0" />
     <PackageVersion Include="HarfBuzzSharp" Version="7.3.0.2" />
+    <PackageVersion Include="PolySharp" Version="1.14.1" />
     <PackageVersion Include="ShimSkiaSharp" Version="2.0.0.1" />
     <PackageVersion Include="SkiaSharp" Version="2.88.8" />
     <PackageVersion Include="SkiaSharp.HarfBuzz" Version="2.80.2" />
