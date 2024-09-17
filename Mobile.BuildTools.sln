@@ -41,7 +41,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.Core", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.AppManifests", "src\Mobile.BuildTools.AppManifests\Mobile.BuildTools.AppManifests.csproj", "{3A49F4A6-9282-4BBD-84C7-296CD11B5091}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BuildTools.Configuration.MSBuild", "src\Mobile.BuildTools.Configuration.MSBuild\Mobile.BuildTools.Configuration.MSBuild.csproj", "{5523AC86-C50C-40D4-8427-08E00E8C033A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile.BuildTools.Configuration.MSBuild", "src\Mobile.BuildTools.Configuration.MSBuild\Mobile.BuildTools.Configuration.MSBuild.csproj", "{5523AC86-C50C-40D4-8427-08E00E8C033A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.BuildTools.AppSettings.Tests", "tests\Mobile.BuildTools.AppSettings.Tests\Mobile.BuildTools.AppSettings.Tests.csproj", "{915FBF46-619A-44FF-A8A5-6B0681CD2D79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -197,6 +199,18 @@ Global
 		{5523AC86-C50C-40D4-8427-08E00E8C033A}.Release|x64.Build.0 = Release|Any CPU
 		{5523AC86-C50C-40D4-8427-08E00E8C033A}.Release|x86.ActiveCfg = Release|Any CPU
 		{5523AC86-C50C-40D4-8427-08E00E8C033A}.Release|x86.Build.0 = Release|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Debug|x64.Build.0 = Debug|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Debug|x86.Build.0 = Debug|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Release|x64.ActiveCfg = Release|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Release|x64.Build.0 = Release|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Release|x86.ActiveCfg = Release|Any CPU
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +228,7 @@ Global
 		{A5578B7E-63D4-4532-8094-09BDE2B5574A} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
 		{3A49F4A6-9282-4BBD-84C7-296CD11B5091} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
 		{5523AC86-C50C-40D4-8427-08E00E8C033A} = {C7456F1C-2B86-4C40-A228-72209A7355A0}
+		{915FBF46-619A-44FF-A8A5-6B0681CD2D79} = {2510D213-21AF-4B25-888D-E63163356A4F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {429C8CA0-DB8C-4CF5-9627-187B9CC47A99}
