@@ -10,19 +10,14 @@ namespace Mobile.BuildTools.AppSettings.Generators
     public abstract class GeneratorBase : ISourceGenerator
     {
         protected GeneratorExecutionContext GeneratorContext { get; private set; }
-        private string _configurationPath;
         private string _buildConfiguration;
-        private string _intermediateOutputDir;
         private string _projectName;
-        private string _projectDirectory;
         private string _targetFrameworkAssembly;
         private string _rootNamespace;
-        private IDictionary<string, string> _props = new Dictionary<string, string>();
 
         protected string ProjectName => _projectName;
         protected string RootNamespace => _rootNamespace;
-        protected string ProjectDirectory => _projectDirectory;
-        protected string SolutionDirectory { get; private set; }
+
         protected BuildToolsConfig Config { get; private set; }
 
         public void Execute(GeneratorExecutionContext context)
@@ -30,15 +25,11 @@ namespace Mobile.BuildTools.AppSettings.Generators
             GeneratorContext = context;
 
             if (!TryGet(context, "MSBuildProjectName", ref _projectName)
-                || !TryGet(context, "MSBuildProjectDirectory", ref _projectDirectory)
                 || !TryGet(context, "RootNamespace", ref _rootNamespace)
                 || !TryGet(context, "Configuration", ref _buildConfiguration)
-                || !TryGet(context, "TargetFrameworkIdentifier", ref _targetFrameworkAssembly)
-                || !TryGet(context, "IntermediateOutputPath", ref _intermediateOutputDir))
+                || !TryGet(context, "TargetFrameworkIdentifier", ref _targetFrameworkAssembly))
                 return;
 
-            //SolutionDirectory = EnvironmentAnalyzer.LocateSolution(ProjectDirectory);
-            //_configurationPath = ConfigHelper.GetConfigurationPath(ProjectDirectory);
             var buildToolsConfig = context.AdditionalFiles.FirstOrDefault(x => Path.GetFileName(x.Path) == Constants.BuildToolsConfigFileName);
             if (buildToolsConfig is null)
                 return;
@@ -50,7 +41,7 @@ namespace Mobile.BuildTools.AppSettings.Generators
             {
                 Generate();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 if(Config.Debug)
                     context.ReportDiagnostic
@@ -94,7 +85,8 @@ namespace Mobile.BuildTools.AppSettings.Generators
         protected void AddSource(ClassBuilder builder)
         {
             GeneratorContext.ReportDiagnostic(Diagnostic.Create(Descriptors.CreatedClass, null, builder.FullyQualifiedName));
-            GeneratorContext.AddSource(builder.FullyQualifiedName, builder.Build());
+            var source = builder.Build();
+            GeneratorContext.AddSource(builder.FullyQualifiedName, source);
         }
 
         protected void ReportDiagnostic(DiagnosticDescriptor descriptor, params string[] messageArgs)

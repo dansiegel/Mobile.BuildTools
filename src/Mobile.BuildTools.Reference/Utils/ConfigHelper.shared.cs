@@ -126,7 +126,7 @@ namespace Mobile.BuildTools.Utils
             return options;
         }
 
-        private static readonly Dictionary<string, string> conditionalDefaults = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> conditionalDefaults = new()
         {
             { "Debug", "Debug" },
             { "Release", "Release" },

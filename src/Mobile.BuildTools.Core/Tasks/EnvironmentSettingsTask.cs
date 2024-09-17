@@ -39,7 +39,7 @@ internal class EnvironmentSettingsTask : BuildToolsTaskBase
             }
         }
 
-        File.WriteAllText(outputPath, JsonSerializer.Serialize(environment, ConfigHelper.GetSerializerSettings()));
+        File.WriteAllText(outputPath, JsonSerializer.Serialize(environment, new JsonSerializerOptions(JsonSerializerDefaults.General)));
         EnvironmentSettings = [new TaskItem(outputPath)];
     }
 }

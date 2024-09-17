@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using CodeGenHelpers;
 using Microsoft.CodeAnalysis;
@@ -214,7 +209,7 @@ NOTE: This file should be excluded from source control.";
             if (string.IsNullOrEmpty(json))
                 return new Dictionary<string, string>();
 
-            return JsonSerializer.Deserialize<BuildEnvironment>(json).Environment;
+            return JsonSerializer.Deserialize<BuildEnvironment>(json, new JsonSerializerOptions(JsonSerializerDefaults.General)).Environment;
         }
 
         internal IDictionary<string, string> GetMergedSecrets(SettingsConfig settingsConfig, out bool hasErrors)

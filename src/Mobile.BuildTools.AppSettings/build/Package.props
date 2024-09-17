@@ -2,9 +2,7 @@
 <Project>
   <ItemGroup>
     <CompilerVisibleProperty Include="Configuration" />
-    <CompilerVisibleProperty Include="IntermediateOutputPath" />
     <CompilerVisibleProperty Include="MSBuildProjectName" />
-    <CompilerVisibleProperty Include="MSBuildProjectDirectory" />
     <CompilerVisibleProperty Include="RootNamespace" />
     <CompilerVisibleProperty Include="TargetFrameworkIdentifier" />
   </ItemGroup>
