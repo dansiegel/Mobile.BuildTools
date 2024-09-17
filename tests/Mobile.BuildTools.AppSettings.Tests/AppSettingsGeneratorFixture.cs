@@ -1,16 +1,12 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Testing;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
-using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpSourceGeneratorTest<Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
+using Mobile.BuildTools.AppSettings.Diagnostics;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
+using Verify = Mobile.BuildTools.AppSettings.Tests.Verifiers.CSharpSourceGeneratorVerifier<Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator>;
 
 namespace Mobile.BuildTools.AppSettings.Tests;
 
@@ -19,6 +15,7 @@ public class AppSettingsGeneratorFixture
     [Fact]
     public async Task AddsSimpleProperty()
     {
+        
         await Test();
     }
 
@@ -26,7 +23,7 @@ public class AppSettingsGeneratorFixture
     {
         Assert.NotNull(method);
         var expected = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Expected", method));
-        var expectedFiles = expected.GetFiles("*.g.cs").Select(x => x.Name).ToArray();
+        var expectedFiles = expected.GetFiles("*.cs").Select(x => x.Name).ToArray();
         var sources = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Sources", method));
         var sourceFiles = sources.GetFiles("*").Select(x => x.Name).ToArray();
         return Test(expectedFiles, sourceFiles, method);
@@ -35,14 +32,10 @@ public class AppSettingsGeneratorFixture
     private static Task Test(string[] generatedSources, string[] additionalFiles, [CallerMemberName] string? method = null)
     {
         Assert.NotNull(method);
-        var test = new Verify
+
+        var test = new Verify.Test(testMethod: method)
         {
             ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
-            CompilerDiagnostics = CompilerDiagnostics.All,
-            TestState =
-            {
-                OutputKind = OutputKind.DynamicallyLinkedLibrary
-            }
         };
 
         AddMSBuildProperties(test, ("MSBuildProjectName", test.TestState.Name),
@@ -53,10 +46,14 @@ public class AppSettingsGeneratorFixture
         test.TestState.GeneratedSources.AddRange(GetGeneratedFiles(generatedSources, method));
         test.TestState.AdditionalFiles.AddRange(GetAdditionalFiles(additionalFiles, method));
 
+        var diagnostics = test.TestState.GeneratedSources.Select(x => new DiagnosticResult(Diagnostics.Descriptors.CreatedClass)
+            .WithMessage(string.Format(Diagnostics.Descriptors.CreatedClass.MessageFormat.ToString(), Path.GetFileNameWithoutExtension(x.filename))));
+        test.TestState.ExpectedDiagnostics.AddRange(diagnostics);
+
         return test.RunAsync();
     }
 
-    private static void AddMSBuildProperties(Verify test, params(string, string)[] buildProperties)
+    private static void AddMSBuildProperties(Verify.Test test, params(string, string)[] buildProperties)
     {
         var sb = new StringBuilder();
         sb.AppendLine("is_global = true");
