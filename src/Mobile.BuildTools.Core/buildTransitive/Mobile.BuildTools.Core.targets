@@ -1,3 +1,0 @@
-<Project>
-  <Import Project="..\build\Mobile.BuildTools.Core.targets" />
-</Project>
