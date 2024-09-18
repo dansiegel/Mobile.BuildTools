@@ -9,7 +9,7 @@ We all have settings that help make our app run whether in development, staging,
 
 ## Using the appsettings.json
 
-The Mobile.BuildTools is smart, we look for the appsettings.json in the p
+The Mobile.BuildTools is smart, we look for the appsettings.json in the project and recurse up to the solution directory. This allows you to provide a single file for your entire solution while providing values that can be used through the solution.
 
 ```json
 {
@@ -17,6 +17,8 @@ The Mobile.BuildTools is smart, we look for the appsettings.json in the p
   "BackendUri": "https://someapp.azurewebsites.net"
 }
 ```
+
+In addition to the core appsettings.json you can additionally provide an `appsettings.Debug.json` to override values for Debug and similarly with any other Build configuration that you may have following the format `appsettings.{Configuration}.json`.
 
 !!! note
     If upgrading to 2.0 and you are using a secrets.json, the secrets.json will continue to work with a build warning. You should convert the file over to `appsettings.json` as support for secrets.json will be deprecated in a future release.
