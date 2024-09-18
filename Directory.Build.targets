@@ -4,7 +4,7 @@
   </PropertyGroup>
 
   <Target Name="BundlePackageBuildPropsAndTargets"
-          BeforeTargets="Build;CoreBuild;CoreCompile">
+          BeforeTargets="Build;CoreBuild;CoreCompile;Pack">
 
     <PropertyGroup>
       <_SourcePackagePropsFile Condition="Exists('build\Package.props')">build\Package.props</_SourcePackagePropsFile>
