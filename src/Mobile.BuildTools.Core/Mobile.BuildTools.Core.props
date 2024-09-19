@@ -12,7 +12,7 @@
     <IsAndroidProject>false</IsAndroidProject>
     <IsiOSProject>false</IsiOSProject>
     <IsUWPProject>false</IsUWPProject>
-    <IsWindowProject>false</IsWindowProject>
+    <IsWindowsProject>false</IsWindowsProject>
     <IsMacCatalystProject>false</IsMacCatalystProject>
     <IsMacOSProject>false</IsMacOSProject>
     <IsTizenProject>false</IsTizenProject>
@@ -63,7 +63,7 @@
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
       <PropertyGroup>
-        <IsWindowProject>true</IsWindowProject>
+        <IsWindowsProject>true</IsWindowsProject>
         <BuildHostSecretPrefix Condition="$(BuildHostSecretPrefix) == ''">WindowsSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
