@@ -6,7 +6,7 @@ using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks;
 
-internal class EnvironmentSettingsTask : BuildToolsTaskBase
+public class EnvironmentSettingsTask : BuildToolsTaskBase
 {
     public ITaskItem[] EnvironmentSettings { get; private set; } = [];
     internal override void ExecuteInternal(IBuildConfiguration config)
