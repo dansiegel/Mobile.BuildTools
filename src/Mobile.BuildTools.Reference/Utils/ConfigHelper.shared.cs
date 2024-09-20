@@ -20,16 +20,21 @@ namespace Mobile.BuildTools.Utils
         {
             if (string.IsNullOrEmpty(searchDirectory)) return null;
 
+            if (Path.GetFileName(searchDirectory) == Constants.BuildToolsConfigFileName)
+            {
+                return GetConfigurationPath(Path.GetDirectoryName(searchDirectory));
+            }
+
             var rootPath = Path.GetPathRoot(searchDirectory);
             var configPath = new FileInfo(Path.Combine(searchDirectory, Constants.BuildToolsConfigFileName));
             if (configPath.Exists)
             {
-                return searchDirectory;
+                return configPath.FullName;
             }
             else if (configPath.Directory.EnumerateFiles("*.sln").Any() ||
                 configPath.Directory.EnumerateDirectories().Any(x => x.Name == ".git"))
             {
-                return configPath.Directory.FullName;
+                return configPath.FullName;
             }
 
             if (searchDirectory == rootPath)
@@ -56,7 +61,7 @@ namespace Mobile.BuildTools.Utils
         {
             var filePath = GetConfigurationPath(path);
             var configurationDirectoryPath = filePath;
-            if (File.GetAttributes(filePath).HasFlag(FileAttributes.Directory))
+            if (Path.GetFileName(filePath) != Constants.BuildToolsConfigFileName)
             {
                 filePath = Path.Combine(filePath, Constants.BuildToolsConfigFileName);
             }

@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Project>
-  <ItemGroup>
-    <CompilerVisibleProperty Include="Configuration" />
-    <CompilerVisibleProperty Include="MSBuildProjectName" />
-    <CompilerVisibleProperty Include="RootNamespace" />
-    <CompilerVisibleProperty Include="TargetFrameworkIdentifier" />
-  </ItemGroup>
-</Project>

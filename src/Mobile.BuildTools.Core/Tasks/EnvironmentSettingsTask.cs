@@ -8,16 +8,21 @@ namespace Mobile.BuildTools.Tasks;
 
 public class EnvironmentSettingsTask : BuildToolsTaskBase
 {
+    [Output]
     public ITaskItem[] EnvironmentSettings { get; private set; } = [];
     internal override void ExecuteInternal(IBuildConfiguration config)
     {
         var outputPath = Path.Combine(IntermediateOutputPath, "Mobile.BuildTools", Constants.BuildToolsEnvironmentSettings);
-        File.Delete(outputPath);
 
-        var outputDirectory = new FileInfo(outputPath).Directory;
-        if (!outputDirectory.Exists)
+        var fileInfo = new FileInfo(outputPath);
+        if (!fileInfo.Directory.Exists)
         {
-            outputDirectory.Create();
+            fileInfo.Directory.Create();
+        }
+
+        if (fileInfo.Exists)
+        {
+            fileInfo.Delete();
         }
 
         var environment = new BuildEnvironment

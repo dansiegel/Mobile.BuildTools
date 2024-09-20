@@ -10,6 +10,7 @@
     <PowerShellExe Condition=" '$(PowerShellExe)'=='' And '$(IsUnix)' == 'true' ">\usr\local\bin\powershell</PowerShellExe>
     <EnableDefaultEmbeddedResourceItems>True</EnableDefaultEmbeddedResourceItems>
     <IsAndroidProject>false</IsAndroidProject>
+    <IsAppleTarget>false</IsAppleTarget>
     <IsiOSProject>false</IsiOSProject>
     <IsUWPProject>false</IsUWPProject>
     <IsWindowsProject>false</IsWindowsProject>
@@ -175,4 +176,11 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Mock' ">
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="Configuration" />
+    <CompilerVisibleProperty Include="MSBuildProjectName" />
+    <CompilerVisibleProperty Include="RootNamespace" />
+    <CompilerVisibleProperty Include="TargetFrameworkIdentifier" />
+  </ItemGroup>
 </Project>
