@@ -100,14 +100,14 @@ NOTE: This file should be excluded from source control.";
 
                 foreach(var valueConfig in settingsConfig.Properties)
                 {
-                    AddProperty(ref builder, mergedSecrets, valueConfig, interfaces, settingsConfig.Delimiter);
+                    AddProperty(ref builder, mergedSecrets, valueConfig, interfaces, settingsConfig.Delimiter, compileGeneratedAttribute);
                 }
 
                 AddSource(builder);
             }
         }
 
-        private void AddProperty(ref ClassBuilder builder, IDictionary<string, string> secrets, ValueConfig valueConfig, IEnumerable<INamedTypeSymbol> interfaces, string delimeter)
+        private void AddProperty(ref ClassBuilder builder, IDictionary<string, string> secrets, ValueConfig valueConfig, IEnumerable<INamedTypeSymbol> interfaces, string delimeter, string compileGeneratedAttribute)
         {
             if (!secrets.ContainsKey(valueConfig.Name))
                 return;
@@ -175,6 +175,8 @@ NOTE: This file should be excluded from source control.";
                 propBuilder.MakeStatic()
                     .WithReadonlyValue(output, valueType: valueType);
             }
+
+            propBuilder.AddAttribute(compileGeneratedAttribute);
         }
 
         private string[] GetValueArray(string value, string delimeter) => 

@@ -1,5 +1,5 @@
 ﻿// Uncomment the following line to write expected files to disk
-#define WRITE_EXPECTED
+//#define WRITE_EXPECTED
 
 #if WRITE_EXPECTED
 #warning WRITE_EXPECTED is fine for local builds, but should not be merged to the main branch.

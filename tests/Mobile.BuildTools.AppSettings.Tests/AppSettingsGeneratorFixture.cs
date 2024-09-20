@@ -1,10 +1,12 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using Mobile.BuildTools.AppSettings.Diagnostics;
+using Mobile.BuildTools.AppSettings.Generators;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
 using Verify = Mobile.BuildTools.AppSettings.Tests.Verifiers.CSharpSourceGeneratorVerifier<Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator>;
 
@@ -15,7 +17,12 @@ public class AppSettingsGeneratorFixture
     [Fact]
     public async Task AddsSimpleProperty()
     {
-        
+        await Test();
+    }
+
+    [Fact]
+    public async Task UsesSettingsOverDefault()
+    {
         await Test();
     }
 
@@ -110,13 +117,16 @@ public class AppSettingsGeneratorFixture
         var path = Path.Combine(Environment.CurrentDirectory, "Expected", method, filename);
         Assert.True(File.Exists(path), $"Path does not exist: '{path}'");
 
-        return (path, GetSourceText(path));
+        var generatedPath = Path.Combine("Mobile.BuildTools.AppSettings", "Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator", filename);
+        return (generatedPath, GetSourceText(path));
     }
 
     private static SourceText GetSourceText(string path)
     {
+        var assembly = typeof(AppSettingsGenerator).Assembly;
+        var toolVersion = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
         using var reader = new StreamReader(path);
-        var source = /*Regex.Replace(*/reader.ReadToEnd()/*, @"\r\n|\n\r|\n|\r", Environment.NewLine)*/;
+        var source = reader.ReadToEnd().Replace("{0}", toolVersion);
         return SourceText.From(source, Encoding.UTF8);
     }
 }

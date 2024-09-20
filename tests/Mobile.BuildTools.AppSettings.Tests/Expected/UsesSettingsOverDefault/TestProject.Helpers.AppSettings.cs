@@ -22,7 +22,7 @@ namespace TestProject.Helpers
     internal static partial class AppSettings
     {
         [GeneratedCodeAttribute("Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator", "{0}")]
-        public const string AProperty =
-            "Hello World";
+        public const string ClientId =
+            "Hello Settings";
     }
 }
