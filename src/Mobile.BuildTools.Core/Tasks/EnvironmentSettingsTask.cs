@@ -14,6 +14,12 @@ public class EnvironmentSettingsTask : BuildToolsTaskBase
         var outputPath = Path.Combine(IntermediateOutputPath, "Mobile.BuildTools", Constants.BuildToolsEnvironmentSettings);
         File.Delete(outputPath);
 
+        var outputDirectory = new FileInfo(outputPath).Directory;
+        if (!outputDirectory.Exists)
+        {
+            outputDirectory.Create();
+        }
+
         var environment = new BuildEnvironment
         {
             BuildNumber = CIBuildEnvironmentUtils.BuildNumber,
