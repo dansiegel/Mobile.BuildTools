@@ -105,7 +105,7 @@ namespace Mobile.BuildTools.Utils
 appsettings.json
 appsettings.*.json
 ";
-            var gitignoreFile = Path.Combine(path, ".gitignore");
+            var gitignoreFile = Path.Combine(Path.GetDirectoryName(path), ".gitignore");
             lock (gitIgnoreLockObject)
             {
                 if (!File.Exists(gitignoreFile))
@@ -114,11 +114,19 @@ appsettings.*.json
                 }
                 else if (!File.ReadAllText(gitignoreFile).Contains(Constants.SecretsJsonFileName))
                 {
-                    File.AppendAllText(gitignoreFile, $"\n\n{requiredContents}");
+                    WriteIfMissing(gitignoreFile, requiredContents);
                 }
             }
 
 #endif
+        }
+
+        private static void WriteIfMissing(string path, string requiredContents)
+        {
+            if (!File.ReadAllText(path).Contains(requiredContents))
+            {
+                File.AppendAllText(path, $"\n\n{requiredContents}");
+            }
         }
 
         private static string GetRelativePath(string filespec, string folder)
