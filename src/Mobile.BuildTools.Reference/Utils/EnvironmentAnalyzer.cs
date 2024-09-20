@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Handlers;
+using Mobile.BuildTools.Reference.IO;
 
 namespace Mobile.BuildTools.Utils
 {
@@ -30,18 +31,31 @@ namespace Mobile.BuildTools.Utils
 
             env = GetEnvironmentVariables(buildConfiguration);
 
-            var projectDirectory = buildConfiguration.ProjectDirectory;
-            var solutionDirectory = buildConfiguration.SolutionDirectory;
+            var projectDirectory = new DirectoryInfo(buildConfiguration.ProjectDirectory);
+            var solutionDirectory = new DirectoryInfo(buildConfiguration.SolutionDirectory);
             var configuration = buildConfiguration.BuildConfiguration;
-            var directories = new List<string>(new[] {
-                projectDirectory,
-            });
+            var directories = new List<DirectoryInfo>
+            {
+                solutionDirectory,
+                projectDirectory
+            };
 
-            var stoppingDir = new DirectoryInfo(solutionDirectory).Parent.FullName;
+            if (buildConfiguration.Platform != Platform.Unsupported)
+            {
+                new DirectoryInfo[]
+                {
+                    new (Path.Combine(projectDirectory.FullName, buildConfiguration.Platform.ToString())),
+                    new (Path.Combine(projectDirectory.FullName, "Platforms", buildConfiguration.Platform.ToString()))
+                }
+                .Where(x => x.Exists)
+                .ForEach(directories.Add);
+            }
+
+            var stoppingDir = solutionDirectory.Parent;
             var lookupDir = projectDirectory;
             do
             {
-                lookupDir = new DirectoryInfo(lookupDir).Parent?.FullName;
+                lookupDir = lookupDir.Parent;
                 if (lookupDir is null || stoppingDir == lookupDir)
                 {
                     break;
@@ -53,39 +67,43 @@ namespace Mobile.BuildTools.Utils
             } while (lookupDir != solutionDirectory);
 
             directories
-                .SelectMany(x => new[]
-                {
-                    // Legacy Support
-                    Path.Combine(x, Constants.SecretsJsonFileName),
-                    Path.Combine(x, string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)),
-                })
+                .Distinct()
+                .SelectMany(x =>
+                    x.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly)
+                        .Where(x => x.Name == Constants.SecretsJsonFileName || x.Name == string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)))
                 .ForEach(x =>
                 {
-                    if (File.Exists(x))
+                    if (x.Exists)
                     {
                         buildConfiguration.Logger.LogWarning($"The secrets.json has been deprecated and will no longer be supported in a future version. Please migrate '{x}' to appsettings.json");
-                        LoadSecrets(x, ref env);
+                        LoadSecrets(x.FullName, ref env);
                     }
                 });
 
             directories
-                .SelectMany(x => new[]
-                {
-                    Path.Combine(x, Constants.AppSettingsJsonFileName),
-                    Path.Combine(x, string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)),
-                })
-                .ForEach(x => LoadSecrets(x, ref env));
+                .Distinct(DirectoryInfoEqualityComparer.Instance)
+                .SelectMany(x => 
+                    x.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly)
+                        .Where(x => x.Name == Constants.AppSettingsJsonFileName 
+                            || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)))
+                .ForEach(x => LoadSecrets(x.FullName, ref env));
 
             if (includeManifest)
             {
-                LoadSecrets(Path.Combine(projectDirectory, Constants.ManifestJsonFileName), ref env);
-                LoadSecrets(Path.Combine(solutionDirectory, Constants.ManifestJsonFileName), ref env);
+                directories
+                    .Distinct(DirectoryInfoEqualityComparer.Instance)
+                    .SelectMany(x =>
+                        x.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly)
+                            .Where(x => x.Name == Constants.ManifestJsonFileName))
+                    .ForEach(x => LoadSecrets(x.FullName, ref env));
+                LoadSecrets(Path.Combine(projectDirectory.FullName, Constants.ManifestJsonFileName), ref env);
+                LoadSecrets(Path.Combine(solutionDirectory.FullName, Constants.ManifestJsonFileName), ref env);
             }
 
             if(buildConfiguration?.Configuration?.Environment != null)
             {
                 var settings = buildConfiguration.Configuration.Environment;
-                var defaultSettings = settings.Defaults ?? new Dictionary<string, string>();
+                var defaultSettings = settings.Defaults ?? [];
                 if(settings.Configuration != null && settings.Configuration.ContainsKey(configuration))
                 {
                     foreach ((var key, var value) in settings.Configuration[configuration])
@@ -178,31 +196,29 @@ namespace Mobile.BuildTools.Utils
             return prefixes;
         }
 
-        private static string GetPlatformManifestPrefix(Platform platform)
-        {
-            return platform switch
+        private static string GetPlatformManifestPrefix(Platform platform) => 
+            platform switch
             {
                 Platform.Android => "DroidManifest_",
                 Platform.iOS => "iOSManifest_",
+                Platform.Windows => "WindowsManifest_",
                 Platform.UWP => "UWPManifest_",
                 Platform.macOS => "MacManifest_",
                 Platform.Tizen => "TizenManifest_",
                 _ => null,
             };
-        }
 
-        public static string[] GetPlatformSecretPrefix(Platform platform)
-        {
-            return platform switch
+        public static string[] GetPlatformSecretPrefix(Platform platform) =>
+            platform switch
             {
-                Platform.Android => new[] { "DroidSecret_" },
-                Platform.iOS => new[] { "iOSSecret_" },
-                Platform.UWP => new[] { "UWPSecret_" },
-                Platform.macOS => new[] { "MacSecret_" },
-                Platform.Tizen => new[] { "TizenSecret_" },
-                _ => new[] { DefaultSecretPrefix, LegacySecretPrefix },
+                Platform.Android => ["DroidSecret_"],
+                Platform.iOS => ["iOSSecret_"],
+                Platform.Windows => ["WindowsSecret_"],
+                Platform.UWP => ["UWPSecret_"],
+                Platform.macOS => ["MacSecret_"],
+                Platform.Tizen => ["TizenSecret_"],
+                _ => [DefaultSecretPrefix, LegacySecretPrefix],
             };
-        }
 
         public static IEnumerable<string> GetSecretPrefixes(Platform platform, bool forceIncludeDefault = false)
         {
@@ -257,7 +273,7 @@ namespace Mobile.BuildTools.Utils
             {
                 var configuration = build.BuildConfiguration;
                 var settings = build.Configuration.Environment;
-                var defaultSettings = settings.Defaults ?? new Dictionary<string, string>();
+                var defaultSettings = settings.Defaults ?? [];
                 if (settings.Configuration != null && settings.Configuration.ContainsKey(configuration))
                 {
                     foreach ((var key, var value) in settings.Configuration[configuration])
@@ -282,11 +298,9 @@ namespace Mobile.BuildTools.Utils
             return IsInGitRepo(di.Parent.FullName);
         }
 
-        private static bool IsRootPath(DirectoryInfo directoryPath)
-        {
-            return directoryPath.Root.FullName == directoryPath.FullName ||
+        private static bool IsRootPath(DirectoryInfo directoryPath) =>
+            directoryPath.Root.FullName == directoryPath.FullName ||
                 directoryPath.FullName == Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        }
 
         private static void LoadSecrets(string path, ref Dictionary<string, string> env)
         {

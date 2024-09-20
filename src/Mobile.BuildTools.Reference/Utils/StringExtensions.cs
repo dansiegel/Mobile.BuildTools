@@ -12,7 +12,8 @@ namespace Mobile.BuildTools.Utils
             {
                 "monoandroid" or "xamarin.android" or "xamarinandroid" or "android" => Platform.Android,
                 "xamarinios" or "xamarin.ios" or "ios" => Platform.iOS,
-                "win" or "uap" or "windows" => Platform.UWP,
+                "uap" => Platform.UWP,
+                "windows" or "win" => Platform.Windows,
                 "xamarinmac" or "xamarin.mac" or "maccatalyst" or "macos" => Platform.macOS,
                 "tizen" => Platform.Tizen,
                 _ => Platform.Unsupported,

@@ -9,13 +9,8 @@ using Xunit.Abstractions;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Utils
 {
-    public class EnvironmentAnalyzerFixture : FixtureBase, IDisposable
+    public class EnvironmentAnalyzerFixture(ITestOutputHelper testOutputHelper) : FixtureBase(null, testOutputHelper), IDisposable
     {
-        public EnvironmentAnalyzerFixture(ITestOutputHelper testOutputHelper) 
-            : base(null, testOutputHelper)
-        {
-        }
-
         [Theory]
         [InlineData("secrets.json")]
         [InlineData("appsettings.json")]
@@ -24,16 +19,16 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             var config = GetConfiguration($"{nameof(GetsValuesFromJson)}-{Path.GetFileNameWithoutExtension(filename)}");
             var settingsConfig = new SettingsConfig
             {
-                Properties = new List<ValueConfig>
-                    {
+                Properties =
+                    [
                         new ValueConfig
                         {
                             Name = "SampleProp",
                             PropertyType = PropertyType.String
                         }
-                    }
+                    ]
             };
-            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>([settingsConfig]);
 
             var secrets = new
             {
@@ -53,17 +48,17 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             var config = GetConfiguration();
             var settingsConfig = new SettingsConfig
             {
-                Properties = new List<ValueConfig>
-                {
+                Properties =
+                [
                     new ValueConfig
                     {
                         Name = "SampleProp",
                         PropertyType = PropertyType.String
                     }
-                }
+                ]
             };
             config.Configuration.Environment.Defaults.Add("SampleProp", "Hello Tests");
-            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>([settingsConfig]);
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
 
@@ -77,21 +72,21 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             var config = GetConfiguration();
             var settingsConfig = new SettingsConfig
             {
-                Properties = new List<ValueConfig>
-                {
+                Properties =
+                [
                     new ValueConfig
                     {
                         Name = "SampleProp",
                         PropertyType = PropertyType.String
                     }
-                }
+                ]
             };
             config.Configuration.Environment.Defaults.Add("SampleProp", "Hello Tests");
             config.Configuration.Environment.Configuration[config.BuildConfiguration] = new Dictionary<string, string>
             {
                 { "SampleProp", "Hello Override" }
             };
-            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>([settingsConfig]);
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
 
@@ -105,16 +100,16 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             var config = GetConfiguration();
             var settingsConfig = new SettingsConfig
             {
-                Properties = new List<ValueConfig>
-                {
+                Properties =
+                [
                     new ValueConfig
                     {
                         Name = "SampleProp1",
                         PropertyType = PropertyType.String
                     }
-                }
+                ]
             };
-            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>([settingsConfig]);
             Environment.SetEnvironmentVariable("SampleProp1", nameof(GetsValuesFromHostEnvironment), EnvironmentVariableTarget.Process);
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
@@ -131,16 +126,16 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             var config = GetConfiguration();
             var settingsConfig = new SettingsConfig
             {
-                Properties = new List<ValueConfig>
-                {
+                Properties =
+                [
                     new ValueConfig
                     {
                         Name = "SampleProp3",
                         PropertyType = PropertyType.String
                     }
-                }
+                ]
             };
-            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>([settingsConfig]);
             config.Configuration.Environment.Defaults["SampleProp3"] = "Hello Config Environment";
 
             Environment.SetEnvironmentVariable("SampleProp3", nameof(OverridesConfigEnvironmentFromHostEnvironment), EnvironmentVariableTarget.Process);
@@ -159,16 +154,16 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             var config = GetConfiguration($"{nameof(OverridesConfigEnvironmentFromJson)}-{Path.GetFileNameWithoutExtension(filename)}");
             var settingsConfig = new SettingsConfig
             {
-                Properties = new List<ValueConfig>
-                {
+                Properties =
+                [
                     new ValueConfig
                     {
                         Name = "SampleProp",
                         PropertyType = PropertyType.String
                     }
-                }
+                ]
             };
-            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>(new[] { settingsConfig });
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>([settingsConfig]);
             config.Configuration.Environment.Defaults["SampleProp"] = "Hello Config Environment";
             var secrets = new
             {

@@ -57,7 +57,7 @@ namespace Mobile.BuildTools.Tasks
             {
                 Platform.Android => new AndroidImageCollectionGenerator(this),
                 Platform.iOS or Platform.macOS or Platform.TVOS => new AppleImageCollectionGenerator(this),
-                Platform.UWP => new UwpImageCollectionGenerator(this),
+                Platform.UWP or Platform.Windows => new UwpImageCollectionGenerator(this),
                 _ => null,
             };
         }
