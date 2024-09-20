@@ -3,8 +3,8 @@
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
   </PropertyGroup>
 
-  <Target Name="BundlePackageBuildPropsAndTargets"
-          BeforeTargets="Build">
+  <!--<Target Name="BundlePackageBuildPropsAndTargets"
+          BeforeTargets="Build;CoreBuild;CoreCompile;Pack">
 
     <PropertyGroup>
       <_SourcePackagePropsFile Condition="Exists('build\Package.props')">build\Package.props</_SourcePackagePropsFile>
@@ -45,7 +45,7 @@
             PackagePath="buildTransitive\$(PackageId).targets" 
             Condition="$(_SourcePackageTargetsFile) != ''" />
     </ItemGroup>
-  </Target>
+  </Target>-->
 
   <Target Name="DeleteCachedPackage" Condition="'$(CI)' != 'true'" BeforeTargets="Pack">
     <ItemGroup>

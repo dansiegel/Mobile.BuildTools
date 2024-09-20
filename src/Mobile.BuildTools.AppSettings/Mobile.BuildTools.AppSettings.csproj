@@ -25,6 +25,8 @@
     <Compile Include="..\Mobile.BuildTools.Reference\Models\**\*.cs" LinkBase="Reference\Models" />
     <Compile Include="..\Mobile.BuildTools.Reference\Utils\**\*.cs" LinkBase="Reference\Utils" Exclude="@(MBTReferenceExclude)" />
     <Compile Include="..\Mobile.BuildTools.Reference\Constants.cs" Link="Reference\Constants.cs" />
+
+    <InternalsVisibleTo Include="Mobile.BuildTools.AppSettings.Tests" />
   </ItemGroup>
 
   <ItemGroup>

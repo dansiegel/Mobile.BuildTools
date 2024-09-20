@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using CodeGenHelpers;
 using Microsoft.CodeAnalysis;
@@ -105,14 +100,14 @@ NOTE: This file should be excluded from source control.";
 
                 foreach(var valueConfig in settingsConfig.Properties)
                 {
-                    AddProperty(ref builder, mergedSecrets, valueConfig, interfaces, settingsConfig.Delimiter);
+                    AddProperty(ref builder, mergedSecrets, valueConfig, interfaces, settingsConfig.Delimiter, compileGeneratedAttribute);
                 }
 
                 AddSource(builder);
             }
         }
 
-        private void AddProperty(ref ClassBuilder builder, IDictionary<string, string> secrets, ValueConfig valueConfig, IEnumerable<INamedTypeSymbol> interfaces, string delimeter)
+        private void AddProperty(ref ClassBuilder builder, IDictionary<string, string> secrets, ValueConfig valueConfig, IEnumerable<INamedTypeSymbol> interfaces, string delimeter, string compileGeneratedAttribute)
         {
             if (!secrets.ContainsKey(valueConfig.Name))
                 return;
@@ -180,6 +175,8 @@ NOTE: This file should be excluded from source control.";
                 propBuilder.MakeStatic()
                     .WithReadonlyValue(output, valueType: valueType);
             }
+
+            propBuilder.AddAttribute(compileGeneratedAttribute);
         }
 
         private string[] GetValueArray(string value, string delimeter) => 
@@ -214,7 +211,7 @@ NOTE: This file should be excluded from source control.";
             if (string.IsNullOrEmpty(json))
                 return new Dictionary<string, string>();
 
-            return JsonSerializer.Deserialize<BuildEnvironment>(json).Environment;
+            return JsonSerializer.Deserialize<BuildEnvironment>(json, new JsonSerializerOptions(JsonSerializerDefaults.General)).Environment;
         }
 
         internal IDictionary<string, string> GetMergedSecrets(SettingsConfig settingsConfig, out bool hasErrors)

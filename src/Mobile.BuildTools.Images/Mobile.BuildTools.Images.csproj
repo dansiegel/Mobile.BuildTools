@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Mobile.BuildTools.Core\Build\BuildExtensions.cs" LinkBase="Build" />
+    <Compile Include="..\Mobile.BuildTools.Core\Extensions\BuildExtensions.cs" LinkBase="Build" />
     <Compile Include="..\Mobile.BuildTools\Extensions\ITaskItemExtensions.cs" LinkBase="Extensions" />
     <Compile Include="..\Mobile.BuildTools.Core\Logging\BuildHostLoggingHelper.cs" LinkBase="Logging" />
     <Compile Include="..\Mobile.BuildTools.Core\Tasks\BuildToolsTaskBase.cs" LinkBase="Tasks" />

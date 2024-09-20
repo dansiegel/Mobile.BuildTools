@@ -10,9 +10,10 @@
     <PowerShellExe Condition=" '$(PowerShellExe)'=='' And '$(IsUnix)' == 'true' ">\usr\local\bin\powershell</PowerShellExe>
     <EnableDefaultEmbeddedResourceItems>True</EnableDefaultEmbeddedResourceItems>
     <IsAndroidProject>false</IsAndroidProject>
+    <IsAppleTarget>false</IsAppleTarget>
     <IsiOSProject>false</IsiOSProject>
     <IsUWPProject>false</IsUWPProject>
-    <IsWindowProject>false</IsWindowProject>
+    <IsWindowsProject>false</IsWindowsProject>
     <IsMacCatalystProject>false</IsMacCatalystProject>
     <IsMacOSProject>false</IsMacOSProject>
     <IsTizenProject>false</IsTizenProject>
@@ -63,7 +64,7 @@
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
       <PropertyGroup>
-        <IsWindowProject>true</IsWindowProject>
+        <IsWindowsProject>true</IsWindowsProject>
         <BuildHostSecretPrefix Condition="$(BuildHostSecretPrefix) == ''">WindowsSecret_</BuildHostSecretPrefix>
       </PropertyGroup>
     </When>
@@ -175,4 +176,11 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Mock' ">
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="Configuration" />
+    <CompilerVisibleProperty Include="MSBuildProjectName" />
+    <CompilerVisibleProperty Include="RootNamespace" />
+    <CompilerVisibleProperty Include="TargetFrameworkIdentifier" />
+  </ItemGroup>
 </Project>

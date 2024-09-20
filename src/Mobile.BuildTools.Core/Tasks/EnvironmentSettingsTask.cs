@@ -6,13 +6,24 @@ using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Tasks;
 
-internal class EnvironmentSettingsTask : BuildToolsTaskBase
+public class EnvironmentSettingsTask : BuildToolsTaskBase
 {
+    [Output]
     public ITaskItem[] EnvironmentSettings { get; private set; } = [];
     internal override void ExecuteInternal(IBuildConfiguration config)
     {
         var outputPath = Path.Combine(IntermediateOutputPath, "Mobile.BuildTools", Constants.BuildToolsEnvironmentSettings);
-        File.Delete(outputPath);
+
+        var fileInfo = new FileInfo(outputPath);
+        if (!fileInfo.Directory.Exists)
+        {
+            fileInfo.Directory.Create();
+        }
+
+        if (fileInfo.Exists)
+        {
+            fileInfo.Delete();
+        }
 
         var environment = new BuildEnvironment
         {
@@ -39,7 +50,7 @@ internal class EnvironmentSettingsTask : BuildToolsTaskBase
             }
         }
 
-        File.WriteAllText(outputPath, JsonSerializer.Serialize(environment, ConfigHelper.GetSerializerSettings()));
+        File.WriteAllText(outputPath, JsonSerializer.Serialize(environment, new JsonSerializerOptions(JsonSerializerDefaults.General)));
         EnvironmentSettings = [new TaskItem(outputPath)];
     }
 }
