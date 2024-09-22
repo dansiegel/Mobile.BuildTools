@@ -38,7 +38,7 @@
                             ProjectDirectory="$(MSBuildProjectDirectory)"
                             SolutionDirectory="$(SolutionDir)"
                             IntermediateOutputPath="$(IntermediateOutputPath)"
-                            TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                            TargetFrameworkIdentifier="$(TargetFramework)"
                             AdditionalSearchPaths="$(BuildToolsImageSearchPath)"
                             IgnoreDefaultSearchPaths="$(BuildToolsIgnoreDefaultSearchPath)"
                             SingleProject="$(SingleProject)">
@@ -61,7 +61,7 @@
                       ProjectDirectory="$(MSBuildProjectDirectory)"
                       SolutionDirectory="$(SolutionDir)"
                       IntermediateOutputPath="$(IntermediateOutputPath)"
-                      TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                      TargetFrameworkIdentifier="$(TargetFramework)"
                       Images="@(UnifiedImageAsset)">
       <Output ItemName="GeneratedFile"
               TaskParameter="GeneratedImages"/>

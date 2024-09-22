@@ -85,7 +85,9 @@ namespace Mobile.BuildTools.Utils
                 .SelectMany(x => 
                     x.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly)
                         .Where(x => x.Name == Constants.AppSettingsJsonFileName 
-                            || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)))
+                            || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)
+                            || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}")
+                            || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}.{configuration}")))
                 .ForEach(x => LoadSecrets(x.FullName, ref env));
 
             if (includeManifest)

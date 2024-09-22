@@ -2,15 +2,17 @@
 <Project>
 
   <Import Project="MonoAndroid.targets"
-          Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid'" />
+          Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" />
   <Import Project="iOS.targets"
-          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS'" />
+          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'" />
+  <Import Project="iOS.targets"
+          Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'" />
   <Import Project="iOS.targets"
           Condition="$(TargetFrameworkIdentifier) == 'Xamarin.TVOS'" />
   <Import Project="Mac.targets"
           Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'" />
   <Import Project="UAP.targets"
-          Condition="$(TargetFrameworkIdentifier) == 'UAP'" />
+          Condition="$(TargetFrameworkIdentifier) == 'UAP' OR $(TargetFramework.Contains('windows10'))" />
   <Import Project="NetStandard.targets"
           Condition="$(TargetFrameworkIdentifier) == '.NETStandard'" />
 
