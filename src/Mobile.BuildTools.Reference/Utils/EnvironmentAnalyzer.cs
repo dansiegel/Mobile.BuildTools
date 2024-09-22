@@ -56,7 +56,7 @@ namespace Mobile.BuildTools.Utils
             do
             {
                 lookupDir = lookupDir.Parent;
-                if (lookupDir is null || stoppingDir == lookupDir)
+                if (lookupDir is null || stoppingDir.FullName == lookupDir.FullName)
                 {
                     break;
                 }
@@ -66,34 +66,47 @@ namespace Mobile.BuildTools.Utils
                 }
             } while (lookupDir != solutionDirectory);
 
-            directories
+            directories = directories.Select(x =>
+            {
+                var dir = x.FullName;
+                if (dir.EndsWith($"{Path.DirectorySeparatorChar}"))
+                    dir = dir.Substring(0, dir.Length - 1);
+
+                return dir;
+            })
                 .Distinct()
+                .Select(x => new DirectoryInfo(x))
+                .Where(x => x.Exists)
+                .ToList();
+
+            directories
                 .SelectMany(x =>
                     x.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly)
                         .Where(x => x.Name == Constants.SecretsJsonFileName || x.Name == string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)))
+                .Where(x => x.Exists)
+                .Select(x => x.FullName)
+                .Distinct()
                 .ForEach(x =>
                 {
-                    if (x.Exists)
-                    {
-                        buildConfiguration.Logger.LogWarning($"The secrets.json has been deprecated and will no longer be supported in a future version. Please migrate '{x}' to appsettings.json");
-                        LoadSecrets(x.FullName, ref env);
-                    }
+                    buildConfiguration.Logger.LogWarning($"The secrets.json has been deprecated and will no longer be supported in a future version. Please migrate '{x}' to appsettings.json");
+                    LoadSecrets(x, ref env);
                 });
 
             directories
-                .Distinct(DirectoryInfoEqualityComparer.Instance)
                 .SelectMany(x => 
                     x.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly)
                         .Where(x => x.Name == Constants.AppSettingsJsonFileName 
                             || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)
                             || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}")
                             || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}.{configuration}")))
-                .ForEach(x => LoadSecrets(x.FullName, ref env));
+                .Where(x => x.Exists)
+                .Select(x => x.FullName)
+                .Distinct()
+                .ForEach(x => LoadSecrets(x, ref env));
 
             if (includeManifest)
             {
                 directories
-                    .Distinct(DirectoryInfoEqualityComparer.Instance)
                     .SelectMany(x =>
                         x.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly)
                             .Where(x => x.Name == Constants.ManifestJsonFileName))
