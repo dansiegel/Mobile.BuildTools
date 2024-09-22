@@ -5,7 +5,7 @@
         AfterTargets="_DetectAppManifest"
         DependsOnTargets="MobileBuildToolsInit">
     <PropertyGroup>
-      <_MBTSourcePlist>$(_AppManifest)</_MBTSourcePlist>
+      <_MBTSourcePlist>$(AppBundleManifest)</_MBTSourcePlist>
       <_MBTUpdatedManifest>$(IntermediateOutputPath)mbt\Info.plist</_MBTUpdatedManifest>
     </PropertyGroup>
 
