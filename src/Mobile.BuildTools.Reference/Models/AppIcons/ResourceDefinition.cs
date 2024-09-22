@@ -47,16 +47,21 @@ namespace Mobile.BuildTools.Models.AppIcons
         [JsonPropertyName("uwp")]
         public PlatformConfiguration UWP { get; set; }
 
+        [Description("Specifies the Windows specific configuration for the source image.")]
+        [JsonPropertyName("windows")]
+        public PlatformConfiguration Windows { get; set; }
+
         public IEnumerable<IImageResource> GetConfigurations(Platform platform)
         {
             var plats = platform switch
             {
-                Platform.Android => new[] { Android },
-                Platform.iOS => new[] { iOS, Apple },
-                Platform.macOS => new[] { MacOS, Apple },
-                Platform.TVOS => new[] { TVOS, Apple },
-                Platform.Tizen => new[] { Tizen },
-                Platform.UWP => new[] { UWP },
+                Platform.Android => [Android],
+                Platform.iOS => [iOS, Apple],
+                Platform.macOS => [MacOS, Apple],
+                Platform.TVOS => [TVOS, Apple],
+                Platform.Tizen => [Tizen],
+                Platform.Windows => [Windows],
+                Platform.UWP => [UWP],
                 _ => Array.Empty<IImageResource>(),
             };
             plats = plats.Where(x => x != null).ToArray();
@@ -70,6 +75,7 @@ namespace Mobile.BuildTools.Models.AppIcons
                 Platform.macOS => MacOS?.AdditionalOutputs ?? Apple.AdditionalOutputs,
                 Platform.TVOS => TVOS?.AdditionalOutputs ?? Apple.AdditionalOutputs,
                 Platform.Tizen => Tizen?.AdditionalOutputs,
+                Platform.Windows => Windows?.AdditionalOutputs,
                 Platform.UWP => UWP?.AdditionalOutputs,
                 _ => null
             } ?? AdditionalOutputs;

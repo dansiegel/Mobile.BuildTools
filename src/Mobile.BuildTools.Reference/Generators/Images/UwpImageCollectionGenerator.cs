@@ -18,7 +18,7 @@ namespace Mobile.BuildTools.Generators.Images
             { "StoreLogo", 200 }
         };
 
-        private readonly double[] _scales = new[] { 1.0, 0.5, 0.375, 0.3125, 0.25 };
+        private readonly double[] _scales = [1.0, 0.5, 0.375, 0.3125, 0.25];
 
         public UwpImageCollectionGenerator(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
@@ -150,7 +150,7 @@ namespace Mobile.BuildTools.Generators.Images
                 _ => throw new NotImplementedException()
             };
             var fileName = formattedName ? $"{outputName}.png" : $"{outputName}.{suffix}.png";
-            var outputFile = Path.Combine(Build.IntermediateOutputPath, "Assets", fileName);
+            var outputFile = Path.Combine(Build.IntermediateOutputPath, "Mobile.BuildTools", "Assets", fileName);
             var outputLink = Path.Combine("Assets", fileName);
             return new OutputImage
             {

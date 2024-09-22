@@ -4,7 +4,7 @@
 
 There is a lot of talk these days about DevOps. One of the problems with DevOps is that it can be really challenging. Far too many companies suffer from reliance on poor practices that their Development teams know need to be fixed. Today we have a variety of Build Systems that are at our disposal and we no longer need to rely on such poor practices. Mobile.BuildTools can help turn your run of the mill project into a streamlined DevOps masterpiece. Best of all because the Mobile.BuildTools simply provide new targets for MSBuild it works absolutely EVERYWHERE that MSBuild itself is installed!
 
-> **IMPORTANT** Version 1.x is no longer under development. This is considered a legacy version. Docs for v1.x are located in the Wiki. For those wishing to use the more powerful API's described in the mobilebuildtools.com docs site please use the v2.0 previews.
+> **IMPORTANT** Version 1.x is no longer under development. This is considered a legacy version. Docs for v1.x are located in the Wiki. For those wishing to use the more powerful API's described in the [mobilebuildtools.com docs](https://mobilebuildtools.com) site please use the v2.0 previews.
 
 #### Background
 
@@ -12,9 +12,11 @@ As part of my frustration at how challenging it was to go from File -> New Solut
 
 ## Support
 
-If this project helped you reduce time to develop and made your app better, please be sure to star the project. Also please consider becoming a GitHub sponsor. I spend hundreds if not over 1000 hours a year working on Open Source and your financial contributions help me spend time working on new features and fixing bugs that affect your apps.
+If this project helped you reduce time to develop and made your app better, please be sure to star the project. Also please consider becoming a GitHub sponsor. I have spent 1000's hours a year working on Open Source and your financial contributions help me spend time working on new features and fixing bugs that affect your apps.
 
 [![GitHub Sponsors](https://github.blog/wp-content/uploads/2019/05/mona-heart-featured.png?fit=600%2C315)](https://xam.dev/sponsor-buildtools)
+
+Enterprise Support options are available through AvantiPoint - Email dsiegel@avantipoint.com
 
 
 ## Samples
@@ -32,14 +34,7 @@ For more information on the various Build Tasks, and Properties please see the W
 | [Mobile.BuildTools][BuildToolsNuGet] | [![BuildToolsNuGetShield]][BuildToolsNuGet] | [![BuildToolsSponsorConnectShield]][BuildToolsSponsorConnect] |
 | [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] | [![BuildToolsConfigSponsorConnectShield]][BuildToolsConfigSponsorConnect] |
 
-| | Status |
-|-|-|
-| Build | [![Build Status][AzureDevOpsBuildStatus]][AzureDevOpsLatestBuild] |
-| Integration Tests (Mac) | [![Build Status](https://dev.azure.com/dansiegel/Mobile.BuildTools/_apis/build/status/dansiegel.Mobile.BuildTools?branchName=master&stageName=Run%20Tests&jobName=Integration%20Tests%20(Mac))][AzureDevOpsLatestBuild] |
-| Integration Tests (Windows) | [![Build Status](https://dev.azure.com/dansiegel/Mobile.BuildTools/_apis/build/status/dansiegel.Mobile.BuildTools?branchName=master&stageName=Run%20Tests&jobName=Integration%20Tests%20(Windows))][AzureDevOpsLatestBuild] |
-| Tests | ![Tests](https://img.shields.io/azure-devops/tests/dansiegel/Mobile.BuildTools/40/master) |
-
-Want to consume the CI packages? Be sure to [sign up as a GitHub sponsor](https://xam.dev/sponsor-buildtools) and get the pacakges from Sponsor Connect.
+Want to consume the CI packages? Be sure to [sign up as a GitHub sponsor](https://xam.dev/sponsor-buildtools) and get the packages from Sponsor Connect.
 
 
 [BuildToolsNuGet]: https://www.nuget.org/packages/Mobile.BuildTools/

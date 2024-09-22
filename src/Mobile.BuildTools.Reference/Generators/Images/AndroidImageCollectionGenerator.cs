@@ -66,6 +66,7 @@ namespace Mobile.BuildTools.Generators.Images
                 {
                     InputFile = config.SourceFile,
                     OutputFile = Path.Combine(Build.IntermediateOutputPath,
+                                                "Mobile.BuildTools",
                                                 "Resources",
                                                 $"{resourceType}-{resolution.Key}",
                                                 platformSanitizedName),

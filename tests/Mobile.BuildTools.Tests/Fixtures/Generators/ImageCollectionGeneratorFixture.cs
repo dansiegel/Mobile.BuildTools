@@ -208,7 +208,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
             foreach(var expectedOutput in expectedOutputs)
             {
-                var expectedOutputPath = Path.Combine(config.IntermediateOutputPath, expectedOutput.OutputFile);
+                var expectedOutputPath = Path.Combine(config.IntermediateOutputPath, "Mobile.BuildTools", expectedOutput.OutputFile);
                 var actualOutput = actualOutputs.FirstOrDefault(x => x.OutputFile == expectedOutputPath);
                 Assert.NotNull(actualOutput);
                 Assert.Equal(expectedOutput.Height, actualOutput.Height);

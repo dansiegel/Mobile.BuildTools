@@ -15,7 +15,7 @@
                        ProjectDirectory="$(MSBuildProjectDirectory)"
                        SolutionDirectory="$(SolutionDir)"
                        IntermediateOutputPath="$(IntermediateOutputPath)"
-                       TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                       TargetFrameworkIdentifier="$(TargetFramework)"
                        InputConfigFiles="@(MobileBuildToolsConfig)">
       <Output ItemName="GeneratedAppConfig"
               TaskParameter="OutputConfigs"/>
@@ -32,7 +32,7 @@
                                      ProjectDirectory="$(MSBuildProjectDirectory)"
                                      SolutionDirectory="$(SolutionDir)"
                                      IntermediateOutputPath="$(IntermediateOutputPath)"
-                                     TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                     TargetFrameworkIdentifier="$(TargetFramework)"
                                      AppConfigEnvironment="$(AppConfigEnvironment)"
                                      InputConfigFiles="@(MobileBuildToolsConfig)"
                                      GeneratedAppConfig="@(GeneratedAppConfig)">

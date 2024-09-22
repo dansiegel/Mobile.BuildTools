@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
@@ -50,7 +50,10 @@ public class EnvironmentSettingsTask : BuildToolsTaskBase
             }
         }
 
-        File.WriteAllText(outputPath, JsonSerializer.Serialize(environment, new JsonSerializerOptions(JsonSerializerDefaults.General)));
+        File.WriteAllText(outputPath, JsonSerializer.Serialize(environment, new JsonSerializerOptions(JsonSerializerDefaults.General)
+        {
+            WriteIndented = true
+        }));
         EnvironmentSettings = [new TaskItem(outputPath)];
     }
 }

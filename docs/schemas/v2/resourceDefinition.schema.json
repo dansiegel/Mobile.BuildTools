@@ -77,7 +77,7 @@
         }
       }
     },
-    "PlatformConfiguration": {
+    "AndroidPlatformConfiguration": {
       "description": "Specifies the Android specific configuration for the source image.",
       "type": [
         "object",
@@ -165,7 +165,7 @@
         }
       }
     },
-    "PlatformConfiguration-1": {
+    "ApplePlatformConfiguration": {
       "description": "Specifies the configuration for all Apple targets if building for iOS, macOS, TVOS, WatchOS.",
       "type": [
         "object",
@@ -253,7 +253,7 @@
         }
       }
     },
-    "PlatformConfiguration-2": {
+    "IOSPlatformConfiguration": {
       "description": "Specifies the iOS specific configuration for the source image.",
       "type": [
         "object",
@@ -341,7 +341,7 @@
         }
       }
     },
-    "PlatformConfiguration-3": {
+    "TvOSPlatformConfiguration": {
       "description": "Specifies the TVOS specific configuration for the source image.",
       "type": [
         "object",
@@ -429,7 +429,7 @@
         }
       }
     },
-    "PlatformConfiguration-4": {
+    "MacOSPlatformConfiguration": {
       "description": "Specifies the macOS specific configuration for the source image.",
       "type": [
         "object",
@@ -517,7 +517,7 @@
         }
       }
     },
-    "PlatformConfiguration-5": {
+    "TizenPlatformConfiguration": {
       "description": "Specifies the Tizen specific configuration for the source image.",
       "type": [
         "object",
@@ -605,7 +605,7 @@
         }
       }
     },
-    "PlatformConfiguration-6": {
+    "WindowsPlatformConfiguration": {
       "description": "Specifies the UWP specific configuration for the source image.",
       "type": [
         "object",
@@ -783,25 +783,28 @@
       ]
     },
     "android": {
-      "$ref": "#/definitions/PlatformConfiguration"
+      "$ref": "#/definitions/AndroidPlatformConfiguration"
     },
     "apple": {
-      "$ref": "#/definitions/PlatformConfiguration-1"
+      "$ref": "#/definitions/ApplePlatformConfiguration"
     },
     "ios": {
-      "$ref": "#/definitions/PlatformConfiguration-2"
+      "$ref": "#/definitions/IOSPlatformConfiguration"
     },
     "tvos": {
-      "$ref": "#/definitions/PlatformConfiguration-3"
+      "$ref": "#/definitions/TvOSPlatformConfiguration"
     },
     "macos": {
-      "$ref": "#/definitions/PlatformConfiguration-4"
+      "$ref": "#/definitions/MacOSPlatformConfiguration"
     },
     "tizen": {
-      "$ref": "#/definitions/PlatformConfiguration-5"
+      "$ref": "#/definitions/TizenPlatformConfiguration"
     },
     "uwp": {
-      "$ref": "#/definitions/PlatformConfiguration-6"
+      "$ref": "#/definitions/WindowsPlatformConfiguration"
+    },
+    "windows": {
+      "$ref": "#/definitions/WindowsPlatformConfiguration"
     },
     "additionalOutputs": {
       "description": "Provides additional resource outputs for the specified source image.",

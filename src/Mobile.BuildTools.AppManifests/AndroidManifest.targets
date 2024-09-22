@@ -5,7 +5,7 @@
           AfterTargets="_GetAndroidPackageName"
           Condition=" $(_AndroidManifestAbs) != '' ">
     <PropertyGroup>
-      <_MBTUpdatedManifest>$(IntermediateOutputPath)mbt\AndroidManifest.xml</_MBTUpdatedManifest>
+      <_MBTUpdatedManifest>$(IntermediateOutputPath)Mobile.BuildTools\AndroidManifest.xml</_MBTUpdatedManifest>
       <_MBTSourceManifest>$(_AndroidManifestAbs)</_MBTSourceManifest>
       <_AndroidManifestAbs>$(_MBTUpdatedManifest)</_AndroidManifestAbs>
     </PropertyGroup>
@@ -31,7 +31,7 @@
                           SolutionDirectory="$(SolutionDir)"
                           Configuration="$(Configuration)"
                           IntermediateOutputPath="$(IntermediateOutputPath)"
-                          TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                          TargetFrameworkIdentifier="$(TargetFramework)"
                           ManifestPath="$(_MBTUpdatedManifest)"
                           OutputManifestPath="$(_MBTUpdatedManifest)"
                           Condition="$(BuildToolsEnableTemplateManifests)">
@@ -51,7 +51,7 @@
                                   SolutionDirectory="$(SolutionDir)"
                                   Configuration="$(Configuration)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
-                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                  TargetFrameworkIdentifier="$(TargetFramework)"
                                   ManifestPath="$(_MBTUpdatedManifest)"
                                   OutputManifestPath="$(_MBTUpdatedManifest)"
                                   Condition="$(BuildToolsEnableAutomaticVersioning)" />
