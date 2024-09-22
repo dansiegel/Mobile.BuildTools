@@ -18,7 +18,7 @@ namespace Mobile.BuildTools.Generators.Images
             { "StoreLogo", 200 }
         };
 
-        private readonly double[] _scales = new[] { 1.0, 0.5, 0.375, 0.3125, 0.25 };
+        private readonly double[] _scales = [1.0, 0.5, 0.375, 0.3125, 0.25];
 
         public UwpImageCollectionGenerator(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
