@@ -9,9 +9,9 @@ public class AppConfigCopyTask : BuildToolsTaskBase
 {
     public ITaskItem[] InputConfigFiles { get; set; }
 
-    private List<ITaskItem> _outputs = new List<ITaskItem>();
+    private List<ITaskItem> _outputs = [];
     [Output]
-    public ITaskItem[] OutputConfigs => _outputs.ToArray();
+    public ITaskItem[] OutputConfigs => [.. _outputs];
 
     internal override void ExecuteInternal(IBuildConfiguration config)
     {
@@ -38,7 +38,7 @@ public class AppConfigCopyTask : BuildToolsTaskBase
             return;
         }
 
-        var configsOutputDir = Path.Combine(IntermediateOutputPath, "configs");
+        var configsOutputDir = Path.Combine(IntermediateOutputPath, "Mobile.BuildTools", "configs");
 
         // Determine which files need outputs
         //var files = InputConfigFiles.Select(x => x.ItemSpec);

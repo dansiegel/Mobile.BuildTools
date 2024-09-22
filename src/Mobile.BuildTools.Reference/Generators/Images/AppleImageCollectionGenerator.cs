@@ -71,7 +71,7 @@ namespace Mobile.BuildTools.Generators.Images
                 return ResourceSizes.Select(x => new OutputImage
                 {
                     InputFile = config.SourceFile,
-                    OutputFile = Path.Combine(Build.IntermediateOutputPath, "Resources", $"{config.Name}{x.Key}.png"),
+                    OutputFile = Path.Combine(Build.IntermediateOutputPath, "Mobile.BuildTools", "Resources", $"{config.Name}{x.Key}.png"),
                     OutputLink = Path.Combine("Resources", $"{config.Name}{x.Key}.png"),
                     Scale = config.Scale * x.Value,
                     ShouldBeVisible = true,
@@ -130,7 +130,7 @@ namespace Mobile.BuildTools.Generators.Images
             var scale = int.Parse(x.Scale[0].ToString());
             var size = x.Size.Split('x');
             Log.LogMessage($"Found App Icon Set image {resource.SourceFile} -> {basePath}{Path.DirectorySeparatorChar}{x.FileName}");
-            var outputFile = Path.Combine(Build.IntermediateOutputPath, basePath, x.FileName);
+            var outputFile = Path.Combine(Build.IntermediateOutputPath, "Mobile.BuildTools", basePath, x.FileName);
             var outputLink = Path.Combine(basePath, x.FileName);
             var width = (int)(double.Parse(size[0]) * scale);
             var height = (int)(double.Parse(size[1]) * scale);

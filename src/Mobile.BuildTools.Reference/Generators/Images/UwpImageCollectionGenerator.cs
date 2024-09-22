@@ -150,7 +150,7 @@ namespace Mobile.BuildTools.Generators.Images
                 _ => throw new NotImplementedException()
             };
             var fileName = formattedName ? $"{outputName}.png" : $"{outputName}.{suffix}.png";
-            var outputFile = Path.Combine(Build.IntermediateOutputPath, "Assets", fileName);
+            var outputFile = Path.Combine(Build.IntermediateOutputPath, "Mobile.BuildTools", "Assets", fileName);
             var outputLink = Path.Combine("Assets", fileName);
             return new OutputImage
             {
