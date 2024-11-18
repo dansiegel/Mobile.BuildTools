@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
   </PropertyGroup>
 
   <!--<Target Name="BundlePackageBuildPropsAndTargets"
