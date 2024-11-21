@@ -16,5 +16,4 @@ jobs:
       solution-path: Mobile.BuildTools.sln
       submodules: true
       install-workload: 'maui macos maui-tizen'
-      uno-check: true
-      vs-version: 17.8
+      vs-version: 17.12
