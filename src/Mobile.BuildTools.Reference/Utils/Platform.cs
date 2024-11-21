@@ -5,6 +5,7 @@
         iOS,
         Android,
         UWP,
+        Windows,
         macOS,
         Tizen,
         TVOS,

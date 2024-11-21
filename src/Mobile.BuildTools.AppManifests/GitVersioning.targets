@@ -12,7 +12,7 @@
                                  ProjectDirectory="$(MSBuildProjectDirectory)"
                                  SolutionDirectory="$(SolutionDir)"
                                  IntermediateOutputPath="$(IntermediateOutputPath)"
-                                 TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                 TargetFrameworkIdentifier="$(TargetFramework)"
                                  OutputPath="$(OutputPath)"
                                  Condition=" '$(BuildToolsEnableReleaseNotes)' " />
   </Target>

@@ -24,7 +24,7 @@
     <LocateBuildToolsConfigTask ProjectDir="$(MSBuildProjectDirectory)"
                                 ProjectName="$(MSBuildProjectName)"
                                 SolutionDir="$(SolutionDir)"
-                                TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                TargetFrameworkIdentifier="$(TargetFramework)"
                                 SdkShortFrameworkIdentifier="$(_SdkShortFrameworkIdentifier)"
                                 IsCrossTargetingBuild="$(IsCrossTargetingBuild)">
       <Output TaskParameter="BuildToolsConfigFilePath"
@@ -59,7 +59,7 @@
                 SolutionDirectory="$(SolutionDir)"
                 Configuration="$(Configuration)"
                 IntermediateOutputPath="$(IntermediateOutputPath)"
-                TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)">
+                TargetFrameworkIdentifier="$(TargetFramework)">
       <Output TaskParameter="EnvironmentSettings"
               ItemName="BuildToolsEnvironmentSettings" />
     </EnvironmentSettingsTask>
@@ -85,7 +85,7 @@
                 SolutionDirectory="$(SolutionDir)"
                 Configuration="$(Configuration)"
                 IntermediateOutputPath="$(IntermediateOutputPath)"
-                TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)">
+                TargetFrameworkIdentifier="$(TargetFramework)">
       <Output ItemName="GeneratedFile"
               TaskParameter="GoogleOutput"/>
       <Output ItemName="FilesWrite"
@@ -97,5 +97,14 @@
               TaskParameter="GoogleOutput"
               Condition="$(IsAppleTarget) == 'true'"/>
     </GoogleTask>
+  </Target>
+
+  <PropertyGroup>
+    <CleanDependsOn>$(CleanDependsOn);_MBTClean</CleanDependsOn>
+  </PropertyGroup>
+
+  <Target Name="_MBTClean">
+    <RemoveDir Directories="$(IntermediateOutputPath)\Mobile.BuildTools" />
+    <Delete Files="$(IntermediateOutputPath)\google-services.json;$(IntermediateOutputPath)\GoogleService-Info.plist" />
   </Target>
 </Project>

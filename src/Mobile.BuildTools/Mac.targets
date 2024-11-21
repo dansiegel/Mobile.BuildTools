@@ -19,7 +19,7 @@
                                   ProjectDirectory="$(MSBuildProjectDirectory)"
                                   SolutionDirectory="$(SolutionDir)"
                                   IntermediateOutputPath="$(IntermediateOutputPath)"
-                                  TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+                                  TargetFrameworkIdentifier="$(TargetFramework)"
                                   Condition="$(BuildToolsEnableAutomaticVersioning)" />
   </Target>
 

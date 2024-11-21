@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" ReferenceOutputAssembly="False" />
+    <ProjectReference Include="..\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" ReferenceOutputAssembly="False" NoWarn="NU1702" />
   </ItemGroup>
 
   <Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">
