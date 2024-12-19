@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Handlers;
-using Mobile.BuildTools.Reference.IO;
 
 namespace Mobile.BuildTools.Utils
 {
@@ -19,14 +18,14 @@ namespace Mobile.BuildTools.Utils
         public static IDictionary<string, string> GatherEnvironmentVariables(IBuildConfiguration buildConfiguration = null, bool includeManifest = false)
         {
             var env = new Dictionary<string, string>();
-            if(buildConfiguration is null)
+            if (buildConfiguration is null)
             {
                 foreach (var key in Environment.GetEnvironmentVariables().Keys)
                 {
                     env[key.ToString()] = Environment.GetEnvironmentVariable(key.ToString());
                 }
 
-                return env; 
+                return env;
             }
 
             env = GetEnvironmentVariables(buildConfiguration);
@@ -60,7 +59,7 @@ namespace Mobile.BuildTools.Utils
                 {
                     break;
                 }
-                else if(!directories.Contains(lookupDir))
+                else if (!directories.Contains(lookupDir))
                 {
                     directories.Add(lookupDir);
                 }
@@ -79,30 +78,45 @@ namespace Mobile.BuildTools.Utils
                 .Where(x => x.Exists)
                 .ToList();
 
-            directories
-                .SelectMany(x =>
-                    x.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly)
-                        .Where(x => x.Name == Constants.SecretsJsonFileName || x.Name == string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)))
-                .Where(x => x.Exists)
-                .Select(x => x.FullName)
-                .Distinct()
-                .ForEach(x =>
+            string[] expectedFileNames =
+            [
+                Constants.SecretsJsonFileName,
+                string.Format(Constants.SecretsJsonConfigurationFileFormat, configuration)
+            ];
+            foreach (var fileName in expectedFileNames)
+            {
+                foreach (var directory in directories)
                 {
-                    buildConfiguration.Logger.LogWarning($"The secrets.json has been deprecated and will no longer be supported in a future version. Please migrate '{x}' to appsettings.json");
-                    LoadSecrets(x, ref env);
-                });
+                    var file = new FileInfo(Path.Combine(directory.FullName, fileName));
+                    if (file.Exists)
+                    {
+                        buildConfiguration.Logger.LogWarning($"The secrets.json has been deprecated and will no longer be supported in a future version. Please migrate '{fileName}' to appsettings.json");
+                        LoadSecrets(file.FullName, ref env);
+                        break;
+                    }
+                }
+            }
 
-            directories
-                .SelectMany(x => 
-                    x.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly)
-                        .Where(x => x.Name == Constants.AppSettingsJsonFileName 
-                            || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration)
-                            || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}")
-                            || x.Name == string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}.{configuration}")))
-                .Where(x => x.Exists)
-                .Select(x => x.FullName)
-                .Distinct()
-                .ForEach(x => LoadSecrets(x, ref env));
+            expectedFileNames =
+            [
+                Constants.AppSettingsJsonFileName,
+                string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration),
+                string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}"),
+                string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}.{configuration}")
+            ];
+
+            foreach(var fileName in expectedFileNames)
+            {
+                foreach(var directory in directories)
+                {
+                    var file = new FileInfo(Path.Combine(directory.FullName, fileName));
+                    if (file.Exists)
+                    {
+                        LoadSecrets(file.FullName, ref env);
+                        break;
+                    }
+                }
+            }
 
             if (includeManifest)
             {
@@ -134,12 +148,12 @@ namespace Mobile.BuildTools.Utils
         private static Dictionary<string, string> GetEnvironmentVariables(IBuildConfiguration buildConfiguration)
         {
             var env = new Dictionary<string, string>();
-            foreach((var key, var value) in buildConfiguration.Configuration.Environment.Defaults)
+            foreach ((var key, var value) in buildConfiguration.Configuration.Environment.Defaults)
             {
                 env[key] = value;
             }
 
-            if(buildConfiguration.Configuration.Environment.Configuration.ContainsKey(buildConfiguration.BuildConfiguration))
+            if (buildConfiguration.Configuration.Environment.Configuration.ContainsKey(buildConfiguration.BuildConfiguration))
             {
                 var configEnvironment = buildConfiguration.Configuration.Environment.Configuration[buildConfiguration.BuildConfiguration];
                 if(configEnvironment is not null)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
 using Xunit;
@@ -40,6 +37,41 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
 
             Assert.True(mergedSecrets.ContainsKey("SampleProp"));
             Assert.Equal(secrets.SampleProp, mergedSecrets["SampleProp"]);
+        }
+
+        [Fact]
+        public void GetsValueFromBuildConfigurationOverrideJson()
+        {
+            var config = GetConfiguration();
+            var settingsConfig = new SettingsConfig
+            {
+                Properties =
+                    [
+                        new ValueConfig
+                        {
+                            Name = "SampleProp",
+                            PropertyType = PropertyType.String
+                        }
+                    ]
+            };
+
+            config.Configuration.AppSettings[config.ProjectName] = new List<SettingsConfig>([settingsConfig]);
+
+            var secrets = new
+            {
+                SampleProp = "Hello Tests"
+            };
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, "appsettings.json"), JsonSerializer.Serialize(secrets));
+            var buildConfigurationSecrets = new
+            {
+                SampleProp = $"Hello {config.BuildConfiguration}"
+            };
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, $"appsettings.{config.BuildConfiguration}.json"), JsonSerializer.Serialize(buildConfigurationSecrets));
+
+            var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
+
+            Assert.True(mergedSecrets.ContainsKey("SampleProp"));
+            Assert.Equal(buildConfigurationSecrets.SampleProp, mergedSecrets["SampleProp"]);
         }
 
         [Fact]
