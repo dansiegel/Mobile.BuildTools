@@ -18,6 +18,8 @@ namespace Mobile.BuildTools.AppSettings.Generators
         protected string ProjectName => _projectName;
         protected string RootNamespace => _rootNamespace;
 
+        protected string BuildConfiguration => _buildConfiguration;
+
         protected BuildToolsConfig Config { get; private set; }
 
         public void Execute(GeneratorExecutionContext context)
