@@ -15,6 +15,8 @@ namespace Mobile.BuildTools.Utils
         public bool IsTravisCI { get; set; }
         public bool IsBuildHost { get; set; }
         public string BuildNumber { get; set; }
+        public string BuildConfiguration { get; set; }
+        public Platform TargetPlatform { get; set; }
         public IDictionary<string, string> Environment { get; set; } = new Dictionary<string, string>();
     }
 }
