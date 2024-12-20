@@ -203,25 +203,12 @@ NOTE: This file should be excluded from source control.";
             }
         }
 
-        private IDictionary<string, string> GetEnvironmentSettings()
-        {
-            var buildToolsEnvFile = GeneratorContext.AdditionalFiles.FirstOrDefault(x => Path.GetFileName(x.Path) == Constants.BuildToolsEnvironmentSettings);
-            if (buildToolsEnvFile is null)
-                return new Dictionary<string, string>();
-
-            var json = buildToolsEnvFile.GetText().ToString();
-            if (string.IsNullOrEmpty(json))
-                return new Dictionary<string, string>();
-
-            return JsonSerializer.Deserialize<BuildEnvironment>(json, new JsonSerializerOptions(JsonSerializerDefaults.General)).Environment;
-        }
-
         internal IDictionary<string, string> GetMergedSecrets(SettingsConfig settingsConfig, out bool hasErrors)
         {
             if (string.IsNullOrEmpty(settingsConfig.Prefix))
                 settingsConfig.Prefix = "BuildTools_";
 
-            var env = GetEnvironmentSettings();
+            var env = Environment.Environment;
             var secrets = new Dictionary<string, string>();
             hasErrors = false;
             foreach (var prop in settingsConfig.Properties)
@@ -230,11 +217,15 @@ NOTE: This file should be excluded from source control.";
 
                 var searchKeys = new List<string>
                 {
-                    prefixKey
+                    $"{Environment.TargetPlatform}_{Environment.BuildConfiguration}_{prefixKey}",
+                    $"{Environment.TargetPlatform}_{prefixKey}",
+                    prefixKey,
                 };
 
                 if (settingsConfig.Prefix != _defaultPrefix)
                 {
+                    searchKeys.Add($"{Environment.TargetPlatform}_{Environment.BuildConfiguration}_{_defaultPrefix}_{prefixKey}");
+                    searchKeys.Add($"{Environment.TargetPlatform}_{_defaultPrefix}_{prefixKey}");
                     searchKeys.Add($"{_defaultPrefix}{prefixKey}");
                 }
 

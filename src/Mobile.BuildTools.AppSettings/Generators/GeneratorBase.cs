@@ -22,6 +22,8 @@ namespace Mobile.BuildTools.AppSettings.Generators
 
         protected BuildToolsConfig Config { get; private set; }
 
+        protected BuildEnvironment Environment { get; private set; }
+
         public void Execute(GeneratorExecutionContext context)
         {
             GeneratorContext = context;
@@ -38,6 +40,10 @@ namespace Mobile.BuildTools.AppSettings.Generators
 
             var json = buildToolsConfig.GetText().ToString();
             Config = JsonSerializer.Deserialize<BuildToolsConfig>(json, ConfigHelper.GetSerializerSettings());
+
+            var buildToolsEnvFile = GeneratorContext.AdditionalFiles.FirstOrDefault(x => Path.GetFileName(x.Path) == Constants.BuildToolsEnvironmentSettings);
+            json = buildToolsEnvFile.GetText().ToString();
+            Environment = JsonSerializer.Deserialize<BuildEnvironment>(json, new JsonSerializerOptions(JsonSerializerDefaults.General)) ?? new BuildEnvironment();
 
             try
             {
