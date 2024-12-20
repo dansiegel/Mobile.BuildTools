@@ -36,6 +36,7 @@ Within the Project we can now provide any configuration values we need to either
         "delimiter": ";",
         "namespace": "Helpers",
         "rootNamespace": null,
+        "prefix": "BuildTools_",
         "properties": [
           // Property Definitions
         ]
@@ -125,6 +126,144 @@ Other times we may have non-sensitive values that we need to configure defaults 
         ]
       }
     ]
+  }
+}
+```
+
+#### Handling Duplicate Property Names
+
+There may be times in which you have more than one project in your solution, or perhaps just more than one generated settings class that require duplicate property names. An example of this could be an API Settings class. 
+
+```json
+{
+  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "appSettings": {
+    "AwesomeApp": [
+      {
+        "className": "FooApiSettings",
+        "properties": [
+          {
+            "name": "BaseUri",
+            "type": "Uri"
+          }
+        ]
+      },
+      {
+        "className": "BarApiSettings",
+        "properties": [
+          {
+            "name": "BaseUri",
+            "type": "Uri"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+In this sample we have 2 generated classes with the `BaseUri` property, this creates a few problems for us because we need to distinguish which Uri belongs to which class and ultimately our JSON would be invalid because it has a duplicated key
+
+```json
+{
+  "BaseUri": "https://api.foo.com",
+  "BaseUri": "https://api.bar.com"
+}
+```
+
+To solve this problem we can use the Prefix property on our generated class settings. In this way we can specify a unique variable prefix that will be used to identify which Base Uri property belongs to which generated class
+
+```json
+{
+  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "appSettings": {
+    "AwesomeApp": [
+      {
+        "className": "FooApiSettings",
+        "prefix": "FooApi_",
+        "properties": [
+          {
+            "name": "BaseUri",
+            "type": "Uri"
+          }
+        ]
+      },
+      {
+        "className": "BarApiSettings",
+        "prefix": "BarApi_",
+        "properties": [
+          {
+            "name": "BaseUri",
+            "type": "Uri"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+With the Prefix added we can now update our appsettings.json to be:
+
+```json
+{
+  "FooApi_BaseUri": "https://api.foo.com",
+  "BarApi_BaseUri": "https://api.bar.com"
+}
+```
+
+> [!NOTE]
+> If your prefix does not end with an underscore one will automatically be inserted. In the above example if we did not explicitly have the underscore, the Mobile.BuildTools would still be expecting the same values in our `appsettings.json` or as an Environment variable.
+
+#### Setting Variables from the environment
+
+The Mobile.BuildTools allows us to "Fake" environment variables. There may be times such as the previous sample with our previous example where the values aren't particularly sensitive but simply something that may change based on our Build... 
+
+```json
+{
+  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "environment": {
+    "defaults": {
+      "FooApi_BaseUri": "https://dev.api.foo.com",
+      "BarApi_BaseUri": "https://dev.api.bar.com"
+    },
+  }
+}
+```
+
+It's also possible that we may want to further customize this without the need to update a CI Build environment for variables that aren't particularly sensitive. In this case we can provide Build Configuration specific settings:
+
+```json
+{
+  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "environment": {
+    "configuration": {
+      "Debug": {
+        "FooApi_BaseUri": "https://dev.api.foo.com",
+        "BarApi_BaseUri": "https://dev.api.bar.com"
+      },
+      "QA": {
+        "FooApi_BaseUri": "https://qa.api.foo.com",
+        "BarApi_BaseUri": "https://qa.api.bar.com"
+      },
+      "Release": {
+        "FooApi_BaseUri": "https://api.foo.com",
+        "BarApi_BaseUri": "https://api.bar.com"
+      }
+    },
+  }
+}
+```
+
+#### Fuzzy Matching
+
+From time to time you may want to make use of Fuzzy Matching. Fuzzy Matching allows you to provide configurations that aren't tied to a specific Build Configuration name. For example we might have an `appsettings.QA.json` with a `DebugQA` build configuration. We might also have a `ReleaseQA` build configuration. In the case we build with either of these build configurations we might want it to pick up the QA build configuration. We can pick these configurations up by enabling Fuzzy Matching in our environment.
+
+```json
+{
+  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "environment": {
+    "enableFuzzyMatching": true
   }
 }
 ```

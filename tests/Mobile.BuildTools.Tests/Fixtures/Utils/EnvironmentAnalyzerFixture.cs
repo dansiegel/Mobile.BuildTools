@@ -43,6 +43,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         public void GetsValueFromBuildConfigurationOverrideJson()
         {
             var config = GetConfiguration();
+            config.BuildConfiguration = "Debug";
             var settingsConfig = new SettingsConfig
             {
                 Properties =
@@ -62,16 +63,53 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
                 SampleProp = "Hello Tests"
             };
             File.WriteAllText(Path.Combine(config.ProjectDirectory, "appsettings.json"), JsonSerializer.Serialize(secrets));
-            var buildConfigurationSecrets = new
+            var debugBuildSecrets = new
             {
-                SampleProp = $"Hello {config.BuildConfiguration}"
+                SampleProp = $"Hello Debug"
             };
-            File.WriteAllText(Path.Combine(config.ProjectDirectory, $"appsettings.{config.BuildConfiguration}.json"), JsonSerializer.Serialize(buildConfigurationSecrets));
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, $"appsettings.Debug.json"), JsonSerializer.Serialize(debugBuildSecrets)); 
+            var releaseBuildSecrets = new
+            {
+                SampleProp = $"Hello Release"
+            };
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, $"appsettings.Release.json"), JsonSerializer.Serialize(releaseBuildSecrets));
 
             var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
 
             Assert.True(mergedSecrets.ContainsKey("SampleProp"));
-            Assert.Equal(buildConfigurationSecrets.SampleProp, mergedSecrets["SampleProp"]);
+            Assert.Equal(debugBuildSecrets.SampleProp, mergedSecrets["SampleProp"]);
+        }
+
+        [Theory]
+        [InlineData("DebugQA", "Debug")]
+        [InlineData("DebugQA", "QA")]
+        public void GetsValueFromBuildFuzzyConfigurationOverrideJson(string buildConfiguration, string fuzzyConfiguration)
+        {
+            var config = GetConfiguration();
+            config.BuildConfiguration = buildConfiguration;
+            config.Configuration.Environment ??= new BuildTools.Models.EnvironmentSettings();
+            config.Configuration.Environment.EnableFuzzyMatching = true;
+
+            var secrets = new
+            {
+                SampleProp = "Hello Tests"
+            };
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, "appsettings.json"), JsonSerializer.Serialize(secrets));
+            var debugBuildSecrets = new
+            {
+                SampleProp = $"Hello {fuzzyConfiguration}"
+            };
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, $"appsettings.{fuzzyConfiguration}.json"), JsonSerializer.Serialize(debugBuildSecrets));
+            var releaseBuildSecrets = new
+            {
+                SampleProp = "Hello Release"
+            };
+            File.WriteAllText(Path.Combine(config.ProjectDirectory, $"appsettings.Release.json"), JsonSerializer.Serialize(releaseBuildSecrets));
+
+            var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
+
+            Assert.True(mergedSecrets.ContainsKey("SampleProp"));
+            Assert.Equal(debugBuildSecrets.SampleProp, mergedSecrets["SampleProp"]);
         }
 
         [Fact]
@@ -96,6 +134,21 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
 
             Assert.True(mergedSecrets.ContainsKey("SampleProp"));
             Assert.Equal(config.Configuration.Environment.Defaults["SampleProp"], mergedSecrets["SampleProp"]);
+        }
+
+        [Fact]
+        public void GetsValueFromProcessEnvironment()
+        {
+            var expectedValue = Guid.NewGuid().ToString();
+            var key = nameof(GetsValueFromProcessEnvironment);
+            Environment.SetEnvironmentVariable(key, expectedValue, EnvironmentVariableTarget.Process);
+
+            var config = GetConfiguration();
+
+            var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
+
+            Assert.True(mergedSecrets.TryGetValue(key, out var actualValue));
+            Assert.Equal(expectedValue, actualValue);
         }
 
         [Fact]
@@ -149,8 +202,6 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             Assert.True(mergedSecrets.ContainsKey("SampleProp1"));
             Assert.Equal(nameof(GetsValuesFromHostEnvironment), mergedSecrets["SampleProp1"]);
         }
-
-        
 
         [Fact]
         public void OverridesConfigEnvironmentFromHostEnvironment()
@@ -215,6 +266,57 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
             Environment.SetEnvironmentVariable("SampleProp1", null, EnvironmentVariableTarget.Process);
             Environment.SetEnvironmentVariable("SampleProp2", null, EnvironmentVariableTarget.Process);
             Environment.SetEnvironmentVariable("SampleProp3", null, EnvironmentVariableTarget.Process);
+        }
+
+        [Theory]
+        [InlineData("Debug", Platform.Unsupported, "Debug", false)]
+        [InlineData("DebugApk", Platform.Unsupported, "Debug", true)]
+        [InlineData("QA", Platform.Unsupported, "QA", false)]
+        [InlineData("Release", Platform.Unsupported, "Release", false)]
+        [InlineData("Debug", Platform.Android, "Android_Debug", false)]
+        [InlineData("Debug", Platform.iOS, "iOS_Debug", false)]
+        [InlineData("Stage", Platform.Android, "Android", false)]
+        public void GetsValuesFromBuildConfiguration(string buildConfiguration, Platform platform, string expectedEnvironment, bool fuzzyMatching)
+        {
+            var config = GetConfiguration($"{nameof(GetsValuesFromBuildConfiguration)}-{buildConfiguration}");
+            config.BuildConfiguration = buildConfiguration;
+            config.Platform = platform;
+            config.Configuration.Environment.EnableFuzzyMatching = fuzzyMatching;
+            const string key = "EnvironmentProp";
+
+            config.Configuration.Environment.Configuration["Debug"] = new Dictionary<string, string>
+            {
+                { key, "Hello Debug" }
+            };
+            config.Configuration.Environment.Configuration["Android_Debug"] = new Dictionary<string, string>
+            {
+                { key, "Hello Android Debug" }
+            };
+            config.Configuration.Environment.Configuration["iOS_Debug"] = new Dictionary<string, string>
+            {
+                { key, "Hello iOS Debug" }
+            };
+            config.Configuration.Environment.Configuration["QA"] = new Dictionary<string, string>
+            {
+                { key, "Hello QA" }
+            };
+            config.Configuration.Environment.Configuration["Release"] = new Dictionary<string, string>
+            {
+                { key, "Hello Release" }
+            };
+            config.Configuration.Environment.Configuration["Android"] = new Dictionary<string, string>
+            {
+                { key, "Hello Android" }
+            };
+            config.Configuration.Environment.Configuration["Stage"] = new Dictionary<string, string>
+            {
+                { key, "Hello Stage" }
+            };
+            var expectedValue = config.Configuration.Environment.Configuration[expectedEnvironment][key];
+
+            var mergedSecrets = EnvironmentAnalyzer.GatherEnvironmentVariables(config);
+            Assert.True(mergedSecrets.ContainsKey(key));
+            Assert.Equal(expectedValue, mergedSecrets[key]);
         }
     }
 }

@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Handlers;
+using Mobile.BuildTools.Models;
 
 namespace Mobile.BuildTools.Utils
 {
@@ -17,22 +19,17 @@ namespace Mobile.BuildTools.Utils
 
         public static IDictionary<string, string> GatherEnvironmentVariables(IBuildConfiguration buildConfiguration = null, bool includeManifest = false)
         {
-            var env = new Dictionary<string, string>();
+            var env = GetEnvironmentVariables(buildConfiguration);
+
+            var configuration = buildConfiguration.BuildConfiguration;
+
             if (buildConfiguration is null)
             {
-                foreach (var key in Environment.GetEnvironmentVariables().Keys)
-                {
-                    env[key.ToString()] = Environment.GetEnvironmentVariable(key.ToString());
-                }
-
                 return env;
             }
 
-            env = GetEnvironmentVariables(buildConfiguration);
-
             var projectDirectory = new DirectoryInfo(buildConfiguration.ProjectDirectory);
             var solutionDirectory = new DirectoryInfo(buildConfiguration.SolutionDirectory);
-            var configuration = buildConfiguration.BuildConfiguration;
             var directories = new List<DirectoryInfo>
             {
                 solutionDirectory,
@@ -97,25 +94,51 @@ namespace Mobile.BuildTools.Utils
                 }
             }
 
-            expectedFileNames =
-            [
-                Constants.AppSettingsJsonFileName,
-                string.Format(Constants.AppSettingsJsonConfigurationFileFormat, configuration),
-                string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}"),
-                string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}.{configuration}")
-            ];
-
-            foreach(var fileName in expectedFileNames)
+            foreach (var directory in directories)
             {
-                foreach(var directory in directories)
+                var files = directory.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly);
+                if (!files.Any(x => x.Name.StartsWith("appsettings")))
+                    continue;
+
+                var didLoad = false;
+                bool TryLoadFile(string fileName)
                 {
-                    var file = new FileInfo(Path.Combine(directory.FullName, fileName));
-                    if (file.Exists)
+                    if (files.Any(x => x.Name == fileName))
                     {
-                        LoadSecrets(file.FullName, ref env);
-                        break;
+                        didLoad = true;
+                        LoadSecrets(Path.Combine(directory.FullName, fileName), ref env);
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                var searchConfiguration = configuration;
+                if (buildConfiguration.Configuration.Environment?.EnableFuzzyMatching ?? false)
+                {
+                    var availableMatches = files.Select(x =>
+                    {
+                        var match = Regex.Match(x.Name, @"appsettings\.(?<config>[a-zA-Z0-9]+)\.json");
+                        if (match.Success)
+                        {
+                            return match.Groups["config"].Value;
+                        }
+                        return null;
+                    }).Where(x => !string.IsNullOrEmpty(x));
+
+                    if (!availableMatches.Any(x => x == searchConfiguration) && availableMatches.Any(searchConfiguration.Contains))
+                    {
+                        searchConfiguration = availableMatches.First(searchConfiguration.Contains);
                     }
                 }
+
+                TryLoadFile(Constants.AppSettingsJsonFileName);
+                TryLoadFile(string.Format(Constants.AppSettingsJsonConfigurationFileFormat, searchConfiguration));
+                TryLoadFile(string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}"));
+                TryLoadFile(string.Format(Constants.AppSettingsJsonConfigurationFileFormat, $"{buildConfiguration.Platform}.{searchConfiguration}"));
+
+                if (didLoad)
+                    break;
             }
 
             if (includeManifest)
@@ -129,47 +152,78 @@ namespace Mobile.BuildTools.Utils
                 LoadSecrets(Path.Combine(solutionDirectory.FullName, Constants.ManifestJsonFileName), ref env);
             }
 
-            if(buildConfiguration?.Configuration?.Environment != null)
+            if (buildConfiguration.Configuration.Environment?.EnableFuzzyMatching ?? false)
             {
-                var settings = buildConfiguration.Configuration.Environment;
-                var defaultSettings = settings.Defaults ?? [];
-                if(settings.Configuration != null && settings.Configuration.ContainsKey(configuration))
+                var keys = env.Keys.ToArray();
+                foreach (var key in keys)
                 {
-                    foreach ((var key, var value) in settings.Configuration[configuration])
-                        defaultSettings[key] = value;
+                    var match = Regex.Match(key, @"^(?<prefix>[a-zA-Z0-9]+)_(?<key>.+)$");
+                    if (match.Success)
+                    {
+                        var newKey = match.Groups["key"].Value;
+                        if (!env.ContainsKey(newKey))
+                        {
+                            env[newKey] = env[key];
+                        }
+                    }
                 }
-
-                UpdateVariables(defaultSettings, ref env);
             }
 
-            return env;
+            return new SortedDictionary<string, string>(env);
         }
 
         private static Dictionary<string, string> GetEnvironmentVariables(IBuildConfiguration buildConfiguration)
         {
             var env = new Dictionary<string, string>();
-            foreach ((var key, var value) in buildConfiguration.Configuration.Environment.Defaults)
+            var configuration = buildConfiguration.BuildConfiguration;
+            if (buildConfiguration?.Configuration?.Environment != null)
             {
-                env[key] = value;
-            }
-
-            if (buildConfiguration.Configuration.Environment.Configuration.ContainsKey(buildConfiguration.BuildConfiguration))
-            {
-                var configEnvironment = buildConfiguration.Configuration.Environment.Configuration[buildConfiguration.BuildConfiguration];
-                if(configEnvironment is not null)
+                var settings = buildConfiguration.Configuration.Environment;
+                var defaultSettings = settings.Defaults ?? [];
+                if (settings.Configuration is not null)
                 {
-                    foreach((var key, var value) in configEnvironment)
+                    bool ContainsConfigKey(string key, [MaybeNullWhen(false)] out string configurationKey)
                     {
-                        env[key] = value;
+                        if (settings.Configuration.ContainsKey(key))
+                        {
+                            configurationKey = key;
+                            return true;
+                        }
+                        else if (settings.EnableFuzzyMatching)
+                        {
+                            var availableKey = settings.Configuration.Keys.FirstOrDefault(key.StartsWith);
+                            if (!string.IsNullOrEmpty(availableKey))
+                            {
+                                configurationKey = availableKey;
+                                return true;
+                            }
+                        }
+
+                        configurationKey = null;
+                        return false;
                     }
+
+                    void MergeDefaultSettings(string configurationKey)
+                    {
+                        foreach ((var key, var value) in settings.Configuration[configurationKey])
+                            defaultSettings[key] = value;
+                    }
+
+                    if (ContainsConfigKey(configuration, out var configurationKey))
+                        MergeDefaultSettings(configurationKey);
+                    if (ContainsConfigKey($"{buildConfiguration.Platform}", out configurationKey))
+                        MergeDefaultSettings(configurationKey);
+                    if (ContainsConfigKey($"{buildConfiguration.Platform}_{configuration}", out configurationKey))
+                        MergeDefaultSettings(configurationKey);
                 }
+
+                UpdateVariables(defaultSettings, ref env);
             }
 
             foreach (var key in Environment.GetEnvironmentVariables().Keys)
             {
                 env[key.ToString()] = Environment.GetEnvironmentVariable(key.ToString());
             }
-
             return env;
         }
 

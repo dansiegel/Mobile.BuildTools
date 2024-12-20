@@ -5,16 +5,13 @@ namespace Mobile.BuildTools.Models
 {
     public class EnvironmentSettings
     {
-        public EnvironmentSettings()
-        {
-            Defaults = new Dictionary<string, string>();
-            Configuration = new Dictionary<string, Dictionary<string, string>>();
-        }
+        [JsonPropertyName("enableFuzzyMatching")]
+        public bool EnableFuzzyMatching { get; set; }
 
         [JsonPropertyName("defaults")]
-        public Dictionary<string, string> Defaults { get; set; }
+        public Dictionary<string, string> Defaults { get; set; } = [];
 
         [JsonPropertyName("configuration")]
-        public Dictionary<string, Dictionary<string, string>> Configuration { get; set; }
+        public Dictionary<string, Dictionary<string, string>> Configuration { get; set; } = [];
     }
 }

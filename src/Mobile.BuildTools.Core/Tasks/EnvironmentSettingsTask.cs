@@ -37,11 +37,14 @@ public class EnvironmentSettingsTask : BuildToolsTaskBase
             IsGitHubActions = CIBuildEnvironmentUtils.IsGitHubActions,
             IsJenkins = CIBuildEnvironmentUtils.IsJenkins,
             IsTeamCity = CIBuildEnvironmentUtils.IsTeamCity,
-            IsTravisCI = CIBuildEnvironmentUtils.IsTravisCI
+            IsTravisCI = CIBuildEnvironmentUtils.IsTravisCI,
+            BuildConfiguration = config.BuildConfiguration,
+            TargetPlatform = config.Platform
         };
 
-        if (this is IBuildConfiguration buildConfiguration && buildConfiguration.Configuration.AppSettings is not null &&
-            buildConfiguration.Configuration.AppSettings.TryGetValue(ProjectName, out var settings) && settings.Any())
+        if (config.Configuration.AppSettings is not null &&
+            config.Configuration.AppSettings.TryGetValue(ProjectName, out var settings) &&
+            settings.Any())
         {
             var env = EnvironmentAnalyzer.GatherEnvironmentVariables(this);
             if (env.Count > 0)
