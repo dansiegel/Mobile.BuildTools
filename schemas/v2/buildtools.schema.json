@@ -85,7 +85,12 @@
         "null"
       ],
       "properties": {
+        "enableFuzzyMatching": {
+          "type": "boolean",
+          "description": "This will allow fuzzy matching for environment variables and appsettings."
+        },
         "defaults": {
+          "description": "This expects a dictionary of key value pairs to use as defaults for the environment.",
           "type": [
             "object",
             "null"
@@ -98,6 +103,7 @@
           }
         },
         "configuration": {
+          "description": "This expects a key which may be explicitly for the Build Configuration, the Platform (Android, iOS, etc), or a combination of the Platform and Build Configuration separated by an underscore (iOS_Debug), with a value of a dictionary of key value pairs to use as defaults for the environment.",
           "type": [
             "object",
             "null"
