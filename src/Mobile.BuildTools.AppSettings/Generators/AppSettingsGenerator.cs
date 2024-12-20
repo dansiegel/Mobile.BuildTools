@@ -28,7 +28,7 @@ NOTE: This file should be excluded from source control.";
 
         protected override void Generate()
         {
-            var settings = ConfigHelper.GetSettingsConfig(ProjectName, Config);
+            var settings = ConfigHelper.GetSettingsConfig(Environment.ProjectName, Config);
             if (settings is null || !settings.Any())
                 return;
             
@@ -64,7 +64,7 @@ NOTE: This file should be excluded from source control.";
                     settingsConfig.Prefix = settingsConfig.Prefix.Trim();
 
                 if (string.IsNullOrEmpty(settingsConfig.RootNamespace))
-                    settingsConfig.RootNamespace = RootNamespace;
+                    settingsConfig.RootNamespace = Environment.RootNamespace;
                 else
                     settingsConfig.RootNamespace = settingsConfig.RootNamespace.Trim();
 
@@ -239,7 +239,7 @@ NOTE: This file should be excluded from source control.";
 
                     key = env.Keys.FirstOrDefault(x =>
                         x.Equals(searchKey, StringComparison.InvariantCultureIgnoreCase) ||
-                        x.Equals($"{BuildConfiguration}_{searchKey}", StringComparison.InvariantCultureIgnoreCase));
+                        x.Equals($"{Environment.BuildConfiguration}_{searchKey}", StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (string.IsNullOrEmpty(key))

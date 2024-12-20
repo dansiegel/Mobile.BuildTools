@@ -8,6 +8,8 @@ namespace Mobile.BuildTools.Tasks;
 
 public class EnvironmentSettingsTask : BuildToolsTaskBase
 {
+    public string RootNamespace { get; set; }
+
     [Output]
     public ITaskItem[] EnvironmentSettings { get; private set; } = [];
     internal override void ExecuteInternal(IBuildConfiguration config)
@@ -27,6 +29,8 @@ public class EnvironmentSettingsTask : BuildToolsTaskBase
 
         var environment = new BuildEnvironment
         {
+            ProjectName = ProjectName,
+            RootNamespace = RootNamespace,
             BuildNumber = CIBuildEnvironmentUtils.BuildNumber,
             IsCI = CIBuildEnvironmentUtils.IsCI,
             IsAppCenter = CIBuildEnvironmentUtils.IsAppCenter,

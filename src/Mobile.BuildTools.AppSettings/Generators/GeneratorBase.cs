@@ -10,15 +10,6 @@ namespace Mobile.BuildTools.AppSettings.Generators
     public abstract class GeneratorBase : ISourceGenerator
     {
         protected GeneratorExecutionContext GeneratorContext { get; private set; }
-        private string _buildConfiguration;
-        private string _projectName;
-        private string _targetFrameworkAssembly;
-        private string _rootNamespace;
-
-        protected string ProjectName => _projectName;
-        protected string RootNamespace => _rootNamespace;
-
-        protected string BuildConfiguration => _buildConfiguration;
 
         protected BuildToolsConfig Config { get; private set; }
 
@@ -27,12 +18,6 @@ namespace Mobile.BuildTools.AppSettings.Generators
         public void Execute(GeneratorExecutionContext context)
         {
             GeneratorContext = context;
-
-            if (!TryGet(context, "MSBuildProjectName", ref _projectName)
-                || !TryGet(context, "RootNamespace", ref _rootNamespace)
-                || !TryGet(context, "Configuration", ref _buildConfiguration)
-                || !TryGet(context, "TargetFrameworkIdentifier", ref _targetFrameworkAssembly))
-                return;
 
             var buildToolsConfig = context.AdditionalFiles.FirstOrDefault(x => Path.GetFileName(x.Path) == Constants.BuildToolsConfigFileName);
             if (buildToolsConfig is null)

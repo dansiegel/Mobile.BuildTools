@@ -4,6 +4,8 @@ namespace Mobile.BuildTools.Utils
 {
     public class BuildEnvironment
     {
+        public string ProjectName { get; set; }
+        public string RootNamespace { get; set; }
         public bool IsCI { get; set; }
         public bool IsAppCenter { get; set; }
         public bool IsAppVeyor { get; set; }
