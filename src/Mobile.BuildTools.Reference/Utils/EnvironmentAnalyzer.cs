@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -25,11 +25,6 @@ namespace Mobile.BuildTools.Utils
 
             if (buildConfiguration is null)
             {
-                foreach (var key in Environment.GetEnvironmentVariables().Keys)
-                {
-                    env[key.ToString()] = Environment.GetEnvironmentVariable(key.ToString());
-                }
-
                 return env;
             }
 
@@ -225,6 +220,10 @@ namespace Mobile.BuildTools.Utils
                 UpdateVariables(defaultSettings, ref env);
             }
 
+            foreach (var key in Environment.GetEnvironmentVariables().Keys)
+            {
+                env[key.ToString()] = Environment.GetEnvironmentVariable(key.ToString());
+            }
             return env;
         }
 
