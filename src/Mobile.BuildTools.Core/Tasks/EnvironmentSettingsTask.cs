@@ -54,6 +54,18 @@ public class EnvironmentSettingsTask : BuildToolsTaskBase
             config.Configuration.AppSettings.TryGetValue(ProjectName, out var settings) &&
             settings.Any())
         {
+            settings
+                .GroupBy(c => c.FullyQualifiedClassName)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList()
+                .ForEach(name => Log.LogError("Duplicate class name found in the {0} settings: {1}", ProjectName, name));
+
+            if (Log.HasLoggedErrors)
+            {
+                return;
+            }
+
             environment.GeneratedClasses = settings;
             var env = EnvironmentAnalyzer.GatherEnvironmentVariables(this);
             if (env.Count > 0)
