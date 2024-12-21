@@ -8,6 +8,7 @@ namespace Mobile.BuildTools.Tasks;
 
 public class EnvironmentSettingsTask : BuildToolsTaskBase
 {
+    [Required]
     public string RootNamespace { get; set; }
 
     [Output]
