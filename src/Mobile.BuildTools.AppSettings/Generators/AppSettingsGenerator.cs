@@ -28,7 +28,7 @@ NOTE: This file should be excluded from source control.";
 
         protected override void Generate()
         {
-            var settings = ConfigHelper.GetSettingsConfig(Environment.ProjectName, Config);
+            var settings = Environment.GeneratedClasses;
             if (settings is null || !settings.Any())
                 return;
             

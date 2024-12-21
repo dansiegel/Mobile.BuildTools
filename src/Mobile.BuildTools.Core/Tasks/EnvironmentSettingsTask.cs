@@ -29,6 +29,7 @@ public class EnvironmentSettingsTask : BuildToolsTaskBase
 
         var environment = new BuildEnvironment
         {
+            Debug = config.Configuration.Debug,
             ProjectName = ProjectName,
             RootNamespace = RootNamespace,
             BuildNumber = CIBuildEnvironmentUtils.BuildNumber,
@@ -43,13 +44,16 @@ public class EnvironmentSettingsTask : BuildToolsTaskBase
             IsTeamCity = CIBuildEnvironmentUtils.IsTeamCity,
             IsTravisCI = CIBuildEnvironmentUtils.IsTravisCI,
             BuildConfiguration = config.BuildConfiguration,
-            TargetPlatform = config.Platform
+            TargetPlatform = config.Platform,
+            GeneratedClasses = [],
+            Environment = new Dictionary<string, string>()
         };
 
         if (config.Configuration.AppSettings is not null &&
             config.Configuration.AppSettings.TryGetValue(ProjectName, out var settings) &&
             settings.Any())
         {
+            environment.GeneratedClasses = settings;
             var env = EnvironmentAnalyzer.GatherEnvironmentVariables(this);
             if (env.Count > 0)
             {

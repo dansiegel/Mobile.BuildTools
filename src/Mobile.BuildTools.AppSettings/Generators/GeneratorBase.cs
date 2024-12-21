@@ -11,23 +11,14 @@ namespace Mobile.BuildTools.AppSettings.Generators
     {
         protected GeneratorExecutionContext GeneratorContext { get; private set; }
 
-        protected BuildToolsConfig Config { get; private set; }
-
         protected BuildEnvironment Environment { get; private set; }
 
         public void Execute(GeneratorExecutionContext context)
         {
             GeneratorContext = context;
 
-            var buildToolsConfig = context.AdditionalFiles.FirstOrDefault(x => Path.GetFileName(x.Path) == Constants.BuildToolsConfigFileName);
-            if (buildToolsConfig is null)
-                return;
-
-            var json = buildToolsConfig.GetText().ToString();
-            Config = JsonSerializer.Deserialize<BuildToolsConfig>(json, ConfigHelper.GetSerializerSettings());
-
             var buildToolsEnvFile = GeneratorContext.AdditionalFiles.FirstOrDefault(x => Path.GetFileName(x.Path) == Constants.BuildToolsEnvironmentSettings);
-            json = buildToolsEnvFile.GetText().ToString();
+            var json = buildToolsEnvFile.GetText().ToString();
             Environment = JsonSerializer.Deserialize<BuildEnvironment>(json, new JsonSerializerOptions(JsonSerializerDefaults.General)) ?? new BuildEnvironment();
 
             try
@@ -36,14 +27,14 @@ namespace Mobile.BuildTools.AppSettings.Generators
             }
             catch (Exception ex)
             {
-                if(Config.Debug)
+                if (Environment.Debug)
                     context.ReportDiagnostic
                         (Diagnostic.Create(
                             new DiagnosticDescriptor(
                                 "MBT500",
                                 "DEBUG - Unhandled Error",
                                 "An Unhandled Generator Error Occurred: {0} - {1}",
-                                "DEBUG", 
+                                "DEBUG",
                                 DiagnosticSeverity.Error,
                                 true),
                             null,
@@ -52,17 +43,6 @@ namespace Mobile.BuildTools.AppSettings.Generators
         }
 
         protected abstract void Generate();
-
-        private bool TryGet(GeneratorExecutionContext context, string name, ref string value)
-        {
-            if (context.AnalyzerConfigOptions.GlobalOptions.TryGetValue($"build_property.{name}", out value) && !string.IsNullOrEmpty(value))
-            {
-                return true;
-            }
-
-            context.ReportDiagnostic(Diagnostic.Create(Descriptors.MissingMSBuildProperty, null, name));
-            return false;
-        }
 
         public void Initialize(GeneratorInitializationContext context)
         {
