@@ -1,0 +1,3 @@
+﻿# Mobile.BuildTools.AppManifests
+
+The Mobile.BuildTools.AppManifests package provides support for managing your application manifests in your mobile applications. This package is designed to work with any mobile application project type including .NET MAUI, .NET Mobile, Uno Platform and Avalonia applications. This package assists you in transforming your application manifests at build time to ensure that you have better support in development and CI/CD with the ability to transform your application manifests based on your build configuration and environment. This is particularly useful in situations where you might need to include Client Ids that need to be changed between Development, Staging and Production environments.
