@@ -191,6 +191,19 @@
         }
       }
     },
+    "Platform": {
+      "type": "string",
+      "enum": [
+        "iOS",
+        "Android",
+        "UWP",
+        "Windows",
+        "macOS",
+        "Tizen",
+        "TVOS",
+        "Unsupported"
+      ]
+    },
     "ReleaseNotesOptions": {
       "description": "Configures the Mobile.BuildTools to generate Release Notes for your build, based on the Git commit messages.",
       "type": [
@@ -331,6 +344,20 @@
             "Public"
           ]
         },
+        "requiredPlatforms": {
+          "description": "Allows either a single platform string or an array of platforms",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Platform"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Platform"
+              }
+            }
+          ]
+        },
         "rootNamespace": {
           "description": "If using a Shared project as is typically the case with an Uno Platform app, be sure to specify the Root Namespace to use as this will change otherwise based on which platform target you are compiling.",
           "type": [
@@ -445,6 +472,20 @@
           "type": [
             "string",
             "null"
+          ]
+        },
+        "requiredPlatforms": {
+          "description": "Allows either a single platform string or an array of platforms",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Platform"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Platform"
+              }
+            }
           ]
         }
       }
