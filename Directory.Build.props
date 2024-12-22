@@ -5,9 +5,8 @@
     <Copyright>© 2016-$([System.DateTime]::Now.ToString(`yyyy`)) Dan Siegel</Copyright>
     <MinVerMinimumMajorMinor>2.1</MinVerMinimumMajorMinor>
     <MinVerDefaultPreReleaseIdentifiers>pre</MinVerDefaultPreReleaseIdentifiers>
-    <PackageIconUrl>https://raw.githubusercontent.com/dansiegel/Mobile.BuildTools/master/logo/icon.png</PackageIconUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReleaseNotes>https://github.com/dansiegel/Mobile.BuildTools/releases</PackageReleaseNotes>
     <PackageProjectUrl>https://mobilebuildtools.com</PackageProjectUrl>
     <LocalArtifactStagingDirectory>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Artifacts'))</LocalArtifactStagingDirectory>
@@ -39,7 +38,8 @@
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsPackable)">
-    <None Include="$(MSBuildThisFileDirectory)logo\icon.png" Pack="true" PackagePath="\icon.png" />
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)logo\icon.png" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
