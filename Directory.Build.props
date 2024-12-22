@@ -7,6 +7,7 @@
     <MinVerDefaultPreReleaseIdentifiers>pre</MinVerDefaultPreReleaseIdentifiers>
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
     <PackageReleaseNotes>https://github.com/dansiegel/Mobile.BuildTools/releases</PackageReleaseNotes>
     <PackageProjectUrl>https://mobilebuildtools.com</PackageProjectUrl>
     <LocalArtifactStagingDirectory>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Artifacts'))</LocalArtifactStagingDirectory>
