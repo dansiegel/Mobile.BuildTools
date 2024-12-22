@@ -39,6 +39,9 @@ NOTE: This file should be excluded from source control.";
             var compileGeneratedAttribute = @$"[GeneratedCodeAttribute(""{typeof(AppSettingsGenerator).FullName}"", ""{toolVersion}"")]";
             foreach (var settingsConfig in settings)
             {
+                if (settingsConfig.RequiredPlatforms.Length > 0 && !settingsConfig.RequiredPlatforms.Contains(Environment.TargetPlatform))
+                    continue;
+
                 if (string.IsNullOrEmpty(settingsConfig.ClassName))
                     settingsConfig.ClassName = i++ > 0 ? $"AppSettings{i}" : "AppSettings";
                 else
@@ -102,6 +105,9 @@ NOTE: This file should be excluded from source control.";
 
                 foreach(var valueConfig in settingsConfig.Properties)
                 {
+                    if (valueConfig.RequiredPlatforms.Length > 0 && !valueConfig.RequiredPlatforms.Contains(Environment.TargetPlatform))
+                        continue;
+
                     AddProperty(ref builder, mergedSecrets, valueConfig, interfaces, settingsConfig.Delimiter, compileGeneratedAttribute);
                 }
 

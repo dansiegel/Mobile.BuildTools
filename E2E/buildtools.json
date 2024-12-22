@@ -14,9 +14,17 @@
     "E2E.Tests": [
       {
         "prefix": "Test_",
-        "className": "Secrets",
         "accessibility": "Internal",
         "properties": [
+          {
+            "name": "APlatformProperty",
+            "type": "String",
+            "defaultValue": "Should Not Be Used",
+            "requiredPlatforms": [
+              "iOS",
+              "Android"
+            ]
+          },
           {
             "name": "AString",
             "type": "String"
@@ -64,5 +72,17 @@
       }
     ]
   },
-  "debug": true
+  "debug": true,
+  "environment": {
+    "defaults": {
+      "AString": "Hello World!",
+      "AnInt": "5",
+      "ADouble": "3.14",
+      "ABool": "false",
+      "AFloat": "4.2",
+      "ADate": "January 1, 2020",
+      "AStringArray": "Foo;Bar;Baz",
+      "AUri": "https://mobilebuildtools.com"
+    }
+  }
 }

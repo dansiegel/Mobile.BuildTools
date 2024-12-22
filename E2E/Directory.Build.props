@@ -4,20 +4,21 @@
 
   <PropertyGroup Condition=" '$(PIPELINE_WORKSPACE)' != '' ">
     <CIArtifactsDirectory>$([System.IO.Path]::Combine('$(PIPELINE_WORKSPACE)', 'Artifacts'))</CIArtifactsDirectory>
-    <GeneratedLocalPackage>$([System.IO.Directory]::GetFiles('$(CIArtifactsDirectory)', 'Mobile.BuildTools.2.*.nupkg')[0])</GeneratedLocalPackage>
+    <GeneratedLocalPackage>$([System.IO.Directory]::GetFiles('$(CIArtifactsDirectory)', 'Mobile.BuildTools.AppSettings.2.*.nupkg')[0])</GeneratedLocalPackage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(PIPELINE_WORKSPACE)' == '' ">
-    <GeneratedLocalPackage>$([System.IO.Directory]::GetFiles('$(LocalArtifactStagingDirectory)', 'Mobile.BuildTools.2.*.nupkg')[0])</GeneratedLocalPackage>
+    <GeneratedLocalPackage>$([System.IO.Directory]::GetFiles('$(LocalArtifactStagingDirectory)', 'Mobile.BuildTools.AppSettings.2.*.nupkg')[0])</GeneratedLocalPackage>
   </PropertyGroup>
 
   <PropertyGroup>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <GenerateLocalPackageFileName>$([System.IO.Path]::GetFileNameWithoutExtension('$(GeneratedLocalPackage)'))</GenerateLocalPackageFileName>
-    <GeneratedPackageVersion>$(GenerateLocalPackageFileName.Replace('Mobile.BuildTools.', ''))</GeneratedPackageVersion>
+    <GeneratedPackageVersion>$(GenerateLocalPackageFileName.Replace('Mobile.BuildTools.AppSettings.', ''))</GeneratedPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mobile.BuildTools" VersionOverride="$(GeneratedPackageVersion)" PrivateAssets="all" />
-    <PackageReference Include="Mobile.BuildTools.Configuration" VersionOverride="$(GeneratedPackageVersion)" />
+    <PackageReference Include="Mobile.BuildTools.AppSettings" VersionOverride="$(GeneratedPackageVersion)" PrivateAssets="all" />
+    <PackageReference Include="Mobile.BuildTools.Core" VersionOverride="$(GeneratedPackageVersion)" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

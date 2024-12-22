@@ -26,6 +26,24 @@ public class AppSettingsGeneratorFixture
         await Test();
     }
 
+    [Fact]
+    public async Task SkipsUnsupportedPlatform()
+    {
+        await Test();
+    }
+
+    [Fact]
+    public async Task GeneratesRequiredPlatform()
+    {
+        await Test();
+    }
+
+    [Fact]
+    public async Task GeneratesWithRequiredPrefix()
+    {
+        await Test();
+    }
+
     private static Task Test([CallerMemberName] string? method = null)
     {
         Assert.NotNull(method);

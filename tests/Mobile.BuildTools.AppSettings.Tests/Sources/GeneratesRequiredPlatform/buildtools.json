@@ -9,6 +9,16 @@
             "type": "String"
           }
         ]
+      },
+      {
+        "className": "AndroidAppSettings",
+        "requiredPlatforms": "Android",
+        "properties": [
+          {
+            "name": "DataScheme",
+            "type": "String"
+          }
+        ]
       }
     ]
   }

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
+using Mobile.BuildTools.Models.Secrets;
+using Mobile.BuildTools.Utils;
 
 namespace Mobile.BuildTools.Models.Settings
 {
@@ -20,5 +22,9 @@ namespace Mobile.BuildTools.Models.Settings
         [Description("Sets the default value of the property. Can be `null` or `default` to set the default value of the property type.")]
         [JsonPropertyName("defaultValue")]
         public string DefaultValue { get; set; }
+
+
+        [JsonConverter(typeof(PlatformArrayJsonConverter))]
+        public Platform[] RequiredPlatforms { get; set; } = [];
     }
 }
