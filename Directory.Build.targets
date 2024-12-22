@@ -4,6 +4,14 @@
     <NoWarn>$(NoWarn);NU1903</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup Condition="Exists('ReadMe.md')">
+    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition="Exists('ReadMe.md')">
+    <None Include="ReadMe.md" Pack="true" PackagePath="/ReadMe.md" />
+  </ItemGroup>
+
   <!--<Target Name="BundlePackageBuildPropsAndTargets"
           BeforeTargets="Build;CoreBuild;CoreCompile;Pack">
 
