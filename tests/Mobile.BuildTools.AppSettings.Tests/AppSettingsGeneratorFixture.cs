@@ -5,9 +5,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
-using Mobile.BuildTools.AppSettings.Diagnostics;
 using Mobile.BuildTools.AppSettings.Generators;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
 using Verify = Mobile.BuildTools.AppSettings.Tests.Verifiers.CSharpSourceGeneratorVerifier<Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator>;
 
 namespace Mobile.BuildTools.AppSettings.Tests;
