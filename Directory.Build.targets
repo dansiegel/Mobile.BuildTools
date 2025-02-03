@@ -48,6 +48,27 @@
     </ItemGroup>
   </Target>-->
 
+  <Target Name="GenerateThisAssembly" AfterTargets="CoreGenerateAssemblyInfo" Condition="$(IsPackable) == 'true'">
+    <Copy SourceFiles="@(BuildTemplate)"
+          DestinationFolder="$(IntermediateOutputPath)\mbt" />
+
+    <ReplaceFileText Filename="$(IntermediateOutputPath)\mbt\ThisAssembly.cs"
+                    MatchExpression="$$RootNamespace$$"
+                    ReplacementText="$(RootNamespace)" />
+
+    <ReplaceFileText Filename="$(IntermediateOutputPath)\mbt\ThisAssembly.cs"
+                    MatchExpression="$$AssemblyName$$"
+                    ReplacementText="$(AssemblyName)" />
+
+    <ReplaceFileText Filename="$(IntermediateOutputPath)\mbt\ThisAssembly.cs"
+                    MatchExpression="$$AssemblyVersion$$"
+                    ReplacementText="$(AssemblyVersion)" />
+
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)\mbt\ThisAssembly.cs" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="DeleteCachedPackage" Condition="'$(CI)' != 'true'" BeforeTargets="Pack">
     <ItemGroup>
       <ToDelete Include="$(PackageOutputPath)\$(PackageId).$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)*.*" />

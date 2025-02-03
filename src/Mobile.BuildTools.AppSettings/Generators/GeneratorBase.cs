@@ -27,18 +27,9 @@ namespace Mobile.BuildTools.AppSettings.Generators
             }
             catch (Exception ex)
             {
-                if (Environment.Debug)
-                    context.ReportDiagnostic
-                        (Diagnostic.Create(
-                            new DiagnosticDescriptor(
-                                "MBT500",
-                                "DEBUG - Unhandled Error",
+                ReportError("MBT500", "DEBUG - Unhandled Error",
                                 "An Unhandled Generator Error Occurred: {0} - {1}",
-                                "DEBUG",
-                                DiagnosticSeverity.Error,
-                                true),
-                            null,
-                            ex.Message, ex.StackTrace));
+                                ex, "DEBUG");
             }
         }
 
@@ -55,6 +46,23 @@ namespace Mobile.BuildTools.AppSettings.Generators
             return typeSymbol != null;
         }
 
+        protected void Report(string id, string title, string messageFormat, string category, DiagnosticSeverity severity, bool enabledByDefault = true, params object[] messageParameters)
+        {
+            var descriptor = new DiagnosticDescriptor(id, title, messageFormat, category, severity, enabledByDefault);
+            ReportDiagnostic(descriptor, messageParameters);
+        }
+
+        protected void DebugDiagnostic(string title, string messageFormat, params object[] messageParameters)
+        {
+            if (!Environment.Debug)
+                return;
+
+            Report("MBT0042", title, messageFormat, "Debug", DiagnosticSeverity.Info, true, messageParameters);
+        }
+
+        protected void ReportError(string id, string title, string messageFormat, Exception exception, string category = "Debug") =>
+            Report(id, title, messageFormat, category, DiagnosticSeverity.Error, Environment.Debug, exception.Message, exception.StackTrace);
+
         protected void AddSource(ClassBuilder builder)
         {
             GeneratorContext.ReportDiagnostic(Diagnostic.Create(Descriptors.CreatedClass, null, builder.FullyQualifiedName));
@@ -62,7 +70,7 @@ namespace Mobile.BuildTools.AppSettings.Generators
             GeneratorContext.AddSource(builder.FullyQualifiedName, source);
         }
 
-        protected void ReportDiagnostic(DiagnosticDescriptor descriptor, params string[] messageArgs)
+        protected void ReportDiagnostic(DiagnosticDescriptor descriptor, params object[] messageArgs)
         {
             GeneratorContext.ReportDiagnostic(Diagnostic.Create(descriptor, null, messageArgs));
         }
