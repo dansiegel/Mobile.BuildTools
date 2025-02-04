@@ -17,3 +17,39 @@ jobs:
       submodules: true
       install-workload: 'maui macos maui-tizen'
       vs-version: 17.12
+
+  e2e:
+    needs: [build]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Download NuGet Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: NuGet
+          path: Artifacts
+
+      - name: Run Tests
+        run: dotnet test -c Release
+        working-directory: E2E/E2E.Tests
+        env:
+          AString: 'Hello World!'
+          AnInt: 5
+          ADouble: 3.14
+          ABool: false
+          AFloat: 4.2
+          ADate: 'January 1, 2020'
+          AUri: 'https://mobilebuildtools.com'
+          AStringArray: 'Foo;Bar;Baz'
+          APlatformProperty: 'Should Not Exist'
+
