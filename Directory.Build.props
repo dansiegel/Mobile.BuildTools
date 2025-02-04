@@ -38,6 +38,10 @@
     <ContinuousIntegrationBuild>$(CI)</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <ItemGroup>
+    <BuildTemplate Include="$(MSBuildThisFileDirectory)build/ThisAssembly.cs" />
+  </ItemGroup>
+
   <ItemGroup Condition="$(IsPackable)">
     <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="\" Visible="false" />
     <None Include="$(MSBuildThisFileDirectory)logo\icon.png" Pack="true" PackagePath="\" Visible="false" />

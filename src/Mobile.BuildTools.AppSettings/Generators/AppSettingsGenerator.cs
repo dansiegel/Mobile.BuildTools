@@ -31,16 +31,17 @@ NOTE: This file should be excluded from source control.";
             var settings = Environment.GeneratedClasses;
             if (settings is null || !settings.Any())
                 return;
-            
+
             var i = 0;
-            
-            var assembly = typeof(AppSettingsGenerator).Assembly;
-            var toolVersion = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
-            var compileGeneratedAttribute = @$"[GeneratedCodeAttribute(""{typeof(AppSettingsGenerator).FullName}"", ""{toolVersion}"")]";
+
+            var compileGeneratedAttribute = @$"[GeneratedCodeAttribute(""{typeof(AppSettingsGenerator).FullName}"", ""{ThisAssembly.Version}"")]";
             foreach (var settingsConfig in settings)
             {
                 if (settingsConfig.RequiredPlatforms.Length > 0 && !settingsConfig.RequiredPlatforms.Contains(Environment.TargetPlatform))
+                {
+                    DebugDiagnostic("Required Platform not Found", "Currently building for {0} which does not match the required platforms.", Environment.TargetPlatform, $"[{string.Join(", ", settingsConfig.RequiredPlatforms)}]");
                     continue;
+                }
 
                 if (string.IsNullOrEmpty(settingsConfig.ClassName))
                     settingsConfig.ClassName = i++ > 0 ? $"AppSettings{i}" : "AppSettings";
@@ -73,7 +74,10 @@ NOTE: This file should be excluded from source control.";
 
                 var mergedSecrets = GetMergedSecrets(settingsConfig, out var hasErrors);
                 if (hasErrors)
+                {
+                    DebugDiagnostic("Environment Secrets Error", "Unable to retrieve the merged secrets for {0} due to an unexpected error.", settingsConfig.FullyQualifiedClassName);
                     continue;
+                }
 
                 var namespaceParts = new[]
                 {
