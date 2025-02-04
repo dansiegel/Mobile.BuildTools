@@ -62,7 +62,7 @@
 
     <ReplaceFileText Filename="$(IntermediateOutputPath)\mbt\ThisAssembly.cs"
                     MatchExpression="$$AssemblyVersion$$"
-                    ReplacementText="$(AssemblyVersion)" />
+                    ReplacementText="$(InformationalVersion)" />
 
     <ItemGroup>
       <Compile Include="$(IntermediateOutputPath)\mbt\ThisAssembly.cs" />
