@@ -29,13 +29,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" />
-    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" />
+    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" SetTargetFramework="TargetFramework=net472" />
     <ProjectReference Include="..\Mobile.BuildTools.XamarinSdk\Mobile.BuildTools.XamarinSdk.csproj" PackFolder="build" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\Mobile.BuildTools.Reference\bin\$(Configuration)\net472\*.dll" Pack="true" PackagePath="build\%(Filename)%(Extension)" Visible="false" />
-    <None Include="..\Mobile.BuildTools.Reference\bin\$(Configuration)\net472\*.pdb" Pack="true" PackagePath="build\%(Filename)%(Extension)" Visible="false" />
+    <None Include="$(OutputPath)Mobile.BuildTools.Core.dll;$(OutputPath)Mobile.BuildTools.Reference.dll;$(OutputPath)Microsoft.Bcl.AsyncInterfaces.dll;$(OutputPath)System.Buffers.dll;$(OutputPath)System.Memory.dll;$(OutputPath)System.Numerics.Vectors.dll;$(OutputPath)System.Runtime.CompilerServices.Unsafe.dll;$(OutputPath)System.Text.Encodings.Web.dll;$(OutputPath)System.Text.Json.dll;$(OutputPath)System.Threading.Tasks.Extensions.dll;$(OutputPath)System.ValueTuple.dll"
+          Pack="true"
+          PackagePath="build/%(Filename)%(Extension)"
+          Visible="false" />
   </ItemGroup>
 
   <Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">
