@@ -21,8 +21,7 @@ Enterprise Support options are available through AvantiPoint - Email dsiegel@ava
 
 ## Samples
 
-- [App Config Demo](samples/AppConfigSample) - Sample Xamarin app using the new app.config. This sample uses Xamarin.Forms with Prism to show how you can use this with Dependency Injection and keep your apps testable with the IConfigurationManager rather than using all statics. NOTE: This project does not take advantage of build time transformations.
-- [BuildToolsSample](samples/BuildToolsSample) - Sample Xamarin app using various build time generated helpers from the Mobile.BuildTools.
+- [AppManifestsSample](samples/AppManifestsSample) - .NET 10 MAUI sample showing `Mobile.BuildTools.AppManifests` token replacement for `AndroidManifest.xml` and `Info.plist`.
 
 
 ## Mobile.BuildTools

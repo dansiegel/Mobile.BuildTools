@@ -33,6 +33,11 @@
     <ProjectReference Include="..\Mobile.BuildTools.XamarinSdk\Mobile.BuildTools.XamarinSdk.csproj" PackFolder="build" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\Mobile.BuildTools.Reference\bin\$(Configuration)\net472\*.dll" Pack="true" PackagePath="build\%(Filename)%(Extension)" Visible="false" />
+    <None Include="..\Mobile.BuildTools.Reference\bin\$(Configuration)\net472\*.pdb" Pack="true" PackagePath="build\%(Filename)%(Extension)" Visible="false" />
+  </ItemGroup>
+
   <Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">
     <PropertyGroup>
       <IsPackagingProject>true</IsPackagingProject>

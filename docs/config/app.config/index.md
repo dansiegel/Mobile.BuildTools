@@ -46,7 +46,7 @@ By default Mobile.BuildTools will look for any file in the root of the head proj
 ## F.A.Q.
 
 Q. Can I use the ConfigurationManager without using the Mobile.BuildTools?
-A. Yes you absolutely can. The [AppConfigSample](https://github.com/dansiegel/Mobile.BuildTools/tree/master/samples) project in the samples folder does exactly that!
+A. Yes. You can reference `Mobile.BuildTools.Configuration` and use `ConfigurationManager` directly from your own app code. The legacy Xamarin `AppConfigSample` was removed during sample modernization; the current sample focuses on .NET 10 MAUI AppManifests behavior.
 
 Q. How do I use the Environments?
 A. By default Environments are disabled. This means that we will only copy the transformed app.config into your project and the ConfigurationManager will only read the primary app.config.

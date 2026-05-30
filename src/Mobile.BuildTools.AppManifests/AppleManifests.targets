@@ -51,15 +51,18 @@
                                   ManifestPath="$(_MBTUpdatedManifest)"
                                   OutputManifestPath="$(_MBTUpdatedManifest)"
                                   Condition="$(BuildToolsEnableAutomaticVersioning)" />
-  </Target> 
+  </Target>
 
   <Target Name="_MBTManifestPostProcess"
           AfterTargets="_MBTGatherManifests"
           DependsOnTargets="HandleTokenizedInfoPlist;AutomaticBuildVersioning">
     <PropertyGroup Condition="$(BuildToolsEnableTemplateManifests) == 'True' Or $(BuildToolsEnableAutomaticVersioning) == 'True'">
+      <AppBundleManifest>$(_MBTUpdatedManifest)</AppBundleManifest>
       <_AppManifest>$(_MBTUpdatedManifest)</_AppManifest>
     </PropertyGroup>
     <ItemGroup Condition="$(BuildToolsEnableTemplateManifests) == 'True' Or $(BuildToolsEnableAutomaticVersioning) == 'True'">
+      <PartialAppManifest Remove="@(PartialAppManifest)" />
+      <PartialAppManifest Include="$(_MBTUpdatedManifest)" />
       <_PartialAppManifest Remove="@(_PartialAppManifest)" />
       <_PartialAppManifest Include="$(_MBTUpdatedManifest)" />
       <FileWrites Include="$(_MBTUpdatedManifest)" />
