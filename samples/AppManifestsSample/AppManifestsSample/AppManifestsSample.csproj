@@ -37,6 +37,7 @@
 
     <!-- Mobile.BuildTools.AppManifests options -->
     <MobileBuildToolsDebug>true</MobileBuildToolsDebug>
+    <MobileBuildToolsAppManifestsVersion Condition=" '$(MobileBuildToolsAppManifestsVersion)' == '' ">2.1.0-pre.*</MobileBuildToolsAppManifestsVersion>
 
     <!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
     <WindowsPackageType>None</WindowsPackageType>
@@ -69,7 +70,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-    <PackageReference Include="Mobile.BuildTools.AppManifests" Version="2.1.0-pre.*" PrivateAssets="all" />
+    <PackageReference Include="Mobile.BuildTools.AppManifests" Version="$(MobileBuildToolsAppManifestsVersion)" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

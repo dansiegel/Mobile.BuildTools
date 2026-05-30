@@ -53,12 +53,20 @@ jobs:
       - name: Build AppManifests package
         run: dotnet build src/Mobile.BuildTools.AppManifests/Mobile.BuildTools.AppManifests.csproj -v minimal
 
+      - name: Resolve AppManifests package version
+        shell: pwsh
+        run: |
+          $package = Get-ChildItem Artifacts -Filter 'Mobile.BuildTools.AppManifests.*.nupkg' | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+          if (-not $package) { throw 'Mobile.BuildTools.AppManifests package was not produced.' }
+          $version = $package.BaseName -replace '^Mobile\.BuildTools\.AppManifests\.', ''
+          "MBT_APPMANIFESTS_VERSION=$version" >> $env:GITHUB_ENV
+
       - name: Restore AppManifests sample
-        run: dotnet restore AppManifestsSample/AppManifestsSample.csproj -p:TargetFrameworks=net10.0-android -v minimal
+        run: dotnet restore AppManifestsSample/AppManifestsSample.csproj -p:TargetFrameworks=net10.0-android /p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -v minimal
         working-directory: samples/AppManifestsSample
 
       - name: Build AppManifests sample Android head
-        run: dotnet build AppManifestsSample/AppManifestsSample.csproj -f net10.0-android --no-restore -p:TargetFrameworks=net10.0-android -v minimal
+        run: dotnet build AppManifestsSample/AppManifestsSample.csproj -f net10.0-android --no-restore -p:TargetFrameworks=net10.0-android /p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -v minimal
         working-directory: samples/AppManifestsSample
 
       - name: Validate iOS plist source
