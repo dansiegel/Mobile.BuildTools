@@ -47,6 +47,7 @@ jobs:
 
       - name: Install MAUI Android workload
         run: dotnet workload install maui-android
+        working-directory: samples/AppManifestsSample
 
       - name: Build AppManifests package
         run: dotnet build src/Mobile.BuildTools.AppManifests/Mobile.BuildTools.AppManifests.csproj -v minimal
