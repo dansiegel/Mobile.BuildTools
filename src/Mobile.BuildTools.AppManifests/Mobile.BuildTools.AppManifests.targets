@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
   <PropertyGroup>
-    <_MobileBuildToolsAppManifestTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.dll'))</_MobileBuildToolsAppManifestTasksDll>
+    <_MobileBuildToolsAppManifestTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.AppManifests.dll'))</_MobileBuildToolsAppManifestTasksDll>
   </PropertyGroup>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.AutomaticBuildVersioningTask"
@@ -9,23 +9,14 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
              AssemblyFile="$(_MobileBuildToolsAppManifestTasksDll)"/>
 
-  <Choose>
-    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' OR $(TargetFrameworkIdentifier) == 'MonoAndroid'">
-      <Import Project="AndroidManifest.targets" />
-    </When>
-    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR $(TargetFrameworkIdentifier) == 'Xamarin.iOS'">
-      <Import Project="AppleManifests.targets" />
-    </When>
-    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos' OR $(TargetFrameworkIdentifier) == 'Xamarin.Mac'">
-      <Import Project="AppleManifests.targets" />
-    </When>
-    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
-      <Import Project="AppleManifests.targets" />
-    </When>
-    <When Condition="$(TargetFramework.Contains('windows10'))">
-
-    </When>
-  </Choose>
+  <Import Project="AndroidManifest.targets"
+          Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' OR '$(TargetFrameworkIdentifier)' == 'MonoAndroid' " />
+  <Import Project="AppleManifests.targets"
+          Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' " />
+  <Import Project="AppleManifests.targets"
+          Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos' OR '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' " />
+  <Import Project="AppleManifests.targets"
+          Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst' " />
 
   <Target Name="_TemplateManifestDebug"
           BeforeTargets="HandleTokenizedInfoPlist;HandleAndroidManifest"
