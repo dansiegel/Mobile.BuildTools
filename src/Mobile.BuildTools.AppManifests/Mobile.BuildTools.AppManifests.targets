@@ -11,9 +11,13 @@
              AssemblyFile="$(_MobileBuildToolsAppManifestTasksDll)" />
 
   <Import Project="AndroidManifest.targets"
-          Condition=" '$(_MobileBuildToolsTargetPlatform)' == 'android' Or '$(TargetFrameworkIdentifier)' == 'MonoAndroid' " />
+          Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' OR '$(TargetFrameworkIdentifier)' == 'MonoAndroid' " />
   <Import Project="AppleManifests.targets"
-          Condition=" '$(_MobileBuildToolsTargetPlatform)' == 'ios' Or '$(_MobileBuildToolsTargetPlatform)' == 'macos' Or '$(_MobileBuildToolsTargetPlatform)' == 'maccatalyst' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' " />
+          Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' " />
+  <Import Project="AppleManifests.targets"
+          Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos' OR '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' " />
+  <Import Project="AppleManifests.targets"
+          Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst' " />
 
   <Target Name="_TemplateManifestDebug"
           BeforeTargets="HandleTokenizedInfoPlist;HandleAndroidManifest"
