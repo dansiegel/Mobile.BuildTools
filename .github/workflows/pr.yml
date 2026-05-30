@@ -45,11 +45,11 @@ jobs:
         run: dotnet build src/Mobile.BuildTools.AppManifests/Mobile.BuildTools.AppManifests.csproj -v minimal
 
       - name: Restore AppManifests sample
-        run: dotnet restore AppManifestsSample.slnx -v minimal
+        run: dotnet restore AppManifestsSample/AppManifestsSample.csproj -p:TargetFrameworks=net10.0-android -v minimal /p:BaseIntermediateOutputPath=obj-ci/ /p:BaseOutputPath=bin-ci/
         working-directory: samples/AppManifestsSample
 
       - name: Build AppManifests sample Android head
-        run: dotnet build AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -v minimal /p:BaseIntermediateOutputPath=obj-ci/ /p:BaseOutputPath=bin-ci/
+        run: dotnet build AppManifestsSample/AppManifestsSample.csproj -f net10.0-android --no-restore -p:TargetFrameworks=net10.0-android -v minimal /p:BaseIntermediateOutputPath=obj-ci/ /p:BaseOutputPath=bin-ci/
         working-directory: samples/AppManifestsSample
 
       - name: Validate iOS plist source
