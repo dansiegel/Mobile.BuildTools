@@ -4,7 +4,9 @@ on:
   push:
     branches: [master]
     paths:
+    - '.github/workflows/**'
     - 'Directory.*'
+    - 'global.json'
     - 'src/**'
     - 'E2E/**'
     - 'tests/**'
@@ -16,6 +18,7 @@ jobs:
       name: Build Mobile.BuildTools
       solution-path: Mobile.BuildTools.sln
       submodules: true
+      dotnet-version: '8.0.421'
       install-workload: 'maui macos maui-tizen'
       vs-version: 17.12
       code-sign: true

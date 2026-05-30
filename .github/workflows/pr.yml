@@ -3,7 +3,9 @@ name: PR
 on:
   pull_request:
     paths:
+    - '.github/workflows/**'
     - 'Directory.*'
+    - 'global.json'
     - 'src/**'
     - 'E2E/**'
     - 'tests/**'
@@ -15,6 +17,7 @@ jobs:
       name: Build Mobile.BuildTools
       solution-path: Mobile.BuildTools.sln
       submodules: true
+      dotnet-version: '8.0.421'
       install-workload: 'maui macos maui-tizen'
       vs-version: 17.12
 
@@ -31,7 +34,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.421'
 
       - name: Download NuGet Artifacts
         uses: actions/download-artifact@v4
