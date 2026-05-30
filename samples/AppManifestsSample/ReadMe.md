@@ -10,6 +10,7 @@ The app was generated with the .NET 10 `maui` template and then updated only to 
 - The repository root uses .NET SDK `8.0.421` for package/solution builds so CI does not select the .NET 10 SDK in the legacy MSBuild package build path.
 - MSBuild 18.0+ / Visual Studio 2026+ when building through Visual Studio or MSBuild directly. The .NET 10 SDK requires MSBuild 18 or newer.
 - The MAUI Android workload for the Android validation path used by CI.
+- CI restores and builds the Android head explicitly; iOS coverage is limited to plist source validation on Windows.
 
 ## What this demonstrates
 
