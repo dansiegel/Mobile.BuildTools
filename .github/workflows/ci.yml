@@ -46,6 +46,9 @@ jobs:
             8.0.421
             10.0.300
 
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
       - name: Install MAUI Android workload
         run: dotnet workload install maui-android
         working-directory: samples/AppManifestsSample
@@ -62,11 +65,11 @@ jobs:
           "MBT_APPMANIFESTS_VERSION=$version" >> $env:GITHUB_ENV
 
       - name: Restore AppManifests sample
-        run: dotnet restore AppManifestsSample/AppManifestsSample.csproj -p:TargetFrameworks=net10.0-android /p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -v minimal
+        run: MSBuild.exe AppManifestsSample/AppManifestsSample.csproj -t:Restore -p:TargetFramework=net10.0-android -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -v:minimal
         working-directory: samples/AppManifestsSample
 
       - name: Build AppManifests sample Android head
-        run: dotnet build AppManifestsSample/AppManifestsSample.csproj -f net10.0-android --no-restore -p:TargetFrameworks=net10.0-android /p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -v minimal
+        run: MSBuild.exe AppManifestsSample/AppManifestsSample.csproj -t:Build -p:TargetFramework=net10.0-android -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -v:minimal
         working-directory: samples/AppManifestsSample
 
       - name: Validate iOS plist source
