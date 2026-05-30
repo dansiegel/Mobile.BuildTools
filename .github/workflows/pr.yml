@@ -4,8 +4,10 @@ on:
   pull_request:
     paths:
     - 'Directory.*'
+    - 'global.json'
     - 'src/**'
     - 'E2E/**'
+    - 'samples/**'
     - 'tests/**'
 
 jobs:
@@ -15,8 +17,46 @@ jobs:
       name: Build Mobile.BuildTools
       solution-path: Mobile.BuildTools.sln
       submodules: true
+      dotnet-version: 8.0.421
       install-workload: 'maui macos maui-tizen'
       vs-version: 17.12
+
+  sample-appmanifests:
+    name: Build AppManifests sample
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.421
+            10.0.300
+
+      - name: Install MAUI Android workload
+        run: dotnet workload install maui-android
+
+      - name: Build AppManifests package
+        run: dotnet build src/Mobile.BuildTools.AppManifests/Mobile.BuildTools.AppManifests.csproj -v minimal
+
+      - name: Restore AppManifests sample
+        run: dotnet restore AppManifestsSample.slnx -v minimal
+        working-directory: samples/AppManifestsSample
+
+      - name: Build AppManifests sample Android head
+        run: dotnet build AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -v minimal /p:BaseIntermediateOutputPath=obj-ci/ /p:BaseOutputPath=bin-ci/
+        working-directory: samples/AppManifestsSample
+
+      - name: Validate iOS plist source
+        shell: python
+        run: |
+          import plistlib
+          with open(r'AppManifestsSample/Platforms/iOS/Info.plist', 'rb') as f:
+              plistlib.load(f)
 
   e2e:
     needs: [build]

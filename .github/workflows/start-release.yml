@@ -10,9 +10,10 @@ jobs:
       name: Build Mobile.BuildTools
       solution-path: Mobile.BuildTools.sln
       submodules: true
+      dotnet-version: 8.0.421
       install-workload: 'maui macos maui-tizen'
       uno-check: true
-      vs-version: 17.8
+      vs-version: 17.12
       code-sign: true
     secrets:
       codeSignKeyVault: ${{ secrets.CodeSignKeyVault }}
