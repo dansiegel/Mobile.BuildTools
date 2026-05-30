@@ -7,7 +7,7 @@ namespace Mobile.BuildTools.Generators.Manifests
 {
     internal abstract class BaseTemplatedManifestGenerator : GeneratorBase<string>
     {
-        internal const string DefaultToken = @"\$\$";
+        internal const string DefaultToken = "$$";
 
         public BaseTemplatedManifestGenerator(IBuildConfiguration configuration)
             : base(configuration)

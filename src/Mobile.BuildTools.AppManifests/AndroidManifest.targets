@@ -3,7 +3,7 @@
 
   <Target Name="_MBTGatherManifests"
           AfterTargets="_GetAndroidPackageName"
-          Condition=" $(_AndroidManifestAbs) != '' ">
+          Condition=" '$(_AndroidManifestAbs)' != '' ">
     <PropertyGroup>
       <_MBTUpdatedManifest>$(IntermediateOutputPath)Mobile.BuildTools\AndroidManifest.xml</_MBTUpdatedManifest>
       <_MBTSourceManifest>$(_AndroidManifestAbs)</_MBTSourceManifest>
@@ -11,12 +11,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <__MBTInputManifest Remove="@(__MBTInputManifest)" />
+      <__MBTOutputManifest Remove="@(__MBTOutputManifest)" />
       <__MBTInputManifest Include="$(_MBTSourceManifest)" />
       <__MBTOutputManifest Include="$(_MBTUpdatedManifest)" />
+      <FileWrites Include="$(_MBTUpdatedManifest)" />
     </ItemGroup>
 
     <Copy SourceFiles="@(__MBTInputManifest)"
-          DestinationFiles="@(__MBTOutputManifest)" />
+          DestinationFiles="@(__MBTOutputManifest)"
+          SkipUnchangedFiles="true" />
 
   </Target>
 
