@@ -65,15 +65,12 @@ jobs:
           "MBT_APPMANIFESTS_VERSION=$version" >> $env:GITHUB_ENV
 
       - name: Restore AppManifests sample
-        run: MSBuild.exe AppManifestsSample/AppManifestsSample.csproj -t:Restore -p:TargetFramework=net10.0-android -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -v:minimal
+        run: dotnet restore AppManifestsSample/AppManifestsSample.csproj -p:TargetFramework=net10.0-android -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -v minimal
         working-directory: samples/AppManifestsSample
 
-      # NOTE: A full Android `Build` of the sample requires a fix in the
-      # Mobile.BuildTools.AppManifests packaging path (Reference.dll is not
-      # discoverable for the TemplateManifestTask on .NET 10). That packaging
-      # fix is tracked in a separate PR (fix/appmanifests-engine) per Dan's
-      # direction so PR #364 stays scoped to the sample + CI coverage. Once
-      # that PR merges, re-add an Android `Build` step here.
+      - name: Build AppManifests sample Android head
+        run: dotnet build AppManifestsSample/AppManifestsSample.csproj --no-restore -f net10.0-android -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -v minimal
+        working-directory: samples/AppManifestsSample
 
       - name: Validate iOS plist source
         shell: python
