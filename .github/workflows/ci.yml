@@ -4,6 +4,7 @@ on:
   push:
     branches: [master]
     paths:
+    - '.github/workflows/**'
     - 'Directory.*'
     - 'global.json'
     - 'src/**'
