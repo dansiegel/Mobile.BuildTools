@@ -53,7 +53,6 @@ jobs:
           $sdkVersion = dotnet --list-sdks | Where-Object { $_ -like '8.0.*' } | Select-Object -Last 1 | ForEach-Object { ($_ -split ' ')[0] }
           if (-not $sdkVersion) { throw 'No .NET 8 SDK installed.' }
           "DOTNET_SDK_VERSION=$sdkVersion" >> $env:GITHUB_ENV
-          "MSBuildSDKsPath=$env:DOTNET_ROOT/sdk/$sdkVersion/Sdks" >> $env:GITHUB_ENV
 
       - name: Download NuGet Artifacts
         uses: actions/download-artifact@v4

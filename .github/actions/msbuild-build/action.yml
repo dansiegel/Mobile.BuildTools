@@ -82,10 +82,8 @@ runs:
         if (-not $sdkVersion) {
           throw "No installed .NET SDK matched '${{ inputs.dotnet-sdk-glob }}'."
         }
-        $sdkPath = Join-Path $env:DOTNET_ROOT "sdk/$sdkVersion/Sdks"
         "DOTNET_SDK_VERSION=$sdkVersion" >> $env:GITHUB_ENV
-        "MSBuildSDKsPath=$sdkPath" >> $env:GITHUB_ENV
-        Write-Host "Using .NET SDK $sdkVersion for MSBuild SDK resolution."
+        Write-Host "Using .NET SDK $sdkVersion."
 
     - name: Install .NET Workload
       if: ${{ inputs.install-workload != '' }}
@@ -97,16 +95,10 @@ runs:
       shell: pwsh
       run: curl -L -o nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v3
-      with:
-        vs-version: ${{ inputs.vs-version }}
-        vs-prerelease: ${{ inputs.vs-prerelease }}
-
     - name: Build Packages
       shell: pwsh
       run: |
-        msbuild ${{ inputs.solution-path }} /r /p:Configuration=${{ inputs.build-configuration }} ${{ inputs.build-args }}
+        dotnet exec "$env:DOTNET_ROOT\sdk\$env:DOTNET_SDK_VERSION\MSBuild.dll" ${{ inputs.solution-path }} /r /p:Configuration=${{ inputs.build-configuration }} ${{ inputs.build-args }}
 
     - name: Run Tests
       if: ${{ inputs.run-tests == 'true' }}
