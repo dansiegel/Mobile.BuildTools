@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
     - '.github/workflows/**'
+    - '.github/actions/**'
     - 'Directory.*'
     - 'global.json'
     - 'src/**'
@@ -12,14 +13,24 @@ on:
 
 jobs:
   build:
-    uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
-    with:
-      name: Build Mobile.BuildTools
-      solution-path: Mobile.BuildTools.sln
-      submodules: true
-      dotnet-version: '8.0.x'
-      install-workload: 'maui macos maui-tizen'
-      vs-version: 17.12
+    runs-on: windows-latest
+    name: Build Mobile.BuildTools
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Build Mobile.BuildTools
+        uses: ./.github/actions/msbuild-build
+        with:
+          name: Build Mobile.BuildTools
+          solution-path: Mobile.BuildTools.sln
+          dotnet-version: '8.0.x'
+          dotnet-sdk-glob: '8.0.*'
+          install-workload: 'maui macos maui-tizen'
+          vs-version: '17.12'
 
   e2e:
     needs: [build]
@@ -36,6 +47,14 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Select .NET 8 SDK
+        shell: pwsh
+        run: |
+          $sdkVersion = dotnet --list-sdks | Where-Object { $_ -like '8.0.*' } | Select-Object -Last 1 | ForEach-Object { ($_ -split ' ')[0] }
+          if (-not $sdkVersion) { throw 'No .NET 8 SDK installed.' }
+          "DOTNET_SDK_VERSION=$sdkVersion" >> $env:GITHUB_ENV
+          "MSBuildSDKsPath=$env:DOTNET_ROOT/sdk/$sdkVersion/Sdks" >> $env:GITHUB_ENV
+
       - name: Download NuGet Artifacts
         uses: actions/download-artifact@v4
         with:
@@ -43,7 +62,7 @@ jobs:
           path: Artifacts
 
       - name: Run Tests
-        run: dotnet test -c Release
+        run: dotnet exec "$env:DOTNET_ROOT/sdk/$env:DOTNET_SDK_VERSION/dotnet.dll" test -c Release
         working-directory: E2E/E2E.Tests
         env:
           AString: 'Hello World!'
@@ -55,4 +74,3 @@ jobs:
           AUri: 'https://mobilebuildtools.com'
           AStringArray: 'Foo;Bar;Baz'
           APlatformProperty: 'Should Not Exist'
-

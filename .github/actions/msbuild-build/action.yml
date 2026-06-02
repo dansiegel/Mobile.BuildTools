@@ -1,0 +1,151 @@
+name: MSBuild Build
+description: Build/test/package a .NET solution with a loose SDK train and stable-SDK selection.
+
+inputs:
+  name:
+    description: The display name for the build.
+    required: true
+  solution-path:
+    description: The solution or project path to build.
+    required: true
+  dotnet-version:
+    description: The .NET SDK train to install through setup-dotnet.
+    default: 8.0.x
+  dotnet-sdk-glob:
+    description: The installed SDK glob to select for MSBuild SDK resolution.
+    default: 8.0.*
+  install-workload:
+    description: Optional workloads to install with the selected SDK.
+    default: ''
+  vs-version:
+    description: Visual Studio version for setup-msbuild.
+    required: false
+    default: ''
+  vs-prerelease:
+    description: Whether setup-msbuild should allow prerelease Visual Studio.
+    default: 'false'
+  build-configuration:
+    description: Build configuration.
+    default: Release
+  build-args:
+    description: Additional MSBuild arguments.
+    default: ''
+  run-tests:
+    description: Whether to run solution tests after build.
+    default: 'true'
+  dotnet-test-logger:
+    description: dotnet test logger.
+    default: GitHubActions
+  artifacts-path:
+    description: Path to build artifacts.
+    default: ./Artifacts/
+  artifact-name:
+    description: Uploaded artifact name. Empty disables upload.
+    default: NuGet
+  code-sign:
+    description: Whether to sign NuGet packages.
+    default: 'false'
+  codeSignTimestampUrl:
+    description: Timestamp URL for package signing.
+    default: ''
+  codeSignKeyVault:
+    description: Key Vault URL/name for package signing.
+    default: ''
+  codeSignClientId:
+    description: Client id for package signing.
+    default: ''
+  codeSignTenantId:
+    description: Tenant id for package signing.
+    default: ''
+  codeSignClientSecret:
+    description: Client secret for package signing.
+    default: ''
+  codeSignCertificate:
+    description: Certificate name for package signing.
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Setup .NET ${{ inputs.dotnet-version }}
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Select .NET SDK for MSBuild
+      shell: pwsh
+      run: |
+        $sdkVersion = dotnet --list-sdks |
+          Where-Object { $_ -like '${{ inputs.dotnet-sdk-glob }}' } |
+          Select-Object -Last 1 |
+          ForEach-Object { ($_ -split ' ')[0] }
+        if (-not $sdkVersion) {
+          throw "No installed .NET SDK matched '${{ inputs.dotnet-sdk-glob }}'."
+        }
+        $sdkPath = Join-Path $env:DOTNET_ROOT "sdk/$sdkVersion/Sdks"
+        "DOTNET_SDK_VERSION=$sdkVersion" >> $env:GITHUB_ENV
+        "MSBuildSDKsPath=$sdkPath" >> $env:GITHUB_ENV
+        Write-Host "Using .NET SDK $sdkVersion for MSBuild SDK resolution."
+
+    - name: Install .NET Workload
+      if: ${{ inputs.install-workload != '' }}
+      shell: pwsh
+      run: |
+        dotnet exec "$env:DOTNET_ROOT\sdk\$env:DOTNET_SDK_VERSION\dotnet.dll" workload install ${{ inputs.install-workload }}
+
+    - name: Download Latest NuGet.exe
+      shell: pwsh
+      run: curl -L -o nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v3
+      with:
+        vs-version: ${{ inputs.vs-version }}
+        vs-prerelease: ${{ inputs.vs-prerelease }}
+
+    - name: Build Packages
+      shell: pwsh
+      run: |
+        msbuild ${{ inputs.solution-path }} /r /p:Configuration=${{ inputs.build-configuration }} ${{ inputs.build-args }}
+
+    - name: Run Tests
+      if: ${{ inputs.run-tests == 'true' }}
+      shell: pwsh
+      run: |
+        dotnet exec "$env:DOTNET_ROOT\sdk\$env:DOTNET_SDK_VERSION\dotnet.dll" test ${{ inputs.solution-path }} `
+          --configuration ${{ inputs.build-configuration }} `
+          --logger ${{ inputs.dotnet-test-logger }} `
+          --blame-crash `
+          --collect:"XPlat Code Coverage" `
+          -- `
+          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover `
+          --no-build
+
+    - name: Sign NuGet Packages
+      if: ${{ inputs.code-sign == 'true' }}
+      shell: pwsh
+      working-directory: ${{ inputs.artifacts-path }}
+      run: |
+        dotnet tool install --global NuGetKeyVaultSignTool
+        $timestampUrl = '${{ inputs.codeSignTimestampUrl }}'
+        if ($timestampUrl -eq '') {
+          $timestampUrl = 'http://timestamp.digicert.com'
+        }
+        Get-ChildItem -Recurse | Where-Object { $_.Name.EndsWith('.nupkg') -or $_.Name.EndsWith('.snupkg') } | ForEach-Object {
+          NuGetKeyVaultSignTool sign $_.Name `
+            --file-digest sha256 `
+            --timestamp-rfc3161 $timestampUrl `
+            --timestamp-digest sha256 `
+            --azure-key-vault-url '${{ inputs.codeSignKeyVault }}' `
+            --azure-key-vault-client-id '${{ inputs.codeSignClientId }}' `
+            --azure-key-vault-tenant-id '${{ inputs.codeSignTenantId }}' `
+            --azure-key-vault-client-secret '${{ inputs.codeSignClientSecret }}' `
+            --azure-key-vault-certificate '${{ inputs.codeSignCertificate }}'
+        }
+
+    - name: Upload Artifacts
+      if: ${{ inputs.artifact-name != '' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ inputs.artifacts-path }}
