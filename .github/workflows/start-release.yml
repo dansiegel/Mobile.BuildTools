@@ -5,21 +5,30 @@ on:
 
 jobs:
   build:
-    uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
-    with:
-      name: Build Mobile.BuildTools
-      solution-path: Mobile.BuildTools.sln
-      submodules: true
-      install-workload: 'maui macos maui-tizen'
-      uno-check: true
-      vs-version: 17.8
-      code-sign: true
-    secrets:
-      codeSignKeyVault: ${{ secrets.CodeSignKeyVault }}
-      codeSignClientId: ${{ secrets.CodeSignClientId }}
-      codeSignTenantId: ${{ secrets.CodeSignTenantId }}
-      codeSignClientSecret: ${{ secrets.CodeSignClientSecret }}
-      codeSignCertificate: ${{ secrets.CodeSignCertificate }}
+    runs-on: windows-latest
+    name: Build Mobile.BuildTools
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Build Mobile.BuildTools
+        uses: ./.github/actions/msbuild-build
+        with:
+          name: Build Mobile.BuildTools
+          solution-path: Mobile.BuildTools.sln
+          dotnet-version: '8.0.x'
+          dotnet-sdk-glob: '8.0.*'
+          install-workload: 'maui macos maui-tizen'
+          vs-version: '17.8'
+          code-sign: 'true'
+          codeSignKeyVault: ${{ secrets.CodeSignKeyVault }}
+          codeSignClientId: ${{ secrets.CodeSignClientId }}
+          codeSignTenantId: ${{ secrets.CodeSignTenantId }}
+          codeSignClientSecret: ${{ secrets.CodeSignClientSecret }}
+          codeSignCertificate: ${{ secrets.CodeSignCertificate }}
 
   release:
     uses: avantipoint/workflow-templates/.github/workflows/generate-release.yml@master
