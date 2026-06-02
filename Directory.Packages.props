@@ -3,7 +3,7 @@
   <ItemGroup>
     <PackageVersion Include="AvantiPoint.CodeGenHelpers" Version="1.6.20" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
-    <PackageVersion Include="GitHubActionsTestLogger" Version="2.4.1" />
+    <PackageVersion Include="GitHubActionsTestLogger" Version="3.0.4" />
     <PackageVersion Include="Microsoft.Build" Version="17.10.4" />
     <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.10.4" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.10.0" />
