@@ -1,6 +1,5 @@
 {
   "sdk": {
-    "version": "8.0.421",
     "allowPrerelease": false
   },
   "msbuild-sdks": {

@@ -17,7 +17,7 @@ jobs:
       name: Build Mobile.BuildTools
       solution-path: Mobile.BuildTools.sln
       submodules: true
-      dotnet-version: '8.0.421'
+      dotnet-version: '8.0.x'
       install-workload: 'maui macos maui-tizen'
       vs-version: 17.12
 
@@ -34,7 +34,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.421'
+          dotnet-version: '8.0.x'
 
       - name: Download NuGet Artifacts
         uses: actions/download-artifact@v4
