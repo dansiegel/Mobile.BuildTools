@@ -51,7 +51,7 @@
                                   ManifestPath="$(_MBTUpdatedManifest)"
                                   OutputManifestPath="$(_MBTUpdatedManifest)"
                                   Condition="$(BuildToolsEnableAutomaticVersioning)" />
-  </Target> 
+  </Target>
 
   <Target Name="_MBTManifestPostProcess"
           AfterTargets="_MBTGatherManifests"

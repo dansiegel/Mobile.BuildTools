@@ -1,6 +1,7 @@
 name: PR
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
     - '.github/workflows/**'
@@ -9,6 +10,7 @@ on:
     - 'global.json'
     - 'src/**'
     - 'E2E/**'
+    - 'samples/**'
     - 'tests/**'
 
 jobs:
@@ -31,6 +33,53 @@ jobs:
           dotnet-sdk-glob: '8.0.*'
           install-workload: 'maui macos maui-tizen'
           vs-version: '17.12'
+
+  sample-appmanifests:
+    name: Build AppManifests sample
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Install MAUI Android workload
+        run: dotnet workload install maui-android
+        working-directory: samples/AppManifestsSample
+
+      - name: Build AppManifests package
+        run: dotnet build src/Mobile.BuildTools.AppManifests/Mobile.BuildTools.AppManifests.csproj -v minimal
+
+      - name: Resolve AppManifests package version
+        shell: pwsh
+        run: |
+          $package = Get-ChildItem Artifacts -Filter 'Mobile.BuildTools.AppManifests.*.nupkg' | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+          if (-not $package) { throw 'Mobile.BuildTools.AppManifests package was not produced.' }
+          $version = $package.BaseName -replace '^Mobile\.BuildTools\.AppManifests\.', ''
+          "MBT_APPMANIFESTS_VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Restore AppManifests sample
+        run: dotnet restore AppManifestsSample/AppManifestsSample.csproj -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -p:RestorePackagesPath=../../.packages -v minimal
+        working-directory: samples/AppManifestsSample
+
+      - name: Build AppManifests sample Android head
+        run: dotnet build AppManifestsSample/AppManifestsSample.csproj -f net10.0-android --no-restore -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsAppManifestsVersion=$env:MBT_APPMANIFESTS_VERSION -p:RestorePackagesPath=../../.packages -v minimal
+        working-directory: samples/AppManifestsSample
+
+      - name: Validate iOS plist source
+        shell: python
+        working-directory: samples/AppManifestsSample
+        run: |
+          import plistlib
+          with open(r'AppManifestsSample/Platforms/iOS/Info.plist', 'rb') as f:
+              plistlib.load(f)
 
   e2e:
     needs: [build]

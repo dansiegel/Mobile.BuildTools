@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppManifestsSample.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,24" Spacing="20">
+            <Image Source="dotnet_bot.png"
+                   HeightRequest="160"
+                   Aspect="AspectFit"
+                   SemanticProperties.Description="dot net bot in a submarine number ten" />
+
+            <Label Text="Mobile.BuildTools AppManifests"
+                   Style="{StaticResource Headline}"
+                   SemanticProperties.HeadingLevel="Level1" />
+
+            <Label Text="This .NET 10 MAUI sample keeps AndroidManifest.xml and Info.plist tokenized in source. Mobile.BuildTools.AppManifests replaces those tokens during the platform build."
+                   Style="{StaticResource SubHeadline}"
+                   SemanticProperties.HeadingLevel="Level2" />
+
+            <Border StrokeShape="RoundRectangle 12" Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Tokens demonstrated" FontAttributes="Bold" />
+                    <Label Text="• $$AppDisplayName$$ becomes the Android label and iOS CFBundleDisplayName." />
+                    <Label Text="• $$ApiHost$$ becomes Android meta-data/network config and the iOS MBTApiHost key." />
+                    <Label Text="• MBTPackageName updates the Android package / iOS bundle identifier." />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
