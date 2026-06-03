@@ -42,7 +42,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Fact]
-        public void AppleTargetsCopyDetectedManifestAndReplaceConsumedManifestItems()
+        public void AppleTargetsCopyDetectedManifestAndPreserveUserPartialManifestItems()
         {
             var text = LoadTargets("AppleManifests.targets").ToString();
 
@@ -50,8 +50,14 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             Assert.Contains("<_MBTSourcePlist Condition=\" '$(_MBTSourcePlist)' == '' \">$(_AppManifest)</_MBTSourcePlist>", text);
             Assert.Contains("<__MBTInputManifest Include=\"$(_MBTSourcePlist)\"", text);
             Assert.Contains("<AppBundleManifest>$(_MBTUpdatedManifest)</AppBundleManifest>", text);
-            Assert.Contains("<PartialAppManifest Remove=\"@(PartialAppManifest)\"", text);
-            Assert.Contains("<PartialAppManifest Include=\"$(_MBTUpdatedManifest)\"", text);
+            Assert.DoesNotContain("<PartialAppManifest Remove=\"@(PartialAppManifest)\"", text);
+            Assert.DoesNotContain("<_PartialAppManifest Remove=\"@(_PartialAppManifest)\"", text);
+            Assert.Contains("<_MBTSourcePartialAppManifest Include=\"@(PartialAppManifest)\" Condition=\"'%(PartialAppManifest.Identity)' == '$(_MBTSourcePlist)'\"", text);
+            Assert.Contains("<_MBTSourceInternalPartialAppManifest Include=\"@(_PartialAppManifest)\" Condition=\"'%(_PartialAppManifest.Identity)' == '$(_MBTSourcePlist)'\"", text);
+            Assert.Contains("<PartialAppManifest Remove=\"@(_MBTSourcePartialAppManifest)\"", text);
+            Assert.Contains("<PartialAppManifest Include=\"$(_MBTUpdatedManifest)\" Condition=\"'@(_MBTSourcePartialAppManifest)' != ''\"", text);
+            Assert.Contains("<_PartialAppManifest Remove=\"@(_MBTSourceInternalPartialAppManifest)\"", text);
+            Assert.Contains("<_PartialAppManifest Include=\"$(_MBTUpdatedManifest)\" Condition=\"'@(_MBTSourceInternalPartialAppManifest)' != ''\"", text);
         }
 
         private static XDocument LoadTargets(string fileName)

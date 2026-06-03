@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" />
-    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" SetTargetFramework="TargetFramework=net472" />
+    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" SetTargetFramework="TargetFramework=net472" />
     <ProjectReference Include="..\Mobile.BuildTools.XamarinSdk\Mobile.BuildTools.XamarinSdk.csproj" PackFolder="build" />
   </ItemGroup>
 

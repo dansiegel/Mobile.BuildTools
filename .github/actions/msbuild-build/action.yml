@@ -109,9 +109,9 @@ runs:
           --logger ${{ inputs.dotnet-test-logger }} `
           --blame-crash `
           --collect:"XPlat Code Coverage" `
+          --no-build `
           -- `
-          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover `
-          --no-build
+          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
     - name: Sign NuGet Packages
       if: ${{ inputs.code-sign == 'true' }}

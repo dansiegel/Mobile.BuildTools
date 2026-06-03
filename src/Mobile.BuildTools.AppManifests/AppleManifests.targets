@@ -61,10 +61,14 @@
       <_AppManifest>$(_MBTUpdatedManifest)</_AppManifest>
     </PropertyGroup>
     <ItemGroup Condition="$(BuildToolsEnableTemplateManifests) == 'True' Or $(BuildToolsEnableAutomaticVersioning) == 'True'">
-      <PartialAppManifest Remove="@(PartialAppManifest)" />
-      <PartialAppManifest Include="$(_MBTUpdatedManifest)" />
-      <_PartialAppManifest Remove="@(_PartialAppManifest)" />
-      <_PartialAppManifest Include="$(_MBTUpdatedManifest)" />
+      <_MBTSourcePartialAppManifest Remove="@(_MBTSourcePartialAppManifest)" />
+      <_MBTSourcePartialAppManifest Include="@(PartialAppManifest)" Condition="'%(PartialAppManifest.Identity)' == '$(_MBTSourcePlist)'" />
+      <_MBTSourceInternalPartialAppManifest Remove="@(_MBTSourceInternalPartialAppManifest)" />
+      <_MBTSourceInternalPartialAppManifest Include="@(_PartialAppManifest)" Condition="'%(_PartialAppManifest.Identity)' == '$(_MBTSourcePlist)'" />
+      <PartialAppManifest Remove="@(_MBTSourcePartialAppManifest)" />
+      <PartialAppManifest Include="$(_MBTUpdatedManifest)" Condition="'@(_MBTSourcePartialAppManifest)' != ''" />
+      <_PartialAppManifest Remove="@(_MBTSourceInternalPartialAppManifest)" />
+      <_PartialAppManifest Include="$(_MBTUpdatedManifest)" Condition="'@(_MBTSourceInternalPartialAppManifest)' != ''" />
       <FileWrites Include="$(_MBTUpdatedManifest)" />
     </ItemGroup>
   </Target>
