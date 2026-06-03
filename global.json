@@ -1,7 +1,5 @@
 {
   "sdk": {
-    "version": "9.0.300",
-    "rollForward": "latestPatch",
     "allowPrerelease": false
   },
   "msbuild-sdks": {
