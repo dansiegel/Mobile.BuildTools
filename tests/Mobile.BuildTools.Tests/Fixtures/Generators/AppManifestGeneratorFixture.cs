@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators;
 using Mobile.BuildTools.Generators.Manifests;
 using Mobile.BuildTools.Tests.Mocks;
@@ -18,6 +19,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         private const string TestPrefix = "XunitTest_";
         private static readonly string TemplateAndroidManifestPath = @"Templates/MockAndroidManifest.xml";
         private static readonly string TemplateAndroidManifestOutputPath = @"Generated/AndroidManifest.xml";
+        private static readonly string TemplateInfoPlistPath = @"Templates/MockInfo.plist";
+        private static readonly string TemplateInfoPlistOutputPath = @"Generated/Info.plist";
         private static readonly string TemplateManifestPath = @"Templates/MockManifestTemplate.json";
         private static readonly string TemplateManifestOutputPath = @"Generated/MockManifest.json";
 
@@ -97,21 +100,26 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             Assert.Equal("$TemplatedParameter$", json.TemplatedParameter);
         }
 
-        [Fact(Skip = "Dunno")]
+        [Fact]
         public void ProcessingDoesNotCorruptAndroidManifest()
         {
             var config = GetConfiguration();
-            var generator = CreateGenerator(config);
+            config.Platform = Platform.Android;
+            config.Configuration.Manifests.Token = "$$";
+            config.Configuration.Manifests.VariablePrefix = TestPrefix;
+            config.Configuration.Debug = true;
+            var generator = new TemplatedAndroidAppManifestGenerator(config)
+            {
+                ManifestInputPath = TemplateAndroidManifestPath,
+                ManifestOutputPath = TemplateAndroidManifestOutputPath
+            };
             var template = File.ReadAllText(TemplateAndroidManifestPath);
-            var guid = Guid.NewGuid().ToString();
+            var guid = Guid.NewGuid().ToString("N");
             Environment.SetEnvironmentVariable("XunitTest_AADClientId", guid);
 
             var matches = generator.GetMatches(template);
             var match = matches.Cast<Match>().First();
             Assert.Equal("$$AADClientId$$", match.Value);
-
-            generator.ManifestOutputPath = TemplateAndroidManifestOutputPath;
-            config.Configuration.Debug = true;
 
             var ex = Record.Exception(() => ((IGenerator)generator).Execute());
             Assert.Null(ex);
@@ -124,9 +132,46 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             });
 
             Assert.Null(ex);
-
             Assert.DoesNotContain("msal$$AADClientId$$", generatedTemplate);
             Assert.Contains($"msal{guid}", generatedTemplate);
+            Assert.Contains("package=\"com.avantipoint.awesomeapp\"", generatedTemplate);
+        }
+
+        [Fact]
+        public void ProcessingDoesNotCorruptInfoPlist()
+        {
+            var config = GetConfiguration();
+            config.Platform = Platform.iOS;
+            config.Configuration.Manifests.Token = "$$";
+            config.Configuration.Manifests.VariablePrefix = TestPrefix;
+            config.Configuration.Debug = true;
+            var generator = new TemplatedPlistGenerator(config)
+            {
+                ManifestInputPath = TemplateInfoPlistPath,
+                ManifestOutputPath = TemplateInfoPlistOutputPath
+            };
+            var template = File.ReadAllText(TemplateInfoPlistPath);
+            var guid = Guid.NewGuid().ToString("N");
+            Environment.SetEnvironmentVariable("XunitTest_AADClientId", guid);
+
+            var matches = generator.GetMatches(template);
+            var match = matches.Cast<Match>().First();
+            Assert.Equal("$$AADClientId$$", match.Value);
+
+            var ex = Record.Exception(() => ((IGenerator)generator).Execute());
+            Assert.Null(ex);
+
+            var generatedTemplate = File.ReadAllText(TemplateInfoPlistOutputPath);
+            ex = Record.Exception(() =>
+            {
+                var doc = new XmlDocument();
+                doc.LoadXml(generatedTemplate);
+            });
+
+            Assert.Null(ex);
+            Assert.DoesNotContain("msal$$AADClientId$$", generatedTemplate);
+            Assert.Contains($"msal{guid}", generatedTemplate);
+            Assert.Contains("com.avantipoint.awesomeapp", generatedTemplate);
         }
 
         private class TestManifest

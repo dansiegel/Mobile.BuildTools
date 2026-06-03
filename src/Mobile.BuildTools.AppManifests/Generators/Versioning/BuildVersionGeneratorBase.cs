@@ -52,6 +52,12 @@ namespace Mobile.BuildTools.Generators.Versioning
             LogManifestContents();
 
             Log.LogMessage("Processing Manifest");
+            var outputDirectory = Path.GetDirectoryName(ManifestOutputPath);
+            if (!string.IsNullOrWhiteSpace(outputDirectory))
+            {
+                Directory.CreateDirectory(outputDirectory);
+            }
+
             ProcessManifest(ManifestPath, ManifestOutputPath, BuildNumber);
 
             LogManifestContents();

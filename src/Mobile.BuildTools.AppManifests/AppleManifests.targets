@@ -5,17 +5,21 @@
         AfterTargets="_DetectAppManifest"
         DependsOnTargets="MobileBuildToolsInit">
     <PropertyGroup>
-      <_MBTSourcePlist>$(AppBundleManifest)</_MBTSourcePlist>
+      <_MBTSourcePlist Condition=" '$(AppBundleManifest)' != '' ">$(AppBundleManifest)</_MBTSourcePlist>
+      <_MBTSourcePlist Condition=" '$(_MBTSourcePlist)' == '' ">$(_AppManifest)</_MBTSourcePlist>
       <_MBTUpdatedManifest>$(IntermediateOutputPath)Mobile.BuildTools\Info.plist</_MBTUpdatedManifest>
     </PropertyGroup>
 
     <ItemGroup>
-      <__MBTInputManifest Include="$(_AppManifest)" />
+      <__MBTInputManifest Remove="@(__MBTInputManifest)" />
+      <__MBTOutputManifest Remove="@(__MBTOutputManifest)" />
+      <__MBTInputManifest Include="$(_MBTSourcePlist)" />
       <__MBTOutputManifest Include="$(_MBTUpdatedManifest)" />
     </ItemGroup>
 
     <Copy SourceFiles="@(__MBTInputManifest)"
-          DestinationFiles="@(__MBTOutputManifest)" />
+          DestinationFiles="@(__MBTOutputManifest)"
+          SkipUnchangedFiles="true" />
   </Target>
 
   <!-- Process Info.plist -->
@@ -30,8 +34,8 @@
                           ManifestPath="$(_MBTUpdatedManifest)"
                           OutputManifestPath="$(_MBTUpdatedManifest)"
                           Condition="$(BuildToolsEnableTemplateManifests)">
-      <!-- <Output TaskParameter="ProcessedManifest"
-              PropertyName="_AppManifest" /> -->
+      <Output TaskParameter="ProcessedManifest"
+              ItemName="_MBTProcessedAppManifest" />
     </TemplateManifestTask>
   </Target>
 
@@ -52,8 +56,19 @@
   <Target Name="_MBTManifestPostProcess"
           AfterTargets="_MBTGatherManifests"
           DependsOnTargets="HandleTokenizedInfoPlist;AutomaticBuildVersioning">
+    <PropertyGroup Condition="$(BuildToolsEnableTemplateManifests) == 'True' Or $(BuildToolsEnableAutomaticVersioning) == 'True'">
+      <AppBundleManifest>$(_MBTUpdatedManifest)</AppBundleManifest>
+      <_AppManifest>$(_MBTUpdatedManifest)</_AppManifest>
+    </PropertyGroup>
     <ItemGroup Condition="$(BuildToolsEnableTemplateManifests) == 'True' Or $(BuildToolsEnableAutomaticVersioning) == 'True'">
-      <_PartialAppManifest Include="$(_MBTUpdatedManifest)" />
+      <_MBTSourcePartialAppManifest Remove="@(_MBTSourcePartialAppManifest)" />
+      <_MBTSourcePartialAppManifest Include="@(PartialAppManifest)" Condition="'%(PartialAppManifest.Identity)' == '$(_MBTSourcePlist)'" />
+      <_MBTSourceInternalPartialAppManifest Remove="@(_MBTSourceInternalPartialAppManifest)" />
+      <_MBTSourceInternalPartialAppManifest Include="@(_PartialAppManifest)" Condition="'%(_PartialAppManifest.Identity)' == '$(_MBTSourcePlist)'" />
+      <PartialAppManifest Remove="@(_MBTSourcePartialAppManifest)" />
+      <PartialAppManifest Include="$(_MBTUpdatedManifest)" Condition="'@(_MBTSourcePartialAppManifest)' != ''" />
+      <_PartialAppManifest Remove="@(_MBTSourceInternalPartialAppManifest)" />
+      <_PartialAppManifest Include="$(_MBTUpdatedManifest)" Condition="'@(_MBTSourceInternalPartialAppManifest)' != ''" />
       <FileWrites Include="$(_MBTUpdatedManifest)" />
     </ItemGroup>
   </Target>
