@@ -6,6 +6,7 @@ using System.Text.Json;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
+using Mobile.BuildTools.Drawing;
 using Mobile.BuildTools.Models.AppIcons;
 using Mobile.BuildTools.Utils;
 
@@ -111,6 +112,22 @@ namespace Mobile.BuildTools.Generators.Images
             fileWrites.Add(output);
             fileWrites.Add(output + ".inputs");
             result.ItemSpec = output;
+            // Frameworks resize SVGs by default, but not PNGs. Preserve that behavior after
+            // rendering a vector (or selecting a bitmap brand for a vector declaration).
+            var vectorSource = string.Equals(Path.GetExtension(source), ".svg", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(Path.GetExtension(selectedSource), ".svg", StringComparison.OrdinalIgnoreCase);
+            if (vectorSource && !string.Equals(extension, ".svg", StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.IsNullOrEmpty(result.GetMetadata("Resize")))
+                    result.SetMetadata("Resize", "true");
+                if (string.IsNullOrEmpty(result.GetMetadata("BaseSize")) &&
+                    !string.Equals(result.GetMetadata("Resize"), "false", StringComparison.OrdinalIgnoreCase))
+                {
+                    using var prepared = ImageBase.Load(output);
+                    var size = prepared.GetOriginalSize();
+                    result.SetMetadata("BaseSize", $"{size.Width},{size.Height}");
+                }
+            }
             // Link identifies the resource in native pipelines. Keep explicit metadata exactly as supplied.
             if (kind.EndsWith("Image", StringComparison.Ordinal) && string.IsNullOrEmpty(item.GetMetadata("Link")))
                 result.SetMetadata("Link", Path.ChangeExtension(Path.IsPathRooted(item.ItemSpec) ? Path.GetFileName(item.ItemSpec) : item.ItemSpec, extension));

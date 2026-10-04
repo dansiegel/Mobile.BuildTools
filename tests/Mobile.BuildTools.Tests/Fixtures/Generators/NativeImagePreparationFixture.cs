@@ -72,6 +72,32 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             Assert.Equal(4, preparer.FileWrites.Count);
         }
 
+        [Theory]
+        [InlineData("MauiImage")]
+        [InlineData("MauiIcon")]
+        [InlineData("MauiSplashScreen")]
+        [InlineData("UnoImage")]
+        [InlineData("UnoIcon")]
+        [InlineData("UnoSplashScreen")]
+        public void RenderedVectorsKeepFrameworkResizingDefaults(string kind)
+        {
+            var config = GetConfiguration();
+            var source = Path.Combine(config.ProjectDirectory, "logo.svg");
+            File.WriteAllText(source, "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"12\"><rect width=\"16\" height=\"12\" fill=\"red\"/></svg>");
+            File.WriteAllText(Path.ChangeExtension(source, ".json"), "{\"padFactor\":2}");
+            var item = Item(source, kind);
+            var prepared = Preparer(config).Prepare(item);
+            Assert.EndsWith(".png", prepared.ItemSpec);
+            Assert.Equal("true", prepared.GetMetadata("Resize"));
+            Assert.Equal("16,12", prepared.GetMetadata("BaseSize"));
+
+            item.SetMetadata("BaseSize", "72,72");
+            item.SetMetadata("Resize", "false");
+            prepared = Preparer(config).Prepare(item);
+            Assert.Equal("72,72", prepared.GetMetadata("BaseSize"));
+            Assert.Equal("false", prepared.GetMetadata("Resize"));
+        }
+
         [Fact]
         public void NoOpPreservesOutputsAndTracksEveryDependencyByContent()
         {
