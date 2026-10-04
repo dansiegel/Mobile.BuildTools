@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using SkiaSharp;
 using Svg.Skia;
 
@@ -69,7 +69,7 @@ namespace Mobile.BuildTools.Drawing
                 cvn.DrawPicture(svg.Picture, opacityPaint);
 
                 // set the paint to be the highest quality it can find
-                var paint = new SKPaint
+                using var paint = new SKPaint
                 {
                     IsAntialias = true,
                     FilterQuality = SKFilterQuality.High

@@ -1,0 +1,15 @@
+{
+  "width": 300,
+  "height": 185,
+  "padFactor": 1.2,
+  "watermark": {
+    "text": "MBT",
+    "fontFile": "../Fonts/OpenSans-Semibold.ttf",
+    "position": "BottomRight",
+    "textColor": "White",
+    "colors": [
+      "#512BD4",
+      "#AA66CC"
+    ]
+  }
+}

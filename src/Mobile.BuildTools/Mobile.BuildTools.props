@@ -3,7 +3,9 @@
 
   <PropertyGroup>
     <MobileBuildToolsTargets>$(MSBuildThisFileDirectory)Mobile.BuildTools.targets</MobileBuildToolsTargets>
-    <_MobileBuildToolsParentBuildTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.dll'))</_MobileBuildToolsParentBuildTasksDll>
+    <_MobileBuildToolsTaskFramework Condition="'$(MSBuildRuntimeType)' == 'Core'">net10.0</_MobileBuildToolsTaskFramework>
+    <_MobileBuildToolsTaskFramework Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_MobileBuildToolsTaskFramework>
+    <_MobileBuildToolsParentBuildTasksDll>$(MSBuildThisFileDirectory)tasks/$(_MobileBuildToolsTaskFramework)/Mobile.BuildTools.dll</_MobileBuildToolsParentBuildTasksDll>
     <BuildToolsArtifactOutputPath Condition=" '$(BuildToolsArtifactOutputPath)' == '' ">$([System.IO.Path]::Combine('$(SolutionDir)', 'Artifacts'))</BuildToolsArtifactOutputPath>
     <BuildToolsArtifactOutputPath Condition=" '$(BUILD_ARTIFACTSTAGINGDIRECTORY)' != '' ">$([System.IO.Path]::Combine('$(BUILD_ARTIFACTSTAGINGDIRECTORY)', 'App'))</BuildToolsArtifactOutputPath>
   </PropertyGroup>

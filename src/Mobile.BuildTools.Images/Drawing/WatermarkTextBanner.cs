@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Linq;
 using Mobile.BuildTools.Models.AppIcons;
 using SkiaSharp;
@@ -31,11 +31,15 @@ namespace Mobile.BuildTools.Drawing
             // Undo the original scaling factor to simplify the rendering.
             canvas.Scale(originalScale.X, originalScale.Y);
 
+            if (string.IsNullOrEmpty(configuration.Text))
+                return;
+
             var settings = WatermarkSettings.FromConfig(configuration);
+            using var typeface = !string.IsNullOrEmpty(configuration.FontFile) || !string.IsNullOrEmpty(configuration.FontFamily) ? settings.Typeface : null;
             var bannerHeight = (float)(context.Size.Width / 4.5);
             var (start, end) = GetBannerLocations(settings.Position, context.Size, (float)bannerHeight);
 
-            var shader = SKShader.CreateLinearGradient(
+            using var shader = SKShader.CreateLinearGradient(
                 start,
                 end,
                 settings.Colors.Select(c => c.WithAlpha((byte)(0xFF * context.Opacity))).ToArray(),
@@ -48,7 +52,7 @@ namespace Mobile.BuildTools.Drawing
                 StrokeWidth = bannerHeight,
                 Style = SKPaintStyle.Stroke
             };
-            var path = new SKPath();
+            using var path = new SKPath();
             path.MoveTo(start);
             path.LineTo(end);
 

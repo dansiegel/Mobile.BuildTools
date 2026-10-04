@@ -1,4 +1,4 @@
-﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Framework;
 using Mobile.BuildTools.Models;
 using Mobile.BuildTools.Models.Settings;
 using Mobile.BuildTools.Utils;
@@ -68,7 +68,7 @@ namespace Mobile.BuildTools.Tasks
             // Only run these tasks for Android and iOS projects if they're not explicitly disabled
             EnableArtifactCopy = !crossTargetingProject && IsEnabled(configuration?.ArtifactCopy) && isPlatformHead;
             EnableAutomaticVersioning = !crossTargetingProject && configuration.AutomaticVersioning is not null && configuration.AutomaticVersioning.Behavior != VersionBehavior.Off && isPlatformHead;
-            EnableImageProcessing = !crossTargetingProject && IsEnabled(configuration?.Images) && (platform == Platform.iOS || platform == Platform.Android);
+            EnableImageProcessing = !crossTargetingProject && IsEnabled(configuration?.Images);
             EnableTemplateManifests = !crossTargetingProject && IsEnabled(configuration?.Manifests) && isPlatformHead;
             EnableReleaseNotes = IsEnabled(configuration?.ReleaseNotes) && isPlatformHead && EnvironmentAnalyzer.IsInGitRepo(ProjectDir);
 

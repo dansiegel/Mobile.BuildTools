@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
     <_NativeRuntime>win-x64</_NativeRuntime>
-    <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
+    <_NativeRuntime Condition=" $([MSBuild]::IsOSPlatform('OSX'))">osx-x64</_NativeRuntime>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,13 +44,21 @@
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" NoWarn="NU1903" />
+    <!-- Task packages keep these private; the test host needs its own runtime graph. -->
+    <PackageReference Include="Svg.Skia" />
+    <PackageReference Include="HarfBuzzSharp" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
+    <PackageReference Include="Microsoft.Web.Xdt" />
+    <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Mobile.BuildTools.AppManifests\Mobile.BuildTools.AppManifests.csproj" />
     <ProjectReference Include="..\..\src\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj" />
+    <ProjectReference Include="..\..\src\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" />
     <ProjectReference Include="..\..\src\Mobile.BuildTools\Mobile.BuildTools.csproj" />
   </ItemGroup>
 

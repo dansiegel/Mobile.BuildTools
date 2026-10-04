@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,9 +17,9 @@ namespace Mobile.BuildTools.Tests.Fixtures.Tasks
         public CollectImageAssetsTaskFixture(ITestOutputHelper testOutputHelper)
             : base(testOutputHelper)
         {
-            Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "debug"));
-            Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "release"));
-            Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "sample"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "Images", "debug"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "Images", "release"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "Images", "sample"));
             Directory.CreateDirectory(Path.Combine(ConfigPath, "PlatformSpecific"));
             Directory.CreateDirectory(Path.Combine(ConfigPath, "ShouldNotBeIncluded"));
             Directory.CreateDirectory(Path.Combine(ConfigPath, "DebugSpecific"));

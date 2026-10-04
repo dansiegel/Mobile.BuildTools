@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,17 +14,17 @@ namespace Mobile.BuildTools.Utils
             if (string.IsNullOrEmpty(buildToolsConfigPath))
                 return Array.Empty<string>();
 
-            if(!File.GetAttributes(buildToolsConfigPath).HasFlag(FileAttributes.Directory))
+            if (File.Exists(buildToolsConfigPath) || (!Directory.Exists(buildToolsConfigPath) && Path.HasExtension(buildToolsConfigPath)))
             {
                 buildToolsConfigPath = new FileInfo(buildToolsConfigPath).DirectoryName;
             }
 
             var searchPaths = new List<string>();
-            var imageConfig = config.Images;
-            var cliSearchPaths = !string.IsNullOrEmpty(additionalSearchPaths) ? additionalSearchPaths.Split(';') : Array.Empty<string>();
+            var imageConfig = config?.Images;
+            var cliSearchPaths = !string.IsNullOrEmpty(additionalSearchPaths) ? additionalSearchPaths.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
             if (cliSearchPaths.Any())
             {
-                searchPaths.AddRange(additionalSearchPaths.Split(';').Select(x => GetSearchPath(x, buildToolsConfigPath)));
+                searchPaths.AddRange(additionalSearchPaths.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => GetSearchPath(x, buildToolsConfigPath)));
             }
 
             if (cliSearchPaths.Any() && ignoreDefaultSearchPaths.HasValue && ignoreDefaultSearchPaths.Value)
@@ -40,10 +40,12 @@ namespace Mobile.BuildTools.Utils
 
             var monoandroidKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "monoandroid", "android", "droid");
             var xamariniOSKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "xamarin.ios", "xamarinios", "ios", "apple");
-            var xamarinMacKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "xamarin.mac", "xamarinmac", "mac", "apple");
+            var xamarinMacKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "maccatalyst", "macos", "xamarin.mac", "xamarinmac", "mac", "apple");
             var xamarinTVOSKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "xamarin.tvos", "xamarintvos", "tvos", "apple");
 
-            var platformKeys = new[] { monoandroidKey, xamariniOSKey, xamarinMacKey, xamarinTVOSKey }.Where(x => x != null);
+            var windowsKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "windows", "winui", "uwp");
+            var webAssemblyKey = GetKey(imageConfig?.ConditionalDirectories?.Keys, "browserwasm", "wasm", "webassembly");
+            var platformKeys = new[] { monoandroidKey, xamariniOSKey, xamarinMacKey, xamarinTVOSKey, windowsKey, webAssemblyKey }.Where(x => x != null);
 
             switch (platform)
             {
@@ -58,6 +60,15 @@ namespace Mobile.BuildTools.Utils
                 case Platform.macOS:
                     if (!string.IsNullOrEmpty(xamarinMacKey))
                         searchPaths.AddRange(imageConfig.ConditionalDirectories[xamarinMacKey].Select(x => GetSearchPath(x, buildToolsConfigPath)));
+                    break;
+                case Platform.Windows:
+                case Platform.UWP:
+                    if (!string.IsNullOrEmpty(windowsKey))
+                        searchPaths.AddRange(imageConfig.ConditionalDirectories[windowsKey].Select(x => GetSearchPath(x, buildToolsConfigPath)));
+                    break;
+                case Platform.WebAssembly:
+                    if (!string.IsNullOrEmpty(webAssemblyKey))
+                        searchPaths.AddRange(imageConfig.ConditionalDirectories[webAssemblyKey].Select(x => GetSearchPath(x, buildToolsConfigPath)));
                     break;
                 case Platform.TVOS:
                     if (!string.IsNullOrEmpty(xamarinTVOSKey))
@@ -99,8 +110,8 @@ namespace Mobile.BuildTools.Utils
             if (condition.Equals(buildConfiguration, StringComparison.InvariantCultureIgnoreCase))
                 return true;
 
-            if (condition[0] == '!')
-                return true;
+            if (!string.IsNullOrEmpty(condition) && condition[0] == '!')
+                return !condition.Substring(1).Equals(buildConfiguration, StringComparison.InvariantCultureIgnoreCase);
 
             return false;
         }
@@ -121,8 +132,12 @@ namespace Mobile.BuildTools.Utils
 
         private static string GetSearchPath(string directory, string buildToolsConfigPath)
         {
-            if (Uri.TryCreate(directory, UriKind.RelativeOrAbsolute, out var result) && result.IsAbsoluteUri)
+            if (string.IsNullOrWhiteSpace(directory))
+                return null;
+            if (Path.IsPathRooted(directory))
                 return directory;
+            if (Uri.TryCreate(directory, UriKind.Absolute, out var result) && result.IsFile)
+                return result.LocalPath;
 
             var sanitizedDirectoryPath = Path.Combine(directory.Split('/', '\\'));
             return Path.Combine(buildToolsConfigPath, sanitizedDirectoryPath);

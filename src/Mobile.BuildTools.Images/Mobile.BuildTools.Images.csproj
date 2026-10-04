@@ -1,11 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFrameworks>net472;net10.0</TargetFrameworks>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackFolder>build</PackFolder>
+    <PackFolder>build/tasks/$(TargetFramework)</PackFolder>
+    <MobileBuildToolsTaskPackage>true</MobileBuildToolsTaskPackage>
+    <TaskPackageBuildFolder>build</TaskPackageBuildFolder>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
     <IncludeSource>false</IncludeSource>
   </PropertyGroup>
 
@@ -19,8 +23,10 @@
 
   <ItemGroup>
     <PackageReference Include="HarfBuzzSharp" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build" Pack="false" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" PrivateAssets="all" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build" Pack="false" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" ExcludeAssets="runtime" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
     <PackageReference Include="PolySharp">
       <PrivateAssets>all</PrivateAssets>
@@ -29,6 +35,7 @@
     <PackageReference Include="ShimSkiaSharp" PrivateAssets="all" />
     <PackageReference Include="Svg.Skia" PrivateAssets="all" />
     <PackageReference Include="System.Buffers" PrivateAssets="all" />
+    <PackageReference Include="System.ComponentModel.Annotations" PrivateAssets="all" />
     <PackageReference Include="System.IO.UnmanagedMemoryStream" PrivateAssets="all" />
     <PackageReference Include="System.Numerics.Vectors" PrivateAssets="all" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" PrivateAssets="all" />
@@ -36,7 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="build" />
+    <ProjectReference Include="..\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj" PackFolder="$(PackFolder)" />
   </ItemGroup>
 
   <Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">

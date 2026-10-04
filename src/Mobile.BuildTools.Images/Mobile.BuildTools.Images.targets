@@ -1,73 +1,108 @@
 <Project>
-
   <PropertyGroup>
-    <_MobileBuildToolsImagesParentBuildTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Images.dll'))</_MobileBuildToolsImagesParentBuildTasksDll>
+    <_MobileBuildToolsImagesTaskFramework Condition="'$(MSBuildRuntimeType)' == 'Core'">net10.0</_MobileBuildToolsImagesTaskFramework>
+    <_MobileBuildToolsImagesTaskFramework Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_MobileBuildToolsImagesTaskFramework>
+    <_MobileBuildToolsImagesParentBuildTasksDll>$(MSBuildThisFileDirectory)tasks/$(_MobileBuildToolsImagesTaskFramework)/Mobile.BuildTools.Images.dll</_MobileBuildToolsImagesParentBuildTasksDll>
+    <_MobileBuildToolsImagesPlatformIdentifier>$(TargetPlatformIdentifier)</_MobileBuildToolsImagesPlatformIdentifier>
+    <_MobileBuildToolsImagesPlatformIdentifier Condition="'$(_MobileBuildToolsImagesPlatformIdentifier)' == '' and '$(TargetFramework)' != ''">$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</_MobileBuildToolsImagesPlatformIdentifier>
   </PropertyGroup>
 
-  <UsingTask TaskName="Mobile.BuildTools.Tasks.CollectImageAssetsTask"
-             AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)"/>
-  <UsingTask TaskName="Mobile.BuildTools.Tasks.ImageResizerTask"
-             AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)"/>
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.CollectImageAssetsTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.ImageResizerTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.PrepareNativeImageAssetsTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
 
-  <Import Project="Android.targets"
-          Condition="$(TargetFrameworkIdentifier) == 'MonoAndroid'" />
-  <Import Project="Android.targets"
-          Condition="$(TargetFramework.EndsWith('-android'))" />
-  <Import Project="Apple.targets"
-          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.iOS'" />
-  <Import Project="Apple.targets"
-          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.TVOS'" />
-  <Import Project="Apple.targets"
-          Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'" />
-  <Import Project="Apple.targets"
-          Condition="$(TargetFramework.EndsWith('-ios'))" />
-  <Import Project="Apple.targets"
-          Condition="$(TargetFramework.EndsWith('-maccatalyst'))" />
-  <Import Project="Windows.targets"
-          Condition="$(TargetFrameworkIdentifier) == 'UAP'" />
+  <Import Project="Android.targets" Condition="'$(TargetFrameworkIdentifier)' == 'MonoAndroid' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'android'" />
+  <Import Project="Apple.targets" Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' or '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS' or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'ios' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'maccatalyst' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'macos' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'tvos'" />
+  <Import Project="Windows.targets" Condition="'$(TargetFrameworkIdentifier)' == 'UAP' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'windows'" />
+  <PropertyGroup>
+    <_MobileBuildToolsLegacyImagesSupported Condition="'$(TargetFrameworkIdentifier)' == 'MonoAndroid' or '$(TargetFrameworkIdentifier)' == 'UAP' or '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' or '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS' or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'android' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'ios' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'maccatalyst' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'macos' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'tvos' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'windows'">true</_MobileBuildToolsLegacyImagesSupported>
+  </PropertyGroup>
 
+  <!-- Prepare before framework item export, icon mapping, and input hashing. Uno's Android
+       design-time splash/resource hooks must remain active. -->
+  <Target Name="_MobileBuildToolsPrepareNativeImages"
+          BeforeTargets="GetMauiItems;ResizetizeCollectItems;GetUnoItems;UnoResizetizeCollectItems;ValidateAvailableItems;UpdatePathOfUnoIcon;GenerateUnoSplashScreens;GenerateUnoSplashAndroid"
+          DependsOnTargets="MobileBuildToolsInit"
+          Condition="'$(IsCrossTargetingBuild)' != 'true'">
+    <ItemGroup Condition="'$(BuildToolsEnableImageProcessing)' == 'true'">
+      <_MobileBuildToolsNativeImage Include="@(MauiImage)" MobileBuildToolsItemType="MauiImage" />
+      <_MobileBuildToolsNativeImage Include="@(MauiIcon)" MobileBuildToolsItemType="MauiIcon" />
+      <_MobileBuildToolsNativeImage Include="@(MauiSplashScreen)" MobileBuildToolsItemType="MauiSplashScreen" />
+      <_MobileBuildToolsNativeImage Include="@(UnoImage)" MobileBuildToolsItemType="UnoImage" />
+      <_MobileBuildToolsNativeImage Include="@(UnoIcon)" MobileBuildToolsItemType="UnoIcon" />
+      <_MobileBuildToolsNativeImage Include="@(UnoSplashScreen)" MobileBuildToolsItemType="UnoSplashScreen" />
+    </ItemGroup>
+    <PrepareNativeImageAssetsTask Condition="'@(_MobileBuildToolsNativeImage)' != ''"
+                                 Images="@(_MobileBuildToolsNativeImage)"
+                                 ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                 ProjectName="$(MSBuildProjectName)"
+                                 ProjectDirectory="$(MSBuildProjectDirectory)"
+                                 SolutionDirectory="$(SolutionDir)"
+                                 Configuration="$(Configuration)"
+                                 IntermediateOutputPath="$(IntermediateOutputPath)"
+                                 TargetFrameworkIdentifier="$(TargetFramework)"
+                                 RuntimeIdentifier="$(RuntimeIdentifier)"
+                                 AdditionalSearchPaths="$(BuildToolsImageSearchPath)"
+                                 IgnoreDefaultSearchPaths="$(BuildToolsIgnoreDefaultSearchPath)">
+      <Output ItemName="_MobileBuildToolsPreparedNativeImage" TaskParameter="PreparedImages" />
+      <Output ItemName="FileWrites" TaskParameter="FileWrites" />
+    </PrepareNativeImageAssetsTask>
+    <ItemGroup Condition="'@(_MobileBuildToolsNativeImage)' != ''">
+      <MauiImage Remove="@(MauiImage)" />
+      <MauiImage Include="@(_MobileBuildToolsPreparedNativeImage)" Condition="'%(_MobileBuildToolsPreparedNativeImage.MobileBuildToolsItemType)' == 'MauiImage'" />
+      <MauiIcon Remove="@(MauiIcon)" />
+      <MauiIcon Include="@(_MobileBuildToolsPreparedNativeImage)" Condition="'%(_MobileBuildToolsPreparedNativeImage.MobileBuildToolsItemType)' == 'MauiIcon'" />
+      <MauiSplashScreen Remove="@(MauiSplashScreen)" />
+      <MauiSplashScreen Include="@(_MobileBuildToolsPreparedNativeImage)" Condition="'%(_MobileBuildToolsPreparedNativeImage.MobileBuildToolsItemType)' == 'MauiSplashScreen'" />
+      <UnoImage Remove="@(UnoImage)" />
+      <UnoImage Include="@(_MobileBuildToolsPreparedNativeImage)" Condition="'%(_MobileBuildToolsPreparedNativeImage.MobileBuildToolsItemType)' == 'UnoImage'" />
+      <UnoIcon Remove="@(UnoIcon)" />
+      <UnoIcon Include="@(_MobileBuildToolsPreparedNativeImage)" Condition="'%(_MobileBuildToolsPreparedNativeImage.MobileBuildToolsItemType)' == 'UnoIcon'" />
+      <UnoSplashScreen Remove="@(UnoSplashScreen)" />
+      <UnoSplashScreen Include="@(_MobileBuildToolsPreparedNativeImage)" Condition="'%(_MobileBuildToolsPreparedNativeImage.MobileBuildToolsItemType)' == 'UnoSplashScreen'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- The legacy density generators are only used without a native MAUI/Uno resizetizer. -->
   <Target Name="_CollectImageAssets"
           BeforeTargets="CoreCompile"
           AfterTargets="MobileBuildToolsInit"
-          Condition=" $(BuildToolsEnableImageProcessing) ">
+          Condition="'$(_MobileBuildToolsLegacyImagesSupported)' == 'true' and '$(BuildToolsEnableImageProcessing)' == 'true' and '$(IsCrossTargetingBuild)' != 'true' and '$(UseMaui)' != 'true' and '$(UnoResizetizer)' != 'true' and '$(_UnoResizetizerTaskAssemblyName)' == '' and '@(MauiImage);@(MauiIcon);@(MauiSplashScreen);@(UnoImage);@(UnoIcon);@(UnoSplashScreen)' == ';;;;;'">
     <PropertyGroup>
-      <SingleProject Condition=" '$(SingleProject)' == '' ">False</SingleProject>
+      <SingleProject Condition="'$(SingleProject)' == ''">false</SingleProject>
     </PropertyGroup>
     <CollectImageAssetsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                             ProjectName="$(MSBuildProjectName)"
                             ProjectDirectory="$(MSBuildProjectDirectory)"
                             SolutionDirectory="$(SolutionDir)"
+                            Configuration="$(Configuration)"
                             IntermediateOutputPath="$(IntermediateOutputPath)"
                             TargetFrameworkIdentifier="$(TargetFramework)"
                             AdditionalSearchPaths="$(BuildToolsImageSearchPath)"
                             IgnoreDefaultSearchPaths="$(BuildToolsIgnoreDefaultSearchPath)"
                             SingleProject="$(SingleProject)">
-      <Output ItemName="UnifiedImageAsset"
-              TaskParameter="GeneratedImages" />
-      <Output ItemName="UnifiedImageAssetSource"
-              TaskParameter="SourceImages" />
-      <Output PropertyName="BuildToolsBundleUnifiedImages"
-              TaskParameter="HasImages" />
+      <Output ItemName="UnifiedImageAsset" TaskParameter="GeneratedImages" />
+      <Output ItemName="UnifiedImageAssetSource" TaskParameter="SourceImages" />
+      <Output PropertyName="BuildToolsBundleUnifiedImages" TaskParameter="HasImages" />
     </CollectImageAssetsTask>
   </Target>
 
+  <!-- Content fingerprints are evaluated by the task, including sidecars, fonts, watermark,
+       configuration, and the task assembly, even when input timestamps are unchanged. -->
   <Target Name="UnifiedImageAssetProcessing"
           AfterTargets="_CollectImageAssets"
-          Condition=" $(BuildToolsEnableImageProcessing) "
-          Inputs="@(UnifiedImageAssetSource)"
-          Outputs="@(UnifiedImageAsset)">
+          Condition="'$(BuildToolsEnableImageProcessing)' == 'true' and '@(UnifiedImageAsset)' != ''">
     <ImageResizerTask ConfigurationPath="$(BuildToolsConfigFilePath)"
                       ProjectName="$(MSBuildProjectName)"
                       ProjectDirectory="$(MSBuildProjectDirectory)"
                       SolutionDirectory="$(SolutionDir)"
+                      Configuration="$(Configuration)"
                       IntermediateOutputPath="$(IntermediateOutputPath)"
                       TargetFrameworkIdentifier="$(TargetFramework)"
-                      Images="@(UnifiedImageAsset)">
-      <Output ItemName="GeneratedFile"
-              TaskParameter="GeneratedImages"/>
-      <Output ItemName="FilesWrite"
-              TaskParameter="GeneratedImages"/>
+                      Images="@(UnifiedImageAsset)"
+                      SourceFiles="@(UnifiedImageAssetSource)">
+      <Output ItemName="GeneratedFile" TaskParameter="GeneratedImages" />
+      <Output ItemName="FileWrites" TaskParameter="FileWrites" />
     </ImageResizerTask>
   </Target>
-
 </Project>

@@ -4,6 +4,27 @@
     <NoWarn>$(NoWarn);NU1903</NoWarn>
   </PropertyGroup>
 
+  <!-- MSBuild loads tasks in its own runtime, independently of the app target framework.
+       Keep build imports at the package root and both task hosts with their dependencies. -->
+  <ItemGroup Condition="'$(MobileBuildToolsTaskPackage)' == 'true'">
+    <None Update="*.props;*.targets" Pack="true" PackFolder="$(TaskPackageBuildFolder)" />
+    <None Include="$(TargetDir)$(AssemblyName).deps.json"
+          Pack="true" PackagePath="$(PackFolder)/$(AssemblyName).deps.json"
+          Condition="'$(TargetFramework)' == 'net10.0'" />
+  </ItemGroup>
+
+  <Target Name="PackTaskRuntimeAssets" BeforeTargets="GetPackageContents"
+          Condition="'$(MobileBuildToolsTaskPackage)' == 'true' and '$(TargetFramework)' != ''">
+    <ItemGroup>
+      <!-- Preserve the SDK's complete runtime layout. NuGetizer otherwise drops native
+           RIDs with identical filenames and shared assemblies also owned by Core. -->
+      <PackageFile Remove="@(ReferenceCopyLocalPaths)" />
+      <PackageFile Include="@(ReferenceCopyLocalPaths)"
+                   PackagePath="$(PackFolder)/%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(Filename)%(Extension)"
+                   Condition="!$([System.String]::Copy('%(Filename)').StartsWith('Microsoft.Build'))" />
+    </ItemGroup>
+  </Target>
+
   <!--<Target Name="BundlePackageBuildPropsAndTargets"
           BeforeTargets="Build;CoreBuild;CoreCompile;Pack">
 

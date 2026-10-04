@@ -1,0 +1,75 @@
+<Project>
+  <Target Name="_MBTPrepareWindowsManifest"
+          BeforeTargets="MauiGeneratePackageAppxManifest;UnoGeneratePackageAppxManifest;_ValidatePresenceOfAppxManifestItems;_GenerateAppxManifest"
+          DependsOnTargets="MobileBuildToolsInit"
+          Condition="'$(IsCrossTargetingBuild)' != 'true'">
+    <TransformManifestItemsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                ProjectName="$(MSBuildProjectName)"
+                                ProjectDirectory="$(MSBuildProjectDirectory)"
+                                SolutionDirectory="$(SolutionDir)"
+                                Configuration="$(Configuration)"
+                                IntermediateOutputPath="$(IntermediateOutputPath)"
+                                TargetFrameworkIdentifier="$(TargetFramework)"
+                                Manifests="@(AppxManifest)"
+                                OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/manifests/$(TargetFramework)/$(RuntimeIdentifier)/windows"
+                                ReplaceTokens="$(BuildToolsEnableTemplateManifests)" Condition="'$(BuildToolsEnableTemplateManifests)' == 'true' And '@(AppxManifest)' != ''">
+      <Output TaskParameter="ProcessedManifests" ItemName="_MBTAppxManifest" />
+      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
+    </TransformManifestItemsTask>
+    <ItemGroup Condition="'$(BuildToolsEnableTemplateManifests)' == 'true' And '@(_MBTAppxManifest)' != ''">
+      <AppxManifest Remove="@(AppxManifest)" />
+      <AppxManifest Include="@(_MBTAppxManifest)" />
+    </ItemGroup>
+    <TransformManifestItemsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                ProjectName="$(MSBuildProjectName)"
+                                ProjectDirectory="$(MSBuildProjectDirectory)"
+                                SolutionDirectory="$(SolutionDir)"
+                                Configuration="$(Configuration)"
+                                IntermediateOutputPath="$(IntermediateOutputPath)"
+                                TargetFrameworkIdentifier="$(TargetFramework)"
+                                Manifests="@(_MauiAppxManifest)"
+                                OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/manifests/$(TargetFramework)/$(RuntimeIdentifier)/windows"
+                                ReplaceTokens="$(BuildToolsEnableTemplateManifests)" Condition="'$(BuildToolsEnableTemplateManifests)' == 'true' And '@(_MauiAppxManifest)' != ''">
+      <Output TaskParameter="ProcessedManifests" ItemName="_MBT_MauiAppxManifest" />
+      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
+    </TransformManifestItemsTask>
+    <ItemGroup Condition="'$(BuildToolsEnableTemplateManifests)' == 'true' And '@(_MBT_MauiAppxManifest)' != ''">
+      <_MauiAppxManifest Remove="@(_MauiAppxManifest)" />
+      <_MauiAppxManifest Include="@(_MBT_MauiAppxManifest)" />
+    </ItemGroup>
+    <TransformManifestItemsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                ProjectName="$(MSBuildProjectName)"
+                                ProjectDirectory="$(MSBuildProjectDirectory)"
+                                SolutionDirectory="$(SolutionDir)"
+                                Configuration="$(Configuration)"
+                                IntermediateOutputPath="$(IntermediateOutputPath)"
+                                TargetFrameworkIdentifier="$(TargetFramework)"
+                                Manifests="@(_UnoAppxManifest)"
+                                OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/manifests/$(TargetFramework)/$(RuntimeIdentifier)/windows"
+                                ReplaceTokens="$(BuildToolsEnableTemplateManifests)" Condition="'$(BuildToolsEnableTemplateManifests)' == 'true' And '@(_UnoAppxManifest)' != ''">
+      <Output TaskParameter="ProcessedManifests" ItemName="_MBT_UnoAppxManifest" />
+      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
+    </TransformManifestItemsTask>
+    <ItemGroup Condition="'$(BuildToolsEnableTemplateManifests)' == 'true' And '@(_MBT_UnoAppxManifest)' != ''">
+      <_UnoAppxManifest Remove="@(_UnoAppxManifest)" />
+      <_UnoAppxManifest Include="@(_MBT_UnoAppxManifest)" />
+    </ItemGroup>
+    <TransformManifestItemsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                ProjectName="$(MSBuildProjectName)"
+                                ProjectDirectory="$(MSBuildProjectDirectory)"
+                                SolutionDirectory="$(SolutionDir)"
+                                Configuration="$(Configuration)"
+                                IntermediateOutputPath="$(IntermediateOutputPath)"
+                                TargetFrameworkIdentifier="$(TargetFramework)"
+                                Manifests="@(_SkiaManifest)"
+                                OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/manifests/$(TargetFramework)/$(RuntimeIdentifier)/windows"
+                                ReplaceTokens="$(BuildToolsEnableTemplateManifests)" Condition="'$(BuildToolsEnableTemplateManifests)' == 'true' And '@(_SkiaManifest)' != ''">
+      <Output TaskParameter="ProcessedManifests" ItemName="_MBT_SkiaManifest" />
+      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
+    </TransformManifestItemsTask>
+    <ItemGroup Condition="'$(BuildToolsEnableTemplateManifests)' == 'true' And '@(_MBT_SkiaManifest)' != ''">
+      <_SkiaManifest Remove="@(_SkiaManifest)" />
+      <_SkiaManifest Include="@(_MBT_SkiaManifest)" />
+    </ItemGroup>
+  </Target>
+</Project>

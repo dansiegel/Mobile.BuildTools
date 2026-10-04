@@ -1,7 +1,9 @@
 <Project>
   <PropertyGroup>
     <MobileBuildToolsInitDependsOn>_LocateBuildToolsConfig</MobileBuildToolsInitDependsOn>
-    <_MobileBuildToolsCoreParentBuildTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.Core.dll'))</_MobileBuildToolsCoreParentBuildTasksDll>
+    <_MobileBuildToolsCoreTaskFramework Condition="'$(MSBuildRuntimeType)' == 'Core'">net10.0</_MobileBuildToolsCoreTaskFramework>
+    <_MobileBuildToolsCoreTaskFramework Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_MobileBuildToolsCoreTaskFramework>
+    <_MobileBuildToolsCoreParentBuildTasksDll>$(MSBuildThisFileDirectory)tasks/$(_MobileBuildToolsCoreTaskFramework)/Mobile.BuildTools.Core.dll</_MobileBuildToolsCoreParentBuildTasksDll>
   </PropertyGroup>
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.LocateBuildToolsConfigTask"

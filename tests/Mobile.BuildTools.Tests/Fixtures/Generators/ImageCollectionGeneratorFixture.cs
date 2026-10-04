@@ -16,8 +16,8 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
     {
         protected string PlatformImageDirectory => GetPlatformImageDirectory(Platform);
 
-        // 4 images with 4 generated configs
-        protected const int ImageCount = 4 + 4;
+        // Only existing sidecars are inputs; collection must never create them.
+        protected int ImageCount => 4 + Directory.GetFiles(ImageDirectory, "*.json").Length;
         protected int PlatformOffset = 0;
         protected abstract Platform Platform { get; }
         protected string PlatformIcon => GetPlatformIconPath(Platform);
@@ -91,14 +91,18 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Fact]
-        public void GeneratesJsonDefinition()
+        public void UsesDefaultsWithoutWritingSourceSidecars()
         {
             var config = GetConfiguration();
-            var generator = CreateGenerator(config, ImageDirectory);
+            var sourceDirectory = Path.Combine(config.ProjectDirectory, "clean-images");
+            Directory.CreateDirectory(sourceDirectory);
+            File.Copy(Path.Combine(ImageDirectory, "dotnetbot.png"), Path.Combine(sourceDirectory, "dotnetbot.png"));
+            var generator = CreateGenerator(config, sourceDirectory);
             generator.Execute();
 
-            Assert.True(File.Exists(Path.Combine(ImageDirectory, "dotnetbot.json")));
-            Assert.True(File.Exists(Path.Combine(ImageDirectory, "programmer-clipart.json")));
+            Assert.Single(generator.ImageInputFiles);
+            Assert.NotEmpty(generator.Outputs);
+            Assert.False(File.Exists(Path.Combine(sourceDirectory, "dotnetbot.json")));
         }
 
         [Fact]
@@ -180,7 +184,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
             generator.Execute();
 
             var outputImage = generator.Outputs.Last();
-            Assert.Equal("Templates\\Images\\Debug\\example.png", outputImage.Watermark.SourceFile);
+            Assert.Equal(Path.Combine("Templates", "Images", "Debug", "example.png"), outputImage.Watermark.SourceFile);
         }
 
         [Theory]

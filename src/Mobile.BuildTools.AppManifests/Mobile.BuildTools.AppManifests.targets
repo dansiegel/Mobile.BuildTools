@@ -1,37 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
   <PropertyGroup>
-    <_MobileBuildToolsAppManifestTasksDll>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Mobile.BuildTools.dll'))</_MobileBuildToolsAppManifestTasksDll>
+    <_MobileBuildToolsTaskHost Condition="'$(MSBuildRuntimeType)' == 'Core'">net10.0</_MobileBuildToolsTaskHost>
+    <_MobileBuildToolsTaskHost Condition="'$(_MobileBuildToolsTaskHost)' == ''">net472</_MobileBuildToolsTaskHost>
+    <_MobileBuildToolsAppManifestTasksDll>$(MSBuildThisFileDirectory)tasks/$(_MobileBuildToolsTaskHost)/Mobile.BuildTools.AppManifests.dll</_MobileBuildToolsAppManifestTasksDll>
+    <_MBTManifestPlatform>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</_MBTManifestPlatform>
   </PropertyGroup>
-
-  <UsingTask TaskName="Mobile.BuildTools.Tasks.AutomaticBuildVersioningTask"
-             AssemblyFile="$(_MobileBuildToolsAppManifestTasksDll)"/>
-  <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask"
-             AssemblyFile="$(_MobileBuildToolsAppManifestTasksDll)"/>
-
-  <Choose>
-    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' OR $(TargetFrameworkIdentifier) == 'MonoAndroid'">
-      <Import Project="AndroidManifest.targets" />
-    </When>
-    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR $(TargetFrameworkIdentifier) == 'Xamarin.iOS'">
-      <Import Project="AppleManifests.targets" />
-    </When>
-    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos' OR $(TargetFrameworkIdentifier) == 'Xamarin.Mac'">
-      <Import Project="AppleManifests.targets" />
-    </When>
-    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
-      <Import Project="AppleManifests.targets" />
-    </When>
-    <When Condition="$(TargetFramework.Contains('windows10'))">
-
-    </When>
-  </Choose>
-
-  <Target Name="_TemplateManifestDebug"
-          BeforeTargets="HandleTokenizedInfoPlist;HandleAndroidManifest"
-          Condition=" '$(MobileBuildToolsDebug)' == 'true' ">
-    <Message Text="Checking for Platform Template Configurations to Copy" />
-    <Message Text="SdkShortFrameworkIdentifier: '$(_SdkShortFrameworkIdentifier)'" />
-    <Message Text="Token: '$(ManifestToken)'" />
-  </Target>
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.AutomaticBuildVersioningTask" AssemblyFile="$(_MobileBuildToolsAppManifestTasksDll)" />
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.TemplateManifestTask" AssemblyFile="$(_MobileBuildToolsAppManifestTasksDll)" />
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.TransformManifestItemsTask" AssemblyFile="$(_MobileBuildToolsAppManifestTasksDll)" />
+  <Import Project="AndroidManifest.targets" Condition="'$(_MBTManifestPlatform)' == 'android' Or '$(TargetFrameworkIdentifier)' == 'MonoAndroid'" />
+  <Import Project="AppleManifests.targets" Condition="'$(_MBTManifestPlatform)' == 'ios' Or '$(_MBTManifestPlatform)' == 'maccatalyst' Or '$(_MBTManifestPlatform)' == 'macos' Or '$(_MBTManifestPlatform)' == 'tvos' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'" />
+  <Import Project="WindowsManifest.targets" />
+  <Import Project="WebAssemblyManifest.targets" Condition="'$(_MBTManifestPlatform)' == 'browser' Or '$(RuntimeIdentifier)' == 'browser-wasm'" />
 </Project>
