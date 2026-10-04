@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:app="urn:e2e:application" package="com.example.packagesmoke">
+  <application app:label="$$SmokeLiteral$$" empty="$$SmokeEmpty$$">
+    <name>$$SmokeLiteral$$</name>
+    <literalKey>$$SmokeKey.+$$</literalKey>
+  </application>
+</manifest>

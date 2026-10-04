@@ -5,4 +5,67 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageSmokeManifest Include="Assets/PackageSmoke/Manifest.xml;Assets/PackageSmoke/Info.plist;Assets/PackageSmoke/manifest.json" />
+    <EmbeddedResource Include="Assets/PackageSmoke/*">
+      <LogicalName>E2E.Core.PackageSmoke.Inputs.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- Exercise the imported NuGet tasks in the real MSBuild host without requiring
+       a platform workload. The test project inspects only this consumer's outputs. -->
+  <Target Name="GeneratePackageSmokeAssets"
+          BeforeTargets="AssignTargetPaths"
+          DependsOnTargets="MobileBuildToolsInit"
+          Condition="'$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <PackageSmokeImage Include="$(IntermediateOutputPath)PackageSmoke/icon.png">
+        <InputFile>$(MSBuildProjectDirectory)/Assets/PackageSmoke/icon.svg</InputFile>
+        <Width>64</Width>
+        <Height>32</Height>
+      </PackageSmokeImage>
+      <PackageSmokeImage Include="$(IntermediateOutputPath)PackageSmoke/text.png">
+        <InputFile>$(MSBuildProjectDirectory)/Assets/PackageSmoke/text.svg</InputFile>
+        <Width>320</Width>
+        <Height>80</Height>
+      </PackageSmokeImage>
+    </ItemGroup>
+
+    <!-- A cached PNG must not hide a missing native runtime on a later smoke build. -->
+    <Delete Files="@(PackageSmokeImage);@(PackageSmokeImage->'%(Identity).inputs')" />
+    <ImageResizerTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                      ProjectName="$(MSBuildProjectName)"
+                      ProjectDirectory="$(MSBuildProjectDirectory)"
+                      SolutionDirectory="$(SolutionDir)"
+                      Configuration="$(Configuration)"
+                      IntermediateOutputPath="$(IntermediateOutputPath)"
+                      TargetFrameworkIdentifier="$(TargetFramework)"
+                      Images="@(PackageSmokeImage)">
+      <Output TaskParameter="GeneratedImages" ItemName="PackageSmokeGeneratedImage" />
+      <Output TaskParameter="FileWrites" ItemName="FileWrites" />
+    </ImageResizerTask>
+
+    <TransformManifestItemsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                ProjectName="$(MSBuildProjectName)"
+                                ProjectDirectory="$(MSBuildProjectDirectory)"
+                                SolutionDirectory="$(SolutionDir)"
+                                Configuration="$(Configuration)"
+                                IntermediateOutputPath="$(IntermediateOutputPath)"
+                                TargetFrameworkIdentifier="$(TargetFramework)"
+                                Manifests="@(PackageSmokeManifest)"
+                                OutputDirectory="$(IntermediateOutputPath)PackageSmoke/Manifests"
+                                ApplyPackageName="false">
+      <Output TaskParameter="ProcessedManifests" ItemName="PackageSmokeGeneratedManifest" />
+      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
+    </TransformManifestItemsTask>
+
+    <Error Condition="'@(PackageSmokeGeneratedImage->Count())' != '2'" Text="The packaged Images task did not generate both smoke images." />
+    <Error Condition="'@(PackageSmokeGeneratedManifest->Count())' != '3'" Text="The packaged AppManifests task did not generate all three smoke manifests." />
+    <ItemGroup>
+      <EmbeddedResource Include="@(PackageSmokeGeneratedImage);@(PackageSmokeGeneratedManifest)">
+        <LogicalName>E2E.Core.PackageSmoke.Outputs.%(Filename)%(Extension)</LogicalName>
+      </EmbeddedResource>
+    </ItemGroup>
+  </Target>
+
 </Project>

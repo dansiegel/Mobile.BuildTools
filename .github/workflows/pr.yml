@@ -12,66 +12,42 @@ on:
     - 'samples/AppManifestsSample/**'
 
 jobs:
-  # Keep the existing whole-solution gate, including Configuration and AppSettings coverage.
   build:
     uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
     with:
-      name: Build Mobile.BuildTools solution
+      name: Build Mobile.BuildTools
       solution-path: Mobile.BuildTools.sln
       submodules: true
       dotnet-version: '10.0.x'
       install-workload: 'maui macos'
       vs-version: '18.0'
-      artifact-name: FullSolutionNuGet
       build-args: /p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
 
-  assets:
-    name: Task packages (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: true
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-      - name: Build task packages for both MSBuild hosts
-        run: |
-          dotnet build src/Mobile.BuildTools.Core/Mobile.BuildTools.Core.csproj -c Release -p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
-          dotnet build src/Mobile.BuildTools.AppManifests/Mobile.BuildTools.AppManifests.csproj -c Release -p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
-          dotnet build src/Mobile.BuildTools.Images/Mobile.BuildTools.Images.csproj -c Release -p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
-          dotnet build src/Mobile.BuildTools/Mobile.BuildTools.csproj -c Release -p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
-      - name: Run existing task regression tests
-        run: dotnet test tests/Mobile.BuildTools.Tests/Mobile.BuildTools.Tests.csproj -c Release -p:GeneratePackageOnBuild=false --logger trx
-      - uses: actions/upload-artifact@v4
-        if: matrix.os == 'ubuntu-latest'
-        with:
-          name: NuGet
-          path: Artifacts/*.nupkg
-
+  # Every host consumes the same NuGet artifact from build. Do not rebuild task
+  # projects or add runtime dependencies to hide a package's missing native assets.
   e2e:
-    needs: [assets]
+    needs: [build]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-      - uses: actions/download-artifact@v4
+      - name: Download NuGet Artifacts
+        uses: actions/download-artifact@v4
         with:
           name: NuGet
           path: Artifacts
-      - name: Run existing package-consumer tests
-        run: dotnet test -c Release
+      - name: Show consumer host runtime
+        run: dotnet --info
+      - name: Run Tests
+        run: dotnet test -c Release -p:GeneratedPackageVersion=2.1.0-ci.${{ github.run_number }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
         working-directory: E2E/E2E.Tests
         env:
           AString: 'Hello World!'
@@ -83,21 +59,29 @@ jobs:
           AUri: 'https://mobilebuildtools.com'
           AStringArray: 'Foo;Bar;Baz'
           APlatformProperty: 'Should Not Exist'
-
-  android:
-    name: MAUI Android sample
-    needs: [assets]
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - name: Setup MSBuild
+        if: runner.os == 'Windows'
+        uses: microsoft/setup-msbuild@v2
         with:
-          dotnet-version: '10.0.x'
-      - name: Install Android workload
+          vs-version: '18.0'
+      - name: Build package consumer with full MSBuild
+        if: runner.os == 'Windows'
+        run: msbuild E2E/E2E.Tests/E2E.Tests.csproj /t:Restore,Rebuild /p:Configuration=Release /p:GeneratedPackageVersion=2.1.0-ci.${{ github.run_number }} /p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+      - name: Verify full MSBuild consumer outputs
+        if: runner.os == 'Windows'
+        run: dotnet test E2E/E2E.Tests/E2E.Tests.csproj -c Release --no-build --no-restore -p:GeneratedPackageVersion=2.1.0-ci.${{ github.run_number }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+      - name: Setup Java for the Android consumer
+        uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: '21'
+      - name: Install supported MAUI consumer workloads
         run: dotnet workload install maui-android
-      - uses: actions/download-artifact@v4
-        with:
-          name: NuGet
-          path: Artifacts
-      - name: Build existing MAUI sample against this commit's packages
-        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -c Debug -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsVersion=2.1.0-ci.${{ github.run_number }}
+      - name: Build MAUI Android package consumer
+        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -c Debug -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsVersion=2.1.0-ci.${{ github.run_number }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+      - name: Install MAUI Windows consumer workload
+        if: runner.os == 'Windows'
+        run: dotnet workload install maui-windows
+      - name: Build MAUI Windows package consumer
+        if: runner.os == 'Windows'
+        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-windows10.0.19041.0 -c Debug -p:TargetFrameworks=net10.0-windows10.0.19041.0 -p:MobileBuildToolsVersion=2.1.0-ci.${{ github.run_number }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
