@@ -13,6 +13,7 @@ using Xunit;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Tasks
 {
+    [Collection("MSBuild")]
     public sealed class NativeImageBuildTargetsFixture : IDisposable
     {
         private readonly string directory = Path.Combine(Path.GetTempPath(), nameof(NativeImageBuildTargetsFixture), Guid.NewGuid().ToString("N"));

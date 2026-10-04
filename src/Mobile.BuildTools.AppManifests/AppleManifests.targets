@@ -48,4 +48,12 @@
       <PartialAppManifest Include="@(_MBTApplePartialManifests)" />
     </ItemGroup>
   </Target>
+  <!-- Retain the opt-in APS setting using the framework's entitlement input, before signing. -->
+  <Target Name="SetApsEnvironmentToProduction" BeforeTargets="_CompileEntitlements"
+          Condition="'$(APSProductionEnvironment)' != '' And '$(APSProductionEnvironment)' != 'false'">
+    <ItemGroup>
+      <CustomEntitlements Remove="aps-environment" />
+      <CustomEntitlements Include="aps-environment" Type="String" Value="production" />
+    </ItemGroup>
+  </Target>
 </Project>

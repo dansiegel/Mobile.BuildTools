@@ -7,6 +7,7 @@ This .NET 10 MAUI sample reconciles the sample from PR #364. It uses the Images 
 Build the packages first, using an installed SDK that supports .NET 10:
 
 ```console
+dotnet build src/Mobile.BuildTools.Core/Mobile.BuildTools.Core.csproj -c Release
 dotnet build src/Mobile.BuildTools.AppManifests/Mobile.BuildTools.AppManifests.csproj -c Release
 dotnet build src/Mobile.BuildTools.Images/Mobile.BuildTools.Images.csproj -c Release
 ```

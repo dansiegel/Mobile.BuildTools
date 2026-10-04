@@ -16,6 +16,7 @@ public class PlatformExtensionsFixture
     [InlineData("net10.0-maccatalyst26.0", Platform.macOS)]
     [InlineData("net10.0-windows10.0.19041.0", Platform.Windows)]
     [InlineData("net10.0-browser", Platform.WebAssembly)]
+    [InlineData("net10.0-browserwasm", Platform.WebAssembly)]
     [InlineData("net11.0-browser", Platform.WebAssembly)]
     [InlineData("net10.0-tvos26.0", Platform.TVOS)]
     [InlineData(null, Platform.Unsupported)]

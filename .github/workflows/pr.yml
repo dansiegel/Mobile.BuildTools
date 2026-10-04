@@ -3,43 +3,74 @@ name: PR
 on:
   pull_request:
     paths:
+    - '.github/workflows/pr.yml'
     - 'Directory.*'
+    - 'global.json'
     - 'src/**'
     - 'E2E/**'
     - 'tests/**'
+    - 'samples/AppManifestsSample/**'
 
 jobs:
+  # Keep the existing whole-solution gate, including Configuration and AppSettings coverage.
   build:
     uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
     with:
-      name: Build Mobile.BuildTools
+      name: Build Mobile.BuildTools solution
       solution-path: Mobile.BuildTools.sln
       submodules: true
-      install-workload: 'maui macos maui-tizen'
-      vs-version: 17.12
+      dotnet-version: '10.0.x'
+      install-workload: 'maui macos'
+      vs-version: '18.0'
+      artifact-name: FullSolutionNuGet
+      build-args: /p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
 
-  e2e:
-    needs: [build]
+  assets:
+    name: Task packages (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v4
         with:
-          dotnet-version: 8.0.x
+          fetch-depth: 0
+          submodules: true
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build task packages for both MSBuild hosts
+        run: |
+          dotnet build src/Mobile.BuildTools.Core/Mobile.BuildTools.Core.csproj -c Release -p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
+          dotnet build src/Mobile.BuildTools.AppManifests/Mobile.BuildTools.AppManifests.csproj -c Release -p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
+          dotnet build src/Mobile.BuildTools.Images/Mobile.BuildTools.Images.csproj -c Release -p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
+          dotnet build src/Mobile.BuildTools/Mobile.BuildTools.csproj -c Release -p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
+      - name: Run existing task regression tests
+        run: dotnet test tests/Mobile.BuildTools.Tests/Mobile.BuildTools.Tests.csproj -c Release -p:GeneratePackageOnBuild=false --logger trx
+      - uses: actions/upload-artifact@v4
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          name: NuGet
+          path: Artifacts/*.nupkg
 
-      - name: Download NuGet Artifacts
-        uses: actions/download-artifact@v4
+  e2e:
+    needs: [assets]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/download-artifact@v4
         with:
           name: NuGet
           path: Artifacts
-
-      - name: Run Tests
+      - name: Run existing package-consumer tests
         run: dotnet test -c Release
         working-directory: E2E/E2E.Tests
         env:
@@ -53,3 +84,20 @@ jobs:
           AStringArray: 'Foo;Bar;Baz'
           APlatformProperty: 'Should Not Exist'
 
+  android:
+    name: MAUI Android sample
+    needs: [assets]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Install Android workload
+        run: dotnet workload install maui-android
+      - uses: actions/download-artifact@v4
+        with:
+          name: NuGet
+          path: Artifacts
+      - name: Build existing MAUI sample against this commit's packages
+        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -c Debug -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsVersion=2.1.0-ci.${{ github.run_number }}

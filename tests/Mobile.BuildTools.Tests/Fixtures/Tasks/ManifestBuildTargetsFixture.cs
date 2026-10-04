@@ -14,6 +14,7 @@ using Xunit;
 
 namespace Mobile.BuildTools.Tests.Fixtures.Tasks;
 
+[Collection("MSBuild")]
 public sealed class ManifestBuildTargetsFixture : IDisposable
 {
     private readonly string directory = Path.Combine(Path.GetTempPath(), nameof(ManifestBuildTargetsFixture), Guid.NewGuid().ToString("N"));
@@ -69,6 +70,17 @@ public sealed class ManifestBuildTargetsFixture : IDisposable
         Assert.Equal("FrameworkSplash", XDocument.Load(partials[1].EvaluatedInclude).Descendants("string").Single().Value);
         Assert.Equal("A & B", XDocument.Load(state.GetPropertyValue("AppBundleManifest")).Descendants("string").Single().Value);
         Assert.Contains("$Value$", File.ReadAllText(Path.Combine(directory, "User.plist")));
+    }
+
+    [Fact]
+    public void AppleRetainsOptInProductionPushEntitlement()
+    {
+        var project = CreateProject("AppleManifests.targets", "net10.0-ios26.0", "<APSProductionEnvironment>true</APSProductionEnvironment>",
+            "<CustomEntitlements Include=\"aps-environment\" Type=\"String\" Value=\"development\" /><CustomEntitlements Include=\"unrelated\" Type=\"Boolean\" Value=\"true\" />", "<Target Name=\"_CompileEntitlements\" />");
+        var entitlements = Build(project, "_CompileEntitlements").GetItems("CustomEntitlements");
+        Assert.Equal(2, entitlements.Count);
+        Assert.Equal("production", entitlements.Single(item => item.EvaluatedInclude == "aps-environment").GetMetadataValue("Value"));
+        Assert.Equal("true", entitlements.Single(item => item.EvaluatedInclude == "unrelated").GetMetadataValue("Value"));
     }
 
     [Theory]

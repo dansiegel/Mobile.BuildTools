@@ -22,7 +22,7 @@ public static class StringExtensions
             "windows" or "win" => Platform.Windows,
             "xamarinmac" or "xamarin.mac" or "maccatalyst" or "macos" => Platform.macOS,
             "tizen" => Platform.Tizen,
-            "browser" or "wasm" or "webassembly" => Platform.WebAssembly,
+            "browser" or "browserwasm" or "wasm" or "webassembly" => Platform.WebAssembly,
             _ => Platform.Unsupported
         };
     }

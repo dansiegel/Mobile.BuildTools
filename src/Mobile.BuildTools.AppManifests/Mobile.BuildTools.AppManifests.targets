@@ -11,5 +11,5 @@
   <Import Project="AndroidManifest.targets" Condition="'$(_MBTManifestPlatform)' == 'android' Or '$(TargetFrameworkIdentifier)' == 'MonoAndroid'" />
   <Import Project="AppleManifests.targets" Condition="'$(_MBTManifestPlatform)' == 'ios' Or '$(_MBTManifestPlatform)' == 'maccatalyst' Or '$(_MBTManifestPlatform)' == 'macos' Or '$(_MBTManifestPlatform)' == 'tvos' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'" />
   <Import Project="WindowsManifest.targets" />
-  <Import Project="WebAssemblyManifest.targets" Condition="'$(_MBTManifestPlatform)' == 'browser' Or '$(RuntimeIdentifier)' == 'browser-wasm'" />
+  <Import Project="WebAssemblyManifest.targets" Condition="'$(_MBTManifestPlatform)' == 'browser' Or '$(_MBTManifestPlatform)' == 'browserwasm' Or '$(RuntimeIdentifier)' == 'browser-wasm'" />
 </Project>

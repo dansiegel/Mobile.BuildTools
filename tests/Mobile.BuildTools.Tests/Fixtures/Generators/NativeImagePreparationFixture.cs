@@ -132,6 +132,30 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
         }
 
         [Fact]
+        public void ParallelFrameworkBuildsDoNotShareOutputs()
+        {
+            var config = GetConfiguration();
+            var source = Path.Combine(config.ProjectDirectory, "logo.png");
+            WriteImage(source, SKColors.Red);
+            File.WriteAllText(Path.ChangeExtension(source, ".json"), "{\"width\":32,\"height\":24,\"padFactor\":2}");
+            var runtimes = new[] { "android-arm64", "android-x64", "ios-arm64", "iossimulator-arm64", "browser-wasm" };
+            var paths = new System.Collections.Concurrent.ConcurrentBag<string>();
+            System.Threading.Tasks.Parallel.ForEach(runtimes, runtime =>
+            {
+                var preparer = new NativeImagePreparer(config, "net10.0", runtime, Array.Empty<string>(), null);
+                paths.Add(preparer.Prepare(Item(source, "UnoImage")).ItemSpec);
+            });
+            Assert.Equal(runtimes.Length, paths.Distinct().Count());
+            Assert.All(paths, path =>
+            {
+                using var bitmap = SKBitmap.Decode(path);
+                Assert.Equal(32, bitmap.Width);
+                Assert.Equal(24, bitmap.Height);
+            });
+            Assert.Equal(SKColors.Red, ReadColor(source));
+        }
+
+        [Fact]
         public void IgnoresOnlyConfiguredItems()
         {
             var config = GetConfiguration();
