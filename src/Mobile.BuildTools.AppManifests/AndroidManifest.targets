@@ -1,4 +1,7 @@
 <Project>
+  <PropertyGroup>
+    <MobileBuildToolsAndroidImageManifestDependsOn>$(MobileBuildToolsAndroidImageManifestDependsOn);_MBTPrepareAndroidManifest</MobileBuildToolsAndroidImageManifestDependsOn>
+  </PropertyGroup>
   <!-- Run before the Android SDK first reads package identity, rather than replacing its private cached path afterwards. -->
   <Target Name="_MBTPrepareAndroidManifest" BeforeTargets="PrepareForBuild;_GetAndroidPackageName"
           DependsOnTargets="MobileBuildToolsInit"

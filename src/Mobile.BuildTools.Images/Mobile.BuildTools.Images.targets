@@ -9,6 +9,7 @@
 
   <UsingTask TaskName="Mobile.BuildTools.Tasks.CollectImageAssetsTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ImageResizerTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.GenerateNativeImageManifestTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
   <UsingTask TaskName="Mobile.BuildTools.Tasks.PrepareNativeImageAssetsTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
 
   <Import Project="Android.targets" Condition="'$(TargetFrameworkIdentifier)' == 'MonoAndroid' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'android'" />

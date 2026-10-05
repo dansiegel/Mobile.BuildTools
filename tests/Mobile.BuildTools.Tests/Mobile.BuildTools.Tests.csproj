@@ -63,7 +63,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Resizetizer" GeneratePathProperty="true" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Uno.Resizetizer" GeneratePathProperty="true" ExcludeAssets="all" PrivateAssets="all" />
+    <AssemblyMetadata Include="MauiResizetizerPackagePath" Value="$(PkgMicrosoft_Maui_Resizetizer)" />
+    <AssemblyMetadata Include="UnoResizetizerPackagePath" Value="$(PkgUno_Resizetizer)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Templates\**\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
+
+  <!-- .NET 10 does not honor ExcludeAssets for package analyzers. These packages
+       supply task assemblies for isolated contract tests, not app source generators. -->
+  <Target Name="ExcludeFrameworkContractAnalyzers" AfterTargets="ResolveLockFileAnalyzers">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'Uno.Resizetizer' or '%(Analyzer.NuGetPackageId)' == 'Microsoft.Maui.Resizetizer'" />
+    </ItemGroup>
+  </Target>
 
 </Project>

@@ -1,5 +1,6 @@
 <Project>
   <PropertyGroup>
+    <MobileBuildToolsAppleImageManifestDependsOn>$(MobileBuildToolsAppleImageManifestDependsOn);_MBTPrepareApplePartialManifests</MobileBuildToolsAppleImageManifestDependsOn>
     <CollectAppManifestsDependsOn>$(CollectAppManifestsDependsOn);_MBTPrepareAppleManifest</CollectAppManifestsDependsOn>
   </PropertyGroup>
   <Target Name="_MBTPrepareAppleManifest" DependsOnTargets="MobileBuildToolsInit;_DetectAppManifest"
