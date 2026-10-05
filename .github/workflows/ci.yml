@@ -17,6 +17,7 @@ jobs:
       solution-path: Mobile.BuildTools.sln
       submodules: true
       dotnet-version: '10.0.x'
+      jdk-version: '21'
       install-workload: 'maui macos'
       vs-version: '18.0'
       code-sign: true
