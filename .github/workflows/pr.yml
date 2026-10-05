@@ -28,6 +28,16 @@ jobs:
   e2e:
     needs: [build]
     runs-on: ${{ matrix.os }}
+    env:
+      AString: 'Hello World!'
+      AnInt: 5
+      ADouble: 3.14
+      ABool: false
+      AFloat: 4.2
+      ADate: 'January 1, 2020'
+      AUri: 'https://mobilebuildtools.com'
+      AStringArray: 'Foo;Bar;Baz'
+      APlatformProperty: 'Should Not Exist'
     strategy:
       fail-fast: false
       matrix:
@@ -49,16 +59,6 @@ jobs:
       - name: Run Tests
         run: dotnet test -c Release -p:GeneratedPackageVersion=2.1.0-ci.${{ github.run_number }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
         working-directory: E2E/E2E.Tests
-        env:
-          AString: 'Hello World!'
-          AnInt: 5
-          ADouble: 3.14
-          ABool: false
-          AFloat: 4.2
-          ADate: 'January 1, 2020'
-          AUri: 'https://mobilebuildtools.com'
-          AStringArray: 'Foo;Bar;Baz'
-          APlatformProperty: 'Should Not Exist'
       - name: Setup MSBuild
         if: runner.os == 'Windows'
         uses: microsoft/setup-msbuild@v2
