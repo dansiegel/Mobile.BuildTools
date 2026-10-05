@@ -52,29 +52,31 @@ namespace Mobile.BuildTools.Drawing
                 StrokeWidth = bannerHeight,
                 Style = SKPaintStyle.Stroke
             };
-            using var path = new SKPath();
-            path.MoveTo(start);
-            path.LineTo(end);
+            using var pathBuilder = new SKPathBuilder();
+            pathBuilder.MoveTo(start);
+            pathBuilder.LineTo(end);
+            using var path = pathBuilder.Detach();
 
             canvas.DrawPath(path, linePaint);
             using var textPaint = new SKPaint
             {
                 Color = settings.TextColor.WithAlpha((byte)(0xFF * context.Opacity)),
-                TextAlign = SKTextAlign.Center,
-                Typeface = settings.Typeface
+                IsAntialias = true
             };
 
-            // Adjust TextSize property so text is 45% of the resulting image size.
-            var textWidth = textPaint.MeasureText(settings.Text);
-            textPaint.TextSize = 0.45f * context.Size.Width * textPaint.TextSize / textWidth;
+            using var font = new SKFont(settings.Typeface);
+            // Keep the text at 45% of the output width using Skia's separate font API.
+            var textWidth = font.MeasureText(settings.Text, textPaint);
+            if (textWidth <= 0)
+                return;
+            font.Size = 0.45f * context.Size.Width * font.Size / textWidth;
 
             // Find the text bounds 
-            var textBounds = new SKRect();
             // It may well be a Skia bug but it appears the measuring doesn't include the height of the descender characters in the measured height.
-            textPaint.MeasureText(StripDescenders(settings.Text), ref textBounds);
+            font.MeasureText(StripDescenders(settings.Text), out var textBounds, textPaint);
 
             // Text drawn on the centre of the line so we need to bump it down to align the centre of the text.
-            canvas.DrawTextOnPath(settings.Text, path, 0, textBounds.Height / 2, textPaint);
+            canvas.DrawTextOnPath(settings.Text, path, 0, textBounds.Height / 2, SKTextAlign.Center, font, textPaint);
         }
 
         private string StripDescenders(string text)

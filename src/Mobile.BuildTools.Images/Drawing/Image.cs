@@ -28,7 +28,7 @@ namespace Mobile.BuildTools.Drawing
                 };
             }
 
-            canvas.DrawBitmap(bitmap, 0, 0, paint);
+            canvas.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default, paint);
 
             paint?.Dispose();
         }

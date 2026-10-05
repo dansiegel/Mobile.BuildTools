@@ -17,12 +17,11 @@
 using System;
 using GeneratedCodeAttribute = System.CodeDom.Compiler.GeneratedCodeAttribute;
 
-namespace TestProject.Helpers
+namespace TestProject.Helpers;
+
+internal static partial class AppSettings
 {
-    internal static partial class AppSettings
-    {
-        [GeneratedCodeAttribute("Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator", "{0}")]
-        public const string ClientId =
-            "Hello Settings";
-    }
+    [GeneratedCodeAttribute("Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator", "{0}")]
+    public const string ClientId =
+        "Hello Settings";
 }

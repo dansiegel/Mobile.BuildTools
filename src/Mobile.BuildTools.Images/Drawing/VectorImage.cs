@@ -71,12 +71,11 @@ namespace Mobile.BuildTools.Drawing
                 // set the paint to be the highest quality it can find
                 using var paint = new SKPaint
                 {
-                    IsAntialias = true,
-                    FilterQuality = SKFilterQuality.High
+                    IsAntialias = true
                 };
 
                 // draw to the main canvas using the correct quality settings
-                canvas.DrawBitmap(bmp, 0, 0, paint);
+                canvas.DrawBitmap(bmp, 0, 0, new SKSamplingOptions(SKCubicResampler.Mitchell), paint);
             }
 
             opacityPaint?.Dispose();

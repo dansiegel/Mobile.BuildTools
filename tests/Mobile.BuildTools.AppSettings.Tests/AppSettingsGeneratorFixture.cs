@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using Mobile.BuildTools.AppSettings.Diagnostics;
@@ -44,24 +45,38 @@ public class AppSettingsGeneratorFixture
         await Test();
     }
 
+    [Fact]
+    public async Task UsesFileScopedNamespaceForExistingClass()
+    {
+        await Test(
+            ["TestProject.Helpers.AppSettings.cs"],
+            [Constants.BuildToolsConfigFileName, Constants.BuildToolsEnvironmentSettings],
+            nameof(AddsSimpleProperty),
+            "namespace TestProject.Helpers; internal static partial class AppSettings { }");
+    }
+
     private static Task Test([CallerMemberName] string? method = null)
     {
         Assert.NotNull(method);
         var expected = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Expected", method));
-        var expectedFiles = expected.GetFiles("*.cs").Select(x => x.Name).ToArray();
+        var expectedFiles = expected.GetFiles("*.cs").Select(x => x.Name).OrderBy(x => x, StringComparer.Ordinal).ToArray();
         var sources = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Sources", method));
         var sourceFiles = sources.GetFiles("*").Select(x => x.Name).ToArray();
         return Test(expectedFiles, sourceFiles, method);
     }
 
-    private static Task Test(string[] generatedSources, string[] additionalFiles, [CallerMemberName] string? method = null)
+    private static Task Test(string[] generatedSources, string[] additionalFiles, [CallerMemberName] string? method = null, string? source = null)
     {
         Assert.NotNull(method);
 
         var test = new Verify.Test(testMethod: method)
         {
             ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            LanguageVersion = LanguageVersion.CSharp10,
         };
+
+        if (source is not null)
+            test.TestState.Sources.Add(source);
 
         AddMSBuildProperties(test, ("MSBuildProjectName", test.TestState.Name),
             ("RootNamespace", test.TestState.AssemblyName),
@@ -144,7 +159,7 @@ public class AppSettingsGeneratorFixture
         var assembly = typeof(AppSettingsGenerator).Assembly;
         var toolVersion = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
         using var reader = new StreamReader(path);
-        var source = reader.ReadToEnd().Replace("{0}", toolVersion);
+        var source = reader.ReadToEnd().Replace("{0}", toolVersion).ReplaceLineEndings(Environment.NewLine);
         return SourceText.From(source, Encoding.UTF8);
     }
 }

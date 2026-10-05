@@ -33,6 +33,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="ShimSkiaSharp" PrivateAssets="all" />
+    <PackageReference Include="SkiaSharp" PrivateAssets="all" />
     <PackageReference Include="Svg.Skia" PrivateAssets="all" />
     <PackageReference Include="System.Buffers" PrivateAssets="all" />
     <PackageReference Include="System.ComponentModel.Annotations" PrivateAssets="all" />
