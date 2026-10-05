@@ -14,6 +14,10 @@ Prepared sources and input fingerprints live under the intermediate output direc
 
 Projects without native MAUI/Uno image items retain the legacy platform image generation path. Task packages support both .NET 10 MSBuild and full-framework MSBuild hosts.
 
+## Linux build hosts
+
+SVG text and font-family watermarks use system font discovery. Linux build hosts need fontconfig (`libfontconfig.so.1`) and the fonts used by their images installed. The package includes the fontconfig-enabled Skia native runtime so SVG text and font-family watermarks can resolve those fonts. A configured watermark `fontFile` is the most predictable choice across hosts.
+
 ## App icon and splash manifest references
 
 When image processing is enabled, native `MauiIcon` / `UnoIcon` declarations (or `MauiImage` / `UnoImage` with `IsAppIcon="true"`) also supply missing app-icon manifest references. This works with the Images package alone; AppManifests may additionally transform the generated inputs. Source manifests are never edited. Explicit references are preserved, with a build warning when they select something different from the generated icon.

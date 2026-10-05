@@ -51,7 +51,7 @@
     <PackageReference Include="Microsoft.Web.Xdt" />
     <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="SkiaSharp" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 

@@ -26,7 +26,7 @@
     <PackageVersion Include="PolySharp" Version="1.16.0" />
     <PackageVersion Include="ShimSkiaSharp" Version="5.2.3" />
     <PackageVersion Include="SkiaSharp" Version="4.153.1" />
-    <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="4.153.1" />
     <PackageVersion Include="SkiaSharp.HarfBuzz" Version="4.153.1" />
     <PackageVersion Include="Svg.Skia" Version="5.2.3" />
     <PackageVersion Include="Svg.Custom" Version="5.2.3" />

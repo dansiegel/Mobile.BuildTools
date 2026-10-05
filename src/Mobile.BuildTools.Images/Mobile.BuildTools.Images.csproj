@@ -24,7 +24,7 @@
   <ItemGroup>
     <PackageReference Include="HarfBuzzSharp" PrivateAssets="all" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" PrivateAssets="all" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" PrivateAssets="all" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build" Pack="false" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" ExcludeAssets="runtime" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
