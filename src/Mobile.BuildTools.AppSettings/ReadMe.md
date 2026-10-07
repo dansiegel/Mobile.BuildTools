@@ -1,4 +1,4 @@
-﻿# Mobile.BuildTools.AppSettings
+# Mobile.BuildTools.AppSettings
 
 The Mobile.BuildTools.AppSettings is a re-invented implementation of the Classic Mobile.BuildTools that was originally generated as part of the Mobile.BuildTools project. This new implementation is significantly more powerful with an improved ability to control properties in Cross Compiled projects like those found in .NET MAUI and Uno Platform projects. This new implementation also provides an improved ability to bring in proeprties based on Prefixes and allows fuzzy matching for Configurations.
 
@@ -8,7 +8,7 @@ Be sure to add a `buildtools.json` to your solution root directory.
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "appSettings": {
     "YourProjectName": [
       {

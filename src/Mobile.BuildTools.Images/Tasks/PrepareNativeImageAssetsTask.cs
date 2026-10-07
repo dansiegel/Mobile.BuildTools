@@ -13,7 +13,7 @@ namespace Mobile.BuildTools.Tasks
         public ITaskItem[] Images { get; set; } = Array.Empty<ITaskItem>();
         public string RuntimeIdentifier { get; set; }
         public string AdditionalSearchPaths { get; set; }
-        public bool? IgnoreDefaultSearchPaths { get; set; }
+        public bool IgnoreDefaultSearchPaths { get; set; }
 
         [Output]
         public ITaskItem[] PreparedImages { get; private set; } = Array.Empty<ITaskItem>();
@@ -36,3 +36,4 @@ namespace Mobile.BuildTools.Tasks
         }
     }
 }
+

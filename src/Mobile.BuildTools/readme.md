@@ -1,4 +1,4 @@
-﻿# Mobile.BuildTools
+# Mobile.BuildTools
 
 Thanks for installing the Mobile.BuildTools library!
 
@@ -16,6 +16,6 @@ Be sure to add a `buildtools.json` to your solution root directory.
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
 }
 ```

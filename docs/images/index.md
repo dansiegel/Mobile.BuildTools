@@ -126,3 +126,7 @@ Not all platforms are supported. For more information see the grid below:
 | Web Assembly | Not Planned |
 
 \* Platform is theoretically supported as there should be no difference from iOS, however this has not been directly tested.
+
+## Lottie animations (v3 development)
+
+Explicit `MobileBuildToolsLottie` items support white-label raw JSON animations with default-on conservative minification. Set `images.optimizeLottie=false` in buildtools.json for byte-preserving copying. See [Lottie raw animation assets](https://github.com/dansiegel/Mobile.BuildTools/blob/ds/lottie-assets/docs/images/lottie-assets.md) for declarations, companions, packaging and validation limits.

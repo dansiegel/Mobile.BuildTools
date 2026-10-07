@@ -22,7 +22,7 @@ We can now leave our Info.plist or AndroidManifest.xml checked into source contr
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "manifests": {
     "token": "$$",
     "variablePrefix": "Manifest_",

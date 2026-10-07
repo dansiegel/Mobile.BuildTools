@@ -4,7 +4,7 @@ Build versioning can be extremely important for analytics and diagnostics. What'
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "automaticVersioning": {
     "behavior": "PreferBuildNumber",
     "environment": "All",

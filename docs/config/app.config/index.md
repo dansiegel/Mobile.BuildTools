@@ -6,7 +6,7 @@ By default Mobile.BuildTools will look for any file in the root of the head proj
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "appConfig": {
     "strategy": "TransformOnly"
   }

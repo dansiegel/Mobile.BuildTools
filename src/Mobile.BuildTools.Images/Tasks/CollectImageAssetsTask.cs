@@ -11,7 +11,7 @@ namespace Mobile.BuildTools.Tasks
     {
         public string AdditionalSearchPaths { get; set; }
 
-        public bool? IgnoreDefaultSearchPaths { get; set; }
+        public bool IgnoreDefaultSearchPaths { get; set; }
 
         public bool SingleProject { get; set; }
 
@@ -77,3 +77,4 @@ namespace Mobile.BuildTools.Tasks
         }
     }
 }
+

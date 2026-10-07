@@ -4,7 +4,7 @@ Generating Release notes can be painful. The Mobile.BuildTools will help solve t
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "releaseNotes": {
     "maxDays": 7,
     "maxCommit": 10,

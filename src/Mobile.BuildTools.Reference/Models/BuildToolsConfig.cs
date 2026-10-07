@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
@@ -10,7 +10,7 @@ namespace Mobile.BuildTools.Models
     [Description("Configures the Mobile.BuildTools. This file should be located in the solution root directory next to the solution file.")]
     public class BuildToolsConfig
     {
-        private string _schema = "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json";
+        private string _schema = "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json";
         [JsonPropertyName("$schema")]
         public string Schema
         {

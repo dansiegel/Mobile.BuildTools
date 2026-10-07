@@ -14,7 +14,7 @@ namespace Mobile.BuildTools.Models.AppIcons
         [JsonPropertyName("$schema")]
         public string Schema
         {
-            get => "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json";
+            get => "http://mobilebuildtools.com/schemas/v3/resourceDefinition.schema.json";
             set { }
         }
 

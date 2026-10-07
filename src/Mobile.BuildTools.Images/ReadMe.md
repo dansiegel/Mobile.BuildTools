@@ -40,3 +40,7 @@ The Skia-facing static SVG adapter is maintained in this project and compiled ag
 Adapted renderer and font-provider source retains its upstream MIT notices and pinned provenance in the third-party notices shipped with the Images package. The non-packable test project retains Svg.Skia as a pixel-parity oracle alongside independent size/color expectations. CI inspects produced packages separately and exercises SVG/native rendering with both .NET and full-framework MSBuild hosts.
 
 As in the pre-modernization Svg.Skia 2.0.0.1 implementation, MBT rasterizes the static base document. Animation markup is not evaluated as a timeline, and MBT does not produce animated GIFs. The temporary 5.2.3 dependency added time-zero SMIL evaluation, which is deliberately not adopted as a new feature here. Animated SVG/GIF/Lottie support is separate follow-up work. Unchanged vector items continue through the framework-owned resizetizer.
+
+## Lottie animations (v3 development)
+
+Explicit `MobileBuildToolsLottie` items support white-label raw JSON animations with default-on conservative minification. Set `images.optimizeLottie=false` in buildtools.json for byte-preserving copying. See [Lottie raw animation assets](https://github.com/dansiegel/Mobile.BuildTools/blob/ds/lottie-assets/docs/images/lottie-assets.md) for declarations, companions, packaging and validation limits.

@@ -3,8 +3,8 @@ The Mobile.BuildTools relies a lot on JSON configurations because JSON is easy f
 | FileName | Schema Url |
 |:--------:|:----------:|
 | appsettings.json | n/a - JSON Dictionary |
-| buildtools.json | https://mobilebuildtools.com/schemas/v2/buildtools.schema.json |
-| {imageName}.json | https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json |
+| buildtools.json | https://mobilebuildtools.com/schemas/v3/buildtools.schema.json |
+| {imageName}.json | https://mobilebuildtools.com/schemas/v3/resourceDefinition.schema.json |
 
 ## appsettings.json
 
@@ -16,7 +16,7 @@ One of the biggest changes in the Mobile.BuildTools 2.0 is the introduction of t
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json"
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json"
 }
 ```
 

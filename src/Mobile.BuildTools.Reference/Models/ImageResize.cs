@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models
@@ -11,6 +11,12 @@ namespace Mobile.BuildTools.Models
             ConditionalDirectories = new Dictionary<string, IEnumerable<string>>();
         }
 
+        [System.ComponentModel.Description("Minifies selected Lottie JSON assets. Enabled by default. Set false to preserve selected animation bytes while retaining conditional asset selection.")]
+        [JsonPropertyName("optimizeLottie")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool OptimizeLottie { get; set; } = true;
+
         [JsonPropertyName("directories")]
         public List<string> Directories { get; set; }
 
@@ -18,3 +24,4 @@ namespace Mobile.BuildTools.Models
         public Dictionary<string, IEnumerable<string>> ConditionalDirectories { get; set; }
     }
 }
+

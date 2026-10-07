@@ -10,7 +10,7 @@ The Mobile.BuildTools 2.0 configuration gives us a lot of flexibility as we can 
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "appSettings": {
     "AwesomeApp": [
       {
@@ -27,7 +27,7 @@ Within the Project we can now provide any configuration values we need to either
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "projectSecrets": {
     "AwesomeApp": [
       {
@@ -55,7 +55,7 @@ The Mobile.BuildTools 2.0 added support for every primitive datatype, along with
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "projectSecrets": {
     "AwesomeApp": [
       {
@@ -90,7 +90,7 @@ It's pretty common for people using the Mobile.BuildTools to inject values such 
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "appSettings": {
     "AwesomeApp": [
       {
@@ -113,7 +113,7 @@ Other times we may have non-sensitive values that we need to configure defaults 
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "appSettings": {
     "AwesomeApp": [
       {
@@ -136,7 +136,7 @@ There may be times in which you have more than one project in your solution, or 
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "appSettings": {
     "AwesomeApp": [
       {
@@ -175,7 +175,7 @@ To solve this problem we can use the Prefix property on our generated class sett
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "appSettings": {
     "AwesomeApp": [
       {
@@ -221,7 +221,7 @@ The Mobile.BuildTools allows us to "Fake" environment variables. There may be ti
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "environment": {
     "defaults": {
       "FooApi_BaseUri": "https://dev.api.foo.com",
@@ -235,7 +235,7 @@ It's also possible that we may want to further customize this without the need t
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "environment": {
     "configuration": {
       "Debug": {
@@ -261,7 +261,7 @@ From time to time you may want to make use of Fuzzy Matching. Fuzzy Matching all
 
 ```json
 {
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v3/buildtools.schema.json",
   "environment": {
     "enableFuzzyMatching": true
   }

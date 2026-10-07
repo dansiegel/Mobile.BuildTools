@@ -84,6 +84,7 @@ nav:
     - Image Assets:
       - Getting Started: images/index.md
       - Configuring Images: images/configuring-images.md
+      - Lottie Raw Assets: images/lottie-assets.md
       - Build Customization: images/build-customization.md
       - Built In Templates: images/built-in-templates.md
     - Release Note Generation: release-notes.md

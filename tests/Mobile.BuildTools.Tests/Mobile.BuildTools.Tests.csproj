@@ -57,6 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\tools\Mobile.BuildTools.SchemaGenerator\Mobile.BuildTools.SchemaGenerator.csproj" />
     <ProjectReference Include="..\..\src\Mobile.BuildTools.AppManifests\Mobile.BuildTools.AppManifests.csproj" />
     <ProjectReference Include="..\..\src\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj" />
     <ProjectReference Include="..\..\src\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" />
@@ -83,3 +84,4 @@
   </Target>
 
 </Project>
+

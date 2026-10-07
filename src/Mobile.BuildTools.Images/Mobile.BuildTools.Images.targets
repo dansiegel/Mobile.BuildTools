@@ -12,6 +12,8 @@
   <UsingTask TaskName="Mobile.BuildTools.Tasks.GenerateNativeImageManifestTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
   <UsingTask TaskName="Mobile.BuildTools.Tasks.PrepareNativeImageAssetsTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
 
+  <UsingTask TaskName="Mobile.BuildTools.Tasks.PrepareLottieAssetsTask" AssemblyFile="$(_MobileBuildToolsImagesParentBuildTasksDll)" />
+
   <Import Project="Android.targets" Condition="'$(TargetFrameworkIdentifier)' == 'MonoAndroid' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'android'" />
   <Import Project="Apple.targets" Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' or '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS' or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'ios' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'maccatalyst' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'macos' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'tvos'" />
   <Import Project="Windows.targets" Condition="'$(TargetFrameworkIdentifier)' == 'UAP' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'windows'" />
@@ -106,4 +108,41 @@
       <Output ItemName="FileWrites" TaskParameter="FileWrites" />
     </ImageResizerTask>
   </Target>
+
+  <!-- Always register raw assets, including no-op builds. Content fingerprints, not
+       MSBuild timestamps, decide whether bytes need replacing. Empty lists retire old outputs. -->
+  <Target Name="_MobileBuildToolsPrepareLottieAssets"
+          BeforeTargets="AssignTargetPaths;GetMauiItems;ProcessMauiAssets;_ComputeAndroidAssets;_CollectBundleResources;GetCopyToOutputDirectoryItems"
+          DependsOnTargets="MobileBuildToolsInit"
+          Condition="'$(IsCrossTargetingBuild)' != 'true' and ('@(MobileBuildToolsLottie)' != '' or Exists('$([System.IO.Path]::Combine($(IntermediateOutputPath), `Mobile.BuildTools`, `lottie`))'))">
+    <PrepareLottieAssetsTask Condition="'$(BuildToolsEnableImageProcessing)' == 'true'" Assets="@(MobileBuildToolsLottie)"
+                            ConfigurationPath="$(BuildToolsConfigFilePath)"
+                            ProjectName="$(MSBuildProjectName)"
+                            ProjectDirectory="$(MSBuildProjectDirectory)"
+                            SolutionDirectory="$(SolutionDir)"
+                            Configuration="$(Configuration)"
+                            IntermediateOutputPath="$(IntermediateOutputPath)"
+                            TargetFrameworkIdentifier="$(TargetFramework)"
+                            RuntimeIdentifier="$(RuntimeIdentifier)"
+                            AdditionalSearchPaths="$(BuildToolsImageSearchPath)"
+                            IgnoreDefaultSearchPaths="$(BuildToolsIgnoreDefaultSearchPath)">
+      <Output ItemName="_MobileBuildToolsPreparedLottie" TaskParameter="PreparedAssets" />
+      <Output ItemName="FileWrites" TaskParameter="FileWrites" />
+    </PrepareLottieAssetsTask>
+    <ItemGroup Condition="'$(BuildToolsEnableImageProcessing)' == 'true'">
+      <!-- Explicit declarations replace any default/raw inclusion of that same source. -->
+      <None Remove="@(MobileBuildToolsLottie)" />
+      <MauiImage Remove="@(MobileBuildToolsLottie)" />
+      <UnoImage Remove="@(MobileBuildToolsLottie)" />
+      <Content Remove="@(MobileBuildToolsLottie);@(_MobileBuildToolsPreparedLottie->'%(MobileBuildToolsOriginalSource)')" />
+      <MauiAsset Remove="@(MobileBuildToolsLottie);@(_MobileBuildToolsPreparedLottie->'%(MobileBuildToolsOriginalSource)')" />
+      <AndroidAsset Remove="@(MobileBuildToolsLottie);@(_MobileBuildToolsPreparedLottie->'%(MobileBuildToolsOriginalSource)')" />
+      <BundleResource Remove="@(MobileBuildToolsLottie);@(_MobileBuildToolsPreparedLottie->'%(MobileBuildToolsOriginalSource)')" />
+      <MauiAsset Include="@(_MobileBuildToolsPreparedLottie)" Condition="'$(UseMaui)' == 'true'" />
+      <AndroidAsset Include="@(_MobileBuildToolsPreparedLottie)" Condition="'$(UseMaui)' != 'true' and ('$(TargetFrameworkIdentifier)' == 'MonoAndroid' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'android')" />
+      <BundleResource Include="@(_MobileBuildToolsPreparedLottie)" Condition="'$(UseMaui)' != 'true' and ('$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac' or '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'ios' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'maccatalyst' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'macos' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'tvos')" />
+      <Content Include="@(_MobileBuildToolsPreparedLottie)" Condition="'$(UseMaui)' != 'true' and '$(TargetFrameworkIdentifier)' != 'MonoAndroid' and '$(TargetFrameworkIdentifier)' != 'Xamarin.iOS' and '$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' and '$(TargetFrameworkIdentifier)' != 'Xamarin.TVOS' and '$(_MobileBuildToolsImagesPlatformIdentifier)' != 'android' and '$(_MobileBuildToolsImagesPlatformIdentifier)' != 'ios' and '$(_MobileBuildToolsImagesPlatformIdentifier)' != 'maccatalyst' and '$(_MobileBuildToolsImagesPlatformIdentifier)' != 'macos' and '$(_MobileBuildToolsImagesPlatformIdentifier)' != 'tvos'" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
 </Project>
+

@@ -66,11 +66,11 @@ namespace Mobile.BuildTools.Tasks
             }
             catch (Exception ex)
             {
-                Log.LogError($"Unhandled error while executing {GetType().Name}");
+                Log.LogError($"Error while executing {GetType().Name} with configuration '{ConfigurationPath}'");
                 Log.LogErrorFromException(ex);
 
-                if(ConfigHelper.Exists(ConfigurationPath)
-                    && ConfigHelper.GetConfig(ConfigurationPath).Debug)
+                // Do not reparse a malformed config from the exception handler.
+                if(_config?.Debug == true)
                 {
                     Log.LogWarning("**************** DEBUG OUTPUT ****************");
                     Log.LogWarning(ex.ToString());
@@ -108,3 +108,4 @@ namespace Mobile.BuildTools.Tasks
         }
     }
 }
+
