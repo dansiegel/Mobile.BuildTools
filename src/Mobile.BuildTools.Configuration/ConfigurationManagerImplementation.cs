@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -47,8 +47,10 @@ namespace Mobile.BuildTools.Configuration
         public void Reset()
         {
             using var streamReader = _platformConfig.GetStreamReader(defaultAppConfigName);
-            using var reader = XmlReader.Create(streamReader);
+            using var reader = XmlReader.Create(streamReader, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null });
             var xDocument = XDocument.Load(reader);
+            if (xDocument.Root?.Name != "configuration")
+                throw new System.IO.InvalidDataException("Expected an app.config configuration root element.");
             InitInternal(xDocument);
         }
 
@@ -114,3 +116,4 @@ namespace Mobile.BuildTools.Configuration
             item?.Attribute(AppConfigElement.Value)?.Value);
     }
 }
+

@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <Target Name="HandlePlatformAppConfig"
+          Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp'"
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy">
     <ItemGroup>
       <BundleResource Include="@(PlatformAppConfig)"
@@ -54,3 +55,4 @@
   </Target>
 
 </Project>
+

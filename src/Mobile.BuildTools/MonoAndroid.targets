@@ -33,6 +33,7 @@
   </PropertyGroup>
 
   <Target Name="HandlePlatformAppConfig"
+          Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp'"
           AfterTargets="_CollectAppConfigs;ConfigurationManagerTransformAndCopy">
     <ItemGroup>
       <AndroidAsset Include="@(PlatformAppConfig)"
@@ -41,3 +42,4 @@
   </Target>
 
 </Project>
+

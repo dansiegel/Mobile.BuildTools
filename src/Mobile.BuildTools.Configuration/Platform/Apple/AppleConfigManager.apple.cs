@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Foundation;
@@ -19,7 +19,7 @@ namespace Mobile.BuildTools.Configuration
         public StreamReader GetStreamReader(string name)
         {
             if (!ResourceExists(name, out var path))
-                new StreamReader(Stream.Null);
+                return StreamReader.Null;
 
             return new StreamReader(path);
         }

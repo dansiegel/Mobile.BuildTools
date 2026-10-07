@@ -10,7 +10,7 @@
              AssemblyFile="$(_MobileBuildToolsConfigurationTaskDll)"/>
 
   <Target Name="_CollectAppConfigs"
-          BeforeTargets="$(HandlePlatformAppConfigBeforeTargets)"
+          BeforeTargets="$(HandlePlatformAppConfigBeforeTargets);PrepareForBuild;AssignTargetPaths"
           DependsOnTargets="MobileBuildToolsInit">
     <!--AfterTargets="ResolveAssemblyReferences"
     Condition="@(ReferencePath->WithMetadataValue('NuGetPackageId', 'Mobile.BuildTools.Configuration')) != '' ">-->
@@ -48,6 +48,29 @@
       <Output ItemName="PlatformAppConfig"
               TaskParameter="OutputConfigs"/>
     </ConfigurationManagerHandlerTask>
+  </Target>
+
+  <!-- Framework packages own asset layout. Uno's Content pipeline is intentionally
+       selected before native platform asset kinds for Uno single-project apps. -->
+  <Target Name="_InjectMobileBuildToolsConfigurationAssets"
+          AfterTargets="ConfigurationManagerTransformAndCopy"
+          Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+    <PropertyGroup>
+      <_ConfigurationPlatform>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</_ConfigurationPlatform>
+      <MobileBuildToolsConfigurationAssetKind Condition="'$(MobileBuildToolsConfigurationAssetKind)' == '' And '$(UnoSingleProject)' == 'true'">Content</MobileBuildToolsConfigurationAssetKind>
+      <MobileBuildToolsConfigurationAssetKind Condition="'$(MobileBuildToolsConfigurationAssetKind)' == '' And '$(UseMaui)' == 'true'">MauiAsset</MobileBuildToolsConfigurationAssetKind>
+      <MobileBuildToolsConfigurationAssetKind Condition="'$(MobileBuildToolsConfigurationAssetKind)' == '' And '$(_ConfigurationPlatform)' == 'android'">AndroidAsset</MobileBuildToolsConfigurationAssetKind>
+      <MobileBuildToolsConfigurationAssetKind Condition="'$(MobileBuildToolsConfigurationAssetKind)' == '' And ('$(_ConfigurationPlatform)' == 'ios' Or '$(_ConfigurationPlatform)' == 'macos' Or '$(_ConfigurationPlatform)' == 'maccatalyst')">BundleResource</MobileBuildToolsConfigurationAssetKind>
+      <MobileBuildToolsConfigurationAssetKind Condition="'$(MobileBuildToolsConfigurationAssetKind)' == ''">Content</MobileBuildToolsConfigurationAssetKind>
+    </PropertyGroup>
+    <Error Condition="'$(MobileBuildToolsConfigurationAssetKind)' != 'Content' And '$(MobileBuildToolsConfigurationAssetKind)' != 'MauiAsset' And '$(MobileBuildToolsConfigurationAssetKind)' != 'AndroidAsset' And '$(MobileBuildToolsConfigurationAssetKind)' != 'BundleResource'"
+           Text="Unsupported MobileBuildToolsConfigurationAssetKind. Use Content, MauiAsset, AndroidAsset or BundleResource." />
+    <ItemGroup>
+      <MauiAsset Include="@(PlatformAppConfig)" LogicalName="%(Filename)%(Extension)" Condition="'$(MobileBuildToolsConfigurationAssetKind)' == 'MauiAsset'" />
+      <AndroidAsset Include="@(PlatformAppConfig)" Link="Assets/%(Filename)%(Extension)" Condition="'$(MobileBuildToolsConfigurationAssetKind)' == 'AndroidAsset'" />
+      <BundleResource Include="@(PlatformAppConfig)" LogicalName="%(Filename)%(Extension)" Link="%(Filename)%(Extension)" Condition="'$(MobileBuildToolsConfigurationAssetKind)' == 'BundleResource'" />
+      <Content Include="@(PlatformAppConfig)" Link="%(Filename)%(Extension)" TargetPath="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="'$(MobileBuildToolsConfigurationAssetKind)' == 'Content'" />
+    </ItemGroup>
   </Target>
 
   <!-- Runs only configuration tasks. Never depends on Build, Compile or Publish. -->

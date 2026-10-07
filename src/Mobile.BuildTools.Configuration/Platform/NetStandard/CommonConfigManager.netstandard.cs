@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -8,7 +8,7 @@ namespace Mobile.BuildTools.Configuration
     {
         public IEnumerable<string> GetEnvironments()
         {
-            var assets = Directory.GetFiles(Directory.GetCurrentDirectory(), "app.*.config")
+            var assets = Directory.GetFiles(System.AppContext.BaseDirectory, "app.*.config")
                                   .Where(x => Path.GetExtension(x).ToLower() == ".config" &&
                                              !Path.GetFileName(x).Equals("app.config"))
                                   .Select(x => Path.GetFileName(x));
@@ -30,9 +30,10 @@ namespace Mobile.BuildTools.Configuration
                 name = name == "app" ? "app.config" : $"app.{name}.config";
             }
 
-            var files = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.config", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(System.AppContext.BaseDirectory, "*.config", SearchOption.AllDirectories);
             path = files.FirstOrDefault(x => Path.GetFileName(x) == name);
             return !string.IsNullOrEmpty(path);
         }
     }
 }
+

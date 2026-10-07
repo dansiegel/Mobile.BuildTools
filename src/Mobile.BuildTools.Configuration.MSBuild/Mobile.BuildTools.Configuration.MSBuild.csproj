@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -23,6 +23,8 @@
     <PackageReference Include="Microsoft.Build" Pack="false" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
+    <!-- Direct pin is required: central versions do not override transitive MSBuild dependencies. -->
+    <PackageReference Include="System.Text.Json" PrivateAssets="all" />
     <PackageReference Include="PolySharp">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -40,3 +42,4 @@
   </Target>-->
 
 </Project>
+

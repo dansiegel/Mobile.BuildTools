@@ -114,3 +114,58 @@ After the MSBuild + CLI proof and eventual 3.0 publication, a thin GitHub Action
 can wrap CLI inputs/results; existing Azure DevOps task stubs can become a second
 thin wrapper. Both reuse core detection/generation/preparation/signing logic.
 They are future work, not a prerequisite and not included in this checkpoint.
+
+## Second source checkpoint
+
+The feature branch now incorporates merged 3.0 master `dad3a1d`, preserving the
+first WIP commit as history. Changes remain independent of the Lottie branch.
+
+- `ConfigurationManager.InitAsync` accepts an async `(assetName, cancellationToken)
+  reader returning a Stream. It requests app.config, owns/disposes that stream,
+  snapshots the bytes, parses the final config and retains existing typed access.
+  This is a framework-neutral seam, not automatic platform discovery. Call it
+  before accessing Current on browser targets. It does not enable runtime XDT.
+  Reset reuses the loaded snapshot; initialize again to reload an asset.
+- MAUI callers can use FileSystem.Current.OpenAppPackageFileAsync; Uno callers can
+  open `ms-appx:///app.config` via StorageFile and return its readable stream.
+  Async platform APIs remain in application/framework code, avoiding a hard Uno or
+  MAUI dependency in the shared Configuration library. These native/browser adapter
+  calls have not been exercised here.
+- Generic desktop lookup uses AppContext.BaseDirectory instead of process CWD.
+  Apple missing-file handling returns an empty reader instead of constructing and
+  discarding one. Base config parsing rejects DTDs and non-configuration roots.
+- Modern SDK injection is now owned by the Configuration package: UnoSingleProject
+  uses Content, MAUI uses MauiAsset, native Android uses AndroidAsset, Apple uses
+  BundleResource, and desktop/WinUI use Content with output/publish copying.
+  `MobileBuildToolsConfigurationAssetKind` can explicitly select one of those four
+  modes for older/custom framework project shapes. Legacy umbrella injection is
+  skipped for .NETCoreApp to avoid duplicate ownership. Actual SDK target ordering,
+  output layout and packaged app readback remain validation gates.
+- Configuration.MSBuild now directly references centrally versioned System.Text.Json
+  rather than relying on its transitive Microsoft.Build dependency. This addresses
+  the demonstrated #359 8.0-versus-10.0 resolution gap, but #359 must stay open until
+  its real output and nupkg are inspected. Evidence from merged-master build:
+  https://github.com/dansiegel/Mobile.BuildTools/actions/runs/37687969216/job/113020578895
+
+Validation distinctions:
+
+1. The existing Configuration runtime and existing Configuration.Tests projects
+   compiled and ran 23 tests, including four new tests, in an isolated source-only
+   check. That check used a temporary, uncommitted MSBuild import to exclude
+   package-production references, use shared-framework Extensions assemblies, and
+   cached Microsoft.NET.Test.Sdk 17.10.0 / xunit 2.9.3 / adapter 2.8.2. It did not
+   create another project or app. It is NOT validation of the production package
+   dependency graph and is not a substitute for the following failed check.
+2. Restoring the original centrally versioned runtime/test graph from the available
+   offline cache fails because Microsoft.Extensions.Configuration.Abstractions,
+   Hosting and Hosting.Abstractions 10.0.12 are absent (nearest cache version
+   10.0.11). No dependency versions were downgraded in source.
+3. Restoring the actual net472 Configuration.MSBuild project resolves
+   System.Text.Json/10.0.12 after the explicit reference, but the full restore fails
+   for missing net472 reference assemblies and transitive packages including
+   Microsoft.Bcl.AsyncInterfaces 10.0.12. A failed restore's selected version is
+   diagnostic evidence only, not a successful package/build qualification.
+4. No actual native/mobile/Uno/WASM build, NativeAOT publish, install, package
+   signing, notarization or real preparation-vs-rebuild timing was performed.
+   Configuration.MSBuild's legacy net472-only task packaging also still needs
+   modern Core MSBuild host selection parity with the other task packages.
