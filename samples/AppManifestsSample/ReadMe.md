@@ -12,10 +12,10 @@ dotnet build src/Mobile.BuildTools.AppManifests/Mobile.BuildTools.AppManifests.c
 dotnet build src/Mobile.BuildTools.Images/Mobile.BuildTools.Images.csproj -c Release
 ```
 
-The sample adds the repository's `Artifacts` directory through `RestoreAdditionalProjectSources`; no separate NuGet configuration is required. Set `MobileBuildToolsVersion` to the exact version produced by the package build (the local fallback is `2.1.0-pre`). Use an isolated `RestorePackagesPath` when repeatedly rebuilding the same package version, so an older global-cache package cannot mask changes.
+The sample adds the repository's `Artifacts` directory through `RestoreAdditionalProjectSources`; no separate NuGet configuration is required. Set `MobileBuildToolsVersion` to the exact version produced by the package build (a single local AppManifests nupkg is selected automatically; multiple versions require an explicit selection). Use an isolated `RestorePackagesPath` when repeatedly rebuilding the same package version, so an older global-cache package cannot mask changes.
 
 ```console
-dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -c Debug -p:MobileBuildToolsVersion=2.1.0-pre -p:RestorePackagesPath=artifacts/sample-packages
+dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -c Debug -p:MobileBuildToolsVersion=<exact-produced-version> -p:RestorePackagesPath=artifacts/sample-packages
 ```
 
 This requires the MAUI Android workload and an Android SDK. With a running emulator, use the same command with `-t:Run`.

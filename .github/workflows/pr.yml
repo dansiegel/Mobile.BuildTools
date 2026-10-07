@@ -12,7 +12,55 @@ on:
     - 'samples/AppManifestsSample/**'
 
 jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.version.outputs.package_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Verify natural and CI package versions
+        id: version
+        shell: pwsh
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          MERGE_SHA: ${{ github.sha }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          [xml]$props = Get-Content Directory.Build.props
+          $minimum = @($props.Project.PropertyGroup.MinVerMinimumMajorMinor | Where-Object { $_ })[0]
+          if ($minimum -ne '3.0') { throw "Expected the 3.0 source version baseline, found '$minimum'." }
+          $ciVersion = "$minimum.0-ci.$env:GITHUB_RUN_NUMBER"
+          "package_version=$ciVersion" >> $env:GITHUB_OUTPUT
+          $project = 'src/Mobile.BuildTools.AppSettings/Mobile.BuildTools.AppSettings.csproj'
+          foreach ($revision in @($env:HEAD_SHA, $env:MERGE_SHA) | Select-Object -Unique) {
+            git checkout --detach $revision
+            if ($LASTEXITCODE -ne 0) { throw "Cannot inspect version at $revision." }
+            foreach ($override in @('', $ciVersion)) {
+              $output = dotnet msbuild $project -restore -target:MinVer -nologo -p:MinVerVerbosity=detailed "-p:MinVerVersionOverride=$override" "-getProperty:MinVerVersion,PackageVersion,AssemblyVersion,FileVersion"
+              if ($LASTEXITCODE -ne 0) { throw "MinVer evaluation failed at $revision." }
+              $text = $output -join "`n"
+              Write-Host $text
+              $match = [regex]::Match($text, '(?s)\{\s*"Properties"\s*:\s*\{.*\}\s*\}\s*$')
+              if (!$match.Success) { throw 'MSBuild did not return version properties.' }
+              $values = ($match.Value | ConvertFrom-Json).Properties
+              if ($override -eq '') {
+                if ($values.MinVerVersion -notmatch '^3\.0\.') { throw "Natural version is not 3.0: $($values.MinVerVersion)" }
+              } elseif ($values.MinVerVersion -ne $ciVersion) {
+                throw "CI version override was not applied: $($values.MinVerVersion)"
+              }
+              if ($values.PackageVersion -ne $values.MinVerVersion) {
+                throw "PackageVersion and MinVerVersion disagree at $revision."
+              }
+            }
+          }
+
   build:
+    needs: [version]
     uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
     with:
       name: Build Mobile.BuildTools
@@ -22,12 +70,12 @@ jobs:
       jdk-version: '21'
       install-workload: 'maui macos'
       vs-version: '18.0'
-      build-args: /p:MinVerVersionOverride=2.1.0-ci.${{ github.run_number }}
+      build-args: /p:MinVerVersionOverride=${{ needs.version.outputs.package_version }}
 
   # Every host consumes the same NuGet artifact from build. Do not rebuild task
   # projects or add runtime dependencies to hide a package's missing native assets.
   e2e:
-    needs: [build]
+    needs: [version, build]
     runs-on: ${{ matrix.os }}
     env:
       AString: 'Hello World!'
@@ -58,7 +106,7 @@ jobs:
       - name: Show consumer host runtime
         run: dotnet --info
       - name: Run Tests
-        run: dotnet test -c Release -p:GeneratedPackageVersion=2.1.0-ci.${{ github.run_number }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+        run: dotnet test -c Release -p:GeneratedPackageVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
         working-directory: E2E/E2E.Tests
       - name: Setup MSBuild
         if: runner.os == 'Windows'
@@ -67,10 +115,10 @@ jobs:
           vs-version: '18.0'
       - name: Build package consumer with full MSBuild
         if: runner.os == 'Windows'
-        run: msbuild E2E/E2E.Tests/E2E.Tests.csproj /t:Restore,Rebuild /p:Configuration=Release /p:GeneratedPackageVersion=2.1.0-ci.${{ github.run_number }} /p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+        run: msbuild E2E/E2E.Tests/E2E.Tests.csproj /t:Restore,Rebuild /p:Configuration=Release /p:GeneratedPackageVersion=${{ needs.version.outputs.package_version }} /p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
       - name: Verify full MSBuild consumer outputs
         if: runner.os == 'Windows'
-        run: dotnet test E2E/E2E.Tests/E2E.Tests.csproj -c Release --no-build --no-restore -p:GeneratedPackageVersion=2.1.0-ci.${{ github.run_number }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+        run: dotnet test E2E/E2E.Tests/E2E.Tests.csproj -c Release --no-build --no-restore -p:GeneratedPackageVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
       - name: Setup Java for the Android consumer
         uses: actions/setup-java@v4
         with:
@@ -79,10 +127,10 @@ jobs:
       - name: Install supported MAUI consumer workloads
         run: dotnet workload install maui-android
       - name: Build MAUI Android package consumer
-        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -c Debug -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsVersion=2.1.0-ci.${{ github.run_number }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -c Debug -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
       - name: Install MAUI Windows consumer workload
         if: runner.os == 'Windows'
         run: dotnet workload install maui-windows
       - name: Build MAUI Windows package consumer
         if: runner.os == 'Windows'
-        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-windows10.0.19041.0 -c Debug -p:TargetFrameworks=net10.0-windows10.0.19041.0 -p:MobileBuildToolsVersion=2.1.0-ci.${{ github.run_number }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-windows10.0.19041.0 -c Debug -p:TargetFrameworks=net10.0-windows10.0.19041.0 -p:MobileBuildToolsVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"

@@ -37,7 +37,8 @@
 
     <!-- Mobile.BuildTools.AppManifests options -->
     <RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);$(MSBuildThisFileDirectory)../../../Artifacts</RestoreAdditionalProjectSources>
-    <MobileBuildToolsVersion Condition=" '$(MobileBuildToolsVersion)' == '' ">2.1.0-pre</MobileBuildToolsVersion>
+    <MobileBuildToolsArtifactsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../../Artifacts'))</MobileBuildToolsArtifactsDirectory>
+    <MobileBuildToolsVersion Condition="'$(MobileBuildToolsVersion)' == '' And '$(GeneratedPackageVersion)' != ''">$(GeneratedPackageVersion)</MobileBuildToolsVersion>
 
     <!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
     <WindowsPackageType>None</WindowsPackageType>
@@ -48,6 +49,20 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
+
+  <!-- Consume one exact locally produced version, or require an explicit selection. -->
+  <PropertyGroup Condition="'$(MobileBuildToolsVersion)' == '' And Exists('$(MobileBuildToolsArtifactsDirectory)')">
+    <_MobileBuildToolsPackageCount>$([System.IO.Directory]::GetFiles('$(MobileBuildToolsArtifactsDirectory)', 'Mobile.BuildTools.AppManifests.*.nupkg').Length)</_MobileBuildToolsPackageCount>
+    <_MobileBuildToolsPackage Condition="'$(_MobileBuildToolsPackageCount)' == '1'">$([System.IO.Directory]::GetFiles('$(MobileBuildToolsArtifactsDirectory)', 'Mobile.BuildTools.AppManifests.*.nupkg')[0])</_MobileBuildToolsPackage>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MobileBuildToolsVersion)' == '' And '$(_MobileBuildToolsPackage)' != ''">
+    <_MobileBuildToolsPackageName>$([System.IO.Path]::GetFileNameWithoutExtension('$(_MobileBuildToolsPackage)'))</_MobileBuildToolsPackageName>
+    <MobileBuildToolsVersion>$(_MobileBuildToolsPackageName.Replace('Mobile.BuildTools.AppManifests.', ''))</MobileBuildToolsVersion>
+  </PropertyGroup>
+  <Target Name="ValidateMobileBuildToolsVersion" BeforeTargets="CollectPackageReferences;PrepareForBuild">
+    <Error Condition="'$(MobileBuildToolsVersion)' == ''"
+           Text="Set MobileBuildToolsVersion to the exact produced package version, or keep one AppManifests nupkg in Artifacts." />
+  </Target>
 
   <ItemGroup>
     <!-- App Icon -->
