@@ -43,7 +43,7 @@ public sealed class ManifestBuildTargetsFixture : IDisposable
         var manifest = state.GetPropertyValue("ObservedManifest");
         Assert.Equal("com.example.test", XDocument.Load(manifest).Root.Attribute("package").Value);
         Assert.Equal("A & B", XDocument.Load(manifest).Root.Element("application").Attribute("label").Value);
-        Assert.Contains(state.GetItems("FileWrites"), item => item.EvaluatedInclude == manifest);
+        Assert.Contains(state.GetItems("FileWrites"), item => Path.GetFullPath(item.EvaluatedInclude) == Path.GetFullPath(manifest));
         Assert.Contains("$Package$", File.ReadAllText(Path.Combine(directory, "AndroidManifest.xml")));
     }
 
