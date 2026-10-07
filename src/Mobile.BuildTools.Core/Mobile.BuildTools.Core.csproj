@@ -1,11 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFrameworks>net472;net10.0</TargetFrameworks>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackFolder>buildTransitive</PackFolder>
+    <PackFolder>buildTransitive/tasks/$(TargetFramework)</PackFolder>
+    <MobileBuildToolsTaskPackage>true</MobileBuildToolsTaskPackage>
+    <TaskPackageBuildFolder>buildTransitive</TaskPackageBuildFolder>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
     <IncludeSource>false</IncludeSource>
     <Description>This package contains core Build Tasks used by the Mobile.BuildTools suite of packages.</Description>
   </PropertyGroup>
@@ -15,9 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build" Pack="false" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" />
+    <PackageReference Include="Microsoft.Build" Pack="false" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Pack="false" ExcludeAssets="runtime" />
     <PackageReference Include="NuGetizer" PrivateAssets="all" />
+    <PackageReference Include="System.Text.Json" PrivateAssets="all" />
     <PackageReference Include="PolySharp">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -26,7 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mobile.BuildTools.Reference\Mobile.BuildTools.Reference.csproj"
-                      PackFolder="buildTransitive" />
+                      PackFolder="$(PackFolder)" />
   </ItemGroup>
 
   <Target Name="ExcludeTFM" BeforeTargets="_AddPackageManifest" AfterTargets="InferPackageContents">

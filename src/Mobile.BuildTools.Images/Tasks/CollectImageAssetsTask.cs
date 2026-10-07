@@ -1,4 +1,4 @@
-﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Generators.Images;
@@ -22,7 +22,7 @@ namespace Mobile.BuildTools.Tasks
         public ITaskItem[] SourceImages { get; private set; }
 
         [Output]
-        public bool HasImages => GeneratedImages.Length > 0;
+        public bool HasImages => GeneratedImages?.Length > 0;
 
         internal override void ExecuteInternal(IBuildConfiguration config)
         {
@@ -34,14 +34,15 @@ namespace Mobile.BuildTools.Tasks
 // #endif
 
             GeneratedImages = Array.Empty<ITaskItem>();
+            SourceImages = Array.Empty<ITaskItem>();
             var generator = CreateGenerator(config.Platform, config);
-            generator.SearchFolders = GetSearchPaths(config);
             if (generator is null)
             {
                 Log.LogWarning($"Cannot collect image assets for {TargetFrameworkIdentifier}, target framework is not supported.");
                 return;
             }
 
+            generator.SearchFolders = GetSearchPaths(config);
             generator.Execute();
             SourceImages = generator.ImageInputFiles.Select(x => new TaskItem(x)).ToArray();
             GeneratedImages = generator.Outputs.Select(x => x.ToTaskItem()).ToArray();

@@ -1,0 +1,48 @@
+<Project>
+  <!-- PWA JSON is distinct from Uno's generated JavaScript boot AppManifest.js. -->
+  <Target Name="_MBTPrepareWebAssemblyManifest" BeforeTargets="AssignTargetPaths;UnoResizetizeImages;GenerateUnoWasmAssets"
+          DependsOnTargets="MobileBuildToolsInit"
+          Condition="'$(IsCrossTargetingBuild)' != 'true' And Exists('$(WasmPWAManifestFile)')">
+    <PropertyGroup>
+      <_MBTPwaSourceFullPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(WasmPWAManifestFile)'))</_MBTPwaSourceFullPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <_MBTPwaContentSource Include="@(Content)" Condition="'%(Content.FullPath)' == '$(_MBTPwaSourceFullPath)'" />
+      <_MBTPwaSource Include="@(_MBTPwaContentSource)" />
+      <_MBTPwaSource Include="$(WasmPWAManifestFile)" Condition="'@(_MBTPwaSource)' == ''" />
+    </ItemGroup>
+    <AssignTargetPath Files="@(_MBTPwaSource)" RootFolder="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="AssignedFiles" ItemName="_MBTPwaSourceWithTargetPath" />
+    </AssignTargetPath>
+    <ItemGroup>
+      <_MBTPwaSourceWithTargetPath Update="@(_MBTPwaSourceWithTargetPath)" Link="%(_MBTPwaSourceWithTargetPath.TargetPath)" Condition="'%(_MBTPwaSourceWithTargetPath.Link)' == ''" />
+    </ItemGroup>
+    <TransformManifestItemsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                ProjectName="$(MSBuildProjectName)"
+                                ProjectDirectory="$(MSBuildProjectDirectory)"
+                                SolutionDirectory="$(SolutionDir)"
+                                Configuration="$(Configuration)"
+                                IntermediateOutputPath="$(IntermediateOutputPath)"
+                                TargetFrameworkIdentifier="$(TargetFramework)"
+                                Manifests="@(_MBTPwaSourceWithTargetPath)"
+                                OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/manifests/$(TargetFramework)/$(RuntimeIdentifier)/webassembly"
+                                ReplaceTokens="$(BuildToolsEnableTemplateManifests)" Condition="'$(BuildToolsEnableTemplateManifests)' == 'true'">
+      <Output TaskParameter="ProcessedManifests" ItemName="_MBTPwaManifest" />
+      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
+      <Output TaskParameter="Changed" PropertyName="_MBTPwaManifestChanged" />
+    </TransformManifestItemsTask>
+    <ItemGroup Condition="'@(_MBTPwaManifest)' != ''">
+      <Content Remove="@(_MBTPwaContentSource)" />
+      <Content Include="@(_MBTPwaManifest)" />
+    </ItemGroup>
+    <PropertyGroup Condition="'@(_MBTPwaManifest)' != ''">
+      <_MBTPwaManifestPath>@(_MBTPwaManifest)</_MBTPwaManifestPath>
+      <WasmPWAManifestFile>$([MSBuild]::MakeRelative('$(MSBuildProjectDirectory)', '$(_MBTPwaManifestPath)'))</WasmPWAManifestFile>
+      <!-- Uno 1.12 caches this path during evaluation. Keep its resizetizer input pointed at the transformed JSON. -->
+      <_WasmPwaManifestPath>@(_MBTPwaManifest)</_WasmPwaManifestPath>
+      <_WasmHasPWAManifest>true</_WasmHasPWAManifest>
+    </PropertyGroup>
+    <!-- Uno 1.12 does not list PWA JSON in the resize target's Inputs. Invalidate only its generated stamp when JSON changes. -->
+    <Delete Files="$(_UnoResizetizerStampFile)" Condition="'$(_MBTPwaManifestChanged)' == 'true' And '$(_UnoResizetizerStampFile)' != '' And Exists('$(_UnoResizetizerStampFile)')" />
+  </Target>
+</Project>

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Authors>Dan Siegel</Authors>
     <Copyright>© 2016-$([System.DateTime]::Now.ToString(`yyyy`)) Dan Siegel</Copyright>
-    <MinVerMinimumMajorMinor>2.1</MinVerMinimumMajorMinor>
+    <MinVerMinimumMajorMinor>3.0</MinVerMinimumMajorMinor>
     <MinVerDefaultPreReleaseIdentifiers>pre</MinVerDefaultPreReleaseIdentifiers>
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -23,8 +23,13 @@
     <NeutralLanguage>en</NeutralLanguage>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <NoWarn>$(NoWarn);NU1009;NU1012;NU1507;NU1012</NoWarn>
+    <NoWarn>$(NoWarn);NU1009;NU1012;NU1507</NoWarn>
     <ImplicitUsings>true</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- Package props are imported before the project body; select source mode here. -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Mobile.BuildTools.AppSettings'">
+    <CodeGenHelpersMode>Source</CodeGenHelpersMode>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -33,7 +38,7 @@
 
   <!-- CI Helper -->
   <PropertyGroup>
-    <CI>false</CI>
+    <CI Condition="'$(CI)' == ''">false</CI>
     <CI Condition=" '$(BUILD_BUILDNUMBER)' != '' ">true</CI>
     <ContinuousIntegrationBuild>$(CI)</ContinuousIntegrationBuild>
   </PropertyGroup>
@@ -69,15 +74,15 @@
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
       <PropertyGroup>
-        <TargetPlatformMinVersion>10.14</TargetPlatformMinVersion>
-        <SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion>12.0</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion>12.0</SupportedOSPlatformVersion>
         <RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">osx-x64</RuntimeIdentifier>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
       <PropertyGroup>
-        <TargetPlatformMinVersion>14.0</TargetPlatformMinVersion>
-        <SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion>15.0</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">maccatalyst-x64</RuntimeIdentifier>
       </PropertyGroup>
     </When>

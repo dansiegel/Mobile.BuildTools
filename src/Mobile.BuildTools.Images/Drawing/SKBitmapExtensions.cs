@@ -1,4 +1,4 @@
-﻿using SkiaSharp;
+using SkiaSharp;
 
 namespace Mobile.BuildTools.Drawing
 {
@@ -13,7 +13,7 @@ namespace Mobile.BuildTools.Drawing
             {
                 for (var y = 0; y < imageHeight; y++)
                 {
-                    if (bitmap.GetPixel(x, y).Alpha == 0)
+                    if (bitmap.GetPixel(x, y).Alpha < 255)
                     {
                         return true;
                     }

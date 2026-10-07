@@ -1,5 +1,7 @@
 ﻿using Mobile.BuildTools.Build;
-using Xamarin.Android.Tools;
+using System.IO;
+using System.Xml.Linq;
+using Mobile.BuildTools.Generators.Manifests;
 
 namespace Mobile.BuildTools.Generators.Versioning
 {
@@ -12,10 +14,12 @@ namespace Mobile.BuildTools.Generators.Versioning
 
         protected override void ProcessManifest(string path, string outputPath, string buildNumber)
         {
-            var androidManifest = AndroidAppManifest.Load(path, new AndroidVersions(AndroidVersions.KnownVersions));
-            androidManifest.VersionCode = buildNumber;
-            androidManifest.VersionName = $"{SanitizeVersion(androidManifest.VersionName)}.{buildNumber}";
-            androidManifest.WriteToFile(outputPath);
+            var document = TemplatedXmlManifestGenerator.Parse(File.ReadAllText(path));
+            XNamespace android = "http://schemas.android.com/apk/res/android";
+            var version = document.Root.Attribute(android + "versionName")?.Value;
+            document.Root.SetAttributeValue(android + "versionCode", buildNumber);
+            document.Root.SetAttributeValue(android + "versionName", $"{SanitizeVersion(version)}.{buildNumber}");
+            WriteIfChanged(outputPath, document.ToString(SaveOptions.DisableFormatting));
         }
     }
 }

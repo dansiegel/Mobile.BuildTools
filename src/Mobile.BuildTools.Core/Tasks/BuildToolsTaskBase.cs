@@ -56,7 +56,7 @@ namespace Mobile.BuildTools.Tasks
             {
                 LocateSolution();
 
-                ConfigurationPath = ConfigHelper.GetConfigurationPath(ProjectDirectory);
+                ConfigurationPath = string.IsNullOrEmpty(ConfigurationPath) ? ConfigHelper.GetConfigurationPath(ProjectDirectory) : ConfigurationPath;
                 _config = ConfigHelper.GetConfig(ConfigurationPath);
 //#if DEBUG
 //                if (!Debugger.IsAttached && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -66,10 +66,6 @@ namespace Mobile.BuildTools.Tasks
             }
             catch (Exception ex)
             {
-#if DEBUG
-                if (!Debugger.IsAttached && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    Debugger.Launch();
-#endif
                 Log.LogError($"Unhandled error while executing {GetType().Name}");
                 Log.LogErrorFromException(ex);
 
@@ -103,7 +99,7 @@ namespace Mobile.BuildTools.Tasks
 
         private void LocateSolution()
         {
-            if (!string.IsNullOrEmpty(SolutionDirectory) && Directory.EnumerateFiles(SolutionDirectory, "*.sln").Any())
+            if (!string.IsNullOrEmpty(SolutionDirectory) && (Directory.EnumerateFiles(SolutionDirectory, "*.sln").Any() || Directory.EnumerateFiles(SolutionDirectory, "*.slnx").Any()))
             {
                 return;
             }

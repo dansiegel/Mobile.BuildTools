@@ -3,53 +3,183 @@ name: PR
 on:
   pull_request:
     paths:
+    - '.github/workflows/pr.yml'
     - 'Directory.*'
+    - 'global.json'
     - 'src/**'
     - 'E2E/**'
     - 'tests/**'
+    - 'samples/AppManifestsSample/**'
 
 jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.version.outputs.package_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Verify natural and CI package versions
+        id: version
+        shell: pwsh
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          MERGE_SHA: ${{ github.sha }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          [xml]$props = Get-Content Directory.Build.props
+          $minimum = @($props.Project.PropertyGroup.MinVerMinimumMajorMinor | Where-Object { $_ })[0]
+          if ($minimum -ne '3.0') { throw "Expected the 3.0 source version baseline, found '$minimum'." }
+          $ciVersion = "$minimum.0-ci.$env:GITHUB_RUN_NUMBER"
+          "package_version=$ciVersion" >> $env:GITHUB_OUTPUT
+          $project = 'src/Mobile.BuildTools.AppSettings/Mobile.BuildTools.AppSettings.csproj'
+          foreach ($revision in @($env:HEAD_SHA, $env:MERGE_SHA) | Select-Object -Unique) {
+            git checkout --detach $revision
+            if ($LASTEXITCODE -ne 0) { throw "Cannot inspect version at $revision." }
+            foreach ($override in @('', $ciVersion)) {
+              $output = dotnet msbuild $project -restore -target:MinVer -nologo -p:MinVerVerbosity=detailed "-p:MinVerVersionOverride=$override" "-getProperty:MinVerVersion,PackageVersion,AssemblyVersion,FileVersion"
+              if ($LASTEXITCODE -ne 0) { throw "MinVer evaluation failed at $revision." }
+              $text = $output -join "`n"
+              Write-Host $text
+              $match = [regex]::Match($text, '(?s)\{\s*"Properties"\s*:\s*\{.*\}\s*\}\s*$')
+              if (!$match.Success) { throw 'MSBuild did not return version properties.' }
+              $values = ($match.Value | ConvertFrom-Json).Properties
+              if ($override -eq '') {
+                if ($values.MinVerVersion -notmatch '^3\.0\.') { throw "Natural version is not 3.0: $($values.MinVerVersion)" }
+              } elseif ($values.MinVerVersion -ne $ciVersion) {
+                throw "CI version override was not applied: $($values.MinVerVersion)"
+              }
+              if ($values.PackageVersion -ne $values.MinVerVersion) {
+                throw "PackageVersion and MinVerVersion disagree at $revision."
+              }
+            }
+          }
+
   build:
+    needs: [version]
     uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
     with:
       name: Build Mobile.BuildTools
       solution-path: Mobile.BuildTools.sln
       submodules: true
-      install-workload: 'maui macos maui-tizen'
-      vs-version: 17.12
+      dotnet-version: '10.0.x'
+      jdk-version: '21'
+      install-workload: 'maui macos'
+      vs-version: '18.0'
+      build-args: /p:MinVerVersionOverride=${{ needs.version.outputs.package_version }}
 
+  # Every host consumes the same NuGet artifact from build. Do not rebuild task
+  # projects or add runtime dependencies to hide a package's missing native assets.
   e2e:
-    needs: [build]
+    needs: [version, build]
     runs-on: ${{ matrix.os }}
+    env:
+      AString: 'Hello World!'
+      AnInt: 5
+      ADouble: 3.14
+      ABool: false
+      AFloat: 4.2
+      ADate: 'January 1, 2020'
+      AUri: 'https://mobilebuildtools.com'
+      AStringArray: 'Foo;Bar;Baz'
+      APlatformProperty: 'Should Not Exist'
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
-
+          dotnet-version: '10.0.x'
       - name: Download NuGet Artifacts
         uses: actions/download-artifact@v4
         with:
           name: NuGet
           path: Artifacts
-
+      - name: Verify shipped package dependency graph
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = '${{ needs.version.outputs.package_version }}'
+          $ids = @('Mobile.BuildTools', 'Mobile.BuildTools.Core', 'Mobile.BuildTools.Configuration', 'Mobile.BuildTools.AppSettings', 'Mobile.BuildTools.AppManifests', 'Mobile.BuildTools.Images')
+          foreach ($id in $ids) {
+            $path = Join-Path Artifacts "$id.$version.nupkg"
+            if (!(Test-Path $path)) { throw "Exact produced package missing: $path" }
+            $zip = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path $path))
+            try {
+              $leaked = @($zip.Entries | Where-Object { $_.FullName -match '(^|/)(Svg\.Skia|Svg\.Animation)\.(dll(?:\.config)?|pdb|xml|deps\.json|runtimeconfig\.json)$' })
+              if ($leaked.Count) { throw "Legacy SVG implementation leaked into $id : $($leaked.FullName)" }
+              $entry = @($zip.Entries | Where-Object { $_.FullName.EndsWith('.nuspec') })[0]
+              $reader = [System.IO.StreamReader]::new($entry.Open())
+              try { [xml]$manifest = $reader.ReadToEnd() } finally { $reader.Dispose() }
+              $packageVersion = $manifest.SelectSingleNode("//*[local-name()='metadata']/*[local-name()='version']").InnerText
+              if ($packageVersion -ne $version) { throw "Wrong package version in $id : $packageVersion" }
+              $dependencies = $manifest.SelectNodes("//*[local-name()='dependency']")
+              foreach ($dependency in $dependencies) {
+                if ($dependency.id -in @('Svg.Skia', 'Svg.Animation')) { throw "Legacy SVG package dependency in $id : $($dependency.id)" }
+              }
+              foreach ($entry in @($zip.Entries | Where-Object { $_.FullName.EndsWith('.deps.json') })) {
+                $reader = [System.IO.StreamReader]::new($entry.Open())
+                try { $deps = $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
+                if (@($deps.libraries.PSObject.Properties.Name | Where-Object { $_ -match '^Svg\.(Skia|Animation)/' }).Count) {
+                  throw "Legacy SVG dependency remains in $id / $($entry.FullName)"
+                }
+              }
+              Write-Host "$id ${version}: no shipped Svg.Skia or Svg.Animation dependency."
+            } finally { $zip.Dispose() }
+          }
+      - name: Show consumer host runtime
+        run: dotnet --info
       - name: Run Tests
-        run: dotnet test -c Release
+        run: dotnet test -c Release -p:GeneratedPackageVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
         working-directory: E2E/E2E.Tests
-        env:
-          AString: 'Hello World!'
-          AnInt: 5
-          ADouble: 3.14
-          ABool: false
-          AFloat: 4.2
-          ADate: 'January 1, 2020'
-          AUri: 'https://mobilebuildtools.com'
-          AStringArray: 'Foo;Bar;Baz'
-          APlatformProperty: 'Should Not Exist'
-
+      - name: Inspect packaged desktop image dependencies
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $taskDirectory = Join-Path '${{ runner.temp }}/mbt-consumer-packages' 'mobile.buildtools.images/${{ needs.version.outputs.package_version }}/build/tasks/net472'
+          foreach ($name in @('Mobile.BuildTools.Images.dll', 'Svg.Custom.dll', 'Svg.Model.dll', 'Svg.SceneGraph.dll', 'ShimSkiaSharp.dll', 'SkiaSharp.dll', 'HarfBuzzSharp.dll')) {
+            $path = Join-Path $taskDirectory $name
+            if (!(Test-Path $path)) { throw "Packaged task dependency missing: $path" }
+            Write-Host "$name : $([System.Reflection.AssemblyName]::GetAssemblyName($path).FullName)"
+          }
+          foreach ($architecture in @('x86', 'x64', 'arm64')) {
+            foreach ($name in @('libSkiaSharp.dll', 'libHarfBuzzSharp.dll')) {
+              $path = Join-Path $taskDirectory "$architecture/$name"
+              if (!(Test-Path $path)) { throw "Packaged native task dependency missing: $path" }
+              Write-Host "Native task dependency: $path"
+            }
+          }
+      - name: Setup MSBuild
+        if: runner.os == 'Windows'
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '18.0'
+      - name: Build package consumer with full MSBuild
+        if: runner.os == 'Windows'
+        run: msbuild E2E/E2E.Tests/E2E.Tests.csproj /t:Restore,Rebuild /p:Configuration=Release /p:GeneratedPackageVersion=${{ needs.version.outputs.package_version }} /p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+      - name: Verify full MSBuild consumer outputs
+        if: runner.os == 'Windows'
+        run: dotnet test E2E/E2E.Tests/E2E.Tests.csproj -c Release --no-build --no-restore -p:GeneratedPackageVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+      - name: Setup Java for the Android consumer
+        uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: '21'
+      - name: Install supported MAUI consumer workloads
+        run: dotnet workload install maui-android
+      - name: Build MAUI Android package consumer
+        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-android -c Debug -p:TargetFrameworks=net10.0-android -p:MobileBuildToolsVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+      - name: Install MAUI Windows consumer workload
+        if: runner.os == 'Windows'
+        run: dotnet workload install maui-windows
+      - name: Build MAUI Windows package consumer
+        if: runner.os == 'Windows'
+        run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-windows10.0.19041.0 -c Debug -p:TargetFrameworks=net10.0-windows10.0.19041.0 -p:MobileBuildToolsVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"

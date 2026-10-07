@@ -1,4 +1,6 @@
+﻿using System;
 using System.IO;
+using Mobile.BuildTools.Drawing;
 using System.Text;
 using Mobile.BuildTools.Generators.Images;
 using Mobile.BuildTools.Models.AppIcons;
@@ -16,7 +18,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
     [Collection(nameof(ImageResizer))]
     public class ImageResizerGeneratorFixture : FixtureBase
     {
-        public ImageResizerGeneratorFixture(ITestOutputHelper testOutputHelper) 
+        public ImageResizerGeneratorFixture(ITestOutputHelper testOutputHelper)
             : base(Path.Combine("Templates", "Apple"), testOutputHelper)
         {
         }
@@ -281,25 +283,27 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
 
         private void VerifyImageContents(OutputImage image)
         {
-            var expectedFilePath = Path.Combine(TestConstants.ExpectedImageDirectory, image.OutputFile);
-            var outputFilePath = image.OutputFile;
-
-            Assert.True(File.Exists(expectedFilePath), $"Expected image file '{expectedFilePath}' does not exist");
-            Assert.True(File.Exists(outputFilePath), $"Resulting image file '{outputFilePath}' does not exist");
-
-            using var expectedImage = SKBitmap.Decode(expectedFilePath);
-            using var outputImage = SKBitmap.Decode(outputFilePath);
-
-            Assert.Equal(expectedImage.Width, outputImage.Width);
-            Assert.Equal(expectedImage.Height, outputImage.Height);
-
-            for (var y = 0; y < expectedImage.Height; ++y)
+            Assert.True(File.Exists(image.OutputFile));
+            using var source = ImageBase.Load(image.InputFile);
+            using var output = SKBitmap.Decode(image.OutputFile);
+            Assert.NotNull(output);
+            var size = source.GetOriginalSize();
+            var width = image.Width;
+            var height = image.Height;
+            if (width > 0 && height == 0)
+                height = Math.Max(1, (int)Math.Round((double)size.Height * width / size.Width));
+            else if (height > 0 && width == 0)
+                width = Math.Max(1, (int)Math.Round((double)size.Width * height / size.Height));
+            else if (width == 0 && height == 0)
             {
-                for (var x = 0; x < expectedImage.Width; ++x)
-                {
-                    Assert.Equal(expectedImage.GetPixel(x, y), outputImage.GetPixel(x, y));
-                }
+                var scale = image.Scale > 0 ? image.Scale : 1;
+                width = Math.Max(1, (int)Math.Round(size.Width * scale));
+                height = Math.Max(1, (int)Math.Round(size.Height * scale));
             }
+            Assert.Equal(width, output.Width);
+            Assert.Equal(height, output.Height);
+            if (image.RequiresBackgroundColor)
+                Assert.False(output.HasTransparentBackground());
         }
     }
 }

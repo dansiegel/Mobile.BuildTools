@@ -16,4 +16,35 @@
     </ItemGroup>
   </Target>
 
+  <PropertyGroup>
+    <CollectAppManifestsDependsOn>$(CollectAppManifestsDependsOn);_MobileBuildToolsImageAppleManifest</CollectAppManifestsDependsOn>
+  </PropertyGroup>
+  <!-- The Apple SDK reads XSAppIconAssets before actool and merges actool's resulting
+       icon keys later. Do not manufacture CFBundleIcons or duplicate splash partials. -->
+  <Target Name="_MobileBuildToolsImageAppleManifest"
+          DependsOnTargets="_MobileBuildToolsPrepareNativeImages;_DetectAppManifest;$(MobileBuildToolsAppleImageManifestDependsOn)"
+          Condition="'$(IsCrossTargetingBuild)' != 'true' and '$(OutputType)' == 'Exe' and ('$(_MobileBuildToolsImagesPlatformIdentifier)' == 'ios' or '$(_MobileBuildToolsImagesPlatformIdentifier)' == 'maccatalyst')">
+    <PropertyGroup>
+      <_MobileBuildToolsImageAppleSource>$(AppBundleManifest)</_MobileBuildToolsImageAppleSource>
+      <_MobileBuildToolsImageAppleSource Condition="'$(_MobileBuildToolsImageAppleSource)' == ''">$(_AppManifest)</_MobileBuildToolsImageAppleSource>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(BuildToolsEnableImageProcessing)' == 'true'">
+      <_MobileBuildToolsImageManifestInput Remove="@(_MobileBuildToolsImageManifestInput)" />
+      <_MobileBuildToolsImageManifestInput Include="@(MauiImage)" MobileBuildToolsItemType="MauiImage" Condition="'$(DisableResizetizer)' != 'true' and '$(EnableMauiImageProcessing)' != 'false'" />
+      <_MobileBuildToolsImageManifestInput Include="@(MauiIcon)" MobileBuildToolsItemType="MauiIcon" Condition="'$(DisableResizetizer)' != 'true' and '$(EnableMauiImageProcessing)' != 'false'" />
+      <_MobileBuildToolsImageManifestInput Include="@(UnoImage)" MobileBuildToolsItemType="UnoImage" Condition="'$(DisableUnoResizetizer)' != 'true'" />
+      <_MobileBuildToolsImageManifestInput Include="@(UnoIcon)" MobileBuildToolsItemType="UnoIcon" Condition="'$(DisableUnoResizetizer)' != 'true'" />
+    </ItemGroup>
+    <GenerateNativeImageManifestTask Condition="'@(_MobileBuildToolsImageManifestInput)' != ''" Images="@(_MobileBuildToolsImageManifestInput)"
+                                     Manifest="$(_MobileBuildToolsImageAppleSource)"
+                                     PartialManifests="@(PartialAppManifest)"
+                                     AppManifestEntries="@(AppManifestEntry)"
+                                     Platform="apple"
+                                     ProjectDirectory="$(MSBuildProjectDirectory)"
+                                     OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/image-manifests/$(TargetFramework)/$(RuntimeIdentifier)/apple">
+      <Output TaskParameter="GeneratedManifest" ItemName="PartialAppManifest" />
+      <Output TaskParameter="FileWrites" ItemName="FileWrites" />
+    </GenerateNativeImageManifestTask>
+  </Target>
+
 </Project>

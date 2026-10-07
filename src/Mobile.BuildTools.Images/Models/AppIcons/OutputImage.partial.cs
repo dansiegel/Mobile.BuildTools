@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Globalization;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Extensions;
@@ -16,10 +17,10 @@ namespace Mobile.BuildTools.Models.AppIcons
             item.SetMetadata(nameof(image.Height), image.Height.ToString());
             item.SetMetadata(nameof(image.Width), image.Width.ToString());
             item.SetMetadata(nameof(image.RequiresBackgroundColor), image.RequiresBackgroundColor.ToString());
-            item.SetMetadata(nameof(image.Scale), image.Scale.ToString());
+            item.SetMetadata(nameof(image.Scale), image.Scale.ToString(CultureInfo.InvariantCulture));
             item.SetMetadata(nameof(image.ShouldBeVisible), image.ShouldBeVisible.ToString());
             item.SetMetadata(nameof(image.BackgroundColor), image.BackgroundColor);
-            item.SetMetadata(nameof(image.PaddingFactor), image.PaddingFactor?.ToString());
+            item.SetMetadata(nameof(image.PaddingFactor), image.PaddingFactor?.ToString(CultureInfo.InvariantCulture));
             item.SetMetadata(nameof(image.PaddingColor), image.PaddingColor);
 
             if (image.Watermark != null)
@@ -31,7 +32,7 @@ namespace Mobile.BuildTools.Models.AppIcons
                 item.SetMetadata("WatermarkTextColor", image.Watermark.TextColor);
                 item.SetMetadata("WatermarkFontFamily", image.Watermark.FontFamily);
                 item.SetMetadata("WatermarkFontFile", image.Watermark.FontFile);
-                item.SetMetadata("WatermarkOpacity", image.Watermark.Opacity?.ToString());
+                item.SetMetadata("WatermarkOpacity", image.Watermark.Opacity?.ToString(CultureInfo.InvariantCulture));
             }
 
             return item;
@@ -47,14 +48,14 @@ namespace Mobile.BuildTools.Models.AppIcons
                 OutputLink = item.GetMetadata(nameof(OutputImage.OutputLink)),
                 BackgroundColor = item.GetMetadata(nameof(OutputImage.BackgroundColor)),
                 PaddingColor = item.GetMetadata(nameof(OutputImage.PaddingColor)),
-                PaddingFactor = !string.IsNullOrEmpty(paddingString) && double.TryParse(paddingString, out var p) ? p : default
+                PaddingFactor = !string.IsNullOrEmpty(paddingString) && double.TryParse(paddingString, NumberStyles.Float, CultureInfo.InvariantCulture, out var p) ? p : default
             };
 
             int.TryParse(item.GetMetadata(nameof(OutputImage.Height)), out var height);
             int.TryParse(item.GetMetadata(nameof(OutputImage.Width)), out var width);
             bool.TryParse(item.GetMetadata(nameof(OutputImage.RequiresBackgroundColor)), out var requiresBackgroundColor);
             bool.TryParse(item.GetMetadata(nameof(OutputImage.ShouldBeVisible)), out var shouldBeVisible);
-            if(double.TryParse(item.GetMetadata(nameof(OutputImage.Scale)), out var scale) && (height == 0 || width == 0) && scale == 0)
+            if(double.TryParse(item.GetMetadata(nameof(OutputImage.Scale)), NumberStyles.Float, CultureInfo.InvariantCulture, out var scale) && (height == 0 || width == 0) && scale == 0)
             {
                 scale = 1;
             }
@@ -68,7 +69,7 @@ namespace Mobile.BuildTools.Models.AppIcons
             var watermarkSourceFile = item.GetMetadata("WatermarkSourceFile");
             var watermarkText = item.GetMetadata("WatermarkText");
             var opacityString = item.GetMetadata("WatermarkOpacity");
-            var opacity = double.TryParse(opacityString, out var op) ? op : Constants.DefaultOpacity;
+            var opacity = double.TryParse(opacityString, NumberStyles.Float, CultureInfo.InvariantCulture, out var op) ? op : Constants.DefaultOpacity;
 
             if (!string.IsNullOrEmpty(watermarkSourceFile))
             {

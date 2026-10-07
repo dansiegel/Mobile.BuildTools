@@ -11,4 +11,65 @@
     </ItemGroup>
   </Target>
 
+  <!-- Both framework icon generators emit {name} and {name}_round mipmaps. They do not
+       insert AndroidManifest references. Run after optional template/version transforms and before
+       Android's first manifest read, so the Images package also works independently. -->
+  <Target Name="_MobileBuildToolsImageAndroidManifest"
+          BeforeTargets="PrepareForBuild;_GetAndroidPackageName"
+          DependsOnTargets="_MobileBuildToolsPrepareNativeImages;$(MobileBuildToolsAndroidImageManifestDependsOn)"
+          Condition="'$(IsCrossTargetingBuild)' != 'true' and '$(AndroidApplication)' == 'true' and Exists('$(AndroidManifest)')">
+    <PropertyGroup>
+      <_MobileBuildToolsImageAndroidSource Condition="'$(_MobileBuildToolsImageAndroidSource)' == ''">$(AndroidManifest)</_MobileBuildToolsImageAndroidSource>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(BuildToolsEnableImageProcessing)' == 'true'">
+      <_MobileBuildToolsImageManifestInput Remove="@(_MobileBuildToolsImageManifestInput)" />
+      <_MobileBuildToolsImageManifestInput Include="@(MauiImage)" MobileBuildToolsItemType="MauiImage" Condition="'$(DisableResizetizer)' != 'true' and '$(EnableMauiImageProcessing)' != 'false'" />
+      <_MobileBuildToolsImageManifestInput Include="@(MauiIcon)" MobileBuildToolsItemType="MauiIcon" Condition="'$(DisableResizetizer)' != 'true' and '$(EnableMauiImageProcessing)' != 'false'" />
+      <_MobileBuildToolsImageManifestInput Include="@(UnoImage)" MobileBuildToolsItemType="UnoImage" Condition="'$(DisableUnoResizetizer)' != 'true'" />
+      <_MobileBuildToolsImageManifestInput Include="@(UnoIcon)" MobileBuildToolsItemType="UnoIcon" Condition="'$(DisableUnoResizetizer)' != 'true'" />
+    </ItemGroup>
+    <GenerateNativeImageManifestTask Condition="'@(_MobileBuildToolsImageManifestInput)' != ''" Images="@(_MobileBuildToolsImageManifestInput)"
+                                     Manifest="$(_MobileBuildToolsImageAndroidSource)"
+                                     Platform="android"
+                                     ProjectDirectory="$(MSBuildProjectDirectory)"
+                                     OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/image-manifests/$(TargetFramework)/$(RuntimeIdentifier)/android">
+      <Output TaskParameter="GeneratedManifest" ItemName="_MobileBuildToolsImageAndroidManifest" />
+      <Output TaskParameter="FileWrites" ItemName="FileWrites" />
+    </GenerateNativeImageManifestTask>
+    <PropertyGroup Condition="'@(_MobileBuildToolsImageAndroidManifest)' != ''">
+      <_MobileBuildToolsImageAndroidManifestPath>@(_MobileBuildToolsImageAndroidManifest)</_MobileBuildToolsImageAndroidManifestPath>
+      <AndroidManifest>$([MSBuild]::MakeRelative('$(MSBuildProjectDirectory)', '$(_MobileBuildToolsImageAndroidManifestPath)'))</AndroidManifest>
+    </PropertyGroup>
+  </Target>
+
+  <!-- Referenced-project icons can arrive after the early manifest read. Reconcile the
+       final native collection without rerunning source preparation or changing identity. -->
+  <Target Name="_MobileBuildToolsImageAndroidManifestAfterCollection"
+          AfterTargets="ResizetizeCollectItems;UnoResizetizeCollectItems"
+          DependsOnTargets="_MobileBuildToolsPrepareNativeImages;$(MobileBuildToolsAndroidImageManifestDependsOn)"
+          Condition="'$(IsCrossTargetingBuild)' != 'true' and '$(AndroidApplication)' == 'true' and Exists('$(AndroidManifest)')">
+    <PropertyGroup>
+      <_MobileBuildToolsImageAndroidSource Condition="'$(_MobileBuildToolsImageAndroidSource)' == ''">$(AndroidManifest)</_MobileBuildToolsImageAndroidSource>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(BuildToolsEnableImageProcessing)' == 'true'">
+      <_MobileBuildToolsImageManifestInput Remove="@(_MobileBuildToolsImageManifestInput)" />
+      <_MobileBuildToolsImageManifestInput Include="@(MauiImage)" MobileBuildToolsItemType="MauiImage" Condition="'$(DisableResizetizer)' != 'true' and '$(EnableMauiImageProcessing)' != 'false'" />
+      <_MobileBuildToolsImageManifestInput Include="@(MauiIcon)" MobileBuildToolsItemType="MauiIcon" Condition="'$(DisableResizetizer)' != 'true' and '$(EnableMauiImageProcessing)' != 'false'" />
+      <_MobileBuildToolsImageManifestInput Include="@(UnoImage)" MobileBuildToolsItemType="UnoImage" Condition="'$(DisableUnoResizetizer)' != 'true'" />
+      <_MobileBuildToolsImageManifestInput Include="@(UnoIcon)" MobileBuildToolsItemType="UnoIcon" Condition="'$(DisableUnoResizetizer)' != 'true'" />
+    </ItemGroup>
+    <GenerateNativeImageManifestTask Condition="'@(_MobileBuildToolsImageManifestInput)' != ''" Images="@(_MobileBuildToolsImageManifestInput)"
+                                     Manifest="$(_MobileBuildToolsImageAndroidSource)"
+                                     Platform="android"
+                                     ProjectDirectory="$(MSBuildProjectDirectory)"
+                                     OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/image-manifests/$(TargetFramework)/$(RuntimeIdentifier)/android">
+      <Output TaskParameter="GeneratedManifest" ItemName="_MobileBuildToolsImageAndroidManifestCollected" />
+      <Output TaskParameter="FileWrites" ItemName="FileWrites" />
+    </GenerateNativeImageManifestTask>
+    <PropertyGroup Condition="'@(_MobileBuildToolsImageAndroidManifestCollected)' != ''">
+      <_MobileBuildToolsImageAndroidManifestPath>@(_MobileBuildToolsImageAndroidManifestCollected)</_MobileBuildToolsImageAndroidManifestPath>
+      <AndroidManifest>$([MSBuild]::MakeRelative('$(MSBuildProjectDirectory)', '$(_MobileBuildToolsImageAndroidManifestPath)'))</AndroidManifest>
+    </PropertyGroup>
+  </Target>
+
 </Project>

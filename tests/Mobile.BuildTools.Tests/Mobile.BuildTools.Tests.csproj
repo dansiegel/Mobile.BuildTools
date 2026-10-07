@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
     <_NativeRuntime>win-x64</_NativeRuntime>
-    <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
+    <_NativeRuntime Condition=" $([MSBuild]::IsOSPlatform('OSX'))">osx-x64</_NativeRuntime>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,18 +44,42 @@
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" NoWarn="NU1903" />
+    <!-- Task packages keep these private; the test host needs its own runtime graph. -->
+    <!-- Test-only renderer oracle; production package graph is checked independently in CI. -->
+    <PackageReference Include="Svg.Skia" PrivateAssets="all" />
+    <PackageReference Include="HarfBuzzSharp" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
+    <PackageReference Include="Microsoft.Web.Xdt" />
+    <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Mobile.BuildTools.AppManifests\Mobile.BuildTools.AppManifests.csproj" />
     <ProjectReference Include="..\..\src\Mobile.BuildTools.Images\Mobile.BuildTools.Images.csproj" />
+    <ProjectReference Include="..\..\src\Mobile.BuildTools.Core\Mobile.BuildTools.Core.csproj" />
     <ProjectReference Include="..\..\src\Mobile.BuildTools\Mobile.BuildTools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Resizetizer" GeneratePathProperty="true" ExcludeAssets="all" PrivateAssets="all" />
+    <PackageReference Include="Uno.Resizetizer" GeneratePathProperty="true" ExcludeAssets="all" PrivateAssets="all" />
+    <AssemblyMetadata Include="MauiResizetizerPackagePath" Value="$(PkgMicrosoft_Maui_Resizetizer)" />
+    <AssemblyMetadata Include="UnoResizetizerPackagePath" Value="$(PkgUno_Resizetizer)" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Templates\**\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
+
+  <!-- .NET 10 does not honor ExcludeAssets for package analyzers. These packages
+       supply task assemblies for isolated contract tests, not app source generators. -->
+  <Target Name="ExcludeFrameworkContractAnalyzers" AfterTargets="ResolveLockFileAnalyzers">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'Uno.Resizetizer' or '%(Analyzer.NuGetPackageId)' == 'Microsoft.Maui.Resizetizer'" />
+    </ItemGroup>
+  </Target>
 
 </Project>

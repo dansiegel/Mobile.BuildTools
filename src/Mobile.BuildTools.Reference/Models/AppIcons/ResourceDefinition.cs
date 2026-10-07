@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -72,8 +72,8 @@ namespace Mobile.BuildTools.Models.AppIcons
             {
                 Platform.Android => Android?.AdditionalOutputs,
                 Platform.iOS => iOS?.AdditionalOutputs ?? Apple?.AdditionalOutputs,
-                Platform.macOS => MacOS?.AdditionalOutputs ?? Apple.AdditionalOutputs,
-                Platform.TVOS => TVOS?.AdditionalOutputs ?? Apple.AdditionalOutputs,
+                Platform.macOS => MacOS?.AdditionalOutputs ?? Apple?.AdditionalOutputs,
+                Platform.TVOS => TVOS?.AdditionalOutputs ?? Apple?.AdditionalOutputs,
                 Platform.Tizen => Tizen?.AdditionalOutputs,
                 Platform.Windows => Windows?.AdditionalOutputs,
                 Platform.UWP => UWP?.AdditionalOutputs,

@@ -10,6 +10,11 @@
     "conditionalDirectories": {},
     "disable": true
   },
+  "manifests": {
+    "token": "$$",
+    "variablePrefix": "Manifest_",
+    "missingTokensAsErrors": true
+  },
   "appSettings": {
     "E2E.Tests": [
       {
@@ -82,7 +87,12 @@
       "AFloat": "4.2",
       "ADate": "January 1, 2020",
       "AStringArray": "Foo;Bar;Baz",
-      "AUri": "https://mobilebuildtools.com"
+      "AUri": "https://mobilebuildtools.com",
+      "Manifest_SmokeLiteral": "Build smoke <&> \"quotes\" 'apostrophes' \\path $& $1 $$NotAToken$$\nsecond line",
+      "Manifest_SmokeEmpty": "",
+      "Manifest_SmokeKey.+": "literal-key",
+      "Manifest_SmokeCount": "42",
+      "Manifest_SmokeRatio": "3.25"
     }
   }
 }

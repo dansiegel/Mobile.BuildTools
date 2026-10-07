@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Mobile.BuildTools.Build;
-using Xamarin.MacDev;
+using System.Xml.Linq;
+using Mobile.BuildTools.Generators.Manifests;
 
 namespace Mobile.BuildTools.Generators.Versioning
 {
@@ -13,11 +14,11 @@ namespace Mobile.BuildTools.Generators.Versioning
 
         protected override void ProcessManifest(string plistPath, string outputPath, string buildNumber)
         {
-            var infoPlist = PDictionary.FromFile(plistPath);
-            infoPlist.SetCFBundleVersion(buildNumber);
-            var shortVersion = $"{SanitizeVersion(infoPlist["CFBundleShortVersionString"] as PString)}.{buildNumber}";
-            infoPlist.SetCFBundleShortVersionString(shortVersion);
-            File.WriteAllBytes(outputPath, infoPlist.ToByteArray(PropertyListFormat.Xml));
+            var document = TemplatedXmlManifestGenerator.Parse(File.ReadAllText(plistPath));
+            var version = TemplatedPlistGenerator.FindValue(document, "CFBundleShortVersionString")?.Value;
+            TemplatedPlistGenerator.SetValue(document, "CFBundleVersion", buildNumber);
+            TemplatedPlistGenerator.SetValue(document, "CFBundleShortVersionString", $"{SanitizeVersion(version)}.{buildNumber}");
+            WriteIfChanged(outputPath, document.ToString(SaveOptions.DisableFormatting));
         }
     }
 }

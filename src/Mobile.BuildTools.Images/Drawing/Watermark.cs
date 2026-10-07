@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using Mobile.BuildTools.Models.AppIcons;
 using SkiaSharp;
 
@@ -16,19 +16,4 @@ namespace Mobile.BuildTools.Drawing
             };
     }
 
-    internal class EmptyWatermark : ImageBase
-    {
-        public EmptyWatermark() : base(string.Empty)
-        {
-        }
-
-        public override bool HasTransparentBackground => false;
-
-        public override void Draw(SKCanvas canvas, Context context)
-        {
-
-        }
-
-        public override Size GetOriginalSize() => Size.Empty;
-    }
 }

@@ -1,0 +1,11 @@
+{
+  "name": "$$SmokeLiteral$$",
+  "$$SmokeKey.+$$": "$$SmokeEmpty$$",
+  "count": 42,
+  "ratio": 3.25,
+  "enabled": true,
+  "optional": null,
+  "icons": [
+    { "src": "$$SmokeLiteral$$" }
+  ]
+}

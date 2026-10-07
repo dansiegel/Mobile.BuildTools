@@ -49,20 +49,20 @@ namespace Mobile.BuildTools.Generators.Versioning
             BuildNumber = GetBuildNumber();
             Log.LogMessage($"Build Number: {BuildNumber}");
 
-            LogManifestContents();
 
             Log.LogMessage("Processing Manifest");
             ProcessManifest(ManifestPath, ManifestOutputPath, BuildNumber);
 
-            LogManifestContents();
         }
 
-        private void LogManifestContents()
+        protected static void WriteIfChanged(string path, string manifest)
         {
-            if (Build.Configuration.Debug)
-            {
-                Log.LogMessage(File.ReadAllText(ManifestPath));
-            }
+            if (File.Exists(path) && File.ReadAllText(path) == manifest)
+                return;
+            var directory = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(directory))
+                Directory.CreateDirectory(directory);
+            File.WriteAllText(path, manifest);
         }
 
         protected abstract void ProcessManifest(string path, string outputPath, string buildNumber);

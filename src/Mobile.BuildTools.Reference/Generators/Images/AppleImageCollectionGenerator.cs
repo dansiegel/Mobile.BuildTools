@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -77,7 +77,11 @@ namespace Mobile.BuildTools.Generators.Images
                     ShouldBeVisible = true,
                     Watermark = config.Watermark,
                     BackgroundColor = config.BackgroundColor,
-                    BuildAction = "BundleResource"
+                    BuildAction = "BundleResource",
+                    Width = config.Width.HasValue ? Math.Max(1, (int)Math.Round(config.Width.Value * x.Value)) : 0,
+                    Height = config.Height.HasValue ? Math.Max(1, (int)Math.Round(config.Height.Value * x.Value)) : 0,
+                    PaddingColor = config.PaddingColor,
+                    PaddingFactor = config.PaddingFactor
                 });
            }
         }
@@ -145,7 +149,9 @@ namespace Mobile.BuildTools.Generators.Images
                 ShouldBeVisible = false,
                 Watermark = resource.Watermark,
                 BackgroundColor = resource.BackgroundColor,
-                BuildAction = "ImageAsset"
+                BuildAction = "ImageAsset",
+                PaddingColor = resource.PaddingColor,
+                PaddingFactor = resource.PaddingFactor
             };
         }
     }

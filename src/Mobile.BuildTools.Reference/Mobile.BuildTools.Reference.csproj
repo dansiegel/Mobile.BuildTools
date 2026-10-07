@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net472;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net472;net10.0</TargetFrameworks>
     <PackageId>Mobile.BuildTools.VSCompatibility</PackageId>
     <Description>This is a package specifically for 3rd party tooling to provide compatibility with the Mobile.BuildTools image generation.</Description>
     <IsPackable>false</IsPackable>
-    <PackFolder>build</PackFolder>
+    <PackFolder Condition="'$(PackFolder)' == ''">build</PackFolder>
     <IncludeSource>false</IncludeSource>
     <ImplicitUsings>false</ImplicitUsings>
   </PropertyGroup>
@@ -17,7 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" PrivateAssets="All" NoWarn="NU1903" />
+    <PackageReference Include="System.Text.Json" PrivateAssets="all" NoWarn="NU1903" />
     <PackageReference Include="System.ComponentModel.Annotations" PrivateAssets="all" />
   </ItemGroup>
 
