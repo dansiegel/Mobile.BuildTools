@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -30,7 +30,7 @@ namespace Mobile.BuildTools.Generators.Images
         {
             if(config.Ignore)
             {
-                yield return default;
+                yield break;
             }
 
 #if DEBUG
@@ -80,8 +80,8 @@ namespace Mobile.BuildTools.Generators.Images
                     BuildAction = "AndroidResource",
                     PaddingColor = config.PaddingColor,
                     PaddingFactor = config.PaddingFactor,
-                    Height = config.Height ?? 0,
-                    Width = config.Width ?? 0
+                    Height = config.Height.HasValue ? Math.Max(1, (int)Math.Round(config.Height.Value * resolution.Value / 4)) : 0,
+                    Width = config.Width.HasValue ? Math.Max(1, (int)Math.Round(config.Width.Value * resolution.Value / 4)) : 0
                 };
             }
         }

@@ -40,7 +40,7 @@
       <_NativeRuntime Condition=" '$(OS)' != 'Windows_NT'">osx-x64</_NativeRuntime>
       <_NativeRuntimeFile Condition=" '$(OS)' != 'Windows_NT'">libsass.dylib</_NativeRuntimeFile>
       <ScssRuntimeInput Condition=" '$(ScssRuntimeInput)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'runtimes', $(_NativeRuntime), $(_NativeRuntimeFile)))</ScssRuntimeInput>
-      <ScssRuntimeOutput Condition=" '$(ScssRuntimeOutput)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), $(_NativeRuntimeFile)))</ScssRuntimeOutput>
+      <ScssRuntimeOutput Condition=" '$(ScssRuntimeOutput)' == '' ">$([System.IO.Path]::Combine($([System.IO.Path]::GetDirectoryName('$(_MobileBuildToolsParentBuildTasksDll)')), '$(_NativeRuntimeFile)'))</ScssRuntimeOutput>
     </PropertyGroup>
 
     <Message Text="LibSass native binary exists at: $(ScssRuntimeOutput)"

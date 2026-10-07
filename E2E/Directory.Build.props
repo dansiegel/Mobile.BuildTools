@@ -2,23 +2,35 @@
 
   <Import Project="../Directory.Build.props" />
 
-  <PropertyGroup Condition=" '$(PIPELINE_WORKSPACE)' != '' ">
-    <CIArtifactsDirectory>$([System.IO.Path]::Combine('$(PIPELINE_WORKSPACE)', 'Artifacts'))</CIArtifactsDirectory>
-    <GeneratedLocalPackage>$([System.IO.Directory]::GetFiles('$(CIArtifactsDirectory)', 'Mobile.BuildTools.AppSettings.2.*.nupkg')[0])</GeneratedLocalPackage>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(PIPELINE_WORKSPACE)' == '' ">
-    <GeneratedLocalPackage>$([System.IO.Directory]::GetFiles('$(LocalArtifactStagingDirectory)', 'Mobile.BuildTools.AppSettings.2.*.nupkg')[0])</GeneratedLocalPackage>
+  <PropertyGroup>
+    <CIArtifactsDirectory Condition="'$(CIArtifactsDirectory)' == '' And '$(PIPELINE_WORKSPACE)' != ''">$([System.IO.Path]::Combine('$(PIPELINE_WORKSPACE)', 'Artifacts'))</CIArtifactsDirectory>
+    <CIArtifactsDirectory Condition="'$(CIArtifactsDirectory)' == ''">$(LocalArtifactStagingDirectory)</CIArtifactsDirectory>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  <!-- CI supplies the exact producer version. Preserve the convenient local inference
+       only when there is one unambiguous generated package to consume. -->
+  <PropertyGroup Condition="'$(GeneratedPackageVersion)' == '' And Exists('$(CIArtifactsDirectory)')">
+    <_GeneratedAppSettingsPackageCount>$([System.IO.Directory]::GetFiles('$(CIArtifactsDirectory)', 'Mobile.BuildTools.AppSettings.*.nupkg').Length)</_GeneratedAppSettingsPackageCount>
+    <GeneratedLocalPackage Condition="'$(_GeneratedAppSettingsPackageCount)' == '1'">$([System.IO.Directory]::GetFiles('$(CIArtifactsDirectory)', 'Mobile.BuildTools.AppSettings.*.nupkg')[0])</GeneratedLocalPackage>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(GeneratedPackageVersion)' == '' And '$(GeneratedLocalPackage)' != ''">
     <GenerateLocalPackageFileName>$([System.IO.Path]::GetFileNameWithoutExtension('$(GeneratedLocalPackage)'))</GenerateLocalPackageFileName>
     <GeneratedPackageVersion>$(GenerateLocalPackageFileName.Replace('Mobile.BuildTools.AppSettings.', ''))</GeneratedPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mobile.BuildTools.AppSettings" VersionOverride="$(GeneratedPackageVersion)" PrivateAssets="all" />
-    <PackageReference Include="Mobile.BuildTools.Core" VersionOverride="$(GeneratedPackageVersion)" PrivateAssets="all" />
+    <PackageReference Include="Mobile.BuildTools.AppSettings" VersionOverride="[$(GeneratedPackageVersion)]" PrivateAssets="all" />
+    <PackageReference Include="Mobile.BuildTools.Core" VersionOverride="[$(GeneratedPackageVersion)]" PrivateAssets="all" />
   </ItemGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'E2E.Core'">
+    <PackageReference Include="Mobile.BuildTools.Images" VersionOverride="[$(GeneratedPackageVersion)]" PrivateAssets="all" />
+    <PackageReference Include="Mobile.BuildTools.AppManifests" VersionOverride="[$(GeneratedPackageVersion)]" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="ValidateGeneratedPackageVersion" BeforeTargets="CollectPackageReferences;PrepareForBuild">
+    <Error Condition="'$(GeneratedPackageVersion)' == ''"
+           Text="Set GeneratedPackageVersion to the exact version from the package-build artifacts, or keep one generated AppSettings nupkg in the artifact directory." />
+  </Target>
 
 </Project>

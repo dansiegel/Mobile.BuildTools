@@ -1,67 +1,60 @@
 <Project>
-
-  <!-- Collect Info.plist -->
-  <Target Name="_MBTGatherManifests"
-        AfterTargets="_DetectAppManifest"
-        DependsOnTargets="MobileBuildToolsInit">
+  <PropertyGroup>
+    <MobileBuildToolsAppleImageManifestDependsOn>$(MobileBuildToolsAppleImageManifestDependsOn);_MBTPrepareApplePartialManifests</MobileBuildToolsAppleImageManifestDependsOn>
+    <CollectAppManifestsDependsOn>$(CollectAppManifestsDependsOn);_MBTPrepareAppleManifest</CollectAppManifestsDependsOn>
+  </PropertyGroup>
+  <Target Name="_MBTPrepareAppleManifest" DependsOnTargets="MobileBuildToolsInit;_DetectAppManifest"
+          Condition="'$(IsCrossTargetingBuild)' != 'true'">
     <PropertyGroup>
-      <_MBTSourcePlist>$(AppBundleManifest)</_MBTSourcePlist>
-      <_MBTUpdatedManifest>$(IntermediateOutputPath)Mobile.BuildTools\Info.plist</_MBTUpdatedManifest>
+      <_MBTAppleSourceManifest>$(AppBundleManifest)</_MBTAppleSourceManifest>
+      <_MBTAppleSourceManifest Condition="'$(_MBTAppleSourceManifest)' == ''">$(_AppManifest)</_MBTAppleSourceManifest>
     </PropertyGroup>
-
+    <TransformManifestItemsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                ProjectName="$(MSBuildProjectName)"
+                                ProjectDirectory="$(MSBuildProjectDirectory)"
+                                SolutionDirectory="$(SolutionDir)"
+                                Configuration="$(Configuration)"
+                                IntermediateOutputPath="$(IntermediateOutputPath)"
+                                TargetFrameworkIdentifier="$(TargetFramework)"
+                                Manifests="$(_MBTAppleSourceManifest)"
+                                OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/manifests/$(TargetFramework)/$(RuntimeIdentifier)/apple"
+                                ReplaceTokens="$(BuildToolsEnableTemplateManifests)" VersionManifest="$(BuildToolsEnableAutomaticVersioning)" Condition="Exists('$(_MBTAppleSourceManifest)') And ('$(BuildToolsEnableTemplateManifests)' == 'true' Or '$(BuildToolsEnableAutomaticVersioning)' == 'true')">
+      <Output TaskParameter="ProcessedManifests" ItemName="_MBTAppleManifest" />
+      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
+    </TransformManifestItemsTask>
+    <PropertyGroup Condition="'@(_MBTAppleManifest)' != ''">
+      <AppBundleManifest>@(_MBTAppleManifest)</AppBundleManifest>
+      <_AppManifest>@(_MBTAppleManifest)</_AppManifest>
+    </PropertyGroup>
+  </Target>
+  <!-- BeforeTargets runs after the collection dependencies, including MAUI/Uno splash and font partials. Preserve every item and its metadata. -->
+  <Target Name="_MBTPrepareApplePartialManifests" BeforeTargets="CollectAppManifests"
+          DependsOnTargets="_MBTPrepareAppleManifest"
+          Condition="'$(IsCrossTargetingBuild)' != 'true' And '$(BuildToolsEnableTemplateManifests)' == 'true' And '@(PartialAppManifest)' != ''">
+    <TransformManifestItemsTask ConfigurationPath="$(BuildToolsConfigFilePath)"
+                                ProjectName="$(MSBuildProjectName)"
+                                ProjectDirectory="$(MSBuildProjectDirectory)"
+                                SolutionDirectory="$(SolutionDir)"
+                                Configuration="$(Configuration)"
+                                IntermediateOutputPath="$(IntermediateOutputPath)"
+                                TargetFrameworkIdentifier="$(TargetFramework)"
+                                Manifests="@(PartialAppManifest)"
+                                OutputDirectory="$(IntermediateOutputPath)Mobile.BuildTools/manifests/$(TargetFramework)/$(RuntimeIdentifier)/apple-partials"
+                                ReplaceTokens="$(BuildToolsEnableTemplateManifests)" ApplyPackageName="false">
+      <Output TaskParameter="ProcessedManifests" ItemName="_MBTApplePartialManifests" />
+      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
+    </TransformManifestItemsTask>
     <ItemGroup>
-      <__MBTInputManifest Include="$(_AppManifest)" />
-      <__MBTOutputManifest Include="$(_MBTUpdatedManifest)" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(__MBTInputManifest)"
-          DestinationFiles="@(__MBTOutputManifest)" />
-  </Target>
-
-  <!-- Process Info.plist -->
-  <Target Name="HandleTokenizedInfoPlist">
-    <TemplateManifestTask ConfigurationPath="$(BuildToolsConfigFilePath)"
-                          ProjectName="$(MSBuildProjectName)"
-                          ProjectDirectory="$(MSBuildProjectDirectory)"
-                          SolutionDirectory="$(SolutionDir)"
-                          Configuration="$(Configuration)"
-                          IntermediateOutputPath="$(IntermediateOutputPath)"
-                          TargetFrameworkIdentifier="$(TargetFramework)"
-                          ManifestPath="$(_MBTUpdatedManifest)"
-                          OutputManifestPath="$(_MBTUpdatedManifest)"
-                          Condition="$(BuildToolsEnableTemplateManifests)">
-      <!-- <Output TaskParameter="ProcessedManifest"
-              PropertyName="_AppManifest" /> -->
-    </TemplateManifestTask>
-  </Target>
-
-  <!-- Version Info.plist -->
-  <Target Name="AutomaticBuildVersioning">
-    <AutomaticBuildVersioningTask ConfigurationPath="$(BuildToolsConfigFilePath)"
-                                  ProjectName="$(MSBuildProjectName)"
-                                  ProjectDirectory="$(MSBuildProjectDirectory)"
-                                  SolutionDirectory="$(SolutionDir)"
-                                  Configuration="$(Configuration)"
-                                  IntermediateOutputPath="$(IntermediateOutputPath)"
-                                  TargetFrameworkIdentifier="$(TargetFramework)"
-                                  ManifestPath="$(_MBTUpdatedManifest)"
-                                  OutputManifestPath="$(_MBTUpdatedManifest)"
-                                  Condition="$(BuildToolsEnableAutomaticVersioning)" />
-  </Target> 
-
-  <Target Name="_MBTManifestPostProcess"
-          AfterTargets="_MBTGatherManifests"
-          DependsOnTargets="HandleTokenizedInfoPlist;AutomaticBuildVersioning">
-    <ItemGroup Condition="$(BuildToolsEnableTemplateManifests) == 'True' Or $(BuildToolsEnableAutomaticVersioning) == 'True'">
-      <_PartialAppManifest Include="$(_MBTUpdatedManifest)" />
-      <FileWrites Include="$(_MBTUpdatedManifest)" />
+      <PartialAppManifest Remove="@(PartialAppManifest)" />
+      <PartialAppManifest Include="@(_MBTApplePartialManifests)" />
     </ItemGroup>
   </Target>
-
-  <!-- Update APS Environment -->
-  <Target Name="SetApsEnvironmentToProduction"
-          AfterTargets="HandleTokenizedInfoPlist"
-          Condition=" '$(APSProductionEnvironment)' != '' And '$(APSProductionEnvironment)' != 'false' ">
-    <PropertyListEditor PropertyList="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent" Action="Set" Entry="aps-environment" Type="String" Value="production" />
+  <!-- Retain the opt-in APS setting using the framework's entitlement input, before signing. -->
+  <Target Name="SetApsEnvironmentToProduction" BeforeTargets="_CompileEntitlements"
+          Condition="'$(APSProductionEnvironment)' != '' And '$(APSProductionEnvironment)' != 'false'">
+    <ItemGroup>
+      <CustomEntitlements Remove="aps-environment" />
+      <CustomEntitlements Include="aps-environment" Type="String" Value="production" />
+    </ItemGroup>
   </Target>
 </Project>

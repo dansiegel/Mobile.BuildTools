@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Mobile.BuildTools.Generators.Images
 {
     public abstract class ImageCollectionGeneratorBase : GeneratorBase<IReadOnlyList<OutputImage>>
     {
-        private static readonly string[] supportedExtensions = new[] { ".png", ".jpg", ".svg" };
+        private static readonly string[] supportedExtensions = new[] { ".png", ".jpg", ".jpeg", ".svg" };
 
         public ImageCollectionGeneratorBase(IBuildConfiguration buildConfiguration)
             : base(buildConfiguration)
@@ -29,19 +29,21 @@ namespace Mobile.BuildTools.Generators.Images
             {
                 var imageInputs = new List<string>(imageResourcePaths);
                 imageInputs.AddRange(imageConfigurationPaths);
-                return imageInputs;
+                return imageInputs.Distinct().ToArray();
             }
         }
 
         protected override void ExecuteInternal()
         {
             imageResourcePaths = new List<string>();
+            imageConfigurationPaths = new List<string>();
             var outputImageFiles = new List<OutputImage>();
             var inputFileNames = new List<string>();
             foreach (var folder in SearchFolders)
             {
                 var filesInFolder = Directory.GetFiles(folder, "*", SearchOption.TopDirectoryOnly)
-                    .Where(x => supportedExtensions.Any(e => e.Equals(Path.GetExtension(x), StringComparison.InvariantCultureIgnoreCase)));
+                    .Where(x => supportedExtensions.Any(e => e.Equals(Path.GetExtension(x), StringComparison.InvariantCultureIgnoreCase)))
+                    .OrderBy(x => x, StringComparer.Ordinal);
                 foreach (var file in filesInFolder)
                 {
                     var fileName = Path.GetFileNameWithoutExtension(file);
@@ -55,26 +57,7 @@ namespace Mobile.BuildTools.Generators.Images
                     imageResourcePaths.Add(file);
                     inputFileNames.Add(fileName);
 
-                    var jsonConfig = Path.Combine(Path.GetDirectoryName(file), $"{fileName}.json");
 
-                    if (!File.Exists(jsonConfig))
-                    {
-                        var resourceJson = new FileInfo(jsonConfig);
-                        using var fs = resourceJson.Create();
-                        using var writer = new StreamWriter(fs);
-                        writer.Write(
-                            JsonSerializer.Serialize(
-                                new ResourceDefinition
-                                {
-                                    Name = fileName,
-                                    Scale = 1
-                                },
-                                ConfigHelper.GetSerializerSettings()
-                                )
-                            );
-                    }
-
-                    inputFileNames.Add(jsonConfig);
                 }
             }
 
@@ -103,6 +86,13 @@ namespace Mobile.BuildTools.Generators.Images
                     if (config.Watermark != null)
                     {
                         config.Watermark.SourceFile = GetWatermarkFilePath(config);
+                        if (!string.IsNullOrEmpty(config.Watermark.FontFile))
+                        {
+                            config.Watermark.FontFile = ResolveDependency(config.Watermark.FontFile, config.SourceFile);
+                            imageConfigurationPaths.Add(config.Watermark.FontFile);
+                        }
+                        if (!string.IsNullOrEmpty(config.Watermark.SourceFile))
+                            imageConfigurationPaths.Add(config.Watermark.SourceFile);
                     }
 
                     var output = GetOutputImages(config);
@@ -141,7 +131,7 @@ namespace Mobile.BuildTools.Generators.Images
             if (locatedConfigs.Count > 2)
                 throw new Exception($"Unable to determine which configuration to use. More than 2 configuration files were found for the image '{filePath}', {string.Join(", ", locatedConfigs)}");
 
-            throw new FileNotFoundException(configFileName);
+            return null;
         }
 
         protected virtual ResourceDefinition GetPlatformResourceDefinition(string filePath) => throw new NotImplementedException();
@@ -152,9 +142,8 @@ namespace Mobile.BuildTools.Generators.Images
                 return GetPlatformResourceDefinition(filePath);
 
             var fileName = GetImageConfigurationPath(filePath);
-            var json = File.ReadAllText(fileName);
-            var definition = 
-                JsonSerializer.Deserialize<ResourceDefinition>(json, ConfigHelper.GetSerializerSettings());
+            var definition = fileName is null ? null :
+                JsonSerializer.Deserialize<ResourceDefinition>(File.ReadAllText(fileName), ConfigHelper.GetSerializerSettings());
 
             if (definition is null)
             {
@@ -189,31 +178,24 @@ namespace Mobile.BuildTools.Generators.Images
             if (string.IsNullOrEmpty(fileName))
                 return null;
 
-            return ImageInputFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == fileName || Path.GetFileName(x) == fileName);
+            var found = ImageInputFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == fileName || Path.GetFileName(x) == fileName);
+            return found ?? ResolveDependency(fileName, resource.SourceFile);
         }
 
         protected static bool IsSupportedExtension(string path) =>
             supportedExtensions.Any(e => e.Equals(Path.GetExtension(path), StringComparison.InvariantCultureIgnoreCase));
 
-        //protected static WatermarkConfiguration GetWatermarkConfiguration(ResourceDefinition resource, Platform platform)
-        //{
-        //    var watermark = resource.Watermark;
-        //    switch(platform)
-        //    {
-        //        case Platform.iOS:
-        //            if(resource.Apple?.Watermark != null)
-        //            {
-        //                watermark = resource.Apple.Watermark;
-        //            }
-        //            break;
-        //        case Platform.Android:
-        //            if (resource.Android?.Watermark != null)
-        //            {
-        //                watermark = resource.Android.Watermark;
-        //            }
-        //            break;
-        //    }
-        //    return watermark;
-        //}
+        private string ResolveDependency(string path, string source)
+        {
+            if (File.Exists(path))
+                return Path.GetFullPath(path);
+            foreach (var folder in SearchFolders.Concat(new[] { Path.GetDirectoryName(source), Build.ProjectDirectory }))
+            {
+                var candidate = Path.Combine(folder, path.Replace('\\', Path.DirectorySeparatorChar));
+                if (File.Exists(candidate))
+                    return candidate;
+            }
+            throw new FileNotFoundException("Image dependency was not found.", path);
+        }
     }
 }

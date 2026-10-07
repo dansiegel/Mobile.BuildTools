@@ -39,28 +39,16 @@ namespace Mobile.BuildTools.Tasks
                 OutputManifestPath = ManifestPath;
             }
 
-            BaseTemplatedManifestGenerator generator = null;
-            switch(config.Platform)
+            var generator = ManifestGeneratorFactory.Create(ManifestPath, config);
+            if (generator == null)
             {
-                case Platform.iOS:
-                case Platform.macOS:
-                case Platform.TVOS:
-                    generator = new TemplatedPlistGenerator(config)
-                    {
-                        ManifestInputPath = ManifestPath,
-                        ManifestOutputPath = OutputManifestPath
-                    };
-                    break;
-                case Platform.Android:
-                    generator = new TemplatedAndroidAppManifestGenerator(config)
-                    {
-                        ManifestInputPath = ManifestPath,
-                        ManifestOutputPath = OutputManifestPath
-                    };
-                    break;
+                Log.LogWarning("Unsupported manifest format. JavaScript boot manifests are not JSON web manifests.");
+                return;
             }
+            generator.ManifestInputPath = ManifestPath;
+            generator.ManifestOutputPath = OutputManifestPath;
 
-            generator?.Execute();
+            generator.Execute();
 
             if(File.Exists(generator.Outputs))
             {

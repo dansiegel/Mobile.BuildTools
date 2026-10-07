@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace Mobile.BuildTools.Tests.Fixtures.Utils
         public ImageSearchUtilityFixture()
         {
             Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "Debug"));
-            Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "release"));
+            Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "Release"));
             Directory.CreateDirectory(Path.Combine(ConfigPath, "images", "test"));
         }
 

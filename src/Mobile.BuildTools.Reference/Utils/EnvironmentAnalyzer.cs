@@ -21,7 +21,7 @@ namespace Mobile.BuildTools.Utils
         {
             var env = GetEnvironmentVariables(buildConfiguration);
 
-            var configuration = buildConfiguration.BuildConfiguration;
+            var configuration = buildConfiguration?.BuildConfiguration ?? string.Empty;
 
             if (buildConfiguration is null)
             {
@@ -52,7 +52,7 @@ namespace Mobile.BuildTools.Utils
             do
             {
                 lookupDir = lookupDir.Parent;
-                if (lookupDir is null || stoppingDir.FullName == lookupDir.FullName)
+                if (lookupDir is null || stoppingDir?.FullName == lookupDir.FullName)
                 {
                     break;
                 }
@@ -175,11 +175,11 @@ namespace Mobile.BuildTools.Utils
         private static Dictionary<string, string> GetEnvironmentVariables(IBuildConfiguration buildConfiguration)
         {
             var env = new Dictionary<string, string>();
-            var configuration = buildConfiguration.BuildConfiguration;
+            var configuration = buildConfiguration?.BuildConfiguration ?? string.Empty;
             if (buildConfiguration?.Configuration?.Environment != null)
             {
                 var settings = buildConfiguration.Configuration.Environment;
-                var defaultSettings = settings.Defaults ?? [];
+                var defaultSettings = settings.Defaults != null ? new Dictionary<string, string>(settings.Defaults) : new Dictionary<string, string>();
                 if (settings.Configuration is not null)
                 {
                     bool ContainsConfigKey(string key, [MaybeNullWhen(false)] out string configurationKey)
@@ -247,9 +247,9 @@ namespace Mobile.BuildTools.Utils
         public static string LocateSolution(string searchDirectory)
         {
             var di = new DirectoryInfo(searchDirectory);
-            if (di.EnumerateFiles("*.sln").Any() 
+            if (di.EnumerateFiles("*.sln").Any() || di.EnumerateFiles("*.slnx").Any()
                 || IsRootPath(di.Parent) 
-                || di.EnumerateDirectories().Any(x => x.Name == ".git")
+                || (Directory.Exists(Path.Combine(di.FullName, ".git")) || File.Exists(Path.Combine(di.FullName, ".git")))
                 || IsRootPath(di))
             {
                 return searchDirectory;
@@ -356,7 +356,7 @@ namespace Mobile.BuildTools.Utils
             {
                 var configuration = build.BuildConfiguration;
                 var settings = build.Configuration.Environment;
-                var defaultSettings = settings.Defaults ?? [];
+                var defaultSettings = settings.Defaults != null ? new Dictionary<string, string>(settings.Defaults) : new Dictionary<string, string>();
                 if (settings.Configuration != null && settings.Configuration.ContainsKey(configuration))
                 {
                     foreach ((var key, var value) in settings.Configuration[configuration])
@@ -372,7 +372,7 @@ namespace Mobile.BuildTools.Utils
         public static bool IsInGitRepo(string projectPath)
         {
             var di = new DirectoryInfo(projectPath);
-            if (di.EnumerateDirectories().Any(x => x.Name == ".git"))
+            if ((Directory.Exists(Path.Combine(di.FullName, ".git")) || File.Exists(Path.Combine(di.FullName, ".git"))))
                 return true;
 
             if (IsRootPath(di))
@@ -382,7 +382,7 @@ namespace Mobile.BuildTools.Utils
         }
 
         private static bool IsRootPath(DirectoryInfo directoryPath) =>
-            directoryPath.Root.FullName == directoryPath.FullName ||
+            directoryPath is null || directoryPath.Root.FullName == directoryPath.FullName ||
                 directoryPath.FullName == Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
         private static void LoadSecrets(string path, ref Dictionary<string, string> env)
@@ -390,7 +390,7 @@ namespace Mobile.BuildTools.Utils
             if (!File.Exists(path)) return;
 
             var json = File.ReadAllText(path);
-            var document = JsonDocument.Parse(json);
+            using var document = JsonDocument.Parse(json);
             foreach(var setting in document.RootElement.EnumerateObject())
             {
                 env[setting.Name] = setting.GetPropertyValueAsString();

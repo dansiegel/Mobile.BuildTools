@@ -1,11 +1,11 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace Mobile.BuildTools.Models
 {
     public class TemplatedManifest : ToolItem
     {
-        [Description("The Regex escaped value of the Token. '$$' is used by default to look for token matching the pattern $TokenName$.")]
+        [Description("The literal delimiter used around a token name. '$$' matches $$TokenName$$ by default.")]
         [DefaultValue("$$")]
         [JsonPropertyName("token")]
         public string Token { get; set; }

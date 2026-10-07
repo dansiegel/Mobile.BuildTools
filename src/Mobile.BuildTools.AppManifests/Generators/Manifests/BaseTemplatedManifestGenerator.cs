@@ -1,145 +1,105 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Mobile.BuildTools.Build;
 
-namespace Mobile.BuildTools.Generators.Manifests
+namespace Mobile.BuildTools.Generators.Manifests;
+
+internal abstract class BaseTemplatedManifestGenerator : GeneratorBase<string>
 {
-    internal abstract class BaseTemplatedManifestGenerator : GeneratorBase<string>
+    internal const string DefaultToken = "$$";
+
+    protected BaseTemplatedManifestGenerator(IBuildConfiguration configuration) : base(configuration)
     {
-        internal const string DefaultToken = @"\$\$";
+        Token = string.IsNullOrEmpty(configuration.Configuration.Manifests.Token)
+            ? DefaultToken : configuration.Configuration.Manifests.Token;
+    }
 
-        public BaseTemplatedManifestGenerator(IBuildConfiguration configuration)
-            : base(configuration)
+    public string Token { get; }
+    public string ProjectDirectory => Build.ProjectDirectory;
+    public bool ApplyPackageName { get; set; } = true;
+    public bool EnableTokenReplacement { get; set; } = true;
+    public string ManifestInputPath { get; set; }
+    public string ManifestOutputPath { get; set; }
+
+    protected override void ExecuteInternal()
+    {
+        if (!File.Exists(ManifestInputPath))
         {
-            var token = configuration.Configuration.Manifests.Token;
-            if (string.IsNullOrEmpty(token))
-            {
-                token = DefaultToken;
-            }
-
-            Token = token;
+            Log?.LogWarning("There is no template manifest at '{0}'.", ManifestInputPath);
+            return;
         }
 
-        public string Token { get; }
+        var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(Build, true);
+        var manifest = EnableTokenReplacement ? TransformManifest(ReadManifest(), variables) : ReadManifest();
+        if (EnableTokenReplacement && ApplyPackageName && variables.TryGetValue(Constants.AppPackageName, out var packageName))
+            manifest = SetAppBundleId(manifest, packageName);
 
-        public string ProjectDirectory => Build.ProjectDirectory;
+        SaveManifest(manifest);
+        Outputs = ManifestOutputPath;
+    }
 
-        public string ManifestInputPath { get; set; }
+    public abstract string GetBundId();
+    protected abstract string SetAppBundleId(string manifest, string packageName);
+    protected virtual string ReadManifest() => File.ReadAllText(ManifestInputPath);
+    protected virtual void SaveManifest(string manifest) => WriteManifest(manifest);
 
-        public string ManifestOutputPath { get; set; }
+    protected virtual string TransformManifest(string manifest, IDictionary<string, string> variables) =>
+        ReplaceTokens(manifest, variables);
 
-        protected override void ExecuteInternal()
+    internal MatchCollection GetMatches(string template) =>
+        Regex.Matches(template, $"{Regex.Escape(Token)}(.+?){Regex.Escape(Token)}");
+
+    protected string ReplaceTokens(string text, IDictionary<string, string> variables)
+    {
+        // Evaluate only original matches, so a replacement containing another token stays literal.
+        return Regex.Replace(text, $"{Regex.Escape(Token)}(.+?){Regex.Escape(Token)}", match =>
         {
-            Outputs = ManifestOutputPath;
-
-            if (!File.Exists(ManifestInputPath))
+            if (IsFrameworkToken(match.Groups[1].Value))
+                return match.Value;
+            var key = GetKey(match.Groups[1].Value, variables);
+            if (key != null && variables[key] != null)
             {
-                Log?.LogWarning("There is no Template Manifest at the path: '{0}'", ManifestInputPath);
-                return;
+                Log?.LogMessage($"Replacing manifest token '{match.Groups[1].Value}'.");
+                return variables[key];
             }
 
-            var outputInfo = new FileInfo(ManifestOutputPath);
-            if (!outputInfo.Directory.Exists)
-                outputInfo.Directory.Create();
-
-            var template = ReadManifest();
-
-            var variables = Utils.EnvironmentAnalyzer.GatherEnvironmentVariables(Build, true);
-            foreach (Match match in GetMatches(template))
-            {
-                template = ProcessMatch(template, match, variables);
-            }
-
-            if (variables.ContainsKey(Constants.AppPackageName))
-            {
-                Log.LogMessage($"Setting App Package Name to: {variables[Constants.AppPackageName]}");
-                template = SetAppBundleId(template, variables[Constants.AppPackageName]);
-            }
-
-            SaveManifest(template);
-        }
-
-        public abstract string GetBundId();
-
-        protected abstract string SetAppBundleId(string manifest, string packageName);
-
-        protected abstract string ReadManifest();
-
-        protected abstract void SaveManifest(string manifest);
-
-        internal MatchCollection GetMatches(string template)
-        {
-            var token = Regex.Escape(Token);
-            var pattern = $@"{token}(.*?){token}";
-            return Regex.Matches(template, pattern);
-        }
-
-        internal string ProcessMatch(string template, Match match, IDictionary<string, string> variables)
-        {
-            var tokenId = match.Groups[1].Value;
-            var key = GetKey(tokenId, variables);
-            var token = Regex.Escape(Token);
-
-            if (!string.IsNullOrWhiteSpace(key))
-            {
-                var value = variables[key];
-                var message = Build.Configuration.Debug ? $"Replacing token '{tokenId}' with '{value}'." : $"Replacing token '{tokenId}'.";
-                Log?.LogMessage(message);
-                template = Regex.Replace(template, $@"{token}{tokenId}{token}", value);
-            }
+            var message = $"Unable to locate replacement value for '{match.Value}'.";
+            if (Build.Configuration.Manifests.MissingTokensAsErrors)
+                Log?.LogError(message);
             else
-            {
-                var errorMessage = $"Unable to locate replacement value for '{match.Value}' on line {GetLineNumber(template, match.Value)}";
-                if (Build.Configuration.Manifests.MissingTokensAsErrors)
-                {
-                    Log?.LogError(errorMessage);
-                }
-                else
-                {
-                    Log?.LogWarning(errorMessage);
-                }
-            }
+                Log?.LogWarning(message);
+            return match.Value;
+        });
+    }
 
-            return template;
-        }
+    protected virtual bool IsFrameworkToken(string name) => false;
 
-        private static int GetLineNumber(string input, string value)
-        {
-            var lines = input.Split('\n');
-            for(var i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].Contains(value))
-                    return i + 1;
-            }
+    internal string ProcessMatch(string template, Match match, IDictionary<string, string> variables)
+    {
+        var key = GetKey(match.Groups[1].Value, variables);
+        if (key != null && variables[key] != null)
+            return template.Replace(match.Value, variables[key]);
+        ReplaceTokens(match.Value, variables);
+        return template;
+    }
 
-            return -1;
-        }
+    internal string GetKey(string name, IDictionary<string, string> variables)
+    {
+        if (variables.ContainsKey(name))
+            return name;
+        return Utils.EnvironmentAnalyzer.GetManifestPrefixes(Build.Platform, Build.Configuration.Manifests.VariablePrefix)
+            .Select(prefix => prefix + name).FirstOrDefault(variables.ContainsKey);
+    }
 
-        internal string GetKey(string matchValue, IDictionary<string, string> variables)
-        {
-            if(variables.ContainsKey(matchValue))
-            {
-                return matchValue;
-            }
-
-            var prefixes = Utils.EnvironmentAnalyzer.GetManifestPrefixes(Build.Platform, Build.Configuration.Manifests.VariablePrefix);
-
-            foreach (var manifestPrefix in prefixes)
-            {
-                if (variables.ContainsKey($"{manifestPrefix}{matchValue}"))
-                    return $"{manifestPrefix}{matchValue}";
-            }
-
-            return null;
-        }
-
-        internal void WriteManifest(string template)
-        {
-            var dirPath = Path.GetDirectoryName(ManifestOutputPath);
-            if (!string.IsNullOrWhiteSpace(dirPath))
-                Directory.CreateDirectory(dirPath);
-            File.WriteAllText(ManifestOutputPath, template);
-        }
+    internal void WriteManifest(string manifest)
+    {
+        if (File.Exists(ManifestOutputPath) && File.ReadAllText(ManifestOutputPath) == manifest)
+            return;
+        var directory = Path.GetDirectoryName(ManifestOutputPath);
+        if (!string.IsNullOrEmpty(directory))
+            Directory.CreateDirectory(directory);
+        File.WriteAllText(ManifestOutputPath, manifest);
     }
 }

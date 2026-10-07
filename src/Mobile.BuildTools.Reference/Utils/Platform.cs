@@ -1,4 +1,4 @@
-﻿namespace Mobile.BuildTools.Utils
+namespace Mobile.BuildTools.Utils
 {
     public enum Platform
     {
@@ -9,6 +9,7 @@
         macOS,
         Tizen,
         TVOS,
-        Unsupported
+        Unsupported,
+        WebAssembly
     }
 }

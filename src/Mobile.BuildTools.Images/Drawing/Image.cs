@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using SkiaSharp;
 
 namespace Mobile.BuildTools.Drawing
@@ -9,7 +9,7 @@ namespace Mobile.BuildTools.Drawing
 
         public Image(string filename) : base(filename)
         {
-            bitmap = SKBitmap.Decode(filename);
+            bitmap = SKBitmap.Decode(filename) ?? throw new System.IO.InvalidDataException($"Could not decode image '{filename}'.");
         }
 
         public override bool HasTransparentBackground => bitmap.HasTransparentBackground();
@@ -28,7 +28,7 @@ namespace Mobile.BuildTools.Drawing
                 };
             }
 
-            canvas.DrawBitmap(bitmap, 0, 0, paint);
+            canvas.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default, paint);
 
             paint?.Dispose();
         }

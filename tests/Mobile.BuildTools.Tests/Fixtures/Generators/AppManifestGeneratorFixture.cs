@@ -67,10 +67,6 @@ namespace Mobile.BuildTools.Tests.Fixtures.Generators
                 SolutionDirectory = Directory.GetCurrentDirectory()
             };
             var variables = EnvironmentAnalyzer.GatherEnvironmentVariables(config, true);
-            foreach(var variable in variables)
-            {
-                _testOutputHelper.WriteLine($"  - {variable.Key}: {variable.Value}");
-            }
             var processedTemplate = generator.ProcessMatch(template, match, variables);
             var json = JsonSerializer.Deserialize<TestManifest>(processedTemplate);
 

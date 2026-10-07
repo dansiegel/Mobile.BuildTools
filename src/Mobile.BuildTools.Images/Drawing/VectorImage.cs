@@ -1,16 +1,16 @@
-﻿using System.Drawing;
+using System.Drawing;
 using SkiaSharp;
-using Svg.Skia;
+using Mobile.BuildTools.Drawing.Svg;
 
 namespace Mobile.BuildTools.Drawing
 {
     internal class VectorImage : ImageBase
     {
-        private SKSvg svg;
+        private SvgImage svg;
 
         public VectorImage(string filename) : base(filename)
         {
-            svg = new SKSvg();
+            svg = new SvgImage();
             svg.Load(filename);
         }
 
@@ -69,14 +69,13 @@ namespace Mobile.BuildTools.Drawing
                 cvn.DrawPicture(svg.Picture, opacityPaint);
 
                 // set the paint to be the highest quality it can find
-                var paint = new SKPaint
+                using var paint = new SKPaint
                 {
-                    IsAntialias = true,
-                    FilterQuality = SKFilterQuality.High
+                    IsAntialias = true
                 };
 
                 // draw to the main canvas using the correct quality settings
-                canvas.DrawBitmap(bmp, 0, 0, paint);
+                canvas.DrawBitmap(bmp, 0, 0, new SKSamplingOptions(SKCubicResampler.Mitchell), paint);
             }
 
             opacityPaint?.Dispose();

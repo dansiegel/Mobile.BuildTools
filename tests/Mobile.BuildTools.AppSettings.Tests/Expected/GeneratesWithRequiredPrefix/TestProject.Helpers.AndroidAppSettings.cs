@@ -17,12 +17,11 @@
 using System;
 using GeneratedCodeAttribute = System.CodeDom.Compiler.GeneratedCodeAttribute;
 
-namespace TestProject.Helpers
+namespace TestProject.Helpers;
+
+internal static partial class AndroidAppSettings
 {
-    internal static partial class AndroidAppSettings
-    {
-        [GeneratedCodeAttribute("Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator", "{0}")]
-        public const string DataScheme =
-            "MSAB44C935C-979C-4FD2-9A63-13B395C7AFE3";
-    }
+    [GeneratedCodeAttribute("Mobile.BuildTools.AppSettings.Generators.AppSettingsGenerator", "{0}")]
+    public const string DataScheme =
+        "MSAB44C935C-979C-4FD2-9A63-13B395C7AFE3";
 }
