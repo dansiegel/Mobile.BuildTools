@@ -1,5 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Project>
+  <PropertyGroup>
+    <RequireAppConfigTransform Condition="'$(RequireAppConfigTransform)' == ''">false</RequireAppConfigTransform>
+  </PropertyGroup>
+
   <UsingTask TaskName="Mobile.BuildTools.Tasks.AppConfigCopyTask"
              AssemblyFile="$(_MobileBuildToolsConfigurationTaskDll)"/>
   <UsingTask TaskName="Mobile.BuildTools.Tasks.ConfigurationManagerHandlerTask"
@@ -34,6 +38,7 @@
                                      IntermediateOutputPath="$(IntermediateOutputPath)"
                                      TargetFrameworkIdentifier="$(TargetFramework)"
                                      AppConfigEnvironment="$(AppConfigEnvironment)"
+                                     RequireAppConfigTransform="$(RequireAppConfigTransform)"
                                      InputConfigFiles="@(MobileBuildToolsConfig)"
                                      GeneratedAppConfig="@(GeneratedAppConfig)">
       <Output ItemName="GeneratedFile"
@@ -45,4 +50,22 @@
     </ConfigurationManagerHandlerTask>
   </Target>
 
+  <!-- Runs only configuration tasks. Never depends on Build, Compile or Publish. -->
+  <Target Name="_ValidateMobileBuildToolsConfigurationOutput">
+    <Error Condition="'$(MobileBuildToolsConfigurationOutput)' == ''"
+           Text="Set MobileBuildToolsConfigurationOutput to a new output file." />
+    <Error Condition="Exists('$(MobileBuildToolsConfigurationOutput)')"
+           Text="Configuration output already exists; choose a new output file." />
+  </Target>
+  <Target Name="GenerateMobileBuildToolsConfiguration"
+          DependsOnTargets="_ValidateMobileBuildToolsConfigurationOutput;_CollectAppConfigs;ConfigurationManagerTransformAndCopy">
+    <ItemGroup>
+      <_PromotionConfig Include="@(PlatformAppConfig)" Condition="'%(Filename)%(Extension)' == 'app.config'" />
+    </ItemGroup>
+    <Error Condition="'@(_PromotionConfig->Count())' != '1'"
+           Text="Expected exactly one generated app.config for this project." />
+    <Copy SourceFiles="@(_PromotionConfig)" DestinationFiles="$(MobileBuildToolsConfigurationOutput)" />
+  </Target>
+
 </Project>
+

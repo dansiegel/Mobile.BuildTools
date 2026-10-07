@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Web.XmlTransform;
@@ -14,7 +14,8 @@ namespace Mobile.BuildTools.Configuration
             var configurationFileDocument = new XmlTransformableDocument();
             configurationFileDocument.LoadXml(appConfig);
 
-            transformation.Apply(configurationFileDocument);
+            if (!transformation.Apply(configurationFileDocument))
+                throw new System.InvalidOperationException("The app.config transform failed; no deployable configuration was generated.");
 
             var sb = new StringBuilder();
             using (var writer = XmlWriter.Create(sb))
@@ -26,3 +27,4 @@ namespace Mobile.BuildTools.Configuration
         }
     }
 }
+

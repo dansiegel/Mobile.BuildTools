@@ -1,4 +1,4 @@
-﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mobile.BuildTools.Build;
 using Mobile.BuildTools.Models.Configuration;
@@ -14,6 +14,8 @@ public class ConfigurationManagerHandlerTask : BuildToolsTaskBase
 
     [Required]
     public string AppConfigEnvironment { get; set; }
+
+    public bool RequireAppConfigTransform { get; set; }
 
     [Output]
     public ITaskItem[] OutputConfigs =>
@@ -44,6 +46,13 @@ public class ConfigurationManagerHandlerTask : BuildToolsTaskBase
             return;
         }
 
+        var transformFile = GetTaskItem(InputConfigFiles, $"app.{AppConfigEnvironment}.config");
+        if (RequireAppConfigTransform && transformFile is null)
+        {
+            Log.LogError($"No app.{AppConfigEnvironment}.config transform is mapped to this project. Promotion generation requires an explicit environment transform.");
+            return;
+        }
+
         // Reset output directory
         var fi = new FileInfo(GeneratedAppConfig.First().ItemSpec);
         if(fi.Directory.Exists)
@@ -52,13 +61,11 @@ public class ConfigurationManagerHandlerTask : BuildToolsTaskBase
         }
         fi.Directory.Create();
 
-        // Get Transform config
-        var transformFile = GetTaskItem(InputConfigFiles, $"app.{AppConfigEnvironment}.config");
         var outputs = GeneratedAppConfig.Select(x => x.ToExpectedAppConfig());
         var generator = new ConfigurationManagerTransformationGenerator(config)
         {
             BaseConfigPath = rootConfigFile.ItemSpec,
-            TransformFilePath = transformFile.ItemSpec,
+            TransformFilePath = transformFile?.ItemSpec,
             ExpectedConfigs = outputs
         };
         generator.Execute();
@@ -69,3 +76,4 @@ public class ConfigurationManagerHandlerTask : BuildToolsTaskBase
         Path.GetFileName(x.ItemSpec).Equals(expectedFileName, StringComparison.InvariantCultureIgnoreCase) ||
         (!string.IsNullOrEmpty(x.GetMetadata("Link")) && Path.GetFileName(x.GetMetadata("Link")).Equals(expectedFileName, StringComparison.InvariantCultureIgnoreCase)));
 }
+
