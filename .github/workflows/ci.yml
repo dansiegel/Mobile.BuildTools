@@ -11,6 +11,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      id-token: write
     uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
     with:
       name: Build Mobile.BuildTools
@@ -21,12 +24,12 @@ jobs:
       install-workload: 'maui macos'
       vs-version: '18.0'
       code-sign: true
+      codeSignEndpoint: https://eus.codesigning.azure.net/
+      codeSignAccountName: avantipoint-signing
+      codeSignCertificateProfile: AvantiPoint
     secrets:
-      codeSignKeyVault: ${{ secrets.CodeSignKeyVault }}
       codeSignClientId: ${{ secrets.CodeSignClientId }}
       codeSignTenantId: ${{ secrets.CodeSignTenantId }}
-      codeSignClientSecret: ${{ secrets.CodeSignClientSecret }}
-      codeSignCertificate: ${{ secrets.CodeSignCertificate }}
 
   deploy-internal:
     uses: avantipoint/workflow-templates/.github/workflows/deploy-nuget.yml@master
@@ -47,3 +50,4 @@ jobs:
     secrets:
       feedUrl: ${{ secrets.SPONSOR_CONNECT_NUGET_FEED }}
       apiKey: ${{ secrets.SPONSOR_CONNECT_TOKEN }}
+

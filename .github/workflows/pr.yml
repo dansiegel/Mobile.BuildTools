@@ -3,7 +3,7 @@ name: PR
 on:
   pull_request:
     paths:
-    - '.github/workflows/pr.yml'
+    - '.github/workflows/**'
     - 'Directory.*'
     - 'global.json'
     - 'src/**'
@@ -183,3 +183,4 @@ jobs:
       - name: Build MAUI Windows package consumer
         if: runner.os == 'Windows'
         run: dotnet build samples/AppManifestsSample/AppManifestsSample/AppManifestsSample.csproj -f net10.0-windows10.0.19041.0 -c Debug -p:TargetFrameworks=net10.0-windows10.0.19041.0 -p:MobileBuildToolsVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
+

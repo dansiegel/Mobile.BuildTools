@@ -5,6 +5,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      id-token: write
     uses: avantipoint/workflow-templates/.github/workflows/msbuild-build.yml@master
     with:
       name: Build Mobile.BuildTools
@@ -16,12 +19,12 @@ jobs:
       uno-check: true
       vs-version: '18.0'
       code-sign: true
+      codeSignEndpoint: https://eus.codesigning.azure.net/
+      codeSignAccountName: avantipoint-signing
+      codeSignCertificateProfile: AvantiPoint
     secrets:
-      codeSignKeyVault: ${{ secrets.CodeSignKeyVault }}
       codeSignClientId: ${{ secrets.CodeSignClientId }}
       codeSignTenantId: ${{ secrets.CodeSignTenantId }}
-      codeSignClientSecret: ${{ secrets.CodeSignClientSecret }}
-      codeSignCertificate: ${{ secrets.CodeSignCertificate }}
 
   release:
     uses: avantipoint/workflow-templates/.github/workflows/generate-release.yml@master
@@ -31,3 +34,4 @@ jobs:
     with:
       package-name: Mobile.BuildTools
       artifacts: "Artifacts/*.nupkg,Artifacts/*.snupkg,Artifacts/*.zip"
+
