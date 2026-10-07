@@ -154,3 +154,55 @@ These are proposed acceptance criteria, not tests already run. The preservation 
 - [Airbnb iOS JSON and dotLottie loading](https://github.com/airbnb/lottie/blob/master/ios.md)
 - [SkiaSharp.Extended Lottie documentation](https://github.com/mono/skiasharp.extended/blob/main/docs/docs/lottie.md)
 - [MSBuild incremental builds](https://learn.microsoft.com/en-us/visualstudio/msbuild/incremental-builds?view=visualstudio)
+
+
+## Follow-on exploration: animated SVG to Lottie
+
+**Conclusion:** yes for a deliberately supported subset, particularly self-contained SMIL logo animations. This is a separate conversion feature, not an automatic extension of JSON minification. No SVG conversion is implemented or enabled by this exploration, and the current SVG rendering repair remains separate.
+
+### Existing tools and evidence
+
+[LottieFiles Creator's official import documentation](https://docs.lottiefiles.com/en/creator/09_assets-and-importing/importing) explicitly describes converting SVG SMIL `animate`, `animateTransform` and `animateMotion` elements to Lottie keyframes. This is evidence that the workflow is practical, not a guarantee that every SVG animation survives. Creator is a hosted/editor workflow, not an established redistributable .NET build dependency. Its service terms, automation interfaces and asset-upload permissions would need separate review before using it in a build. No assets were uploaded.
+
+[Glaxnimate's official format documentation](https://docs.glaxnimate.org/en/formats.html) documents SMIL SVG import and Lottie read/write, with incomplete Lottie feature coverage. Its [official repository](https://github.com/KDE/glaxnimate) declares GPLv3-or-later. Its [changelog](https://github.com/KDE/glaxnimate/blob/master/CHANGELOG.md) also records command-line conversion/rendering. It is a useful local proof-of-concept candidate; we have not verified a particular CLI release or this application's animation against it.
+
+[python-lottie](https://gitlab.com/mattbas/python-lottie) documents animated SVG import and Lottie export and declares AGPLv3-or-later. Its [conversion CLI](https://mattbas.gitlab.io/python-lottie/script_lottie_convert.html) exposes frame-count/rate settings and optimization levels. Critically, its documented default optimization level truncates floating-point values; a fidelity experiment must explicitly disable that optimization. Do not assume that a tool's default behavior meets this proposal's conservative JSON contract.
+
+These licenses are dependency-selection constraints, not a conclusion that generated animations inherit the converter's license. Verify exact version, dependency licenses, distribution/integration model and obligations before bundling or incorporating code. No permissively licensed drop-in .NET converter was established by this research; that is not a claim that none exists. No converter was installed or run.
+
+### Proposed conversion subset
+
+The following is an engineering mapping proposal inferred from the [SVG animation specification](https://www.w3.org/TR/SVG11/animate.html), [Lottie shapes](https://lottie.github.io/lottie-spec/latest/specs/shapes/) and [Lottie animated properties](https://lottiefiles.github.io/lottie-docs/properties/). It is not an assertion that all listed mappings are implemented by one of the tools above.
+
+- **Geometry:** map rectangles/ellipses and simple polygons/paths to shape layers or paths. Normalize SVG path commands and coordinate systems. Quadratic curves can be converted to cubics; elliptical arcs generally need a defined approximation tolerance. Preserve compound subpaths, winding/fill rules and drawing order.
+- **Transforms:** map deterministic translation, scale and rotation to Lottie group/layer transforms. Correctly handle viewBox scaling, nested transforms, rotation centers, transform order and units. Skew or matrix decomposition needs additional verification; group opacity must preserve group compositing rather than blindly multiplying each child's opacity.
+- **Appearance:** map solid fill, stroke, stroke width and opacity to corresponding shape properties. Resolve static style inheritance before conversion. Gradients, dash patterns, line caps/joins, non-scaling strokes and color interpolation require specific coverage rather than being assumed equivalent.
+- **Time and values:** turn resolved SMIL begin/duration and values/keyTimes into keyframes at a declared frame rate, without unnecessarily rounding fractional-frame times. Handle linear interpolation, discrete/hold changes and cubic easing under tested rules. SMIL freeze/remove, finite repeats and composition duration must be resolved explicitly.
+- **Motion paths:** a supported animateMotion subset can become animated position with spatial tangents; pace along the curve and auto-orientation require tests. Key-time mapping alone does not guarantee constant speed along a curve.
+- **Morphing:** path animation is feasible when normalized keyframes share compatible contour structure, vertex correspondence, direction and closure. Arbitrary path topology changes are outside the initial subset. Do not infer support just because both formats can animate paths.
+
+### What cannot be promised automatically
+
+CSS animations require cascade, computed-style and timing resolution; a fixed self-contained subset could be added later, but arbitrary stylesheets, media queries, transform-origin rules and environment-dependent values are not SMIL support.
+
+JavaScript-driven motion, DOM mutations, pointer events, hover/click state, external data and event-based SMIL begin/restart behavior are not automatically representable by one fixed Lottie timeline. Do not run embedded scripts during a build. Deterministic syncbase timing may be resolvable in future; unresolved events should produce a diagnostic.
+
+SVG filter graphs, foreignObject/HTML, complex masks/clipping, paint servers and browser-specific compositing cannot be assumed to match target-player features. Text needs exact fonts/shaping or deliberate outlining; outlining changes editability and file size and requires known licensed font inputs. Path-following text needs its own policy.
+
+Indefinite repetition cannot simply be expanded forever. Export one defined cycle only when it is semantically correct and describe the runtime loop requirement; mixed periods, accumulating transforms and non-repeating segments need a bounded policy. A browser frame capture or raster fallback would be a different, potentially large and lossy product, not transparent vector conversion.
+
+Unsupported features must fail or produce an explicit actionable diagnostic. Never silently emit a static first frame, omit effects, rasterize, or claim lossless conversion.
+
+### Recommended experiment before build integration
+
+1. Use a real representative animated SVG and identify its SMIL, CSS or JavaScript animation mechanism without executing it.
+2. Try an approved local converter on a pinned version, with optimization disabled and explicit duration/frame-rate settings. Treat this as an experiment, not a build dependency decision.
+3. Compare SVG and Lottie at start/end, intermediate frames, easing extrema and loop boundaries in the actual target player. Include transforms, alpha/compositing, paths, fonts and referenced assets.
+4. Record supported features, rejected constructs, visual tolerances, resulting size and deterministic byte output.
+5. Only then choose between a documented designer-time conversion workflow and a separate explicitly enabled Images conversion stage. Re-exporting from the original authoring project is preferable when available and better preserves the author's intent.
+
+A future build converter would need a strict offline input policy: disable external XML entities, external file/network resolution and scripts; bound input complexity and resource use. Pin converter/toolchain, font files, locale, frame rate, duration, geometry tolerances and serialization. Hash all inputs/settings/tool versions, normalize generated IDs, avoid timestamps and machine paths, and verify repeatable output across intended build hosts.
+
+Conversion must have its own explicit enablement and settings. `images.optimizeLottie=false` must never unexpectedly convert SVG or stop meaning byte-preserving copying for selected Lottie inputs. Until an SVG conversion contract is explicitly approved, the agreed first release remains conditional Lottie JSON selection and default-on conservative minification.
+
+**Validation status:** documentation/source research only. No supplied SVG fixture was converted, no converter or dependency was installed, and no target-player visual comparison was performed.
