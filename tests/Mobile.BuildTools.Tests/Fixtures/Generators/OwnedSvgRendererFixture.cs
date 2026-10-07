@@ -33,9 +33,10 @@ public sealed class OwnedSvgRendererFixture : IDisposable
         using var bitmap = Render(svg.Picture);
         Assert.Equal(16, bitmap.Width);
         Assert.Equal(16, bitmap.Height);
-        Assert.Equal(SKColors.Transparent, bitmap.GetPixel(0, 0));
+        // RGB channels are unspecified when alpha is zero.
+        Assert.Equal((byte)0, bitmap.GetPixel(0, 0).Alpha);
         Assert.Equal(SKColors.Blue, bitmap.GetPixel(8, 8));
-        Assert.Equal(SKColors.Transparent, bitmap.GetPixel(15, 15));
+        Assert.Equal((byte)0, bitmap.GetPixel(15, 15).Alpha);
     }
 
     [Fact]
@@ -70,6 +71,21 @@ public sealed class OwnedSvgRendererFixture : IDisposable
         using var svg = Load(content);
         using var bitmap = Render(svg.Picture);
         Assert.Equal(SKColors.Magenta, bitmap.GetPixel(2, 2));
+    }
+
+    // The historical MBT dependency (Svg.Skia 2.0.0.1) ignored SMIL. The newer
+    // test oracle evaluates time zero, so it is intentionally not used here.
+    [Theory]
+    [InlineData("<set attributeName=\"fill\" to=\"blue\" begin=\"0s\" dur=\"2s\"/>")]
+    [InlineData("<animate attributeName=\"x\" from=\"2\" to=\"14\" begin=\"-1s\" dur=\"2s\"/>")]
+    [InlineData("<animateTransform attributeName=\"transform\" type=\"translate\" from=\"0 0\" to=\"12 0\" begin=\"-1s\" dur=\"2s\"/>")]
+    [InlineData("<animateMotion path=\"M 0 0 L 12 0\" begin=\"-1s\" dur=\"2s\"/>")]
+    public void AnimationMarkupRetainsHistoricalStaticBaseImage(string animation)
+    {
+        using var svg = Load($"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"8\"><rect x=\"2\" y=\"2\" width=\"4\" height=\"4\" fill=\"red\">{animation}</rect></svg>");
+        using var bitmap = Render(svg.Picture);
+        Assert.Equal(SKColors.Red, bitmap.GetPixel(3, 3));
+        Assert.Equal((byte)0, bitmap.GetPixel(10, 3).Alpha);
     }
 
     [Theory]

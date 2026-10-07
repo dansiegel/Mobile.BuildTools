@@ -28,9 +28,11 @@
     <PackageVersion Include="SkiaSharp" Version="4.153.1" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="4.153.1" />
     <PackageVersion Include="SkiaSharp.HarfBuzz" Version="4.153.1" />
+    <!-- Test-only pixel-parity oracle; never referenced by shipped task projects. -->
     <PackageVersion Include="Svg.Skia" Version="5.2.3" />
     <PackageVersion Include="Svg.Custom" Version="5.2.3" />
     <PackageVersion Include="Svg.Model" Version="5.2.3" />
+    <PackageVersion Include="Svg.SceneGraph" Version="5.2.3" />
     <PackageVersion Include="System.Buffers" Version="4.6.1" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="System.Drawing.Common" Version="10.0.12" />

@@ -1,12 +1,5 @@
 # Static SVG backend provenance
 
-## Staged compatibility checkpoint
-
-These internal helper types are currently exercised by parity tests only. The
-production VectorImage path still uses Svg.Skia, and the shipped package graph
-still includes Svg.Skia/Svg.Animation. Switching production is pending preservation
-of the prior time-zero animated-SVG behavior and a passing full-MSBuild consumer.
-
 The backend conversion, asset loading, and font-provider files in this directory
 are adapted from [Svg.Skia v5.2.3](https://github.com/wieslawsoltes/Svg.Skia/tree/v5.2.3),
 by Wiesław Šoltés, under the MIT license retained in LICENSE.Svg.Skia.txt.
@@ -92,3 +85,24 @@ validation. No local .NET SDK was available for this implementation task.
 The existing repository CI tests must establish compilation, pixel parity,
 font/import/media behavior, repeated load/dispose behavior, and exact-package
 native loading on both task hosts before this work is considered validated.
+
+## Historical rendering contract
+
+Before this modernization, Mobile.BuildTools used Svg.Skia 2.0.0.1. Its
+SKSvg.Load path opens the document, builds the static drawable model, and
+records a picture; it has no animation evaluator. Unsupported animation
+elements are ignored by its drawable factory. Mobile.BuildTools then encodes
+each generated raster as PNG.
+
+Svg.Skia 5.2.3, temporarily adopted by this draft PR, adds time-zero SMIL
+evaluation through Svg.Animation. That newly introduced behavior is not a
+historical compatibility requirement. This owned bridge retains base-document
+static rendering; it does not evaluate an animation timeline or produce GIFs.
+Animation/GIF/Lottie support is separate follow-up work. The 5.2.3 test-only
+oracle is used for static SVG cases, while independent pixel expectations cover
+animation markup's historical base-image behavior.
+
+Historical sources:
+- https://github.com/wieslawsoltes/Svg.Skia/blob/2.0.0.1/src/Svg.Skia/SKSvg.Model.cs
+- https://github.com/wieslawsoltes/Svg.Skia/blob/2.0.0.1/src/Svg.Model/SvgExtensions.IO.cs
+- https://github.com/wieslawsoltes/Svg.Skia/blob/2.0.0.1/src/Svg.Model/Drawables/DrawableFactory.cs

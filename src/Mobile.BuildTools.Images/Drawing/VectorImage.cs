@@ -1,16 +1,16 @@
 using System.Drawing;
 using SkiaSharp;
-using Svg.Skia;
+using Mobile.BuildTools.Drawing.Svg;
 
 namespace Mobile.BuildTools.Drawing
 {
     internal class VectorImage : ImageBase
     {
-        private SKSvg svg;
+        private SvgImage svg;
 
         public VectorImage(string filename) : base(filename)
         {
-            svg = new SKSvg();
+            svg = new SvgImage();
             svg.Load(filename);
         }
 

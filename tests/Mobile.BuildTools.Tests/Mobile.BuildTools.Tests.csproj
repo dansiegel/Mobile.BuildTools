@@ -45,7 +45,8 @@
   <ItemGroup>
     <PackageReference Include="System.Text.Json" NoWarn="NU1903" />
     <!-- Task packages keep these private; the test host needs its own runtime graph. -->
-    <PackageReference Include="Svg.Skia" />
+    <!-- Test-only renderer oracle; production package graph is checked independently in CI. -->
+    <PackageReference Include="Svg.Skia" PrivateAssets="all" />
     <PackageReference Include="HarfBuzzSharp" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
     <PackageReference Include="Microsoft.Web.Xdt" />

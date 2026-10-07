@@ -103,11 +103,60 @@ jobs:
         with:
           name: NuGet
           path: Artifacts
+      - name: Verify shipped package dependency graph
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = '${{ needs.version.outputs.package_version }}'
+          $ids = @('Mobile.BuildTools', 'Mobile.BuildTools.Core', 'Mobile.BuildTools.Configuration', 'Mobile.BuildTools.AppSettings', 'Mobile.BuildTools.AppManifests', 'Mobile.BuildTools.Images')
+          foreach ($id in $ids) {
+            $path = Join-Path Artifacts "$id.$version.nupkg"
+            if (!(Test-Path $path)) { throw "Exact produced package missing: $path" }
+            $zip = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path $path))
+            try {
+              $leaked = @($zip.Entries | Where-Object { $_.FullName -match '(^|/)(Svg\.Skia|Svg\.Animation)\.(dll(?:\.config)?|pdb|xml|deps\.json|runtimeconfig\.json)$' })
+              if ($leaked.Count) { throw "Legacy SVG implementation leaked into $id : $($leaked.FullName)" }
+              $entry = @($zip.Entries | Where-Object { $_.FullName.EndsWith('.nuspec') })[0]
+              $reader = [System.IO.StreamReader]::new($entry.Open())
+              try { [xml]$manifest = $reader.ReadToEnd() } finally { $reader.Dispose() }
+              $packageVersion = $manifest.SelectSingleNode("//*[local-name()='metadata']/*[local-name()='version']").InnerText
+              if ($packageVersion -ne $version) { throw "Wrong package version in $id : $packageVersion" }
+              $dependencies = $manifest.SelectNodes("//*[local-name()='dependency']")
+              foreach ($dependency in $dependencies) {
+                if ($dependency.id -in @('Svg.Skia', 'Svg.Animation')) { throw "Legacy SVG package dependency in $id : $($dependency.id)" }
+              }
+              foreach ($entry in @($zip.Entries | Where-Object { $_.FullName.EndsWith('.deps.json') })) {
+                $reader = [System.IO.StreamReader]::new($entry.Open())
+                try { $deps = $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
+                if (@($deps.libraries.PSObject.Properties.Name | Where-Object { $_ -match '^Svg\.(Skia|Animation)/' }).Count) {
+                  throw "Legacy SVG dependency remains in $id / $($entry.FullName)"
+                }
+              }
+              Write-Host "$id ${version}: no shipped Svg.Skia or Svg.Animation dependency."
+            } finally { $zip.Dispose() }
+          }
       - name: Show consumer host runtime
         run: dotnet --info
       - name: Run Tests
         run: dotnet test -c Release -p:GeneratedPackageVersion=${{ needs.version.outputs.package_version }} -p:RestorePackagesPath="${{ runner.temp }}/mbt-consumer-packages"
         working-directory: E2E/E2E.Tests
+      - name: Inspect packaged desktop image dependencies
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $taskDirectory = Join-Path '${{ runner.temp }}/mbt-consumer-packages' 'mobile.buildtools.images/${{ needs.version.outputs.package_version }}/build/tasks/net472'
+          foreach ($name in @('Mobile.BuildTools.Images.dll', 'Svg.Custom.dll', 'Svg.Model.dll', 'Svg.SceneGraph.dll', 'ShimSkiaSharp.dll', 'SkiaSharp.dll', 'HarfBuzzSharp.dll')) {
+            $path = Join-Path $taskDirectory $name
+            if (!(Test-Path $path)) { throw "Packaged task dependency missing: $path" }
+            Write-Host "$name : $([System.Reflection.AssemblyName]::GetAssemblyName($path).FullName)"
+          }
+          foreach ($architecture in @('x86', 'x64', 'arm64')) {
+            foreach ($name in @('libSkiaSharp.dll', 'libHarfBuzzSharp.dll')) {
+              $path = Join-Path $taskDirectory "$architecture/$name"
+              if (!(Test-Path $path)) { throw "Packaged native task dependency missing: $path" }
+              Write-Host "Native task dependency: $path"
+            }
+          }
       - name: Setup MSBuild
         if: runner.os == 'Windows'
         uses: microsoft/setup-msbuild@v2
