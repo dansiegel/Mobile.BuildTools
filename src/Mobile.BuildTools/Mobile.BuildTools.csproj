@@ -6,7 +6,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageId>$(AssemblyName)</PackageId>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <Description>The Mobile.BuildTools 2.0 is more powerful than ever before. Whether you're managing your application secrets, environment configurations, using CSS with Xamarin.Forms, or looking for a super powerful API that can enable powerful solutions for all of your App Icons / Images. If you aren't using Mobile.BuildTools with your Xamarin apps, you're working too hard or not following best practices! Truthfully I forgot everything it does so we wrote it down. Check out the new for 2.0 docs site at https://mobilebuildtools.com</Description>
+    <Description>Mobile.BuildTools provides MSBuild tasks for application configuration, manifest processing, and image generation in mobile app build pipelines. See https://mobilebuildtools.com for documentation and guidance for modern .NET applications.</Description>
     <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>

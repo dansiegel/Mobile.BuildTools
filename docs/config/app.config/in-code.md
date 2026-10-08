@@ -12,35 +12,13 @@ Before using the ConfigurationManager you must initialize it.
 
 ConfigurationManager accepts a `bool` to enable runtime environments, this must be set to `true` if you want to use configuration transforms.
 
-AppDelegate.cs
+Call this during application startup, before reading configuration values:
 
 ```csharp
-public override bool FinishedLaunching(UIApplication app, NSDictionary options)
-{
-    ConfigurationManager.Init(true);
-    global::Xamarin.Forms.Forms.Init();
-    LoadApplication(new App());
-
-    return base.FinishedLaunching(app, options);
-}
+ConfigurationManager.Init(enableRuntimeEnvironments: true);
 ```
 
-MainActivity.cs
-
-```csharp
-protected override void OnCreate(Bundle bundle)
-{
-    TabLayoutResource = Resource.Layout.Tabbar;
-    ToolbarResource = Resource.Layout.Toolbar;
-
-    base.OnCreate(bundle);
-
-    ConfigurationManager.Init(true, this);
-
-    global::Xamarin.Forms.Forms.Init(this, bundle);
-    LoadApplication(new App());
-}
-```
+This initializes Mobile.BuildTools.Configuration; UI framework initialization is handled separately by your application.
 
 ## Transformations
 

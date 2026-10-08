@@ -491,7 +491,7 @@
       }
     },
     "XamarinCss": {
-      "description": "Configures the Mobile.BuildTools to compile SCSS files into Xamarin.Forms compliant CSS for styling your Xamarin.Forms application with CSS.",
+      "description": "Legacy SCSS compilation settings retained for compatibility with older projects.",
       "type": [
         "object",
         "null"

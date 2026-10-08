@@ -1,3 +1,11 @@
-.NET Maui is the evolution of Xamarin. There is a lot to be excited about with .NET Maui. While this is still early days with .NET Maui and I have not yet had time to evaluate the Mobile.BuildTools with .NET Maui, there is also no reason why the Mobile.BuildTools would not work with .NET Maui. Many of the features included with the Mobile.BuildTools such as the Secrets API, is completely cross platform and can be used with literally any C# project including AspNetCore, Unit Tests, etc.
+# .NET MAUI and Uno Platform
 
-For Platform Specific functionality such as the Image or Manifest processing, these rely on the iOS/Android SDK's which are shared by traditional Xamarin applications and .NET Maui apps. As such these should continue to work. If you encounter any issue with the Mobile.BuildTools and a .NET Maui application please be sure to file and issue on GitHub.
+Use .NET MAUI or Uno Platform for new mobile applications. Mobile.BuildTools provides MSBuild tasks; configuration generation can be used in C# projects independently of the UI framework.
+
+For application configuration, see [App Settings](config/appsettings/index.md). For XML configuration and runtime transformations, see [App.config](config/app.config/index.md).
+
+Manifest and image processing depend on the target platform SDK, project layout, and Mobile.BuildTools version. Check the documentation for each task and validate it against your target project. Retained platform-specific code does not imply that every target or SDK is actively supported.
+
+The [Microsoft Xamarin support policy](https://dotnet.microsoft.com/en-us/platform/support/policy/xamarin) records the end of Xamarin support on May 1, 2024. Older Xamarin samples and platform notes reflect the project's origins; use modern .NET projects for new applications.
+
+If you encounter an issue, [open a GitHub issue](https://github.com/dansiegel/Mobile.BuildTools/issues) with your Mobile.BuildTools version, target framework, SDK version, and a minimal reproduction.

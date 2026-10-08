@@ -1,6 +1,6 @@
 # Getting Started
 
-The Mobile.BuildTools is an easy to use NuGet package that adds new MSBuild targets to your build pipeline. In essence it teaches MSBuild some new tricks to help make your DevOps easier and help you follow better practices while developing your application. The bulk of support is around Xamarin.Android and Xamarin.iOS and it will work regardless of whether you are using the native tooling, Xamarin.Forms, or Uno to create your UI.
+Mobile.BuildTools is a NuGet package that adds MSBuild targets to your build pipeline for application configuration, manifests, images, and other build tasks. For new applications, use .NET MAUI or Uno Platform and review the [modern .NET notes](maui.md). Platform-specific behavior depends on your target SDK and package version.
 
 The Mobile.BuildTools are a collection of MSBuild Tasks that help make MSBuild smarter in handling the build process for CI/CD with Mobile Applications. The library was born from a desire to share build processes from one app to the next without having to copy and paste a bunch of build scripts each of which could easily end up out of date. Because the Mobile.BuildTools simply provides MSBuild Tasks, this adds nothing to the size of your application and if being used on a project that will be packed and shared, you can set the PackageReference's PrivateAssets to all.
 
@@ -13,21 +13,17 @@ The Mobile.BuildTools started out several years ago from powershell scripts I fo
 
 ## Support
 
-This project is maintained by Dan Siegel. If this project has helped you please consider sponsoring Dan on GitHub. Your contributions help make great open source projects possible.
-
-[![GitHub Sponsors](https://github.blog/wp-content/uploads/2019/05/mona-heart-featured.png?fit=600%2C315)][sponsor]
+This project is maintained by Dan Siegel.
 
 !!! note
-    Enterprise Support is available through [AvantiPoint](https://avantipoint.com). Please reach out if you require support for your apps with the Mobile.BuildTools, Prism or general assistance with your Xamarin, .NET Maui, or Uno Platform apps.
+    Enterprise Support is available through [AvantiPoint](https://avantipoint.com). Please reach out if you require support for your apps with the Mobile.BuildTools, Prism or general assistance with your .NET MAUI or Uno Platform apps.
 
 ## Latest NuGet's
 
-| Package | NuGet | SponsorConnect |
-| --------------- | ----- | ---- |
-| [Mobile.BuildTools][BuildToolsNuGet] | [![Latest NuGet][BuildToolsNuGetShield]][BuildToolsNuGet] | [![Latest CI Package][BuildToolsSponsorConnectShield]][BuildToolsSponsorConnect] |
-| [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![Latest NuGet][BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] | [![Latest CI Package][BuildToolsConfigSponsorConnectShield]][BuildToolsConfigSponsorConnect] |
-
-Want to consume the CI packages? Sign up as a [GitHub sponsor][sponsor] and you can access the Sponsor Connect private feed.
+| Package | NuGet |
+| --------------- | ----- |
+| [Mobile.BuildTools][BuildToolsNuGet] | [![Latest NuGet][BuildToolsNuGetShield]][BuildToolsNuGet] |
+| [Mobile.BuildTools.Configuration][BuildToolsConfigNuGet] | [![Latest NuGet][BuildToolsConfigNuGetShield]][BuildToolsConfigNuGet] |
 
 ## Why Use the Mobile.BuildTools
 
@@ -43,7 +39,6 @@ The Mobile.BuildTools is designed to help you with a variety of tasks that make 
     - Configurable to use timestamp or BuildId if it exists + user defined Offset
 - [Tokenize your Info.plist / AndroidManifest.xml](manifests/index.md) (`$$SomeKey$$`)
     - Tokens replaced at build in obj to protect any against configuration values being checked in
-- [Support for SCSS files to generate Xamarin.Forms CSS files](scss-to-css/index.md)
 - [Generate 'AppSettings' class at build that contains any configuration or application secrets](config/appsettings/index.md)
     - Supports all primitive data types + Uri, DateTime, DateTimeOffset, TimeStamp, & Guid
     - Any property can be made an array of values (useful for feature flags or OAuth scopes)
@@ -85,16 +80,10 @@ Some additional notes... the Mobile.BuildTools will help with some advanced scen
     - The smaller icon file in the mipmap folders (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi)
     - The larger launcher_foreground file in the mipmap folders (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi)
 
-[sponsor]: https://xam.dev/sponor-buildtools
-
 [PrismNuGetShield]: https://img.shields.io/nuget/vpre/Prism.MFractor.Config.svg
 
 [BuildToolsNuGet]: https://www.nuget.org/packages/Mobile.BuildTools/
 [BuildToolsNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.svg
-[BuildToolsSponsorConnect]: https://sponsorconnect.dev/nuget/package/Mobile.BuildTools/
-[BuildToolsSponsorConnectShield]: https://img.shields.io/endpoint?url=https%3A%2F%2Fsponsorconnect.dev%2Fshield%2FMobile.BuildTools%2Fvpre
 
 [BuildToolsConfigNuGet]: https://www.nuget.org/packages/Mobile.BuildTools.Configuration/
 [BuildToolsConfigNuGetShield]: https://img.shields.io/nuget/vpre/Mobile.BuildTools.Configuration.svg
-[BuildToolsConfigSponsorConnect]: https://sponsorconnect.dev/nuget/package/Mobile.BuildTools.Configuration/
-[BuildToolsConfigSponsorConnectShield]: https://img.shields.io/endpoint?url=https%3A%2F%2Fsponsorconnect.dev%2Fshield%2FMobile.BuildTools.Configuration%2Fvpre

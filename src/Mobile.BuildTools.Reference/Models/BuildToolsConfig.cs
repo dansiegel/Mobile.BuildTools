@@ -30,7 +30,7 @@ namespace Mobile.BuildTools.Models
         [JsonPropertyName("automaticVersioning")]
         public AutomaticVersioning AutomaticVersioning { get; set; }
 
-        [Description("Configures the Mobile.BuildTools to compile SCSS files into Xamarin.Forms compliant CSS for styling your Xamarin.Forms application with CSS.")]
+        [Description("Legacy SCSS compilation settings retained for compatibility with older projects.")]
         [JsonPropertyName("css")]
         public XamarinCss Css { get; set; }
 

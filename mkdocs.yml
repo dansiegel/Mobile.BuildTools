@@ -90,12 +90,7 @@ nav:
     - Continuous Integration:
       - Platforms: continuous-integration/platforms.md
       - Setup: continuous-integration/setup.md
-    - Xamarin.Forms CSS:
-      - General Info: scss-to-css/index.md
-      - Usage Notes: scss-to-css/css-notes.md
-      - Supported Properties: scss-to-css/properties.md
-      - In Code: scss-to-css/in-code.md
-    - .NET Maui: maui.md
+    - .NET MAUI and Uno Platform: maui.md
     - F.A.Q.: faq.md
     - Appendix:
       - Upgrading from 1.X: appendix/upgrade.md
