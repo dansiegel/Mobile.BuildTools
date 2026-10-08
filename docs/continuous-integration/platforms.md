@@ -1,8 +1,7 @@
-# Build Platforms
+# Build platforms
 
-Because the Mobile.BuildTools is a collection of MSBuild Targets, it works absolutely everywhere that MSBuild is available and building your project. It doesn't matter if you use Cake, or CLI scripts, or which CI platform you use. In general all of the common CI Platforms that Xamarin Developers might use are covered this includes:
+Mobile.BuildTools integrates with MSBuild. Use an agent with the .NET SDK and platform workloads required by your MAUI, Uno Platform, or other .NET project, and an MBT package compatible with those tools.
 
-- App Center
-- Azure DevOps
-- Appveyor
-- Jenkins
+Common hosts include GitHub Actions, Azure Pipelines, AppVeyor, and Jenkins. Configuration values must be available to the build process; see [CI setup](setup.md) for environment-variable mapping.
+
+Legacy build-host detection remains in the source for compatibility. Its presence does not indicate that a retired service or platform is supported for new applications.

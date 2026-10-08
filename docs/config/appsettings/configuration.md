@@ -1,44 +1,26 @@
-Configuration for App Settings is a little different than for Secrets in Mobile.BuildTools 1.x. While we do provide legacy support for getting values from the secrets.json this has been almost entirely rewritten to provide much more advanced scenarios as well as to solve some issues faced in CI.
+# App Settings configuration
 
-## CI Platform Issues
+Start with the [complete walkthrough](index.md), then use this reference to customize generation. Both released v2 and forthcoming v3 source use `appSettings`; `projectSecrets` is an obsolete migration input.
 
-A common problem with some build platforms such as Azure DevOps Windows Agents is that they cast all variables with ToUpper. This means that if you added `MyVariable`, what the Mobile.BuildTools would actually find was `MYVARIABLE`. With 1.x we had no way to convert this back to `MyVariable` for the source generation. This naturally caused a lot of problems. To solve this issue the Mobile.BuildTools now provides a configuration file that describes the projects and classes that it should generate.
+## Select the compiling project
 
-## Configuring the buildtools.json
-
-The Mobile.BuildTools 2.0 configuration gives us a lot of flexibility as we can define 1 or MORE classes that should be generated automatically at build. Additionally since we can describe the class in json, we can specify exactly the data type should be rather than relying on the Mobile.BuildTools to make an educated guess.
+The keys under `appSettings` must exactly match `$(MSBuildProjectName)`, normally the `.csproj` filename without its extension, including case. Each value is an array of class definitions. The key is not an arbitrary alias, assembly name, root namespace, or generated class name.
 
 ```json
 {
   "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
   "appSettings": {
-    "AwesomeApp": [
+    "AwesomeApp.Core": [
       {
-        // Your configuration here
-      }
-    ]
-  }
-}
-```
-
-### Class Configuration
-
-Within the Project we can now provide any configuration values we need to either override or explicitly provide that will control how the class will be generated.
-
-```json
-{
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
-  "projectSecrets": {
-    "AwesomeApp": [
-      {
-        "accessibility": "Internal",
-        "className": "AppSettings",
+        "accessibility": "Public",
+        "rootNamespace": "Company.Product",
+        "namespace": "Configuration",
+        "className": "ApiSettings",
+        "prefix": "Api_",
         "delimiter": ";",
-        "namespace": "Helpers",
-        "rootNamespace": null,
-        "prefix": "BuildTools_",
         "properties": [
-          // Property Definitions
+          { "name": "BaseUri", "type": "Uri", "defaultValue": "https://api.example.com/" },
+          { "name": "Scopes", "type": "String", "isArray": true, "defaultValue": "read;profile" }
         ]
       }
     ]
@@ -46,224 +28,86 @@ Within the Project we can now provide any configuration values we need to either
 }
 ```
 
-!!! note
-    If we do not provide any of the values shown above they will automatically default as shown. Only the `properties` are required.
+This selects `AwesomeApp.Core.csproj` and generates `Company.Product.Configuration.ApiSettings`. Its inputs are `Api_BaseUri` and `Api_Scopes`, with unprefixed names accepted as fallbacks. The array is generated as `string[]`, not a `List<string>`.
 
-### Property Configuration
+## Class options
 
-The Mobile.BuildTools 2.0 added support for every primitive datatype, along with DateTime, DateTimeOffset, Uri, & Guid. Additionally you now have the ability to easily specify that a value should be an array. Note that this only generates arrays, you cannot specify other types such as `List` or `Collection`.
+| Field | Default | Purpose |
+| --- | --- | --- |
+| `accessibility` | `Internal` | Use `Public` if another assembly must access the generated class. |
+| `rootNamespace` | Compiling project's `RootNamespace` | Base namespace; does not select the project. |
+| `namespace` | `Helpers` | Relative namespace appended to the root. Set `"."` for the root namespace alone. |
+| `className` | `AppSettings` | Generated class name. Set distinct names for multiple classes. |
+| `prefix` | `BuildTools_` | Input lookup prefix; keep a trailing underscore for consistent v2/v3 behavior. |
+| `delimiter` | `;` | Separator for array values. Use a single character for consistent behavior across versions. |
+| `properties` | Empty | Explicit definitions of the members to generate. |
 
-```json
-{
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
-  "projectSecrets": {
-    "AwesomeApp": [
-      {
-        "properties": [
-          {
-            "name": "MyProperty",
-            "type": "String"
-          },
-          {
-            "name": "MyProperty2",
-            "type": "Int"
-          },
-          {
-            "name": "MyProperty3",
-            "type": "String",
-            "array": true
-          }
-        ]
-      }
-    ]
-  }
-}
-```
+Input matching is case-insensitive, which accommodates build hosts that uppercase environment variable names. Project selection and file discovery are separate from that matching.
 
-### Providing a Default Value
+## Property options
 
-There are a lot of values which either may not be sensitive or a default value would be safe to have in source control. We'll look at two scenarios here.
+Use `name`, `type`, optional `isArray`, and optional `defaultValue`. `array` and `default` are not the supported JSON property names.
 
-#### Default value for App Center App Id
+Supported type names are `String`, `Bool`, `Byte`, `SByte`, `Char`, `Decimal`, `Double`, `Float`, `Int`, `UInt`, `Long`, `ULong`, `Short`, `UShort`, `DateTime`, `DateTimeOffset`, `Guid`, `Uri`, and `TimeSpan`. Supply values in a format valid for the selected type. Use a delimiter-separated string for an array.
 
-It's pretty common for people using the Mobile.BuildTools to inject values such as the App Center App Id to be able to initialize the App Center SDK. It's also pretty common that you may not want to provide a value for local development. The Mobile.BuildTools makes this easy by understanding the reserved values of `null` and `default`. It doesn't matter which one you use, the Mobile.BuildTools will actually generate the code using the `default` keyword as this is safe across all data types, nullable, and non-nullable alike.
+`defaultValue` is a string, including for numeric and Boolean types. `"null"` and `"default"` request the type's default value; these are not the literal string values `"null"` and `"default"`. Prefer explicit safe defaults such as `"false"` for a Boolean or `"514"` for an integer. If no input or default exists, generation reports a missing value; v3 reports `MBT404`.
+
+## Multiple classes with repeated member names
+
+Give each class a unique name and prefix:
 
 ```json
 {
   "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
   "appSettings": {
-    "AwesomeApp": [
-      {
-        "properties": [
-          {
-            "name": "AppCenterAppId",
-            "type": "String",
-            "defaultValue": "null"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-#### User specified Default value
-
-Other times we may have non-sensitive values that we need to configure defaults for. In the following scenario we may be setting up UDP logging with a Syslog Server. We know that the default port for UDP Syslog Servers is port 514. This value can simply be placed as 
-
-```json
-{
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
-  "appSettings": {
-    "AwesomeApp": [
-      {
-        "properties": [
-          {
-            "name": "SyslogServerPort",
-            "type": "Int",
-            "defaultValue": "514"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-#### Handling Duplicate Property Names
-
-There may be times in which you have more than one project in your solution, or perhaps just more than one generated settings class that require duplicate property names. An example of this could be an API Settings class. 
-
-```json
-{
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
-  "appSettings": {
-    "AwesomeApp": [
-      {
-        "className": "FooApiSettings",
-        "properties": [
-          {
-            "name": "BaseUri",
-            "type": "Uri"
-          }
-        ]
-      },
-      {
-        "className": "BarApiSettings",
-        "properties": [
-          {
-            "name": "BaseUri",
-            "type": "Uri"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-In this sample we have 2 generated classes with the `BaseUri` property, this creates a few problems for us because we need to distinguish which Uri belongs to which class and ultimately our JSON would be invalid because it has a duplicated key
-
-```json
-{
-  "BaseUri": "https://api.foo.com",
-  "BaseUri": "https://api.bar.com"
-}
-```
-
-To solve this problem we can use the Prefix property on our generated class settings. In this way we can specify a unique variable prefix that will be used to identify which Base Uri property belongs to which generated class
-
-```json
-{
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
-  "appSettings": {
-    "AwesomeApp": [
+    "AwesomeApp.Core": [
       {
         "className": "FooApiSettings",
         "prefix": "FooApi_",
-        "properties": [
-          {
-            "name": "BaseUri",
-            "type": "Uri"
-          }
-        ]
+        "properties": [{ "name": "BaseUri", "type": "Uri" }]
       },
       {
         "className": "BarApiSettings",
         "prefix": "BarApi_",
-        "properties": [
-          {
-            "name": "BaseUri",
-            "type": "Uri"
-          }
-        ]
+        "properties": [{ "name": "BaseUri", "type": "Uri" }]
       }
     ]
   }
 }
 ```
 
-With the Prefix added we can now update our appsettings.json to be:
+Supply a flat `appsettings.json`:
 
 ```json
 {
-  "FooApi_BaseUri": "https://api.foo.com",
-  "BarApi_BaseUri": "https://api.bar.com"
+  "FooApi_BaseUri": "https://foo.example.com/",
+  "BarApi_BaseUri": "https://bar.example.com/"
 }
 ```
 
-> [!NOTE]
-> If your prefix does not end with an underscore one will automatically be inserted. In the above example if we did not explicitly have the underscore, the Mobile.BuildTools would still be expecting the same values in our `appsettings.json` or as an Environment variable.
+## Defaults and build configurations
 
-#### Setting Variables from the environment
-
-The Mobile.BuildTools allows us to "Fake" environment variables. There may be times such as the previous sample with our previous example where the values aren't particularly sensitive but simply something that may change based on our Build... 
+`environment.defaults` and `environment.configuration` provide build inputs without separate local files. Keep only non-confidential defaults in this checked-in file:
 
 ```json
 {
   "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
   "environment": {
     "defaults": {
-      "FooApi_BaseUri": "https://dev.api.foo.com",
-      "BarApi_BaseUri": "https://dev.api.bar.com"
+      "BuildTools_BackendUri": "https://api.example.com/"
     },
-  }
-}
-```
-
-It's also possible that we may want to further customize this without the need to update a CI Build environment for variables that aren't particularly sensitive. In this case we can provide Build Configuration specific settings:
-
-```json
-{
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
-  "environment": {
     "configuration": {
       "Debug": {
-        "FooApi_BaseUri": "https://dev.api.foo.com",
-        "BarApi_BaseUri": "https://dev.api.bar.com"
-      },
-      "QA": {
-        "FooApi_BaseUri": "https://qa.api.foo.com",
-        "BarApi_BaseUri": "https://qa.api.bar.com"
+        "BuildTools_BackendUri": "https://dev.example.com/"
       },
       "Release": {
-        "FooApi_BaseUri": "https://api.foo.com",
-        "BarApi_BaseUri": "https://api.bar.com"
+        "BuildTools_BackendUri": "https://api.example.com/"
       }
-    },
+    }
   }
 }
 ```
 
-#### Fuzzy Matching
+These inputs still need corresponding `appSettings` property definitions. System environment and JSON values can replace the defaults. See [lookup and precedence](index.md#file-lookup-and-precedence) for the important v2/v3 differences.
 
-From time to time you may want to make use of Fuzzy Matching. Fuzzy Matching allows you to provide configurations that aren't tied to a specific Build Configuration name. For example we might have an `appsettings.QA.json` with a `DebugQA` build configuration. We might also have a `ReleaseQA` build configuration. In the case we build with either of these build configurations we might want it to pick up the QA build configuration. We can pick these configurations up by enabling Fuzzy Matching in our environment.
-
-```json
-{
-  "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
-  "environment": {
-    "enableFuzzyMatching": true
-  }
-}
-```
+Forthcoming v3 source also supports platform and `Platform_Configuration` entries, such as `Android` and `iOS_Debug`. Its optional `environment.enableFuzzyMatching` matches some configuration prefixes when an exact match is absent. Prefer exact configuration names for predictable builds; this behavior is not part of released v2.0.245.

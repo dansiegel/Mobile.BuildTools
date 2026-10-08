@@ -12,7 +12,7 @@ There are many times in which you may need to parameterize an AndroidManifest.xm
     <string>com.avantipoint.awesomeapp</string>
     <key>CFBundleURLSchemes</key>
     <array>
-      <string>msal$AzureADClientId$</string>
+      <string>msal$$AzureADClientId$$</string>
     </array>
   </dict>
 </array>
@@ -28,7 +28,8 @@ We can now leave our Info.plist or AndroidManifest.xml checked into source contr
     "variablePrefix": "Manifest_",
     "missingTokensAsErrors": false,
     "disable": false
-  },
+  }
+}
 ```
 
 !!! note Note
@@ -39,10 +40,8 @@ We can now leave our Info.plist or AndroidManifest.xml checked into source contr
 
 ## Setting the Variables
 
-The Mobile.BuildTools attempts to locate the values for your Manifest tokens through several sources. In the event that a variable key is duplicated, the Mobile.BuildTools has a precedence that the last one in wins. Variables are loaded from the following sources:
+Manifest replacement gathers build defaults, configuration values, the process environment, and settings files. See [version-specific settings lookup](../config/appsettings/index.md#file-lookup-and-precedence): released v2 merges project-to-solution files; forthcoming v3 selects the first applicable directory starting at the solution.
 
-1. buildtools.json Environment Defaults
-1. buildtools.json Environment Configuration (i.e. Debug, Release)
-1. System Environment
-1. Recursively load legacy `secrets.json` from the Project directory to the Solution directory
-1. Recursively load `appsettings.json` from the Project directory to the Solution directory
+Manifest handling also loads `manifest.json` from the project and solution; duplicate solution-level keys can override project values. `Manifest_` inputs and the token's unprefixed name are distinct lookup forms. Avoid defining conflicting forms, and test with the MBT version used by your build.
+
+Bundled manifest values are readable in the shipped app. They must not contain confidential service credentials.

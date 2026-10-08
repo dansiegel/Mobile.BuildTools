@@ -12,7 +12,7 @@ The Schema for configuring images is rather simple by design. We allow you to sp
 
 ```json
 {
-  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
   "name": "mobile_buildtools"
 }
 ```
@@ -25,11 +25,11 @@ There is a common schema for image configuration which includes the following pr
 
 ```json
 {
-  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
   "name": "someName",
   "scale": 0.875,
   "backgroundColor": "#ffffff",
-  "ignore": false,
+  "ignore": false
 }
 ```
 
@@ -37,7 +37,7 @@ This schema is available generally for each image and can be used to further twe
 
 ```json
 {
-  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
   "android": {
     "name": "icon"
   },
@@ -57,7 +57,7 @@ Given these additional criteria we would want to update our configuration as fol
 
 ```json
 {
-  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
   "android": {
     "name": "icon",
     "resourceType": "Mipmap",
@@ -109,7 +109,7 @@ You will not need to do anything to the `Images\icon.json` file, however you wil
 
 ```json
 {
-  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
   "ignore": true
 }
 ```
@@ -118,7 +118,7 @@ You will not need to do anything to the `Images\icon.json` file, however you wil
 
 ```json
 {
-  "$schema": "http://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
+  "$schema": "https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json",
   "watermark": {
     "sourceFile": "beta-version"
   }

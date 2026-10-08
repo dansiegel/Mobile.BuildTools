@@ -1,30 +1,13 @@
-# Apple Push Notifications
+# Apple push notification entitlements
 
-When using Push Notifications on iOS you must be sure to set the `aps-environment` from `development` to `production` before submitting to the App Store. The Mobile.BuildTools will handle this for you easily at build.
+Set the push-notification entitlement appropriate for the signing and distribution profile of your iOS app. Current v3 source includes an opt-in `APSProductionEnvironment` task that supplies `aps-environment: production` through the .NET Apple SDK's `CustomEntitlements` input before entitlement compilation. This describes source behavior; it does not announce a v3 release or guarantee that released v2.0.245 contains it.
 
-!!! danger "Critical Note"
-    While this was originally slated for v2.0, this will not be done until 2.1.
-
-## From the Build Definition
-
-You can accomplish this easily by updating your build definition to pass additional MSBuild arguments with the value `/p:APSProductionEnvironment=true` and the Mobile.BuildTools will automatically update the `aps-environment` for you.
-
-```yaml
-- task: XamariniOS@2
-  inputs:
-    solutionFile: '**/*.sln'
-    configuration: 'Store'
-    packageApp: true
-    runNugetRestore: false
-    args: '/p:APSProductionEnvironment=true'
-```
-
-## From the MSBuild Properties
-
-You can alternatively do this through any Directory.Build.props or in the csproj of your iOS project by adding the following:
+To opt in for a designated distribution configuration, add this to the app project or its `Directory.Build.props`:
 
 ```xml
-<PropertyGroup Condition=" $(Configuration) == 'Store' ">
+<PropertyGroup Condition="'$(Configuration)' == 'Release'">
   <APSProductionEnvironment>true</APSProductionEnvironment>
 </PropertyGroup>
 ```
+
+Only enable it when production push entitlements match your signing setup. Inspect the final signed app's entitlements as part of your distribution validation. Configuration alone does not replace the SDK's signing and provisioning requirements.

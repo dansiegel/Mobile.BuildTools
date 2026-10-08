@@ -51,7 +51,7 @@ namespace Mobile.BuildTools.Models
         [JsonPropertyName("projectSecrets")]
         public Dictionary<string, SecretsConfig> ProjectSecrets { get; set; }
 
-        [Description("Replaces the former 'Secrets' API, with a newly generated AppSettings class. This will allow you to generate one or more configuration classes.")]
+        [Description("Maps exact compiling project names (the .csproj filename without its extension, matching MSBuildProjectName) to arrays of generated class definitions. Project keys are independent of rootNamespace, namespace, and className.")]
         [JsonPropertyName("appSettings")]
         public Dictionary<string, IEnumerable<SettingsConfig>> AppSettings { get; set; }
 

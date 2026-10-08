@@ -10,7 +10,7 @@ Build versioning can be extremely important for analytics and diagnostics. What'
     "environment": "All",
     "versionOffset": 0,
     "disable": false
-  },
+  }
 }
 ```
 
@@ -32,7 +32,6 @@ Automatic Build Versioning supports the following `Behavior`'s:
 
 \* Supported Build Hosts:
 
-  - AppCenter
   - AppVeyor
   - Azure DevOps
   - Jenkins
@@ -40,9 +39,6 @@ Automatic Build Versioning supports the following `Behavior`'s:
 !!! info Info
     You might use the `versionOffset` when your CI Build Number and Build Number in the App Store or Google Play are not in sync. As an example, when shipping multiple APKs with the same build number Google Play may take build 123 and make it 100123, 200123, 300123, & 400123 respectively for each of the 4 APK's you have provided. This would mean when switching to AAB that you might need to offset by 400000 in order to get your new AAB build to show up in Google Play.
 
-## Planned Enhancements
+## Verify the package behavior
 
-Build Versioning is a brand new task that has been planned for a long time and sadly has taken a lot longer to get implemented than what was originally anticipated. Beginning with the push for 2.1 we will be looking at more advanced scenarios:
-
-- Support scenarios where you may want to control a public display version like 1.0 but need a unique build id so that you can resubmit to the store if the App Store or Google Play reject your app during review.
-- Support using GitVersioning. Git Versioning is a popular technique used by a lot of modern libraries including the Mobile.BuildTools. This occurs by evaluating the Git Height, and is generally controlled with a `version.json` in the root directory. You can look at the Mobile.BuildTools repo for an example of this using Nerdbank.GitVersioning.
+Build-host detection and version formatting depend on the MBT version and target platform. Check the generated manifest before distribution. Historical build-host names retained in source do not indicate that a retired host remains available.

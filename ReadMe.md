@@ -2,9 +2,9 @@
 
 # Build Tools
 
-There is a lot of talk these days about DevOps. One of the problems with DevOps is that it can be really challenging. Far too many companies suffer from reliance on poor practices that their Development teams know need to be fixed. Today we have a variety of Build Systems that are at our disposal and we no longer need to rely on such poor practices. Mobile.BuildTools can help turn your run of the mill project into a streamlined DevOps masterpiece. Best of all because the Mobile.BuildTools simply provide new targets for MSBuild it works absolutely EVERYWHERE that MSBuild itself is installed!
+There is a lot of talk these days about DevOps. One of the problems with DevOps is that it can be really challenging. Far too many companies suffer from reliance on poor practices that their Development teams know need to be fixed. Today we have a variety of Build Systems that are at our disposal and we no longer need to rely on such poor practices. Mobile.BuildTools can help turn your run of the mill project into a streamlined DevOps masterpiece. Best of all because the Mobile.BuildTools simply provide new targets for MSBuild it integrates with MSBuild. Use a package compatible with your target framework, SDK, and configured tasks.
 
-> **IMPORTANT** Version 1.x is no longer under development. This is considered a legacy version. Docs for v1.x are located in the Wiki. For those wishing to use the more powerful API's described in the [mobilebuildtools.com docs](https://mobilebuildtools.com) site please use the v2.0 previews.
+> **Versions:** NuGet 2.0.245 is the released v2 package. Current source is being prepared for v3; v3-specific documentation does not announce a release. Version 1.x is no longer maintained; its historical docs are in the [Wiki](https://github.com/dansiegel/Mobile.BuildTools/wiki).
 
 #### Background
 
@@ -18,7 +18,7 @@ Enterprise Support options are available through AvantiPoint - Email dsiegel@ava
 
 ## Modern .NET applications
 
-For new mobile applications, use .NET MAUI or Uno Platform. Start with the [Mobile.BuildTools documentation](https://mobilebuildtools.com) and the [.NET MAUI and Uno Platform notes](https://mobilebuildtools.com/maui/). Platform-specific tasks depend on your target SDK and package version.
+For new mobile applications, use .NET MAUI or Uno Platform. Start with the [AppSettings walkthrough](https://mobilebuildtools.com/config/appsettings/) and the [.NET MAUI and Uno Platform notes](https://mobilebuildtools.com/maui/). Platform-specific tasks depend on your target SDK and package version.
 
 ## Mobile.BuildTools
 

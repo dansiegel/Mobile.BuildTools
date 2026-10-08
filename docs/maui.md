@@ -2,7 +2,9 @@
 
 Use .NET MAUI or Uno Platform for new mobile applications. Mobile.BuildTools provides MSBuild tasks; configuration generation can be used in C# projects independently of the UI framework.
 
-For application configuration, see [App Settings](config/appsettings/index.md). For XML configuration and runtime transformations, see [App.config](config/app.config/index.md).
+Released v2.0.245 predates modern SDKs; the current source targets .NET 10 for its build tasks and runtime package while the AppSettings generator targets .NET Standard 2.0. Check the package you actually install against your SDK; retained legacy references do not guarantee compatibility. These source targets describe forthcoming v3, not a published v3 release.
+
+For application configuration, see the [complete AppSettings walkthrough](config/appsettings/index.md). For XML configuration and runtime transformations, see [App.config](config/app.config/index.md).
 
 Manifest and image processing depend on the target platform SDK, project layout, and Mobile.BuildTools version. Check the documentation for each task and validate it against your target project. Retained platform-specific code does not imply that every target or SDK is actively supported.
 

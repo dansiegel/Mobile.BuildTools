@@ -1,18 +1,13 @@
-The Mobile.BuildTools relies a lot on JSON configurations because JSON is easy for most developers to work with.
+# Configuration files
 
-| FileName | Schema Url |
-|:--------:|:----------:|
-| appsettings.json | n/a - JSON Dictionary |
-| buildtools.json | https://mobilebuildtools.com/schemas/v2/buildtools.schema.json |
-| {imageName}.json | https://mobilebuildtools.com/schemas/v2/resourceDefinition.schema.json |
+Put `buildtools.json` beside the solution file. It defines which projects receive generated AppSettings classes and configures other build tasks. Values for generated members come from flat JSON files, environment defaults, or the build process's environment.
 
-## appsettings.json
-
-Everyone has a different opinion of how they would like to set things up. While the Mobile.BuildTools is opinionated in certain ways, we also try to make efforts to meet developers where their needs are giving you some flexibility in configuration. Within a CI environment, the Mobile.BuildTools relies on Environment Variables to map values you need in your app. However this is a bit of a pain to deal with for local app development. The Mobile.BuildTools has long relied on a `secrets.json` file containing the dictionary values of the various variables you need for your build. With version 2.0 we have deprecated `secrets.json` in favor of `appsettings.json`. Additionally we hav added a few benefits to this allowing you to now pick and choose which file directory you would like the appsettings.json to live in. This can be any directory from the directory where your Solution file is located up to the Project directory. This can be particularly helpful when you may be using the Mobile.BuildTools to supply values across multiple projects or even where you may be replacing certain values in your AndroidManifest.xml or Info.plist.
-
-## BuildTools.json
-
-One of the biggest changes in the Mobile.BuildTools 2.0 is the introduction of the `buildtools.json`. Because we provide an easy to use json configuration with a Json Schema you have the ability to get intellisense in Visual Studio, Visual Studio Code, as well as many other editors that support Json Schemas. This makes it much easier for you to configure the Mobile.BuildTools rather than relying on MSBuild properties which can confuse many developers. 
+| File | Purpose | Schema |
+| --- | --- | --- |
+| `buildtools.json` | Task and generated-class definitions | [BuildTools schema](schemas/v2/buildtools.schema.json) |
+| `appsettings.json` | Flat dictionary of build-time values | No fixed schema; keys match your definitions |
+| `appsettings.{Configuration}.json` | Configuration overrides | No fixed schema |
+| `{imageName}.json` | Image resource configuration | [Resource definition schema](schemas/v2/resourceDefinition.schema.json) |
 
 ```json
 {
@@ -20,9 +15,14 @@ One of the biggest changes in the Mobile.BuildTools 2.0 is the introduction of t
 }
 ```
 
-!!! note
-    Some features may still utilize MSBuild parameters which can be defined in your CI Build to customize behavior during a CI build. An example of this would be an override to the Image search paths which can be particularly useful for White Labeling apps.
+A schema reference alone does not define an AppSettings class. Add the project/class/property definitions from the [walkthrough](config/appsettings/index.md).
 
-## Image Configuration Json
+## Where settings files are loaded
 
-The Images API for the Mobile.BuildTools is incredibly powerful and dynamic. One of the ways that we support powerful image creation is by incorporating a configuration file for each image. By convention the configuration file should have the same file name (minus the file extension) of the image resource. You can then customize the output image resource name. This can be done globally or be specific on a specific platform like iOS or Android. Additionally you can configure a single input image to have multiple outputs. An example of this scenario could be that you have a resource that will be used for the App Icon. On Android you may output both the standard image and the "Launcher" image which may have additional padding to look good as a round icon.
+Released v2.0.245 merges `appsettings.json` and configuration variants while walking from project to solution. Forthcoming v3 starts with the solution and stops at the first directory containing applicable settings files. See [lookup and precedence](config/appsettings/index.md#file-lookup-and-precedence) before relying on project overrides.
+
+`secrets.json` and `projectSecrets` are obsolete compatibility inputs. Use `appsettings.json` and `appSettings` for current examples. `dotnet user-secrets` is not loaded automatically. The source continues to use the `/schemas/v2/` schema URL; no v3 schema URL is published here.
+
+## Image configuration
+
+An image's JSON file has the same base filename as the input image. It can describe output names, scales, watermarks, and platform-specific outputs. See [Image assets](images/index.md) and [Configuring images](images/configuring-images.md) for examples and feature limitations.

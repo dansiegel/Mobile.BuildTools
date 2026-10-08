@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>$(AssemblyName)</PackageId>
-    <Description>The Mobile.BuildTools.AppSettings is a completely reimagined Roslyn Generator based approach to handling App Settings (formerly Secrets) with the Mobile.BuildTools. With the AppSettings generated with Roslyn this unlocks new possibilities for generating multiple classes which can include settings that implement interfaces. Truthfully I forgot everything it does so we wrote it down. Check out the new for 2.0 docs site at https://mobilebuildtools.com</Description>
+    <Description>Generates strongly typed build-time configuration classes from Mobile.BuildTools AppSettings definitions using Roslyn. See https://mobilebuildtools.com for configuration, package-version guidance, and generated-code usage.</Description>
     <PackageTags>msbuild;dotnet;xamarin;android;ios;macos;uwp;tizen;buildtools</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>true</IsPackable>

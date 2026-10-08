@@ -556,7 +556,7 @@
       }
     },
     "appSettings": {
-      "description": "Replaces the former 'Secrets' API, with a newly generated AppSettings class. This will allow you to generate one or more configuration classes.",
+      "description": "Maps exact compiling project names (the .csproj filename without its extension, matching MSBuildProjectName) to arrays of generated class definitions. Project keys are independent of rootNamespace, namespace, and className.",
       "type": [
         "object",
         "null"

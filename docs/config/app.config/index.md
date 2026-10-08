@@ -27,26 +27,18 @@ By default Mobile.BuildTools will look for any file in the root of the head proj
 !!! note
     All file names are compared ignoring case.
 
-## Supported Platforms
+## Package and target versions
 
-| Platform | Supported |
-|:--------:|:---------:|
-| NetStandard | Yes |
-| NetCoreApp | 3.1 |
-| Xamarin.iOS | Yes |
-| MonoAndroid | 8.0+ |
-| UWP* | 16299+ |
-| Xamarin.Mac* | Yes |
-| Xamarin.TVOS* | Yes |
-| Tizen* | Yes |
+Install `Mobile.BuildTools.Configuration` in each project that uses its runtime API. Use matching build assets in the app project that performs XML transforms and bundling. Released v2 uses the `Mobile.BuildTools` tasks; current v3 source separates `Mobile.BuildTools.Configuration.MSBuild` and core tasks. Do not install this runtime package solely to generate AppSettings.
 
-!!! note
-    Platform's with an asterisk have not been tested explicitly.
+Released v2.0.245 has legacy platform assets. Current source targets `net10.0`, Android, iOS, macOS, Mac Catalyst, and Windows (when enabled). These target declarations describe forthcoming v3; they do not certify every SDK, runtime, or deployment scenario. See [modern .NET notes](../../maui.md) and validate the target you use.
+
+Bundled configuration values can be extracted from the app. XML transformations do not provide a secure store for confidential service credentials.
 
 ## F.A.Q.
 
 Q. Can I use the ConfigurationManager without using the Mobile.BuildTools?
-A. Yes you absolutely can. The [AppConfigSample](https://github.com/dansiegel/Mobile.BuildTools/tree/master/samples) project in the samples folder does exactly that!
+A. Yes you absolutely can. Initialize the runtime package explicitly and supply its XML inputs in the locations expected by the target platform. See [Using it in code](in-code.md).
 
 Q. How do I use the Environments?
 A. By default Environments are disabled. This means that we will only copy the transformed app.config into your project and the ConfigurationManager will only read the primary app.config.

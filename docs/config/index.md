@@ -1,12 +1,20 @@
-# App Configuration for Mobile Projects
+# Choose a configuration API
 
-Mobile Apps unlike traditional Desktop and Web projects are limiting for developers because you must define configuration values at build and not on deployment. The Mobile.BuildTools is here to help you solve this problem and meet you where you are.
+Mobile.BuildTools offers two separate configuration approaches. Choose based on when values should change and how your code should read them.
 
-Developers have different needs at different times. For v1.X, the Mobile.BuildTools took the very opinionated idea that configuration values and app secrets should be treaded as something that should be strongly typed. This has a few advantages that come from errors surfacing at build time rather than runtime.
+| | AppSettings | XML ConfigurationManager |
+| --- | --- | --- |
+| Inputs | `appSettings` definitions in `buildtools.json`; flat `appsettings.json` or build environment variables | XML `app.config` and `app.{Environment}.config` transforms |
+| Result | Strongly typed generated C# members | String values through `IConfigurationManager` / `ConfigurationManager.AppSettings` |
+| Changes | Rebuild the binary | Build transforms, or runtime transforms when the relevant files are bundled |
+| Packages | Released v2: `Mobile.BuildTools`; forthcoming v3: matching AppSettings generator and build assets | `Mobile.BuildTools.Configuration` for runtime use; matching build tasks for transforms and bundling |
+| Startup | No initialization for the basic static class | Initialize ConfigurationManager before reading values; register it yourself if using DI |
 
-Sometimes though it may be more desireable to perform quick swaps from one environment to another where you are certain that you are running the same exact tested binary build as you have previously. For this reason starting with v2.0 you will have support for using an app.config to provide you the same sort of configurations support that you may be used to from Desktop development or from the web.config variant with ASP.NET development.
+`Mobile.BuildTools.Configuration` does not turn `appsettings.json` into a generated class. AppSettings does not require the ConfigurationManager package or its initialization. Neither automatically imports `dotnet user-secrets` or provides an automatic ASP.NET `IConfiguration` binding for generated values.
 
-## See Also
+Both approaches put configuration into the application. Values shipped in generated code or bundled configuration can be extracted by a user. Keep confidential service credentials on your backend.
 
-- Using [app.config](app.config/index.md)
-- Using [App Settings](appsettings/index.md)
+- [Generate and consume AppSettings](appsettings/index.md)
+- [Configure AppSettings](appsettings/configuration.md)
+- [Use XML app.config](app.config/index.md)
+- [Initialize XML ConfigurationManager](app.config/in-code.md)

@@ -1,61 +1,44 @@
-﻿# Mobile.BuildTools.AppSettings
+# Mobile.BuildTools.AppSettings
 
-The Mobile.BuildTools.AppSettings is a re-invented implementation of the Classic Mobile.BuildTools that was originally generated as part of the Mobile.BuildTools project. This new implementation is significantly more powerful with an improved ability to control properties in Cross Compiled projects like those found in .NET MAUI and Uno Platform projects. This new implementation also provides an improved ability to bring in proeprties based on Prefixes and allows fuzzy matching for Configurations.
+This package contains the Roslyn AppSettings generator used by the forthcoming v3 implementation. Its core MSBuild assets prepare the build environment. These source notes do not announce a v3 release or a public preview feed.
+
+Install the matching `Mobile.BuildTools.AppSettings` package in the compiling project that should receive the generated class and retain its `Mobile.BuildTools.Core` dependency/build assets. `Mobile.BuildTools.Configuration` is a separate XML runtime API and is not needed for generated settings. Released v2.0.245 uses MSBuild generation through `Mobile.BuildTools` instead.
+
+See the [complete AppSettings walkthrough](https://mobilebuildtools.com/config/appsettings/) for package placement, directory layout, build commands, and consumption.
 
 ## Configuration
 
-Be sure to add a `buildtools.json` to your solution root directory.
+Put `buildtools.json` beside your solution. The `AwesomeApp.Core` key selects `AwesomeApp.Core.csproj`, independently of its namespace:
 
 ```json
 {
   "$schema": "https://mobilebuildtools.com/schemas/v2/buildtools.schema.json",
   "appSettings": {
-    "YourProjectName": [
+    "AwesomeApp.Core": [
       {
+        "rootNamespace": "AwesomeApp.Core",
+        "namespace": "Helpers",
         "className": "AppSettings",
         "properties": [
-          {
-            "name": "PropertyName",
-            "type": "String",
-          },
-          {
-            "name": "SomeOtherProperty",
-            "type": "String",
-            "default": "Hello World"
-          }
+          { "name": "DisplayName", "type": "String", "defaultValue": "Local development" },
+          { "name": "BackendUri", "type": "Uri" }
         ]
       }
     ]
-  },
-  "environment": {
-    "defaults": {
-      "SomeOtherProperty": "Hello Default Value"
-    },
-    "configuration": {
-      "Debug": {
-        "SomeOtherProperty": "Hello Debug Value"
-      },
-      "Android": {
-        "SomeOtherProperty": "Hello Android Value"
-      },
-      "iOS_Debug": {
-        "SomeOtherProperty": "Hello iOS Debug Value"
-      }
-    }
   }
 }
 ```
 
-As shown you can provide defaults either on the property or in the environment configuration in your buildtools.json. Additionally you can provide values in an appsettings.json file which can be anywhere between your project and your solution.
+Supply `appsettings.json` in the same directory:
+
 ```json
 {
-  "PropertyName": "Hello World"
+  "BuildTools_BackendUri": "https://api.example.com/"
 }
 ```
 
-You can also provide values in an appsettings.Debug.json file which can be anywhere between your project and your solution.
-```json
-{
-  "PropertyName": "Hello Debug World"
-}
-```
+Build, then use `AwesomeApp.Core.Helpers.AppSettings.BackendUri` in the compiling project. The class is `Internal` by default; choose `Public` if another assembly must access it. `defaultValue`, not `default`, supplies an optional property's fallback. Array definitions use `isArray`.
+
+V3 looks in the solution directory first and stops at the first directory with applicable JSON files, loading base, configuration, platform, and platform.configuration files there. It does not merge project-level overrides with solution-level files. [Lookup and precedence](https://mobilebuildtools.com/config/appsettings/#file-lookup-and-precedence) explains how this differs from released v2.
+
+Generated values and intermediate environment files can expose configuration. Keep private files out of Git, and keep confidential server credentials out of shipped client apps. Neither generated AppSettings nor ConfigurationManager automatically reads `dotnet user-secrets`.

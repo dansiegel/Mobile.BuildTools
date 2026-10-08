@@ -4,8 +4,15 @@ Mobile.BuildTools is a NuGet package that adds MSBuild targets to your build pip
 
 The Mobile.BuildTools are a collection of MSBuild Tasks that help make MSBuild smarter in handling the build process for CI/CD with Mobile Applications. The library was born from a desire to share build processes from one app to the next without having to copy and paste a bunch of build scripts each of which could easily end up out of date. Because the Mobile.BuildTools simply provides MSBuild Tasks, this adds nothing to the size of your application and if being used on a project that will be packed and shared, you can set the PackageReference's PrivateAssets to all.
 
-!!! warning "NOTE"
-    The docs on this site are specific to the Mobile.BuildTools v2.0. For those still using v1.4 please refer to the Wiki on GitHub.
+!!! note "Package versions"
+    NuGet 2.0.245 is the released v2 implementation. Current source is being prepared for v3. The guides call out v3 source behavior separately; this does not announce a v3 release. V1 is no longer maintained and its historical docs are in the [GitHub wiki](https://github.com/dansiegel/Mobile.BuildTools/wiki).
+
+## Start here
+
+- [Choose AppSettings or XML ConfigurationManager](config/index.md).
+- [Install, configure, build, and consume generated AppSettings](config/appsettings/index.md).
+- [Provide CI values](continuous-integration/setup.md) and [troubleshoot generation](config/appsettings/faq.md).
+- Review [.NET MAUI and Uno Platform notes](maui.md) for SDK and platform considerations.
 
 ## History
 
@@ -18,7 +25,7 @@ This project is maintained by Dan Siegel.
 !!! note
     Enterprise Support is available through [AvantiPoint](https://avantipoint.com). Please reach out if you require support for your apps with the Mobile.BuildTools, Prism or general assistance with your .NET MAUI or Uno Platform apps.
 
-## Latest NuGet's
+## NuGet packages
 
 | Package | NuGet |
 | --------------- | ----- |
@@ -40,7 +47,7 @@ The Mobile.BuildTools is designed to help you with a variety of tasks that make 
 - [Tokenize your Info.plist / AndroidManifest.xml](manifests/index.md) (`$$SomeKey$$`)
     - Tokens replaced at build in obj to protect any against configuration values being checked in
 - [Generate 'AppSettings' class at build that contains any configuration or application secrets](config/appsettings/index.md)
-    - Supports all primitive data types + Uri, DateTime, DateTimeOffset, TimeStamp, & Guid
+    - Supports all primitive data types + Uri, DateTime, DateTimeOffset, TimeSpan, & Guid
     - Any property can be made an array of values (useful for feature flags or OAuth scopes)
 - [ConfigurationManager with app.config](config/app.config/index.md)
     - Optimized for Mobile with familiar Static API and Interface based Singleton
@@ -60,7 +67,7 @@ The Mobile.BuildTools is designed to help you with a variety of tasks that make 
     - Ability add padding around an image
     - Ability to add a background color to a transparent image
     - Supports PNG & JPG file types
-    - Support for SVG and Gif **(Planned)**
+    - Static SVG rasterization is available in the current v3 image source. Animated SVG, animated GIF, and Lottie processing remain follow-up work; see [image feature status](images/index.md).
 - [Release Notes generation](release-notes.md)
     - Customizable output based on latest commit messages
     - **(Planned)** Support for user templating and Flag based messages since last release/Git Tag... (i.e. `[Bug][iOS] Some bug got fixed`)

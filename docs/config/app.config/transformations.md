@@ -22,12 +22,12 @@ A Transformation config may look like:
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
   <appSettings>
     <add key="foo" value="transformed" xdt:Transform="Replace" xdt:Locator="Match(key)"/>
-    <add key="Environment" value="Dev" xdt:Transform="Insert "/>
+    <add key="Environment" value="Dev" xdt:Transform="Insert"/>
   </appSettings>
 </configuration>
 ```
 
-After running the transform from either the automatic build task, at runtime or with the .NET CLI Tool the resulting app.config will look like:
+After running the transform with the build task or the runtime ConfigurationManager API the resulting app.config will look like:
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>

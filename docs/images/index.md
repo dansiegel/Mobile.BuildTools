@@ -46,9 +46,7 @@ Conditional Directories supercharges your ability deliver customized images for 
 
 A powerful feature of the Mobile.BuildTools is the ability to customize by Build Platform. This allows to to use the office Target Framework Moniker (TFM) or the more friendly platform name like the following.
 
-- Xamarin.iOS
 - iOS
-- MonoAndroid
 - Android
 
 **Build Configurations**
@@ -64,8 +62,8 @@ A powerful feature of the Mobile.BuildTools is the ability to customize by Build
       "Images\\Shared"
     ],
     "conditionalDirectories": {
-      "MonoAndroid": [ "Images\\Android" ],
-      "Xamarin.iOS": [ "Images\\iOS" ],
+      "Android": [ "Images\\Android" ],
+      "iOS": [ "Images\\iOS" ],
       "Debug": [ "Images\\Debug" ],
       "!Store": [ "Images\\NotProduction" ],
       "Store": [ "Images\\Production" ]
@@ -110,19 +108,8 @@ When using Conditional Directories it is very much possible that you would have 
 !!! warning
     While the Mobile.BuildTools can handle locating 2 json configurations during a build where one of them is a sibling of the image, the Mobile.BuildTools cannot handle scenarios where you it locates more than one json configuration that is not a sibling of the image as we would not know which one is the proper one to use.
 
-## Supported Platforms
+## Feature and platform status
 
-Not all platforms are supported. For more information see the grid below:
+Image processing depends on the MBT package version and target SDK. Current v3 source includes static SVG rasterization and raster image processing. Animated SVG timelines, animated GIF output, and Lottie processing remain follow-up work; they are not shipped capabilities advertised by this guide. See the [current image implementation notes](https://github.com/dansiegel/Mobile.BuildTools/blob/master/src/Mobile.BuildTools.Images/ReadMe.md).
 
-| Platform | Status |
-|:--------:|:------:|
-| Android | Supported |
-| iOS | Supported |
-| macOS | Supported * |
-| tvOS | Supported * |
-| Tizen | Not Supported - See [issue #101](https://github.com/dansiegel/Mobile.BuildTools/issues/101) |
-| UWP | Not Supported - See [issue #100](https://github.com/dansiegel/Mobile.BuildTools/issues/100) |
-| Blazor | Not Planned |
-| Web Assembly | Not Planned |
-
-\* Platform is theoretically supported as there should be no difference from iOS, however this has not been directly tested.
+Platform conditions identify input directories; they do not certify processing support on every target. Validate image outputs in your actual MAUI or Uno Platform project. Retained macOS, tvOS, Tizen, UWP, or browser-related configuration names are not a support guarantee. Framework-owned image processing may handle assets that MBT does not transform.

@@ -1,17 +1,21 @@
-# F.A.Q.
+# Frequently asked questions
 
-#### Should every value in my AppSettings be "Secret"?
+## Are generated settings confidential?
 
-The AppSettings Class is a great way to prevent security vulnerabilities created from checking into source control things like Client Id's, Consumer Secrets, or Connection Strings. But it really doesn't have to stop there. In fact the AppSettings class is a great way of setting the configuration environment for your application at build. Should your build point to the Dev, Stage, or Production API? This is also a great way of being very intentional about it.
+No. AppSettings helps keep environment values out of handwritten source and selects values at build time. The result is compiled into your client application and can be extracted. Keep confidential service credentials on your backend. See [CI input handling](continuous-integration/setup.md).
 
-#### Does the AppSettings class have to be in the Helpers namespace or named Secrets?
+## Which configuration API should I use?
 
-In short no it does not. This has always been configurable though it is much easier with version 2.0 as you can just update the Configuration for the project. See the [App Settings Configuration](/config/appsettings/configuration.md) topic for more information on how to configure this for version 2.
+[AppSettings and XML ConfigurationManager](config/index.md) have different inputs and consumption APIs. AppSettings generates strongly typed members; ConfigurationManager reads XML string values and can perform runtime transforms of bundled files. Installing one does not configure the other.
 
-#### Do all of the things that the Mobile.BuildTools is capable of execute every time I run a build?
+## Why is no AppSettings class visible?
 
-We try to be smart about what we will and will not do. There is an initialization task that will run on each build which evaluates your project to determine if certain things should or should not occur. For instance if there are no SCSS files in your project that Target will not fire, similarly if you have disabled a target explicitly it should be skipped during the build.
+Follow the [complete walkthrough](config/appsettings/index.md) and [troubleshooting guide](config/appsettings/faq.md). The project key, package placement, generated namespace, accessibility, and successful build all matter. Editor completion and Solution Explorer do not necessarily show generated source.
 
-#### I installed the Mobile.BuildTools why can't I access the ConfigurationManager?
+## Do all tasks run on every build?
 
-We explicitly separated the ConfigurationManager from the Mobile.BuildTools as we recognize that not everyone will want to use this feature. In order to get the build time transformations you will need to have the Mobile.BuildTools installed in your platform projects, however you will need the Mobile.BuildTools.Configuration package installed in any project where you want to use the ConfigurationManager.
+Tasks evaluate configuration, target platform, and available inputs before running. A task can also be disabled in `buildtools.json`. Compatibility code and retained target names do not guarantee support for every current SDK. Test the configured feature with your installed MBT version.
+
+## Where are v1 instructions?
+
+V1 is no longer maintained. Historical documentation is in the [GitHub wiki](https://github.com/dansiegel/Mobile.BuildTools/wiki). For migration to AppSettings, see [Upgrading from v1](appendix/upgrade.md). Released v2.0.245 and forthcoming v3 source are distinguished in the current guides.
